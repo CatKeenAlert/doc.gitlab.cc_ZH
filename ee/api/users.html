@@ -1,0 +1,903 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Users - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Users</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="users.html#users">Users</a>
+<ul>
+<li>
+<a href="users.html#list-users">List users</a>
+<ul>
+<li>
+<a href="users.html#for-normal-users">For normal users</a>
+</li>
+<li>
+<a href="users.html#for-admins">For admins</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="users.html#single-user">Single user</a>
+<ul>
+<li>
+<a href="users.html#for-user">For user</a>
+</li>
+<li>
+<a href="users.html#for-admin">For admin</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="users.html#user-creation">User creation</a>
+</li>
+<li>
+<a href="users.html#user-modification">User modification</a>
+</li>
+<li>
+<a href="users.html#user-deletion">User deletion</a>
+</li>
+<li>
+<a href="users.html#current-user">Current user</a>
+</li>
+<li>
+<a href="users.html#list-ssh-keys">List SSH keys</a>
+</li>
+<li>
+<a href="users.html#list-ssh-keys-for-user">List SSH keys for user</a>
+</li>
+<li>
+<a href="users.html#single-ssh-key">Single SSH key</a>
+</li>
+<li>
+<a href="users.html#add-ssh-key">Add SSH key</a>
+</li>
+<li>
+<a href="users.html#add-ssh-key-for-user">Add SSH key for user</a>
+</li>
+<li>
+<a href="users.html#delete-ssh-key-for-current-user">Delete SSH key for current user</a>
+</li>
+<li>
+<a href="users.html#delete-ssh-key-for-given-user">Delete SSH key for given user</a>
+</li>
+<li>
+<a href="users.html#list-emails">List emails</a>
+</li>
+<li>
+<a href="users.html#list-emails-for-user">List emails for user</a>
+</li>
+<li>
+<a href="users.html#single-email">Single email</a>
+</li>
+<li>
+<a href="users.html#add-email">Add email</a>
+</li>
+<li>
+<a href="users.html#add-email-for-user">Add email for user</a>
+</li>
+<li>
+<a href="users.html#delete-email-for-current-user">Delete email for current user</a>
+</li>
+<li>
+<a href="users.html#delete-email-for-given-user">Delete email for given user</a>
+</li>
+<li>
+<a href="users.html#block-user">Block user</a>
+</li>
+<li>
+<a href="users.html#unblock-user">Unblock user</a>
+<ul>
+<li>
+<a href="users.html#get-user-contribution-events">Get user contribution events</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='users'>Users <a class='anchor' href='users.html#users' title='Permalink'></a></h1><h2 id='list-users'>List users <a class='anchor' href='users.html#list-users' title='Permalink'></a></h2>
+<p>Active users = Total accounts - Blocked users</p>
+
+<p>Get a list of users.</p>
+
+<p>This function takes pagination parameters <code>page</code> and <code>per_page</code> to restrict the list of users.</p>
+<h3 id='for-normal-users'>For normal users <a class='anchor' href='users.html#for-normal-users' title='Permalink'></a></h3><pre class="highlight plaintext"><code>GET /users
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/cd8.jpeg"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/john_smith"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jack_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jack Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blocked"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gravatar.com/../e32131cd8.jpeg"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/jack_smith"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>In addition, you can filter users based on states eg. <code>blocked</code>, <code>active</code>
+This works only to filter users who are <code>blocked</code> or <code>active</code>.
+It does not support <code>active=false</code> or <code>blocked=false</code>.</p>
+<pre class="highlight plaintext"><code>GET /users?active=true
+</code></pre><pre class="highlight plaintext"><code>GET /users?blocked=true
+</code></pre><h3 id='for-admins'>For admins <a class='anchor' href='users.html#for-admins' title='Permalink'></a></h3><pre class="highlight plaintext"><code>GET /users
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/index.jpg"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/john_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T08:00:58Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"bio"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"skype"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"linkedin"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"website_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-06-01T11:41:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"confirmed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T09:05:22Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"theme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"color_scheme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"projects_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-06-02T06:36:55Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"identities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2435223452345"</span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bitbucket"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.smith"</span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"google_oauth2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8776128412476123468721346"</span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"can_create_group"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"can_create_project"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"two_factor_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"external"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jack_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jack@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jack Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blocked"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/2/index.jpg"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/jack_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T08:01:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"bio"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"skype"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"linkedin"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"website_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"confirmed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-30T16:53:06.148Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"theme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"color_scheme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"projects_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-03-19T17:54:13Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"identities"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"can_create_group"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"can_create_project"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"two_factor_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"external"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>You can search for users by email or username with: <code>/users?search=John</code></p>
+
+<p>In addition, you can lookup users by username:</p>
+<pre class="highlight plaintext"><code>GET /users?username=:username
+</code></pre>
+<p>For example:</p>
+<pre class="highlight plaintext"><code>GET /users?username=jack_smith
+</code></pre>
+<p>You can search for users who are external with: <code>/users?external=true</code></p>
+<h2 id='single-user'>Single user <a class='anchor' href='users.html#single-user' title='Permalink'></a></h2>
+<p>Get a single user.</p>
+<h3 id='for-user'>For user <a class='anchor' href='users.html#for-user' title='Permalink'></a></h3><pre class="highlight plaintext"><code>GET /users/:id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a user</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/cd8.jpeg"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/john_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T08:00:58Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bio"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"skype"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"linkedin"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"website_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='for-admin'>For admin <a class='anchor' href='users.html#for-admin' title='Permalink'></a></h3><pre class="highlight plaintext"><code>GET /users/:id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a user</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/index.jpg"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/john_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T08:00:58Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bio"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"skype"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"linkedin"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"website_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-06-01T11:41:01Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"confirmed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T09:05:22Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"theme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"color_scheme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"projects_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-06-02T06:36:55Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"identities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2435223452345"</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bitbucket"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.smith"</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"google_oauth2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8776128412476123468721346"</span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"can_create_group"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"can_create_project"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"two_factor_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"external"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='user-creation'>User creation <a class='anchor' href='users.html#user-creation' title='Permalink'></a></h2>
+<p>Creates a new user. Note only administrators can create new users.</p>
+<pre class="highlight plaintext"><code>POST /users
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>email</code> (required)            - Email</li>
+<li><code>password</code> (required)         - Password</li>
+<li><code>username</code> (required)         - Username</li>
+<li><code>name</code> (required)             - Name</li>
+<li><code>skype</code> (optional)            - Skype ID</li>
+<li><code>linkedin</code> (optional)         - LinkedIn</li>
+<li><code>twitter</code> (optional)          - Twitter account</li>
+<li><code>website_url</code> (optional)      - Website URL</li>
+<li><code>organization</code> (optional)     - Organization name</li>
+<li><code>projects_limit</code> (optional)   - Number of projects user can create</li>
+<li><code>extern_uid</code> (optional)       - External UID</li>
+<li><code>provider</code> (optional)         - External provider name</li>
+<li><code>bio</code> (optional)              - User&#39;s biography</li>
+<li><code>location</code> (optional)         - User&#39;s location</li>
+<li><code>admin</code> (optional)            - User is admin - true or false (default)</li>
+<li><code>can_create_group</code> (optional) - User can create groups - true or false</li>
+<li><code>confirm</code> (optional)          - Require confirmation - true (default) or false</li>
+<li><code>external</code> (optional)         - Flags the user as external - true or false(default)</li>
+</ul>
+<h2 id='user-modification'>User modification <a class='anchor' href='users.html#user-modification' title='Permalink'></a></h2>
+<p>Modifies an existing user. Only administrators can change attributes of a user.</p>
+<pre class="highlight plaintext"><code>PUT /users/:id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>email</code>                       - Email</li>
+<li><code>username</code>                    - Username</li>
+<li><code>name</code>                        - Name</li>
+<li><code>password</code>                    - Password</li>
+<li><code>skype</code>                       - Skype ID</li>
+<li><code>linkedin</code>                    - LinkedIn</li>
+<li><code>twitter</code>                     - Twitter account</li>
+<li><code>website_url</code>                 - Website URL</li>
+<li><code>organization</code>                - Organization name</li>
+<li><code>projects_limit</code>              - Limit projects each user can create</li>
+<li><code>extern_uid</code>                  - External UID</li>
+<li><code>provider</code>                    - External provider name</li>
+<li><code>bio</code>                         - User&#39;s biography</li>
+<li><code>location</code> (optional)         - User&#39;s location</li>
+<li><code>admin</code> (optional)            - User is admin - true or false (default)</li>
+<li><code>can_create_group</code> (optional) - User can create groups - true or false</li>
+<li><code>external</code> (optional)         - Flags the user as external - true or false(default)</li>
+</ul>
+
+<p>Note, at the moment this method does only return a 404 error,
+even in cases where a 409 (Conflict) would be more appropriate,
+e.g. when renaming the email address to some existing one.</p>
+<h2 id='user-deletion'>User deletion <a class='anchor' href='users.html#user-deletion' title='Permalink'></a></h2>
+<p>Deletes a user. Available only for administrators.
+This is an idempotent function, calling this function for a non-existent user id
+still returns a status code <code>200 OK</code>.
+The JSON response differs if the user was actually deleted or not.
+In the former the user is returned and in the latter not.</p>
+<pre class="highlight plaintext"><code>DELETE /users/:id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of the user</li>
+</ul>
+<h2 id='current-user'>Current user <a class='anchor' href='users.html#current-user' title='Permalink'></a></h2>
+<p>Gets currently authenticated user.</p>
+<pre class="highlight plaintext"><code>GET /user
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/index.jpg"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/john_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T08:00:58Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bio"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"skype"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"linkedin"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"website_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-06-01T11:41:01Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"confirmed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-23T09:05:22Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"theme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"color_scheme_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"projects_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-06-02T06:36:55Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"identities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2435223452345"</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bitbucket"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_smith"</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"google_oauth2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"extern_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8776128412476123468721346"</span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"can_create_group"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"can_create_project"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"two_factor_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"external"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='list-ssh-keys'>List SSH keys <a class='anchor' href='users.html#list-ssh-keys' title='Permalink'></a></h2>
+<p>Get a list of currently authenticated user&#39;s SSH keys.</p>
+<pre class="highlight plaintext"><code>GET /user/keys
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public key"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiPWx6WM4lhHNedGfBpPJNPpZ7yKu+dnn1SJejgt4596k6YjzGGphH2TUxwKzxcKDKKezwkpfnxPkSMkuEspGRt/aZZ9wa++Oi7Qkr8prgHc4soW6NUlfDzpvZK2H5E7eQaSeP3SAwGmQKUFHCddNaP0L+hM7zhFNzjFvpaMgJw0="</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-08-01T14:47:39.080Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Another Public key"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiPWx6WM4lhHNedGfBpPJNPpZ7yKu+dnn1SJejgt4596k6YjzGGphH2TUxwKzxcKDKKezwkpfnxPkSMkuEspGRt/aZZ9wa++Oi7Qkr8prgHc4soW6NUlfDzpvZK2H5E7eQaSeP3SAwGmQKUFHCddNaP0L+hM7zhFNzjFvpaMgJw0="</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-08-01T14:47:39.080Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><strong>none</strong></li>
+</ul>
+<h2 id='list-ssh-keys-for-user'>List SSH keys for user <a class='anchor' href='users.html#list-ssh-keys-for-user' title='Permalink'></a></h2>
+<p>Get a list of a specified user&#39;s SSH keys. Available only for admin</p>
+<pre class="highlight plaintext"><code>GET /users/:id/keys
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - id of specified user</li>
+</ul>
+<h2 id='single-ssh-key'>Single SSH key <a class='anchor' href='users.html#single-ssh-key' title='Permalink'></a></h2>
+<p>Get a single key.</p>
+<pre class="highlight plaintext"><code>GET /user/keys/:key_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>key_id</code> (required) - The ID of an SSH key</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public key"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiPWx6WM4lhHNedGfBpPJNPpZ7yKu+dnn1SJejgt4596k6YjzGGphH2TUxwKzxcKDKKezwkpfnxPkSMkuEspGRt/aZZ9wa++Oi7Qkr8prgHc4soW6NUlfDzpvZK2H5E7eQaSeP3SAwGmQKUFHCddNaP0L+hM7zhFNzjFvpaMgJw0="</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-08-01T14:47:39.080Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='add-ssh-key'>Add SSH key <a class='anchor' href='users.html#add-ssh-key' title='Permalink'></a></h2>
+<p>Creates a new key owned by the currently authenticated user.</p>
+<pre class="highlight plaintext"><code>POST /user/keys
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>title</code> (required) - new SSH Key&#39;s title</li>
+<li><code>key</code> (required)   - new SSH key</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-01-21T17:44:33.512Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-dss AAAAB3NzaC1kc3MAAACBAMLrhYgI3atfrSD6KDas1b/3n6R/HP+bLaHHX6oh+L1vg31mdUqK0Ac/NjZoQunavoyzqdPYhFz9zzOezCrZKjuJDS3NRK9rspvjgM0xYR4d47oNZbdZbwkI4cTv/gcMlquRy0OvpfIvJtjtaJWMwTLtM5VhRusRuUlpH99UUVeXAAAAFQCVyX+92hBEjInEKL0v13c/egDCTQAAAIEAvFdWGq0ccOPbw4f/F8LpZqvWDydAcpXHV3thwb7WkFfppvm4SZte0zds1FJ+Hr8Xzzc5zMHe6J4Nlay/rP4ewmIW7iFKNBEYb/yWa+ceLrs+TfR672TaAgO6o7iSRofEq5YLdwgrwkMmIawa21FrZ2D9SPao/IwvENzk/xcHu7YAAACAQFXQH6HQnxOrw4dqf0NqeKy1tfIPxYYUZhPJfo9O0AmBW2S36pD2l14kS89fvz6Y1g8gN/FwFnRncMzlLY/hX70FSc/3hKBSbH6C6j8hwlgFKfizav21eS358JJz93leOakJZnGb8XlWvz1UJbwCsnR2VEY8Dz90uIk1l/UqHkA= loic@call"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABC"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Will return created key with status <code>201 Created</code> on success. If an
+error occurs a <code>400 Bad Request</code> is returned with a message explaining the error:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"has already been taken"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"has already been taken"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='add-ssh-key-for-user'>Add SSH key for user <a class='anchor' href='users.html#add-ssh-key-for-user' title='Permalink'></a></h2>
+<p>Create new key owned by specified user. Available only for admin</p>
+<pre class="highlight plaintext"><code>POST /users/:id/keys
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required)    - id of specified user</li>
+<li><code>title</code> (required) - new SSH Key&#39;s title</li>
+<li><code>key</code> (required)   - new SSH key</li>
+</ul>
+
+<p>Will return created key with status <code>201 Created</code> on success, or <code>404 Not found</code> on fail.</p>
+<h2 id='delete-ssh-key-for-current-user'>Delete SSH key for current user <a class='anchor' href='users.html#delete-ssh-key-for-current-user' title='Permalink'></a></h2>
+<p>Deletes key owned by currently authenticated user.
+This is an idempotent function and calling it on a key that is already deleted
+or not available results in <code>200 OK</code>.</p>
+<pre class="highlight plaintext"><code>DELETE /user/keys/:key_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>key_id</code> (required) - SSH key ID</li>
+</ul>
+<h2 id='delete-ssh-key-for-given-user'>Delete SSH key for given user <a class='anchor' href='users.html#delete-ssh-key-for-given-user' title='Permalink'></a></h2>
+<p>Deletes key owned by a specified user. Available only for admin.</p>
+<pre class="highlight plaintext"><code>DELETE /users/:id/keys/:key_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - id of specified user</li>
+<li><code>key_id</code> (required)  - SSH key ID</li>
+</ul>
+
+<p>Will return <code>200 OK</code> on success, or <code>404 Not found</code> if either user or key cannot be found.</p>
+<h2 id='list-emails'>List emails <a class='anchor' href='users.html#list-emails' title='Permalink'></a></h2>
+<p>Get a list of currently authenticated user&#39;s emails.</p>
+<pre class="highlight plaintext"><code>GET /user/emails
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email2@example.com"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><strong>none</strong></li>
+</ul>
+<h2 id='list-emails-for-user'>List emails for user <a class='anchor' href='users.html#list-emails-for-user' title='Permalink'></a></h2>
+<p>Get a list of a specified user&#39;s emails. Available only for admin</p>
+<pre class="highlight plaintext"><code>GET /users/:id/emails
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - id of specified user</li>
+</ul>
+<h2 id='single-email'>Single email <a class='anchor' href='users.html#single-email' title='Permalink'></a></h2>
+<p>Get a single email.</p>
+<pre class="highlight plaintext"><code>GET /user/emails/:email_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>email_id</code> (required) - email ID</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='add-email'>Add email <a class='anchor' href='users.html#add-email' title='Permalink'></a></h2>
+<p>Creates a new email owned by the currently authenticated user.</p>
+<pre class="highlight plaintext"><code>POST /user/emails
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>email</code> (required) - email address</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Will return created email with status <code>201 Created</code> on success. If an
+error occurs a <code>400 Bad Request</code> is returned with a message explaining the error:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"has already been taken"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='add-email-for-user'>Add email for user <a class='anchor' href='users.html#add-email-for-user' title='Permalink'></a></h2>
+<p>Create new email owned by specified user. Available only for admin</p>
+<pre class="highlight plaintext"><code>POST /users/:id/emails
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required)    - id of specified user</li>
+<li><code>email</code> (required) - email address</li>
+</ul>
+
+<p>Will return created email with status <code>201 Created</code> on success, or <code>404 Not found</code> on fail.</p>
+<h2 id='delete-email-for-current-user'>Delete email for current user <a class='anchor' href='users.html#delete-email-for-current-user' title='Permalink'></a></h2>
+<p>Deletes email owned by currently authenticated user.
+This is an idempotent function and calling it on a email that is already deleted
+or not available results in <code>200 OK</code>.</p>
+<pre class="highlight plaintext"><code>DELETE /user/emails/:email_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>email_id</code> (required) - email ID</li>
+</ul>
+<h2 id='delete-email-for-given-user'>Delete email for given user <a class='anchor' href='users.html#delete-email-for-given-user' title='Permalink'></a></h2>
+<p>Deletes email owned by a specified user. Available only for admin.</p>
+<pre class="highlight plaintext"><code>DELETE /users/:id/emails/:email_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - id of specified user</li>
+<li><code>email_id</code> (required)  - email ID</li>
+</ul>
+
+<p>Will return <code>200 OK</code> on success, or <code>404 Not found</code> if either user or email cannot be found.</p>
+<h2 id='block-user'>Block user <a class='anchor' href='users.html#block-user' title='Permalink'></a></h2>
+<p>Blocks the specified user.  Available only for admin.</p>
+<pre class="highlight plaintext"><code>PUT /users/:id/block
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - id of specified user</li>
+</ul>
+
+<p>Will return <code>200 OK</code> on success, <code>404 User Not Found</code> is user cannot be found or
+<code>403 Forbidden</code> when trying to block an already blocked user by LDAP synchronization.</p>
+<h2 id='unblock-user'>Unblock user <a class='anchor' href='users.html#unblock-user' title='Permalink'></a></h2>
+<p>Unblocks the specified user.  Available only for admin.</p>
+<pre class="highlight plaintext"><code>PUT /users/:id/unblock
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - id of specified user</li>
+</ul>
+
+<p>Will return <code>200 OK</code> on success, <code>404 User Not Found</code> is user cannot be found or
+<code>403 Forbidden</code> when trying to unblock a user blocked by LDAP synchronization.</p>
+<h3 id='get-user-contribution-events'>Get user contribution events <a class='anchor' href='users.html#get-user-contribution-events' title='Permalink'></a></h3>
+<p>Get the contribution events for the specified user, sorted from newest to oldest.</p>
+<pre class="highlight plaintext"><code>GET /users/:id/events
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the user</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/users/:id/events
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"closed"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">830</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public project search field"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"opened"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50d4420237a9de7be1304607147aec22e4a14af7"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c5feabde2d8cd023215af4d2ceeb7a64839fc428"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refs/heads/master"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"repository"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitlabhq"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@dev.gitlab.org:gitlab/gitlabhq.git"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GitLab: self hosted Git management software. </span><span class="se">\r\n</span><span class="s2">Distributed under the MIT License."</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"homepage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dev.gitlab.org/gitlab/gitlabhq"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"commits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c5feabde2d8cd023215af4d2ceeb7a64839fc428"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add simple search to projects in public area"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-05-13T18:18:08+00:00"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dev.gitlab.org/gitlab/gitlabhq/commit/c5feabde2d8cd023215af4d2ceeb7a64839fc428"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dmitriy.zaporozhets@gmail.com"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"total_commits_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"closed"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">840</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Finish &amp; merge Code search PR"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commented on"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1312</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Note"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T10:33:58.089Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1312</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What an awesome day!"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T10:33:56.698Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">377</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/api/users.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

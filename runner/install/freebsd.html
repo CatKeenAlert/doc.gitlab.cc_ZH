@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Install on FreeBSD - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Install GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Install on FreeBSD</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="freebsd.html#install-on-freebsd">Install on FreeBSD</a>
+</li>
+</ul>
+<h1 id='install-on-freebsd'>Install on FreeBSD <a class='anchor' href='freebsd.html#install-on-freebsd' title='Permalink'></a></h1>
+<p>Create gitlab-runner user and group:</p>
+<pre class="highlight shell"><code>sudo pw group add -n gitlab-runner
+sudo pw user add -n gitlab-runner -g gitlab-runner -s /usr/local/bin/bash
+sudo mkdir /home/gitlab-runner
+sudo chown gitlab-runner:gitlab-runner /home/gitlab-runner
+</code></pre>
+<p>Download the binary for your system:</p>
+<pre class="highlight shell"><code> sudo wget -O /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-freebsd-amd64
+ sudo wget -O /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-freebsd-386
+</code></pre>
+<p>Give it permissions to execute:</p>
+<pre class="highlight shell"><code>sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+<p>Create empty log file with correct permissions:</p>
+<pre class="highlight shell"><code>sudo touch /var/log/gitlab_runner.log <span class="o">&amp;&amp;</span> sudo chown gitlab-runner:gitlab-runner /var/log/gitlab_runner.log
+</code></pre>
+<p>Create rc.d script:</p>
+<pre class="highlight shell"><code>cat &gt; /etc/rc.d/gitlab_runner &lt;&lt; <span class="s2">"EOF"</span>
+<span class="c">#!/bin/sh</span>
+<span class="c"># PROVIDE: gitlab_runner</span>
+<span class="c"># REQUIRE: DAEMON NETWORKING</span>
+<span class="c"># BEFORE:</span>
+<span class="c"># KEYWORD:</span>
+
+. /etc/rc.subr
+
+<span class="nv">name</span><span class="o">=</span><span class="s2">"gitlab_runner"</span>
+<span class="nv">rcvar</span><span class="o">=</span><span class="s2">"gitlab_runner_enable"</span>
+
+load_rc_config <span class="nv">$name</span>
+
+<span class="nv">user</span><span class="o">=</span><span class="s2">"gitlab-runner"</span>
+<span class="nv">user_home</span><span class="o">=</span><span class="s2">"/home/gitlab-runner"</span>
+<span class="nb">command</span><span class="o">=</span><span class="s2">"/usr/local/bin/gitlab-ci-multi-runner run"</span>
+<span class="nv">pidfile</span><span class="o">=</span><span class="s2">"/var/run/</span><span class="k">${</span><span class="nv">name</span><span class="k">}</span><span class="s2">.pid"</span>
+
+<span class="nv">start_cmd</span><span class="o">=</span><span class="s2">"gitlab_runner_start"</span>
+<span class="nv">stop_cmd</span><span class="o">=</span><span class="s2">"gitlab_runner_stop"</span>
+<span class="nv">status_cmd</span><span class="o">=</span><span class="s2">"gitlab_runner_status"</span>
+
+gitlab_runner_start<span class="o">()</span>
+<span class="o">{</span>
+    <span class="nb">export </span><span class="nv">USER</span><span class="o">=</span><span class="k">${</span><span class="nv">user</span><span class="k">}</span>
+    <span class="nb">export </span><span class="nv">HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">user_home</span><span class="k">}</span>
+    <span class="k">if </span>checkyesno <span class="k">${</span><span class="nv">rcvar</span><span class="k">}</span>; <span class="k">then
+        </span><span class="nb">cd</span> <span class="k">${</span><span class="nv">user_home</span><span class="k">}</span>
+        /usr/sbin/daemon -u <span class="k">${</span><span class="nv">user</span><span class="k">}</span> -p <span class="k">${</span><span class="nv">pidfile</span><span class="k">}</span> <span class="k">${</span><span class="nv">command</span><span class="k">}</span> &gt; /var/log/gitlab_runner.log 2&gt;&amp;1
+    <span class="k">fi</span>
+<span class="o">}</span>
+
+gitlab_runner_stop<span class="o">()</span>
+<span class="o">{</span>
+    <span class="k">if</span> <span class="o">[</span> -f <span class="k">${</span><span class="nv">pidfile</span><span class="k">}</span> <span class="o">]</span>; <span class="k">then
+        </span><span class="nb">kill</span> <span class="sb">`</span>cat <span class="k">${</span><span class="nv">pidfile</span><span class="k">}</span><span class="sb">`</span>
+    <span class="k">fi</span>
+<span class="o">}</span>
+
+gitlab_runner_status<span class="o">()</span>
+<span class="o">{</span>
+    <span class="k">if</span> <span class="o">[</span> ! -f <span class="k">${</span><span class="nv">pidfile</span><span class="k">}</span> <span class="o">]</span> <span class="o">||</span> <span class="nb">kill</span> -0 <span class="sb">`</span>cat <span class="k">${</span><span class="nv">pidfile</span><span class="k">}</span><span class="sb">`</span>; <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"Service </span><span class="k">${</span><span class="nv">name</span><span class="k">}</span><span class="s2"> is not running."</span>
+    <span class="k">else
+        </span><span class="nb">echo</span> <span class="s2">"</span><span class="k">${</span><span class="nv">name</span><span class="k">}</span><span class="s2"> appears to be running."</span>
+    <span class="k">fi</span>
+<span class="o">}</span>
+
+run_rc_command <span class="nv">$1</span>
+EOF
+</code></pre>
+<p>Make it executable:</p>
+<pre class="highlight shell"><code>sudo chmod +x /etc/rc.d/gitlab_runner
+</code></pre>
+<p>Register the runner (Look into <a href="http://doc.gitlab.com/ce/ci/runners/README.html">runners documentation</a> to learn how to obtain a token):</p>
+<pre class="highlight shell"><code>sudo -u gitlab-runner -H /usr/local/bin/gitlab-ci-multi-runner register
+
+Please enter the gitlab-ci coordinator URL <span class="o">(</span>e.g. https://gitlab.com<span class="o">)</span>:
+
+Please enter the gitlab-ci token <span class="k">for </span>this runner:
+
+Please enter the gitlab-ci description <span class="k">for </span>this runner:
+<span class="o">[</span>name]:
+Please enter the gitlab-ci tags <span class="k">for </span>this runner <span class="o">(</span>comma separated<span class="o">)</span>:
+
+Registering runner... succeeded
+Please enter the executor: virtualbox, ssh, shell, parallels, docker, docker-ssh:
+shell
+Runner registered successfully. Feel free to start it, but <span class="k">if </span>it<span class="se">\'</span>s running already the config should be automatically reloaded!
+</code></pre>
+<p>Enable gitlab-runner service and start it:</p>
+<pre class="highlight shell"><code>sudo sysrc -f /etc/rc.conf <span class="s2">"gitlab_runner_enable=YES"</span>
+sudo service gitlab_runner start
+</code></pre>
+<p>If you don&#39;t want to enable gitlab-runner server to restart after reboot, you can start it:</p>
+<pre class="highlight shell"><code>sudo service gitlab_runner onestart
+</code></pre>
+<p><strong>The FreeBSD version is also available from <a href="bleeding-edge.html">Bleeding edge</a></strong></p>
+
+<p>Make sure that you read the <a href="../faq/README.html">FAQ</a> section which describes
+some of the most common problems with GitLab Runner.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/freebsd.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

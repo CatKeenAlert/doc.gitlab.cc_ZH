@@ -1,0 +1,897 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Permissions - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Permissions</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="permissions.html#permissions">Permissions</a>
+<ul>
+<li>
+<a href="permissions.html#project">Project</a>
+</li>
+<li>
+<a href="permissions.html#group">Group</a>
+</li>
+<li>
+<a href="permissions.html#external-users">External Users</a>
+</li>
+<li>
+<a href="permissions.html#project-features">Project features</a>
+</li>
+<li>
+<a href="permissions.html#gitlab-ci">GitLab CI</a>
+<ul>
+<li>
+<a href="permissions.html#build-permissions">Build permissions</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='permissions'>Permissions <a class='anchor' href='permissions.html#permissions' title='Permalink'></a></h1>
+<p>Users have different abilities depending on the access level they have in a
+particular group or project. If a user is both in a group&#39;s project and the
+project itself, the highest permission level is used.</p>
+
+<p>On public and internal projects the Guest role is not enforced. All users will
+be able to create issues, leave comments, and pull or download the project code.</p>
+
+<p>GitLab administrators receive all permissions.</p>
+
+<p>To add or import a user, you can follow the <a href="../workflow/add-user/add-user.html">project users and members
+documentation</a>.</p>
+<h2 id='project'>Project <a class='anchor' href='permissions.html#project' title='Permalink'></a></h2>
+<p>The following table depicts the various user permission levels in a project.</p>
+
+<table><thead>
+<tr>
+<th>Action</th>
+<th>Guest</th>
+<th>Reporter</th>
+<th>Developer</th>
+<th>Master</th>
+<th>Owner</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Create new issue</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Leave comments</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See a list of builds</td>
+<td>✓ <sup id="fnref1"><a href="permissions.html#fn1" rel="footnote">1</a></sup></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See a build log</td>
+<td>✓ <sup id="fnref1"><a href="permissions.html#fn1" rel="footnote">1</a></sup></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Download and browse build artifacts</td>
+<td>✓ <sup id="fnref1"><a href="permissions.html#fn1" rel="footnote">1</a></sup></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>View wiki pages</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Pull project code</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Download project</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create code snippets</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage issue tracker</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage labels</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See a commit status</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See a container registry</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See environments</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create new environments</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Stop environments</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See a list of merge requests</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage/Accept merge requests</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create new merge request</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create new branches</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Push to non-protected branches</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Force push to non-protected branches</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Remove non-protected branches</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Add tags</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Write a wiki</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Cancel and retry builds</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create or update commit status</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Update a container registry</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Remove a container registry image</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create new milestones</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Add new team members</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Push to protected branches</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Enable/disable branch protection</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Turn on/off protected branch push for devs</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Rewrite/remove Git tags</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Edit project</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Add deploy keys to project</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Configure project hooks</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage runners</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage build triggers</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage variables</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage pages</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage pages domains and certificates</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Switch visibility level</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Transfer project to another namespace</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Remove project</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Force push to protected branches <sup id="fnref2"><a href="permissions.html#fn2" rel="footnote">2</a></sup></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Remove protected branches <sup id="fnref2"><a href="permissions.html#fn2" rel="footnote">2</a></sup></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Remove pages</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<h2 id='group'>Group <a class='anchor' href='permissions.html#group' title='Permalink'></a></h2>
+<p>Any user can remove themselves from a group, unless they are the last Owner of
+the group. The following table depicts the various user permission levels in a
+group.</p>
+
+<table><thead>
+<tr>
+<th>Action</th>
+<th>Guest</th>
+<th>Reporter</th>
+<th>Developer</th>
+<th>Master</th>
+<th>Owner</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Browse group</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Edit group</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create project in group</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Manage group members</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Remove group</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<h2 id='external-users'>External Users <a class='anchor' href='permissions.html#external-users' title='Permalink'></a></h2>
+<p>In cases where it is desired that a user has access only to some internal or
+private projects, there is the option of creating <strong>External Users</strong>. This
+feature may be useful when for example a contractor is working on a given
+project and should only have access to that project.</p>
+
+<p>External users can only access projects to which they are explicitly granted
+access, thus hiding all other internal or private ones from them. Access can be
+granted by adding the user as member to the project or group.</p>
+
+<p>They will, like usual users, receive a role in the project or group with all
+the abilities that are mentioned in the table above. They cannot however create
+groups or projects, and they have the same access as logged out users in all
+other cases.</p>
+
+<p>An administrator can flag a user as external <a href="../api/users.html">through the API</a>
+or by checking the checkbox on the admin panel. As an administrator, navigate
+to <strong>Admin &gt; Users</strong> to create a new user or edit an existing one. There, you
+will find the option to flag the user as external.</p>
+
+<p>By default new users are not set as external users. This behavior can be changed
+by an administrator under <strong>Admin &gt; Application Settings</strong>.</p>
+<h2 id='project-features'>Project features <a class='anchor' href='permissions.html#project-features' title='Permalink'></a></h2>
+<p>Project features like wiki and issues can be hidden from users depending on
+which visibility level you select on project settings.</p>
+
+<ul>
+<li>Disabled: disabled for everyone</li>
+<li>Only team members: only team members will see even if your project is public or internal</li>
+<li>Everyone with access: everyone can see depending on your project visibility level</li>
+</ul>
+<h2 id='gitlab-ci'>GitLab CI <a class='anchor' href='permissions.html#gitlab-ci' title='Permalink'></a></h2>
+<p>GitLab CI permissions rely on the role the user has in GitLab. There are four
+permission levels it total:</p>
+
+<ul>
+<li>admin</li>
+<li>master</li>
+<li>developer</li>
+<li>guest/reporter</li>
+</ul>
+
+<p>The admin user can perform any action on GitLab CI in scope of the GitLab
+instance and project. In addition, all admins can use the admin interface under
+<code>/admin/runners</code>.</p>
+
+<table><thead>
+<tr>
+<th>Action</th>
+<th>Guest, Reporter</th>
+<th>Developer</th>
+<th>Master</th>
+<th>Admin</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>See commits and builds</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Retry or cancel build</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Remove project</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Create project</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Change project configuration</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Add specific runners</td>
+<td></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Add shared runners</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>See events in the system</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Admin interface</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<h3 id='build-permissions'>Build permissions <a class='anchor' href='permissions.html#build-permissions' title='Permalink'></a></h3>
+<blockquote>
+<p>Changed in GitLab 8.12.</p>
+</blockquote>
+
+<p>GitLab 8.12 has a completely redesigned build permissions system.
+Read all about the <a href="project/new_ci_build_permissions_model.html">new model and its implications</a>.</p>
+
+<p>This table shows granted privileges for builds triggered by specific types of
+users:</p>
+
+<table><thead>
+<tr>
+<th>Action</th>
+<th>Guest, Reporter</th>
+<th>Developer</th>
+<th>Master</th>
+<th>Admin</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Run CI build</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from current project</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from public projects</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from internal projects</td>
+<td></td>
+<td>✓ <sup id="fnref3"><a href="permissions.html#fn3" rel="footnote">3</a></sup></td>
+<td>✓ <sup id="fnref3"><a href="permissions.html#fn3" rel="footnote">3</a></sup></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from private projects</td>
+<td></td>
+<td>✓ <sup id="fnref4"><a href="permissions.html#fn4" rel="footnote">4</a></sup></td>
+<td>✓ <sup id="fnref4"><a href="permissions.html#fn4" rel="footnote">4</a></sup></td>
+<td>✓ <sup id="fnref4"><a href="permissions.html#fn4" rel="footnote">4</a></sup></td>
+</tr>
+<tr>
+<td>Push source and LFS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pull container images from current project</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Pull container images from public projects</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Pull container images from internal projects</td>
+<td></td>
+<td>✓ <sup id="fnref3"><a href="permissions.html#fn3" rel="footnote">3</a></sup></td>
+<td>✓ <sup id="fnref3"><a href="permissions.html#fn3" rel="footnote">3</a></sup></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Pull container images from private projects</td>
+<td></td>
+<td>✓ <sup id="fnref4"><a href="permissions.html#fn4" rel="footnote">4</a></sup></td>
+<td>✓ <sup id="fnref4"><a href="permissions.html#fn4" rel="footnote">4</a></sup></td>
+<td>✓ <sup id="fnref4"><a href="permissions.html#fn4" rel="footnote">4</a></sup></td>
+</tr>
+<tr>
+<td>Push container images to current project</td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Push container images to other projects</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>If <strong>Public pipelines</strong> is enabled in <strong>Project Settings &gt; CI/CD Pipelines</strong>&nbsp;<a href="permissions.html#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p>Not allowed for Guest, Reporter, Developer, Master, or Owner&nbsp;<a href="permissions.html#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn3">
+<p>Only if user is not external one.&nbsp;<a href="permissions.html#fnref3" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn4">
+<p>Only if user is a member of the project.&nbsp;<a href="permissions.html#fnref4" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/permissions.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

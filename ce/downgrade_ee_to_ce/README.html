@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Downgrading from EE to CE - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Downgrading from EE to CE</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#downgrading-from-ee-to-ce">Downgrading from EE to CE</a>
+<ul>
+<li>
+<a href="README.html#disable-enterprise-only-features">Disable Enterprise-only features</a>
+<ul>
+<li>
+<a href="README.html#authentication-mechanisms">Authentication mechanisms</a>
+</li>
+<li>
+<a href="README.html#git-annex">Git Annex</a>
+</li>
+<li>
+<a href="README.html#remove-jenkins-ci-service-entries-from-the-database">Remove Jenkins CI Service entries from the database</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#downgrade-to-ce">Downgrade to CE</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='downgrading-from-ee-to-ce'>Downgrading from EE to CE <a class='anchor' href='README.html#downgrading-from-ee-to-ce' title='Permalink'></a></h1>
+<p>If you ever decide to downgrade your Enterprise Edition back to the Community
+Edition, there are a few steps you need take before installing the CE package
+on top of the current EE package, or, if you are in an installation from source,
+before you change remotes and fetch the latest CE code.</p>
+<h2 id='disable-enterprise-only-features'>Disable Enterprise-only features <a class='anchor' href='README.html#disable-enterprise-only-features' title='Permalink'></a></h2>
+<p>First thing to do is to disable the following features.</p>
+<h3 id='authentication-mechanisms'>Authentication mechanisms <a class='anchor' href='README.html#authentication-mechanisms' title='Permalink'></a></h3>
+<p>Kerberos and Atlassian Crowd are only available on the Enterprise Edition, so
+you should disable these mechanisms before downgrading and you should provide
+alternative authentication methods to your users.</p>
+<h3 id='git-annex'>Git Annex <a class='anchor' href='README.html#git-annex' title='Permalink'></a></h3>
+<p>Git Annex is also only available on the Enterprise Edition. This means that if
+you have repositories that use Git Annex to store large files, these files will
+no longer be easily available via Git. You should consider migrating these
+repositories to use Git LFS before downgrading to the Community Edition.</p>
+<h3 id='remove-jenkins-ci-service-entries-from-the-database'>Remove Jenkins CI Service entries from the database <a class='anchor' href='README.html#remove-jenkins-ci-service-entries-from-the-database' title='Permalink'></a></h3>
+<p>The <code>JenkinsService</code> class is only available on the Enterprise Edition codebase,
+so if you downgrade to the Community Edition, you&#39;ll come across the following
+error:</p>
+<pre class="highlight plaintext"><code>Completed 500 Internal Server Error in 497ms (ActiveRecord: 32.2ms)
+
+ActionView::Template::Error (The single-table inheritance mechanism failed to locate the subclass: 'JenkinsService'. This
+error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this
+column if you didn't intend it to be used for storing the inheritance class or overwrite Service.inheritance_column to
+use another column for that information.)
+</code></pre>
+<p>All services are created automatically for every project you have, so in order
+to avoid getting this error, you need to remove all instances of the
+<code>JenkinsService</code> from your database:</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>$ sudo gitlab-rails runner "Service.where(type: ['JenkinsService', 'JenkinsDeprecatedService']).delete_all"
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>$ bundle exec rails runner "Service.where(type: ['JenkinsService', 'JenkinsDeprecatedService']).delete_all" production
+</code></pre><h2 id='downgrade-to-ce'>Downgrade to CE <a class='anchor' href='README.html#downgrade-to-ce' title='Permalink'></a></h2>
+<p>After performing the above mentioned steps, you are now ready to downgrade your
+GitLab installation to the Community Edition.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+
+<p>To downgrade an Omnibus installation, it is sufficient to install the Community
+Edition package on top of the currently installed one. You can do this manually,
+by directly <a href="https://packages.gitlab.com/gitlab/gitlab-ce">downloading the package</a>
+you need, or by adding our CE package repository and following the
+<a href="https://about.gitlab.com/downloads/">CE installation instructions</a>.</p>
+
+<p><strong>Source Installation</strong></p>
+
+<p>To downgrade a source installation, you need to replace the current remote of
+your GitLab installation with the Community Edition&#39;s remote, fetch the latest
+changes, and checkout the latest stable branch:</p>
+<pre class="highlight plaintext"><code>$ git remote set-url origin git@gitlab.com:gitlab-org/gitlab-ce.git
+$ git fetch --all
+$ git checkout 8-x-stable
+</code></pre>
+<p>Remember to follow the correct <a href="../update/README.html">update guides</a> to make
+sure all dependencies are up to date.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/downgrade_ee_to_ce/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

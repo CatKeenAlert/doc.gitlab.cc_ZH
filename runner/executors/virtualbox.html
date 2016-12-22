@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>VirtualBox - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Executors</a></li>
+            
+          
+          <li class="breadcrumb">VirtualBox</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="virtualbox.html#virtualbox">VirtualBox</a>
+<ul>
+<li>
+<a href="virtualbox.html#overview">Overview</a>
+</li>
+<li>
+<a href="virtualbox.html#create-a-new-base-virtual-machine">Create a new base virtual machine</a>
+</li>
+<li>
+<a href="virtualbox.html#create-a-new-runner">Create a new Runner</a>
+</li>
+<li>
+<a href="virtualbox.html#how-it-works">How it works</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='virtualbox'>VirtualBox <a class='anchor' href='virtualbox.html#virtualbox' title='Permalink'></a></h1>
+<blockquote>
+<p>Note: The Parallels executor works the same as the VirtualBox executor. The
+caching feature is currently not supported.</p>
+</blockquote>
+
+<p>VirtualBox allows you to use VirtualBox&#39;s virtualization to provide a clean
+build environment for every build. This executor supports all systems that can
+be run on VirtualBox. The only requirement is that the virtual machine exposes
+its SSH server and provide a bash-compatible shell.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="virtualbox.html#overview">Overview</a></li>
+<li><a href="virtualbox.html#create-a-new-base-virtual-machine">Create a new base virtual machine</a></li>
+<li><a href="virtualbox.html#create-a-new-runner">Create a new Runner</a></li>
+<li><a href="virtualbox.html#how-it-works">How it works</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='overview'>Overview <a class='anchor' href='virtualbox.html#overview' title='Permalink'></a></h2>
+<p>The project&#39;s source code is checked out to: <code>~/builds/&lt;namespace&gt;/&lt;project-name&gt;</code>.</p>
+
+<p>Where:</p>
+
+<ul>
+<li><code>&lt;namespace&gt;</code> is the namespace where the project is stored on GitLab</li>
+<li><code>&lt;project-name&gt;</code> is the name of the project as it is stored on GitLab</li>
+</ul>
+
+<p>To overwrite the <code>~/builds</code> directory, specify the <code>builds_dir</code> option under
+the <code>[[runners]]</code> section in
+<a href="../configuration/advanced-configuration.html"><code>config.toml</code></a>.</p>
+<h2 id='create-a-new-base-virtual-machine'>Create a new base virtual machine <a class='anchor' href='virtualbox.html#create-a-new-base-virtual-machine' title='Permalink'></a></h2>
+<ol>
+<li>Import or create a new virtual machine in VirtualBox</li>
+<li>Log into the new virtual machine</li>
+<li>If on Windows, install <a href="https://cygwin.com/">Cygwin</a></li>
+<li>Install the OpenSSH server</li>
+<li>Install all other dependencies required by your build</li>
+<li>Log out and shutdown the virtual machine</li>
+</ol>
+
+<p>It&#39;s completely fine to use automation tools like Vagrant to provision the
+virtual machine.</p>
+<h2 id='create-a-new-runner'>Create a new Runner <a class='anchor' href='virtualbox.html#create-a-new-runner' title='Permalink'></a></h2>
+<ol>
+<li>Install GitLab Runner on the host running VirtualBox</li>
+<li>Register a new GitLab Runner with <code>gitlab-ci-multi-runner register</code></li>
+<li>Select the <code>virtualbox</code> executor</li>
+<li>Enter the name of the base virtual machine you created earlier (find it under
+the settings of the virtual machine <strong>General &gt; Basic &gt; Name</strong>)</li>
+<li>Enter the SSH <code>user</code> and <code>password</code> or path to <code>identity_file</code> of the
+virtual machine</li>
+</ol>
+<h2 id='how-it-works'>How it works <a class='anchor' href='virtualbox.html#how-it-works' title='Permalink'></a></h2>
+<p>When a new build is started:</p>
+
+<ol>
+<li>A unique name for the virtual machine is generated: <code>runner-&lt;short-token&gt;-concurrent-&lt;id&gt;</code></li>
+<li>The virtual machine is cloned if it doesn&#39;t exist</li>
+<li>The port forward rules are created to access the SSH server</li>
+<li>The Runner starts or restores the snapshot of the virtual machine</li>
+<li>The Runner waits for the SSH server to become accessible</li>
+<li>The Runner creates a snapshot of the running virtual machine (this is done
+to speed up any next builds)</li>
+<li>The Runner connects to the virtual machine and executes a build</li>
+<li>The Runner stops or shutdowns the virtual machine</li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/executors/virtualbox.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

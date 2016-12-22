@@ -1,0 +1,397 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Group and project members - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Group and project members</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="members.html#group-and-project-members">Group and project members</a>
+<ul>
+<li>
+<a href="members.html#list-all-members-of-a-group-or-project">List all members of a group or project</a>
+</li>
+<li>
+<a href="members.html#get-a-member-of-a-group-or-project">Get a member of a group or project</a>
+</li>
+<li>
+<a href="members.html#add-a-member-to-a-group-or-project">Add a member to a group or project</a>
+</li>
+<li>
+<a href="members.html#edit-a-member-of-a-group-or-project">Edit a member of a group or project</a>
+</li>
+<li>
+<a href="members.html#remove-a-member-from-a-group-or-project">Remove a member from a group or project</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='group-and-project-members'>Group and project members <a class='anchor' href='members.html#group-and-project-members' title='Permalink'></a></h1>
+<p><strong>Valid access levels</strong></p>
+
+<p>The access levels are defined in the <code>Gitlab::Access</code> module. Currently, these levels are recognized:</p>
+<pre class="highlight plaintext"><code>10 =&gt; Guest access
+20 =&gt; Reporter access
+30 =&gt; Developer access
+40 =&gt; Master access
+50 =&gt; Owner access # Only valid for groups
+</code></pre><h2 id='list-all-members-of-a-group-or-project'>List all members of a group or project <a class='anchor' href='members.html#list-all-members-of-a-group-or-project' title='Permalink'></a></h2>
+<p>Gets a list of group or project members viewable by the authenticated user.</p>
+<pre class="highlight plaintext"><code>GET /groups/:id/members
+GET /projects/:id/members
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The group/project ID or path</td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>no</td>
+<td>A query string to search for members</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/groups/:id/members
+curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/:id/members
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raymond_smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Raymond Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-22T14:13:35Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john_doe"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-22T14:13:35Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre><h2 id='get-a-member-of-a-group-or-project'>Get a member of a group or project <a class='anchor' href='members.html#get-a-member-of-a-group-or-project' title='Permalink'></a></h2>
+<p>Gets a member of a group or project.</p>
+<pre class="highlight plaintext"><code>GET /groups/:id/members/:user_id
+GET /projects/:id/members/:user_id
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The group/project ID or path</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The user ID of the member</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/groups/:id/members/:user_id
+curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/:id/members/:user_id
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raymond_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Raymond Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-22T14:13:35Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='add-a-member-to-a-group-or-project'>Add a member to a group or project <a class='anchor' href='members.html#add-a-member-to-a-group-or-project' title='Permalink'></a></h2>
+<p>Adds a member to a group or project.</p>
+<pre class="highlight plaintext"><code>POST /groups/:id/members
+POST /projects/:id/members
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The group/project ID or path</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The user ID of the new member</td>
+</tr>
+<tr>
+<td><code>access_level</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>A valid access level</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>string</td>
+<td>no</td>
+<td>A date string in the format YEAR-MONTH-DAY</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --data <span class="s2">"user_id=1&amp;access_level=30"</span> https://gitlab.example.com/api/v3/groups/:id/members
+curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --data <span class="s2">"user_id=1&amp;access_level=30"</span> https://gitlab.example.com/api/v3/projects/:id/members
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raymond_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Raymond Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-22T14:13:35Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='edit-a-member-of-a-group-or-project'>Edit a member of a group or project <a class='anchor' href='members.html#edit-a-member-of-a-group-or-project' title='Permalink'></a></h2>
+<p>Updates a member of a group or project.</p>
+<pre class="highlight plaintext"><code>PUT /groups/:id/members/:user_id
+PUT /projects/:id/members/:user_id
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The group/project ID or path</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The user ID of the member</td>
+</tr>
+<tr>
+<td><code>access_level</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>A valid access level</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>string</td>
+<td>no</td>
+<td>A date string in the format YEAR-MONTH-DAY</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request PUT --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/groups/:id/members/:user_id?access_level<span class="o">=</span>40
+curl --request PUT --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/:id/members/:user_id?access_level<span class="o">=</span>40
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raymond_smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Raymond Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-22T14:13:35Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='remove-a-member-from-a-group-or-project'>Remove a member from a group or project <a class='anchor' href='members.html#remove-a-member-from-a-group-or-project' title='Permalink'></a></h2>
+<p>Removes a user from a group or project.</p>
+<pre class="highlight plaintext"><code>DELETE /groups/:id/members/:user_id
+DELETE /projects/:id/members/:user_id
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The group/project ID or path</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The user ID of the member</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request DELETE --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/groups/:id/members/:user_id
+curl --request DELETE --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/:id/members/:user_id
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/api/members.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

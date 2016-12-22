@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Using Redis - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Breadcrumb</a></li>
+            
+          
+          <li class="breadcrumb">Using Redis</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="redis.html#using-redis">Using Redis</a>
+<ul>
+<li>
+<a href="redis.html#use-redis-with-the-docker-executor">Use Redis with the Docker executor</a>
+</li>
+<li>
+<a href="redis.html#use-redis-with-the-shell-executor">Use Redis with the Shell executor</a>
+</li>
+<li>
+<a href="redis.html#example-project">Example project</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='using-redis'>Using Redis <a class='anchor' href='redis.html#using-redis' title='Permalink'></a></h1>
+<p>As many applications depend on Redis as their key-value store, you will
+eventually need it in order for your tests to run. Below you are guided how to
+do this with the Docker and Shell executors of GitLab Runner.</p>
+<h2 id='use-redis-with-the-docker-executor'>Use Redis with the Docker executor <a class='anchor' href='redis.html#use-redis-with-the-docker-executor' title='Permalink'></a></h2>
+<p>If you are using <a href="../runners/README.html">GitLab Runner</a> with the Docker executor
+you basically have everything set up already.</p>
+
+<p>First, in your <code>.gitlab-ci.yml</code> add:</p>
+<pre class="highlight yaml"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">redis:latest</span>
+</code></pre>
+<p>Then you need to configure your application to use the Redis database, for
+example:</p>
+<pre class="highlight yaml"><code><span class="na">Host</span><span class="pi">:</span> <span class="s">redis</span>
+</code></pre>
+<p>And that&#39;s it. Redis will now be available to be used within your testing
+framework.</p>
+
+<p>You can also use any other docker image available on <a href="https://hub.docker.com/r/_/redis/">Docker Hub</a>.
+For example, to use Redis 2.8 the service becomes <code>redis:2.8</code>.</p>
+<h2 id='use-redis-with-the-shell-executor'>Use Redis with the Shell executor <a class='anchor' href='redis.html#use-redis-with-the-shell-executor' title='Permalink'></a></h2>
+<p>Redis can also be used on manually configured servers that are using GitLab
+Runner with the Shell executor.</p>
+
+<p>In your build machine install the Redis server:</p>
+<pre class="highlight shell"><code>sudo apt-get install redis-server
+</code></pre>
+<p>Verify that you can connect to the server with the <code>gitlab-runner</code> user:</p>
+<pre class="highlight shell"><code><span class="c"># Try connecting the the Redis server</span>
+sudo -u gitlab-runner -H redis-cli
+
+<span class="c"># Quit the session</span>
+<span class="gp">127.0.0.1:6379&gt; </span>quit
+</code></pre>
+<p>Finally, configure your application to use the database, for example:</p>
+<pre class="highlight yaml"><code><span class="na">Host</span><span class="pi">:</span> <span class="s">localhost</span>
+</code></pre><h2 id='example-project'>Example project <a class='anchor' href='redis.html#example-project' title='Permalink'></a></h2>
+<p>We have set up an <a href="https://gitlab.com/gitlab-examples/redis">Example Redis Project</a> for your convenience
+that runs on <a href="https://gitlab.com">GitLab.com</a> using our publicly available
+<a href="../runners/README.html">shared runners</a>.</p>
+
+<p>Want to hack on it? Simply fork it, commit and push  your changes. Within a few
+moments the changes will be picked by a public runner and the build will begin.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/services/redis.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

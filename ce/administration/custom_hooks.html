@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Custom Git Hooks - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Custom Git Hooks</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="custom_hooks.html#custom-git-hooks">Custom Git Hooks</a>
+<ul>
+<li>
+<a href="custom_hooks.html#setup">Setup</a>
+</li>
+<li>
+<a href="custom_hooks.html#custom-error-messages">Custom error messages</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='custom-git-hooks'>Custom Git Hooks <a class='anchor' href='custom_hooks.html#custom-git-hooks' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong> Custom Git hooks must be configured on the filesystem of the GitLab
+server. Only GitLab server administrators will be able to complete these tasks.
+Please explore <a href="../web_hooks/web_hooks.html">webhooks</a> as an option if you do not
+have filesystem access. For a user configurable Git hook interface, please see
+<a href="http://docs.gitlab.com/ee/git_hooks/git_hooks.html">GitLab Enterprise Edition Git Hooks</a>.</p>
+</blockquote>
+
+<p>Git natively supports hooks that are executed on different actions.
+Examples of server-side git hooks include pre-receive, post-receive, and update.
+See <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks#Server-Side-Hooks">Git SCM Server-Side Hooks</a> for more information about each hook type.</p>
+
+<p>As of gitlab-shell version 2.2.0 (which requires GitLab 7.5+), GitLab
+administrators can add custom git hooks to any GitLab project.</p>
+<h2 id='setup'>Setup <a class='anchor' href='custom_hooks.html#setup' title='Permalink'></a></h2>
+<p>Normally, Git hooks are placed in the repository or project&#39;s <code>hooks</code> directory.
+GitLab creates a symlink from each project&#39;s <code>hooks</code> directory to the
+gitlab-shell <code>hooks</code> directory for ease of maintenance between gitlab-shell
+upgrades. As such, custom hooks are implemented a little differently. Behavior
+is exactly the same once the hook is created, though.</p>
+
+<p>Follow the steps below to set up a custom hook:</p>
+
+<ol>
+<li>Pick a project that needs a custom Git hook.</li>
+<li>On the GitLab server, navigate to the project&#39;s repository directory.
+For an installation from source the path is usually
+<code>/home/git/repositories/&lt;group&gt;/&lt;project&gt;.git</code>. For Omnibus installs the path is
+usually <code>/var/opt/gitlab/git-data/repositories/&lt;group&gt;/&lt;project&gt;.git</code>.</li>
+<li>Create a new directory in this location called <code>custom_hooks</code>.</li>
+<li>Inside the new <code>custom_hooks</code> directory, create a file with a name matching
+the hook type. For a pre-receive hook the file name should be <code>pre-receive</code>
+with no extension.</li>
+<li>Make the hook file executable and make sure it&#39;s owned by git.</li>
+<li>Write the code to make the Git hook function as expected. Hooks can be
+in any language. Ensure the &#39;shebang&#39; at the top properly reflects the language
+type. For example, if the script is in Ruby the shebang will probably be
+<code>#!/usr/bin/env ruby</code>.</li>
+</ol>
+
+<p>That&#39;s it! Assuming the hook code is properly implemented the hook will fire
+as appropriate.</p>
+<h2 id='custom-error-messages'>Custom error messages <a class='anchor' href='custom_hooks.html#custom-error-messages' title='Permalink'></a></h2>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5073">Introduced</a> in GitLab 8.10.</p>
+</blockquote>
+
+<p>If the commit is declined or an error occurs during the Git hook check,
+the STDERR or STDOUT message of the hook will be present in GitLab&#39;s UI.
+STDERR takes precedence over STDOUT.</p>
+
+<p><a target="_blank" href="img/custom_hooks_error_msg.png"><img src="img/custom_hooks_error_msg.png" title="" alt="Custom message from custom Git hook"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/custom_hooks.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

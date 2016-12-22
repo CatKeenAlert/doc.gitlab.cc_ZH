@@ -1,0 +1,557 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Upgrading PostgreSQL Using Slony - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Updating GitLab</a></li>
+            
+          
+          <li class="breadcrumb">Upgrading PostgreSQL Using Slony</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="upgrading_postgresql_using_slony.html#upgrading-postgresql-using-slony">Upgrading PostgreSQL Using Slony</a>
+<ul>
+<li>
+<a href="upgrading_postgresql_using_slony.html#database-dumps">Database Dumps</a>
+</li>
+<li>
+<a href="upgrading_postgresql_using_slony.html#installing-slony">Installing Slony</a>
+</li>
+<li>
+<a href="upgrading_postgresql_using_slony.html#slony-user">Slony User</a>
+</li>
+<li>
+<a href="upgrading_postgresql_using_slony.html#configuring-slony">Configuring Slony</a>
+</li>
+<li>
+<a href="upgrading_postgresql_using_slony.html#stopping-replication">Stopping Replication</a>
+</li>
+<li>
+<a href="upgrading_postgresql_using_slony.html#resetting-sequences">Resetting Sequences</a>
+</li>
+<li>
+<a href="upgrading_postgresql_using_slony.html#removing-slony">Removing Slony</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='upgrading-postgresql-using-slony'>Upgrading PostgreSQL Using Slony <a class='anchor' href='upgrading_postgresql_using_slony.html#upgrading-postgresql-using-slony' title='Permalink'></a></h1>
+<p>This guide describes the steps one can take to upgrade their PostgreSQL database
+to the latest version without the need for hours of downtime. This guide assumes
+you have two database servers: one database server running an older version of
+PostgreSQL (e.g. 9.2.18) and one server running a newer version (e.g. 9.6.0).</p>
+
+<p>For this process we&#39;ll use a PostgreSQL replication tool called
+<a href="http://www.slony.info/">&quot;Slony&quot;</a>. Slony allows replication between different
+PostgreSQL versions and as such can be used to upgrade a cluster with a minimal
+amount of downtime.</p>
+
+<p>In various places we&#39;ll refer to the user <code>gitlab-psql</code>. This user should be the
+user used to run the various PostgreSQL OS processes. If you&#39;re using a
+different user (e.g. <code>postgres</code>) you should replace <code>gitlab-psql</code> with the name
+of said user. This guide also assumes your database is called
+<code>gitlabhq_production</code>. If you happen to use a different database name you should
+change this accordingly.</p>
+<h2 id='database-dumps'>Database Dumps <a class='anchor' href='upgrading_postgresql_using_slony.html#database-dumps' title='Permalink'></a></h2>
+<p>Slony only replicates data and not any schema changes. As a result we must
+ensure that all databases have the same database structure.</p>
+
+<p>To do so we&#39;ll generate a dump of our current database. This dump will only
+contain the structure, not any data. To generate this dump run the following
+command on your active database server:</p>
+<pre class="highlight shell"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/pg_dump -h /var/opt/gitlab/postgresql -p 5432 -U gitlab-psql -s -f /tmp/structure.sql gitlabhq_production
+</code></pre>
+<p>If you&#39;re not using GitLab&#39;s Omnibus package you may have to adjust the paths to
+<code>pg_dump</code> and the PostgreSQL installation directory to match the paths of your
+configuration.</p>
+
+<p>Once the structure dump is generated we also need to generate a dump for the
+<code>schema_migrations</code> table. This table doesn&#39;t have any primary keys and as such
+can&#39;t be replicated easily by Slony. To generate this dump run the following
+command on your active database server:</p>
+<pre class="highlight shell"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/pg_dump -h /var/opt/gitlab/postgresql/ -p 5432 -U gitlab-psql -a -t schema_migrations -f /tmp/migrations.sql gitlabhq_production
+</code></pre>
+<p>Next we&#39;ll need to move these files somewhere accessible by the new database
+server. The easiest way is to simply download these files to your local system:</p>
+<pre class="highlight shell"><code>scp your-user@production-database-host:/tmp/<span class="k">*</span>.sql /tmp
+</code></pre>
+<p>This will copy all the SQL files located in <code>/tmp</code> to your local system&#39;s
+<code>/tmp</code> directory. Once copied you can safely remove the files from the database
+server.</p>
+<h2 id='installing-slony'>Installing Slony <a class='anchor' href='upgrading_postgresql_using_slony.html#installing-slony' title='Permalink'></a></h2>
+<p>Slony will be used to upgrade the database without requiring long downtimes.
+Slony can be downloaded from <a href="http://www.slony.info/">http://www.slony.info/</a>. If you have installed
+PostgreSQL using your operating system&#39;s package manager you may also be able to
+install Slony using said package manager.</p>
+
+<p>When compiling Slony from source you <em>must</em> use the following commands to do so:</p>
+<pre class="highlight shell"><code>./configure --prefix<span class="o">=</span>/path/to/installation/directory --with-perltools --with-pgconfigdir<span class="o">=</span>/path/to/directory/containing/pg_config/bin
+make
+make install
+</code></pre>
+<p>Omnibus users can use the following commands:</p>
+<pre class="highlight shell"><code>./configure --prefix<span class="o">=</span>/opt/gitlab/embedded --with-perltools --with-pgconfigdir<span class="o">=</span>/opt/gitlab/embedded/bin
+make
+make install
+</code></pre>
+<p>This assumes you have installed GitLab into /opt/gitlab.</p>
+
+<p>To test if Slony is installed properly, run the following commands:</p>
+<pre class="highlight shell"><code><span class="nb">test</span> -f /opt/gitlab/embedded/bin/slonik <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s1">'Slony installed'</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s1">'Slony not installed'</span>
+<span class="nb">test</span> -f /opt/gitlab/embedded/bin/slonik_init_cluster <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s1">'Slony Perl tools are available'</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s1">'Slony Perl tools are not available'</span>
+/opt/gitlab/embedded/bin/slonik -v
+</code></pre>
+<p>This assumes Slony was installed to <code>/opt/gitlab/embedded</code>. If Slony was
+installed properly the output of these commands will be (the mentioned &quot;slonik&quot;
+version may be different):</p>
+<pre class="highlight plaintext"><code>Slony installed
+Slony Perl tools are available
+slonik version 2.2.5
+</code></pre><h2 id='slony-user'>Slony User <a class='anchor' href='upgrading_postgresql_using_slony.html#slony-user' title='Permalink'></a></h2>
+<p>Next we must set up a PostgreSQL user that Slony can use to replicate your
+database. To do so, log in to your production database using <code>psql</code> using a
+super user account. Once done run the following SQL queries:</p>
+<pre class="highlight sql"><code><span class="k">CREATE</span> <span class="k">ROLE</span> <span class="n">slony</span> <span class="k">WITH</span> <span class="n">SUPERUSER</span> <span class="n">LOGIN</span> <span class="n">REPLICATION</span> <span class="k">ENCRYPTED</span> <span class="n">PASSWORD</span> <span class="s1">'password string here'</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">ROLE</span> <span class="n">slony</span> <span class="k">SET</span> <span class="n">statement_timeout</span> <span class="k">TO</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre>
+<p>Make sure you replace &quot;password string here&quot; with the actual password for the
+user. A password is <em>required</em>. This user must be created on <em>both</em> the old and
+new database server using the same password.</p>
+
+<p>Once the user has been created make sure you note down the password as we will
+need it later on.</p>
+<h2 id='configuring-slony'>Configuring Slony <a class='anchor' href='upgrading_postgresql_using_slony.html#configuring-slony' title='Permalink'></a></h2>
+<p>Now we can finally start configuring Slony. Slony uses a configuration file for
+most of the work so we&#39;ll need to set this one up. This configuration file
+specifies where to put log files, how Slony should connect to the databases,
+etc.</p>
+
+<p>First we&#39;ll need to create some required directories and set the correct
+permissions. To do so, run the following commands on both the old and new
+database server:</p>
+<pre class="highlight shell"><code>sudo mkdir -p /var/log/gitlab/slony /var/run/slony1 /var/opt/gitlab/postgresql/slony
+sudo chown gitlab-psql:root /var/log/gitlab/slony /var/run/slony1 /var/opt/gitlab/postgresql/slony
+</code></pre>
+<p>Here <code>gitlab-psql</code> is the user used to run the PostgreSQL database processes. If
+you&#39;re using a different user you should replace this with the name of said
+user.</p>
+
+<p>Now that the directories are in place we can create the configuration file. For
+this we can use the following template:</p>
+<pre class="highlight perl"><code><span class="k">if</span> <span class="p">(</span><span class="nv">$ENV</span><span class="p">{</span><span class="s">"SLONYNODES"</span><span class="p">})</span> <span class="p">{</span>
+    <span class="nb">require</span> <span class="nv">$ENV</span><span class="p">{</span><span class="s">"SLONYNODES"</span><span class="p">};</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nv">$CLUSTER_NAME</span> <span class="o">=</span> <span class="s">'slony_replication'</span><span class="p">;</span>
+    <span class="nv">$LOGDIR</span> <span class="o">=</span> <span class="s">'/var/log/gitlab/slony'</span><span class="p">;</span>
+    <span class="nv">$MASTERNODE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nv">$DEBUGLEVEL</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="nv">add_node</span><span class="p">(</span><span class="nv">host</span> <span class="o">=&gt;</span> <span class="s">'OLD_HOST'</span><span class="p">,</span> <span class="nv">dbname</span> <span class="o">=&gt;</span> <span class="s">'gitlabhq_production'</span><span class="p">,</span> <span class="nv">port</span> <span class="o">=&gt;</span><span class="mi">5432</span><span class="p">,</span>
+        <span class="nv">user</span><span class="o">=&gt;</span><span class="s">'slony'</span><span class="p">,</span> <span class="nv">password</span><span class="o">=&gt;</span><span class="s">'SLONY_PASSWORD'</span><span class="p">,</span> <span class="nv">node</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="nv">add_node</span><span class="p">(</span><span class="nv">host</span> <span class="o">=&gt;</span> <span class="s">'NEW_HOST'</span><span class="p">,</span> <span class="nv">dbname</span> <span class="o">=&gt;</span> <span class="s">'gitlabhq_production'</span><span class="p">,</span> <span class="nv">port</span> <span class="o">=&gt;</span><span class="mi">5432</span><span class="p">,</span>
+        <span class="nv">user</span><span class="o">=&gt;</span><span class="s">'slony'</span><span class="p">,</span> <span class="nv">password</span><span class="o">=&gt;</span><span class="s">'SLONY_PASSWORD'</span><span class="p">,</span> <span class="nv">node</span><span class="o">=&gt;</span><span class="mi">2</span><span class="p">,</span> <span class="nv">parent</span><span class="o">=&gt;</span><span class="mi">1</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nv">$SLONY_SETS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"set1"</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="s">"set_id"</span>       <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s">"table_id"</span>     <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s">"sequence_id"</span>  <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s">"pkeyedtables"</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="nv">TABLES</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">};</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$ENV</span><span class="p">{</span><span class="s">"SLONYSET"</span><span class="p">})</span> <span class="p">{</span>
+    <span class="nb">require</span> <span class="nv">$ENV</span><span class="p">{</span><span class="s">"SLONYSET"</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1"># Please do not add or change anything below this point.</span>
+<span class="mi">1</span><span class="p">;</span>
+</code></pre>
+<p>In this configuration file you should replace a few placeholders before you can
+use it. The following placeholders should be replaced:</p>
+
+<ul>
+<li><code>OLD_HOST</code>: the address of the old database server.</li>
+<li><code>NEW_HOST</code>: the address of the new database server.</li>
+<li><code>SLONY_PASSWORD</code>: the password of the Slony user created earlier.</li>
+<li><code>TABLES</code>: the tables to replicate.</li>
+</ul>
+
+<p>The list of tables to replicate can be generated by running the following
+command on your old PostgreSQL database:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-psql gitlabhq_production -c "select concat('\"', schemaname, '.', tablename, '\",') from pg_catalog.pg_tables where schemaname = 'public' and tableowner = 'gitlab' and tablename != 'schema_migrations' order by tablename asc;" -t
+</code></pre>
+<p>If you&#39;re not using Omnibus you should replace <code>gitlab-psql</code> with the
+appropriate path to the <code>psql</code> executable.</p>
+
+<p>The above command outputs a list of tables in a format that can be copy-pasted
+directly into the above configuration file. Make sure to <em>replace</em> <code>TABLES</code> with
+this output, don&#39;t just append it below it. Once done you&#39;ll end up with
+something like this:</p>
+<pre class="highlight perl"><code><span class="s">"pkeyedtables"</span> <span class="o">=&gt;</span> <span class="p">[</span>
+    <span class="s">"public.abuse_reports"</span><span class="p">,</span>
+    <span class="s">"public.appearances"</span><span class="p">,</span>
+    <span class="s">"public.application_settings"</span><span class="p">,</span>
+    <span class="o">...</span> <span class="nv">more</span> <span class="nv">rows</span> <span class="nv">here</span> <span class="o">...</span>
+<span class="p">]</span>
+</code></pre>
+<p>Once you have the configuration file generated you must install it on both the
+old and new database. To do so, place it in
+<code>/var/opt/gitlab/postgresql/slony/slon_tools.conf</code> (for which we created the
+directory earlier on).</p>
+
+<p>Now that the configuration file is in place we can <em>finally</em> start replicating
+our database. First we must set up the schema in our new database. To do so make
+sure that the SQL files we generated earlier can be found in the <code>/tmp</code>
+directory of the new server. Once these files are in place start a <code>psql</code>
+session on this server:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-psql gitlabhq_production
+</code></pre>
+<p>Now run the following commands:</p>
+<pre class="highlight plaintext"><code>\i /tmp/structure.sql
+\i /tmp/migrations.sql
+</code></pre>
+<p>To verify if the structure is in place close the session, start it again, then
+run <code>\d</code>. If all went well you should see output along the lines of the
+following:</p>
+<pre class="highlight plaintext"><code>                               List of relations
+ Schema |                    Name                     |   Type   |    Owner
+--------+---------------------------------------------+----------+-------------
+ public | abuse_reports                               | table    | gitlab
+ public | abuse_reports_id_seq                        | sequence | gitlab
+ public | appearances                                 | table    | gitlab
+ public | appearances_id_seq                          | sequence | gitlab
+ public | application_settings                        | table    | gitlab
+ public | application_settings_id_seq                 | sequence | gitlab
+ public | approvals                                   | table    | gitlab
+ ... more rows here ...
+</code></pre>
+<p>Now we can initialize the required tables and what not that Slony will use for
+its replication process. To do so, run the following on the old database:</p>
+<pre class="highlight plaintext"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/slonik_init_cluster --conf /var/opt/gitlab/postgresql/slony/slon_tools.conf | /opt/gitlab/embedded/bin/slonik
+</code></pre>
+<p>If all went well this will produce something along the lines of:</p>
+<pre class="highlight plaintext"><code>&lt;stdin&gt;:10: Set up replication nodes
+&lt;stdin&gt;:13: Next: configure paths for each node/origin
+&lt;stdin&gt;:16: Replication nodes prepared
+&lt;stdin&gt;:17: Please start a slon replication daemon for each node
+</code></pre>
+<p>Next we need to start a replication node on every server. To do so, run the
+following on the old database:</p>
+<pre class="highlight plaintext"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/slon_start 1 --conf /var/opt/gitlab/postgresql/slony/slon_tools.conf
+</code></pre>
+<p>If all went well this will produce output such as:</p>
+<pre class="highlight plaintext"><code>Invoke slon for node 1 - /opt/gitlab/embedded/bin/slon -p /var/run/slony1/slony_replication_node1.pid -s 1000 -d2  slony_replication 'host=192.168.0.7 dbname=gitlabhq_production user=slony port=5432 password=hieng8ezohHuCeiqu0leeghai4aeyahp' &gt; /var/log/gitlab/slony/node1/gitlabhq_production-2016-10-06.log 2&gt;&amp;1 &amp;
+Slon successfully started for cluster slony_replication, node node1
+PID [26740]
+Start the watchdog process as well...
+</code></pre>
+<p>Next we need to run the following command on the <em>new</em> database server:</p>
+<pre class="highlight plaintext"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/slon_start 2 --conf /var/opt/gitlab/postgresql/slony/slon_tools.conf
+</code></pre>
+<p>This will produce similar output if all went well.</p>
+
+<p>Next we need to tell the new database server what it should replicate. This can
+be done by running the following command on the <em>new</em> database server:</p>
+<pre class="highlight plaintext"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/slonik_create_set 1 --conf /var/opt/gitlab/postgresql/slony/slon_tools.conf | /opt/gitlab/embedded/bin/slonik
+</code></pre>
+<p>This should produce output along the lines of the following:</p>
+<pre class="highlight plaintext"><code>&lt;stdin&gt;:11: Subscription set 1 (set1) created
+&lt;stdin&gt;:12: Adding tables to the subscription set
+&lt;stdin&gt;:16: Add primary keyed table public.abuse_reports
+&lt;stdin&gt;:20: Add primary keyed table public.appearances
+&lt;stdin&gt;:24: Add primary keyed table public.application_settings
+... more rows here ...
+&lt;stdin&gt;:327: Adding sequences to the subscription set
+&lt;stdin&gt;:328: All tables added
+</code></pre>
+<p>Finally we can start the replication process by running the following on the
+<em>new</em> database server:</p>
+<pre class="highlight plaintext"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/slonik_subscribe_set 1 2 --conf /var/opt/gitlab/postgresql/slony/slon_tools.conf | /opt/gitlab/embedded/bin/slonik
+</code></pre>
+<p>This should produce the following output:</p>
+<pre class="highlight plaintext"><code>&lt;stdin&gt;:6: Subscribed nodes to set 1
+</code></pre>
+<p>At this point the new database server will start replicating the data of the old
+database server. This process can take anywhere from a few minutes to hours, if
+not days. Unfortunately Slony itself doesn&#39;t really provide a way of knowing
+when the two databases are in sync. To get an estimate of the progress you can
+use the following shell script:</p>
+<pre class="highlight shell"><code><span class="c">#!/usr/bin/env bash</span>
+
+<span class="nb">set</span> -e
+
+<span class="nv">user</span><span class="o">=</span><span class="s1">'slony'</span>
+<span class="nv">pass</span><span class="o">=</span><span class="s1">'SLONY_PASSWORD'</span>
+
+<span class="k">function </span>main <span class="o">{</span>
+    <span class="k">while</span> :
+    <span class="k">do
+        </span><span class="nb">local source
+        local </span>target
+
+        <span class="nb">source</span><span class="o">=</span><span class="k">$(</span><span class="nv">PGUSER</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">user</span><span class="k">}</span><span class="s2">"</span> <span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">pass</span><span class="k">}</span><span class="s2">"</span> /opt/gitlab/embedded/bin/psql -h OLD_HOST gitlabhq_production -c <span class="s2">"select pg_size_pretty(pg_database_size('gitlabhq_production'));"</span> -t -A<span class="k">)</span>
+        <span class="nv">target</span><span class="o">=</span><span class="k">$(</span><span class="nv">PGUSER</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">user</span><span class="k">}</span><span class="s2">"</span> <span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">pass</span><span class="k">}</span><span class="s2">"</span> /opt/gitlab/embedded/bin/psql -h NEW_HOST gitlabhq_production -c <span class="s2">"select pg_size_pretty(pg_database_size('gitlabhq_production'));"</span> -t -A<span class="k">)</span>
+
+        <span class="nb">echo</span> <span class="s2">"</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">: </span><span class="k">${</span><span class="nv">target</span><span class="k">}</span><span class="s2"> of </span><span class="k">${</span><span class="nv">source</span><span class="k">}</span><span class="s2">"</span> &gt;&gt; progress.log
+        <span class="nb">echo</span> <span class="s2">"</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">: </span><span class="k">${</span><span class="nv">target</span><span class="k">}</span><span class="s2"> of </span><span class="k">${</span><span class="nv">source</span><span class="k">}</span><span class="s2">"</span>
+
+        sleep 60
+    <span class="k">done</span>
+<span class="o">}</span>
+
+main
+</code></pre>
+<p>This script will compare the sizes of the old and new database every minute and
+print the result to STDOUT as well as logging it to a file. Make sure to replace
+<code>SLONY_PASSWORD</code>, <code>OLD_HOST</code>, and <code>NEW_HOST</code> with the correct values.</p>
+<h2 id='stopping-replication'>Stopping Replication <a class='anchor' href='upgrading_postgresql_using_slony.html#stopping-replication' title='Permalink'></a></h2>
+<p>At some point the two databases are in sync. Once this is the case you&#39;ll need
+to plan for a few minutes of downtime. This small downtime window is used to
+stop the replication process, remove any Slony data from both databases, restart
+GitLab so it can use the new database, etc.</p>
+
+<p>First, let&#39;s stop all of GitLab. Omnibus users can do so by running the
+following on their GitLab server(s):</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+sudo gitlab-ctl stop mailroom
+</code></pre>
+<p>If you have any other processes that use PostgreSQL you should also stop those.</p>
+
+<p>Once everything has been stopped you should update any configuration settings,
+DNS records, etc so they all point to the new database.</p>
+
+<p>Once the settings have been taken care of we need to stop the replication
+process. It&#39;s crucial that no new data is written to the databases at this point
+as this data will be lost.</p>
+
+<p>To stop replication, run the following on both database servers:</p>
+<pre class="highlight shell"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/slon_kill --conf /var/opt/gitlab/postgresql/slony/slon_tools.conf
+</code></pre>
+<p>This will stop all the Slony processes on the host the command was executed on.</p>
+<h2 id='resetting-sequences'>Resetting Sequences <a class='anchor' href='upgrading_postgresql_using_slony.html#resetting-sequences' title='Permalink'></a></h2>
+<p>The above setup does not replicate database sequences, as such these must be
+reset manually in the target database. You can use the following script for
+this:</p>
+<pre class="highlight shell"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="nb">set</span> -e
+
+<span class="k">function </span>main <span class="o">{</span>
+    <span class="nb">local </span>fix_sequences
+    <span class="nb">local </span>fix_owners
+
+    <span class="nv">fix_sequences</span><span class="o">=</span><span class="s1">'/tmp/fix_sequences.sql'</span>
+    <span class="nv">fix_owners</span><span class="o">=</span><span class="s1">'/tmp/fix_owners.sql'</span>
+
+    <span class="c"># The SQL queries were taken from</span>
+    <span class="c"># https://wiki.postgresql.org/wiki/Fixing_Sequences</span>
+    sudo gitlab-psql gitlabhq_production -t -c <span class="s2">"
+    SELECT 'ALTER SEQUENCE '|| quote_ident(MIN(schema_name)) ||'.'|| quote_ident(MIN(seq_name))
+           ||' OWNED BY '|| quote_ident(MIN(TABLE_NAME)) ||'.'|| quote_ident(MIN(column_name)) ||';'
+    FROM (
+        SELECT
+            n.nspname AS schema_name,
+            c.relname AS TABLE_NAME,
+            a.attname AS column_name,
+            SUBSTRING(d.adsrc FROM E'^nextval</span><span class="se">\\</span><span class="s2">(''([^'']*)''(?:::text|::regclass)?</span><span class="se">\\</span><span class="s2">)') AS seq_name
+        FROM pg_class c
+        JOIN pg_attribute a ON (c.oid=a.attrelid)
+        JOIN pg_attrdef d ON (a.attrelid=d.adrelid AND a.attnum=d.adnum)
+        JOIN pg_namespace n ON (c.relnamespace=n.oid)
+        WHERE has_schema_privilege(n.oid,'USAGE')
+          AND n.nspname NOT LIKE 'pg!_%' escape '!'
+          AND has_table_privilege(c.oid,'SELECT')
+          AND (NOT a.attisdropped)
+          AND d.adsrc ~ '^nextval'
+    ) seq
+    GROUP BY seq_name HAVING COUNT(*)=1;
+    "</span> &gt; <span class="s2">"</span><span class="k">${</span><span class="nv">fix_owners</span><span class="k">}</span><span class="s2">"</span>
+
+    sudo gitlab-psql gitlabhq_production -t -c <span class="s2">"
+    SELECT 'SELECT SETVAL(' ||
+           quote_literal(quote_ident(PGT.schemaname) || '.' || quote_ident(S.relname)) ||
+           ', COALESCE(MAX(' ||quote_ident(C.attname)|| '), 1) ) FROM ' ||
+           quote_ident(PGT.schemaname)|| '.'||quote_ident(T.relname)|| ';'
+    FROM pg_class AS S,
+         pg_depend AS D,
+         pg_class AS T,
+         pg_attribute AS C,
+         pg_tables AS PGT
+    WHERE S.relkind = 'S'
+        AND S.oid = D.objid
+        AND D.refobjid = T.oid
+        AND D.refobjid = C.attrelid
+        AND D.refobjsubid = C.attnum
+        AND T.relname = PGT.tablename
+    ORDER BY S.relname;
+    "</span> &gt; <span class="s2">"</span><span class="k">${</span><span class="nv">fix_sequences</span><span class="k">}</span><span class="s2">"</span>
+
+    sudo gitlab-psql gitlabhq_production -f <span class="s2">"</span><span class="k">${</span><span class="nv">fix_owners</span><span class="k">}</span><span class="s2">"</span>
+    sudo gitlab-psql gitlabhq_production -f <span class="s2">"</span><span class="k">${</span><span class="nv">fix_sequences</span><span class="k">}</span><span class="s2">"</span>
+
+    rm <span class="s2">"</span><span class="k">${</span><span class="nv">fix_owners</span><span class="k">}</span><span class="s2">"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">fix_sequences</span><span class="k">}</span><span class="s2">"</span>
+<span class="o">}</span>
+
+main
+</code></pre>
+<p>Upload this script to the <em>target</em> server and execute it as follows:</p>
+<pre class="highlight shell"><code>bash path/to/the/script/above.sh
+</code></pre>
+<p>This will correct the ownership of sequences and reset the next value for the
+<code>id</code> column to the next available value.</p>
+<h2 id='removing-slony'>Removing Slony <a class='anchor' href='upgrading_postgresql_using_slony.html#removing-slony' title='Permalink'></a></h2>
+<p>Next we need to remove all Slony related data. To do so, run the following
+command on the <em>target</em> server:</p>
+<pre class="highlight shell"><code>sudo gitlab-psql gitlabhq_production -c <span class="s2">"DROP SCHEMA _slony_replication CASCADE;"</span>
+</code></pre>
+<p>Once done you can safely remove any Slony related files (e.g. the log
+directory), and uninstall Slony if desired. At this point you can start your
+GitLab instance again and if all went well it should be using your new database
+server.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/update/upgrading_postgresql_using_slony.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

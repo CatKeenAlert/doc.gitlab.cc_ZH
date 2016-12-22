@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Post Deployment Migrations - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Post Deployment Migrations</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="post_deployment_migrations.html#post-deployment-migrations">Post Deployment Migrations</a>
+<ul>
+<li>
+<a href="post_deployment_migrations.html#deployment-integration">Deployment Integration</a>
+</li>
+<li>
+<a href="post_deployment_migrations.html#creating-migrations">Creating Migrations</a>
+</li>
+<li>
+<a href="post_deployment_migrations.html#use-cases">Use Cases</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='post-deployment-migrations'>Post Deployment Migrations <a class='anchor' href='post_deployment_migrations.html#post-deployment-migrations' title='Permalink'></a></h1>
+<p>Post deployment migrations are regular Rails migrations that can optionally be
+executed after a deployment. By default these migrations are executed alongside
+the other migrations. To skip these migrations you will have to set the
+environment variable <code>SKIP_POST_DEPLOYMENT_MIGRATIONS</code> to a non-empty value
+when running <code>rake db:migrate</code>.</p>
+
+<p>For example, this would run all migrations including any post deployment
+migrations:</p>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>rake db:migrate
+</code></pre>
+<p>This however will skip post deployment migrations:</p>
+<pre class="highlight shell"><code><span class="nv">SKIP_POST_DEPLOYMENT_MIGRATIONS</span><span class="o">=</span><span class="nb">true </span>bundle <span class="nb">exec </span>rake db:migrate
+</code></pre><h2 id='deployment-integration'>Deployment Integration <a class='anchor' href='post_deployment_migrations.html#deployment-integration' title='Permalink'></a></h2>
+<p>Say you&#39;re using Chef for deploying new versions of GitLab and you&#39;d like to run
+post deployment migrations after deploying a new version. Let&#39;s assume you
+normally use the command <code>chef-client</code> to do so. To make use of this feature
+you&#39;d have to run this command as follows:</p>
+<pre class="highlight shell"><code><span class="nv">SKIP_POST_DEPLOYMENT_MIGRATIONS</span><span class="o">=</span><span class="nb">true </span>sudo chef-client
+</code></pre>
+<p>Once all servers have been updated you can run <code>chef-client</code> again on a single
+server <em>without</em> the environment variable.</p>
+
+<p>The process is similar for other deployment techniques: first you would deploy
+with the environment variable set, then you&#39;ll essentially re-deploy a single
+server but with the variable <em>unset</em>.</p>
+<h2 id='creating-migrations'>Creating Migrations <a class='anchor' href='post_deployment_migrations.html#creating-migrations' title='Permalink'></a></h2>
+<p>To create a post deployment migration you can use the following Rails generator:</p>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>rails g post_deployment_migration migration_name_here
+</code></pre>
+<p>This will generate the migration file in <code>db/post_migrate</code>. These migrations
+behave exactly like regular Rails migrations.</p>
+<h2 id='use-cases'>Use Cases <a class='anchor' href='post_deployment_migrations.html#use-cases' title='Permalink'></a></h2>
+<p>Post deployment migrations can be used to perform migrations that mutate state
+that an existing version of GitLab depends on. For example, say you want to
+remove a column from a table. This requires downtime as a GitLab instance
+depends on this column being present while it&#39;s running. Normally you&#39;d follow
+these steps in such a case:</p>
+
+<ol>
+<li>Stop the GitLab instance</li>
+<li>Run the migration removing the column</li>
+<li>Start the GitLab instance again</li>
+</ol>
+
+<p>Using post deployment migrations we can instead follow these steps:</p>
+
+<ol>
+<li>Deploy a new version of GitLab while ignoring post deployment migrations</li>
+<li>Re-run <code>rake db:migrate</code> but without the environment variable set</li>
+</ol>
+
+<p>Here we don&#39;t need any downtime as the migration takes place <em>after</em> a new
+version (which doesn&#39;t depend on the column anymore) has been deployed.</p>
+
+<p>Some other examples where these migrations are useful:</p>
+
+<ul>
+<li>Cleaning up data generated due to a bug in GitLab</li>
+<li>Removing tables</li>
+<li>Migrating jobs from one Sidekiq queue to another</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/post_deployment_migrations.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

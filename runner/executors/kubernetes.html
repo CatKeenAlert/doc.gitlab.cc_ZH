@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>The Kubernetes executor (**EXPERIMENTAL**) - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Executors</a></li>
+            
+          
+          <li class="breadcrumb">The Kubernetes executor (**EXPERIMENTAL**)</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="kubernetes.html#the-kubernetes-executor-experimental">The Kubernetes executor (<strong>EXPERIMENTAL</strong>)</a>
+<ul>
+<li>
+<a href="kubernetes.html#workflow">Workflow</a>
+</li>
+<li>
+<a href="kubernetes.html#connecting-to-the-kubernetes-api">Connecting to the Kubernetes API</a>
+</li>
+<li>
+<a href="kubernetes.html#the-keywords">The keywords</a>
+</li>
+<li>
+<a href="kubernetes.html#define-keywords-in-the-config-toml">Define keywords in the config toml</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='the-kubernetes-executor-experimental'>The Kubernetes executor (<strong>EXPERIMENTAL</strong>) <a class='anchor' href='kubernetes.html#the-kubernetes-executor-experimental' title='Permalink'></a></h1>
+<p>GitLab Runner can use Kubernetes to run builds on a kubernetes cluster. This is
+possible with the use of the <strong>Kubernetes</strong> executor.</p>
+
+<p>The <strong>Kubernetes</strong> executor, when used with GitLab CI, connects to the Kubernetes
+API in the cluster creating a Pod for each GitLab CI Job. This Pod is made
+up of, at the very least, a build container, there will
+then be additional containers, one for each <code>service</code> defined by the GitLab CI
+yaml. The names for these containers are as follows:</p>
+
+<ul>
+<li>The build container is <code>build</code></li>
+<li>The services containers are <code>svc-X</code> where <code>X</code> is <code>[0-9]+</code></li>
+</ul>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='workflow'>Workflow <a class='anchor' href='kubernetes.html#workflow' title='Permalink'></a></h2>
+<p>The Kubernetes executor divides the build into multiple steps:</p>
+
+<ol>
+<li><strong>Prepare</strong>: Create the Pod against the Kubernetes Cluster.
+This creates the containers required for the build and services to run.</li>
+<li><strong>Pre-build</strong>: Clone, restore cache and download artifacts from previous
+stages.
+User provided image needs to have <code>git</code> installed.</li>
+<li><strong>Build</strong>: User build.</li>
+<li><strong>Post-build</strong>: Create cache, upload artifacts to GitLab.</li>
+</ol>
+
+<p>All stages are run on user provided image. 
+This image needs to have <code>git</code> installed and optionally
+GitLab Runner binary installed for supporting artifacts and caching.</p>
+<h2 id='connecting-to-the-kubernetes-api'>Connecting to the Kubernetes API <a class='anchor' href='kubernetes.html#connecting-to-the-kubernetes-api' title='Permalink'></a></h2>
+<p>The following options are provided, which allow you to connect to the Kubernetes API:</p>
+
+<ul>
+<li><code>host</code>: Optional Kubernetes master host URL (auto-discovery attempted if not specified)</li>
+<li><code>cert_file</code>: Optional Kubernetes master auth certificate</li>
+<li><code>key_file</code>: Optional Kubernetes master auth private key</li>
+<li><code>ca_file</code>: Optional Kubernetes master auth ca certificate</li>
+</ul>
+
+<p>If you are running the GitLab CI Runner within the Kubernetes cluster you can omit
+all of the above fields to have the Runner auto-discovery the Kubernetes API. This
+is the recommended approach.</p>
+
+<p>If you are running it externally to the Cluster then you will need to set each
+of these keywords and make sure that the Runner has access to the Kubernetes API
+on the cluster.</p>
+<h2 id='the-keywords'>The keywords <a class='anchor' href='kubernetes.html#the-keywords' title='Permalink'></a></h2>
+<p>The following keywords help to define the behaviour of the Runner within kubernetes:</p>
+
+<ul>
+<li><code>namespace</code>: Namespace to run Kubernetes Pods in</li>
+<li><code>privileged</code>: Run containers with the privileged flag</li>
+<li><code>cpus</code>: The CPU allocation given to build containers</li>
+<li><code>memory</code>: The amount of memory allocated to build containers</li>
+<li><code>service_cpus</code>: The CPU allocation given to build service containers</li>
+<li><code>service_memory</code>: The amount of memory allocated to build service containers</li>
+<li><code>pull_policy</code>: specify the image pull policy: never, if-not-present, always. The cluster default will be used if not set.</li>
+</ul>
+<h2 id='define-keywords-in-the-config-toml'>Define keywords in the config toml <a class='anchor' href='kubernetes.html#define-keywords-in-the-config-toml' title='Permalink'></a></h2>
+<p>Each of the keywords can be defined in the <code>config.toml</code> for the gitlab runner.</p>
+
+<p>Here is an example <code>config.toml</code>:</p>
+<pre class="highlight toml"><code><span class="py">concurrent</span> <span class="p">=</span> <span class="mi">4</span>
+
+<span class="nn">[[runners]]</span>
+  <span class="py">name</span> <span class="p">=</span> <span class="s">"Kubernetes Runner"</span>
+  <span class="py">url</span> <span class="p">=</span> <span class="s">"https://gitlab.com/ci"</span>
+  <span class="py">token</span> <span class="p">=</span> <span class="s">"......"</span>
+  <span class="py">executor</span> <span class="p">=</span> <span class="s">"kubernetes"</span>
+  <span class="nn">[runners.kubernetes]</span>
+    <span class="py">host</span> <span class="p">=</span> <span class="s">"https://45.67.34.123:4892"</span>
+    <span class="py">cert_file</span> <span class="p">=</span> <span class="s">"/etc/ssl/kubernetes/api.crt"</span>
+    <span class="py">key_file</span> <span class="p">=</span> <span class="s">"/etc/ssl/kubernetes/api.key"</span>
+    <span class="py">ca_file</span> <span class="p">=</span> <span class="s">"/etc/ssl/kubernetes/ca.crt"</span>
+    <span class="py">namespace</span> <span class="p">=</span> <span class="s">"gitlab"</span>
+    <span class="py">privileged</span> <span class="p">=</span> <span class="kc">true</span>
+    <span class="py">cpus</span> <span class="p">=</span> <span class="s">"750m"</span>
+    <span class="py">memory</span> <span class="p">=</span> <span class="s">"250m"</span>
+    <span class="py">service_cpus</span> <span class="p">=</span> <span class="s">"1000m"</span>
+    <span class="py">service_memory</span> <span class="p">=</span> <span class="s">"450m"</span>
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/executors/kubernetes.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

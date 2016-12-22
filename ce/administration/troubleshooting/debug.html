@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Debugging Tips - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Debugging Tips</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="debug.html#debugging-tips">Debugging Tips</a>
+<ul>
+<li>
+<a href="debug.html#mail-not-working">Mail not working</a>
+</li>
+<li>
+<a href="debug.html#advanced-issues">Advanced Issues</a>
+<ul>
+<li>
+<a href="debug.html#the-gnu-project-debugger-gdb">The GNU Project Debugger (gdb)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="debug.html#common-problems">Common Problems</a>
+<ul>
+<li>
+<a href="debug.html#502-gateway-timeout-after-unicorn-spins-at-100-cpu">502 Gateway Timeout after unicorn spins at 100% CPU</a>
+<ul>
+<li>
+<a href="debug.html#troubleshooting-without-affecting-other-users">Troubleshooting without affecting other users</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="debug.html#more-information">More information</a>
+</li>
+</ul>
+<h1 id='debugging-tips'>Debugging Tips <a class='anchor' href='debug.html#debugging-tips' title='Permalink'></a></h1>
+<p>Sometimes things don&#39;t work the way they should. Here are some tips on debugging issues out
+in production.</p>
+<h2 id='mail-not-working'>Mail not working <a class='anchor' href='debug.html#mail-not-working' title='Permalink'></a></h2>
+<p>A common problem is that mails are not being sent for some reason. Suppose you configured
+an SMTP server, but you&#39;re not seeing mail delivered. Here&#39;s how to check the settings:</p>
+
+<ol>
+<li><p>Run a Rails console:</p>
+<pre class="highlight shell"><code>sudo gitlab-rails console production
+</code></pre>
+<p>or for source installs:</p>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>rails console production
+</code></pre></li>
+<li><p>Look at the ActionMailer <code>delivery_method</code> to make sure it matches what you
+intended. If you configured SMTP, it should say <code>:smtp</code>. If you&#39;re using
+Sendmail, it should say <code>:sendmail</code>:</p>
+<pre class="highlight ruby"><code><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">delivery_method</span>
+<span class="o">=&gt;</span> <span class="ss">:smtp</span>
+</code></pre></li>
+<li><p>If you&#39;re using SMTP, check the mail settings:</p>
+<pre class="highlight ruby"><code><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">002</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">smtp_settings</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:address</span><span class="o">=&gt;</span><span class="s2">"localhost"</span><span class="p">,</span> <span class="ss">:port</span><span class="o">=&gt;</span><span class="mi">25</span><span class="p">,</span> <span class="ss">:domain</span><span class="o">=&gt;</span><span class="s2">"localhost.localdomain"</span><span class="p">,</span> <span class="ss">:user_name</span><span class="o">=&gt;</span><span class="kp">nil</span><span class="p">,</span> <span class="ss">:password</span><span class="o">=&gt;</span><span class="kp">nil</span><span class="p">,</span> <span class="ss">:authentication</span><span class="o">=&gt;</span><span class="kp">nil</span><span class="p">,</span> <span class="ss">:enable_starttls_auto</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">}</span><span class="sb">```
+</span></code></pre>
+<p>In the example above, the SMTP server is configured for the local machine. If this is intended, you may need to check your local mail
+logs (e.g. <code>/var/log/mail.log</code>) for more details.</p></li>
+<li><p>Send a test message via the console.</p>
+<pre class="highlight ruby"><code><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">003</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Notify</span><span class="p">.</span><span class="nf">test_email</span><span class="p">(</span><span class="s1">'youremail@email.com'</span><span class="p">,</span> <span class="s1">'Hello World'</span><span class="p">,</span> <span class="s1">'This is a test message'</span><span class="p">).</span><span class="nf">deliver_now</span>
+</code></pre>
+<p>If you do not receive an e-mail and/or see an error message, then check
+your mail server settings.</p></li>
+</ol>
+<h2 id='advanced-issues'>Advanced Issues <a class='anchor' href='debug.html#advanced-issues' title='Permalink'></a></h2>
+<p>For more advanced issues, <code>gdb</code> is a must-have tool for debugging issues.</p>
+<h3 id='the-gnu-project-debugger-gdb'>The GNU Project Debugger (gdb) <a class='anchor' href='debug.html#the-gnu-project-debugger-gdb' title='Permalink'></a></h3>
+<p>To install on Ubuntu/Debian:</p>
+<pre class="highlight plaintext"><code>sudo apt-get install gdb
+</code></pre>
+<p>On CentOS:</p>
+<pre class="highlight plaintext"><code>sudo yum install gdb
+</code></pre><h2 id='common-problems'>Common Problems <a class='anchor' href='debug.html#common-problems' title='Permalink'></a></h2>
+<p>Many of the tips to diagnose issues below apply to many different situations. We&#39;ll use one
+concrete example to illustrate what you can do to learn what is going wrong.</p>
+<h3 id='502-gateway-timeout-after-unicorn-spins-at-100-cpu'>502 Gateway Timeout after unicorn spins at 100% CPU <a class='anchor' href='debug.html#502-gateway-timeout-after-unicorn-spins-at-100-cpu' title='Permalink'></a></h3>
+<p>This error occurs when the Web server times out (default: 60 s) after not
+hearing back from the unicorn worker. If the CPU spins to 100% while this in
+progress, there may be something taking longer than it should.</p>
+
+<p>To fix this issue, we first need to figure out what is happening. The
+following tips are only recommended if you do NOT mind users being affected by
+downtime. Otherwise skip to the next section.</p>
+
+<ol>
+<li>Load the problematic URL</li>
+<li>Run <code>sudo gdb -p &lt;PID&gt;</code> to attach to the unicorn process.</li>
+<li><p>In the gdb window, type:</p>
+<pre class="highlight plaintext"><code>call (void) rb_backtrace()
+</code></pre></li>
+<li><p>This forces the process to generate a Ruby backtrace. Check
+<code>/var/log/gitlab/unicorn/unicorn_stderr.log</code> for the backtace. For example, you may see:</p>
+<pre class="highlight ruby"><code><span class="n">from</span> <span class="sr">/opt/</span><span class="n">gitlab</span><span class="o">/</span><span class="n">embedded</span><span class="o">/</span><span class="n">service</span><span class="o">/</span><span class="n">gitlab</span><span class="o">-</span><span class="n">rails</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">gitlab</span><span class="o">/</span><span class="n">metrics</span><span class="o">/</span><span class="n">sampler</span><span class="p">.</span><span class="nf">rb</span><span class="p">:</span><span class="mi">33</span><span class="ss">:in</span> <span class="sb">`block in start'
+from /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/metrics/sampler.rb:33:in `</span><span class="kp">loop</span><span class="s1">'
+from /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/metrics/sampler.rb:36:in `block (2 levels) in start'</span>
+<span class="n">from</span> <span class="sr">/opt/</span><span class="n">gitlab</span><span class="o">/</span><span class="n">embedded</span><span class="o">/</span><span class="n">service</span><span class="o">/</span><span class="n">gitlab</span><span class="o">-</span><span class="n">rails</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">gitlab</span><span class="o">/</span><span class="n">metrics</span><span class="o">/</span><span class="n">sampler</span><span class="p">.</span><span class="nf">rb</span><span class="p">:</span><span class="mi">44</span><span class="ss">:in</span> <span class="sb">`sample'
+from /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/metrics/sampler.rb:68:in `</span><span class="n">sample_objects</span><span class="s1">'
+from /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/metrics/sampler.rb:68:in `each_with_object'</span>
+<span class="n">from</span> <span class="sr">/opt/</span><span class="n">gitlab</span><span class="o">/</span><span class="n">embedded</span><span class="o">/</span><span class="n">service</span><span class="o">/</span><span class="n">gitlab</span><span class="o">-</span><span class="n">rails</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">gitlab</span><span class="o">/</span><span class="n">metrics</span><span class="o">/</span><span class="n">sampler</span><span class="p">.</span><span class="nf">rb</span><span class="p">:</span><span class="mi">68</span><span class="ss">:in</span> <span class="sb">`each'
+from /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/metrics/sampler.rb:69:in `</span><span class="n">block</span> <span class="k">in</span> <span class="n">sample_objects</span><span class="s1">'
+from /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/metrics/sampler.rb:69:in `name'</span>
+</code></pre></li>
+<li><p>To see the current threads, run:</p>
+<pre class="highlight plaintext"><code>thread apply all bt
+</code></pre></li>
+<li><p>Once you&#39;re done debugging with <code>gdb</code>, be sure to detach from the process and exit:</p>
+<pre class="highlight plaintext"><code>detach
+exit
+</code></pre></li>
+</ol>
+
+<p>Note that if the unicorn process terminates before you are able to run these
+commands, gdb will report an error. To buy more time, you can always raise the
+Unicorn timeout. For omnibus users, you can edit <code>/etc/gitlab/gitlab.rb</code> and
+increase it from 60 seconds to 300:</p>
+<pre class="highlight ruby"><code><span class="n">unicorn</span><span class="p">[</span><span class="s1">'worker_timeout'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">300</span>
+</code></pre>
+<p>For source installations, edit <code>config/unicorn.rb</code>.</p>
+
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure</a> GitLab for the changes to take effect.</p>
+<h4 id='troubleshooting-without-affecting-other-users'>Troubleshooting without affecting other users <a class='anchor' href='debug.html#troubleshooting-without-affecting-other-users' title='Permalink'></a></h4>
+<p>The previous section attached to a running unicorn process, and this may have
+undesirable effects for users trying to access GitLab during this time. If you
+are concerned about affecting others during a production system, you can run a
+separate Rails process to debug the issue:</p>
+
+<ol>
+<li>Log in to your GitLab account.</li>
+<li>Copy the URL that is causing problems (e.g. <a href="https://gitlab.com/ABC">https://gitlab.com/ABC</a>).</li>
+<li>Obtain the private token for your user (Profile Settings -&gt; Account).</li>
+<li><p>Bring up the GitLab Rails console. For omnibus users, run:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-rails console
+</code></pre></li>
+<li><p>At the Rails console, run:</p>
+<pre class="highlight ruby"><code><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">app</span><span class="p">.</span><span class="nf">get</span> <span class="s1">'&lt;URL FROM STEP 2&gt;/?private_token=&lt;TOKEN FROM STEP 3&gt;'</span>
+</code></pre>
+<p>For example:</p>
+<pre class="highlight ruby"><code><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">app</span><span class="p">.</span><span class="nf">get</span> <span class="s1">'https://gitlab.com/gitlab-org/gitlab-ce/issues/1?private_token=123456'</span>
+</code></pre></li>
+<li><p>In a new window, run <code>top</code>. It should show this ruby process using 100% CPU. Write down the PID.</p></li>
+<li><p>Follow step 2 from the previous section on using gdb.</p></li>
+</ol>
+<h1 id='more-information'>More information <a class='anchor' href='debug.html#more-information' title='Permalink'></a></h1>
+<ul>
+<li><a href="https://blog.newrelic.com/2013/04/29/debugging-stuck-ruby-processes-what-to-do-before-you-kill-9/">Debugging Stuck Ruby Processes</a></li>
+<li><a href="gdb-stuck-ruby.txt">Cheatsheet of using gdb and ruby processes</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/troubleshooting/debug.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

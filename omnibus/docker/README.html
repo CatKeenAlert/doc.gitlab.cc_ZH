@@ -1,0 +1,569 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Docker images - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Docker images</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-docker-images">GitLab Docker images</a>
+<ul>
+<li>
+<a href="README.html#prerequisites">Prerequisites</a>
+</li>
+<li>
+<a href="README.html#run-the-image">Run the image</a>
+</li>
+<li>
+<a href="README.html#where-is-the-data-stored">Where is the data stored?</a>
+</li>
+<li>
+<a href="README.html#configure-gitlab">Configure GitLab</a>
+<ul>
+<li>
+<a href="README.html#pre-configure-docker-container">Pre-configure Docker container</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#after-starting-a-container">After starting a container</a>
+</li>
+<li>
+<a href="README.html#upgrade-gitlab-to-newer-version">Upgrade GitLab to newer version</a>
+<ul>
+<li>
+<a href="README.html#use-tagged-versions-of-gitlab">Use tagged versions of GitLab</a>
+</li>
+<li>
+<a href="README.html#run-gitlab-ce-on-public-ip-address">Run GitLab CE on public IP address</a>
+</li>
+<li>
+<a href="README.html#expose-gitlab-on-different-ports">Expose GitLab on different ports</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#diagnose-potential-problems">Diagnose potential problems</a>
+</li>
+<li>
+<a href="README.html#install-gitlab-using-docker-compose">Install GitLab using docker-compose</a>
+</li>
+<li>
+<a href="README.html#update-gitlab-using-docker-compose">Update GitLab using Docker compose</a>
+</li>
+<li>
+<a href="README.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="README.html#500-internal-error">500 Internal Error</a>
+</li>
+<li>
+<a href="README.html#permission-problems">Permission problems</a>
+</li>
+<li>
+<a href="README.html#windows-mac-error-executing-action-run-on-resource-ruby_block-directory-resource-data-gitlab">Windows/Mac: Error executing action run on resource ruby_block[directory resource: /data/GitLab]</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-docker-images'>GitLab Docker images <a class='anchor' href='README.html#gitlab-docker-images' title='Permalink'></a></h1>
+<p>Both GitLab CE and EE are in Docker Hub:</p>
+
+<ul>
+<li><a href="https://registry.hub.docker.com/u/gitlab/gitlab-ce/">GitLab CE Docker image</a></li>
+<li><a href="https://registry.hub.docker.com/u/gitlab/gitlab-ee/">GitLab EE Docker image</a></li>
+</ul>
+
+<p>The GitLab Docker images are monolithic images of GitLab running all the necessary services on a single container.</p>
+
+<p>You can also deploy to Docker Cloud using the <a href="README.html#install-gitlab-using-docker-compose">docker-compose config</a>:</p>
+
+<p><a href="https://cloud.docker.com/stack/deploy/?repo=https://github.com/gitlabhq/omnibus-gitlab/tree/master/docker"><a target="_blank" href="https://files.cloud.docker.com/images/deploy-to-dockercloud.svg"><img src="https://files.cloud.docker.com/images/deploy-to-dockercloud.svg" title="" alt="Deploy to Docker Cloud"/></a></a></p>
+
+<p>In the following examples we are using the image of GitLab CE. To use GitLab EE
+instead of GitLab CE, replace the image name to <code>gitlab/gitlab-ee:latest</code>.</p>
+
+<p>If you want to use the latest RC image, use <code>gitlab/gitlab-ce:rc</code> or
+<code>gitlab/gitlab-ee:rc</code> for GitLab CE and GitLab EE respectively.</p>
+<h2 id='prerequisites'>Prerequisites <a class='anchor' href='README.html#prerequisites' title='Permalink'></a></h2>
+<p>Docker installation is required, see the <a href="https://docs.docker.com/engine/installation/">official installation docs</a>.</p>
+
+<p><strong>Note:</strong> Using a native Docker install instead of Docker Toolbox is recommended in order to use the persisted volumes</p>
+<h2 id='run-the-image'>Run the image <a class='anchor' href='README.html#run-the-image' title='Permalink'></a></h2>
+<p>Run the image:</p>
+<pre class="highlight shell"><code>sudo docker run --detach <span class="se">\</span>
+    --hostname gitlab.example.com <span class="se">\</span>
+    --publish 443:443 --publish 80:80 --publish 22:22 <span class="se">\</span>
+    --name gitlab <span class="se">\</span>
+    --restart always <span class="se">\</span>
+    --volume /srv/gitlab/config:/etc/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/logs:/var/log/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/data:/var/opt/gitlab <span class="se">\</span>
+    gitlab/gitlab-ce:latest
+</code></pre>
+<p>This will download and start a GitLab CE container and publish ports needed to
+access SSH, HTTP and HTTPS. All GitLab data will be stored as subdirectories of
+<code>/srv/gitlab/</code>. The container will automatically <code>restart</code> after a system reboot.</p>
+
+<p>You can now login to the web interface as explained in
+<a href="README.html#after-starting-a-container">After starting a container</a>.</p>
+
+<p>If you are on <em>SELinux</em> then run this instead:</p>
+<pre class="highlight shell"><code>sudo docker run --detach <span class="se">\</span>
+    --hostname gitlab.example.com <span class="se">\</span>
+    --publish 443:443 --publish 80:80 --publish 22:22 <span class="se">\</span>
+    --name gitlab <span class="se">\</span>
+    --restart always <span class="se">\</span>
+    --volume /srv/gitlab/config:/etc/gitlab:Z <span class="se">\</span>
+    --volume /srv/gitlab/logs:/var/log/gitlab:Z <span class="se">\</span>
+    --volume /srv/gitlab/data:/var/opt/gitlab:Z <span class="se">\</span>
+    gitlab/gitlab-ce:latest
+</code></pre>
+<p>This will ensure that the Docker process has enough permissions to create the
+config files in the mounted volumes.</p>
+<h2 id='where-is-the-data-stored'>Where is the data stored? <a class='anchor' href='README.html#where-is-the-data-stored' title='Permalink'></a></h2>
+<p>The GitLab container uses host mounted volumes to store persistent data:</p>
+
+<table><thead>
+<tr>
+<th>Local location</th>
+<th>Container location</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>/srv/gitlab/data</code></td>
+<td><code>/var/opt/gitlab</code></td>
+<td>For storing application data</td>
+</tr>
+<tr>
+<td><code>/srv/gitlab/logs</code></td>
+<td><code>/var/log/gitlab</code></td>
+<td>For storing logs</td>
+</tr>
+<tr>
+<td><code>/srv/gitlab/config</code></td>
+<td><code>/etc/gitlab</code></td>
+<td>For storing the GitLab configuration files</td>
+</tr>
+</tbody></table>
+
+<p>You can fine tune these directories to meet your requirements.</p>
+<h2 id='configure-gitlab'>Configure GitLab <a class='anchor' href='README.html#configure-gitlab' title='Permalink'></a></h2>
+<p>This container uses the official Omnibus GitLab package, so all configuration
+is done in the unique configuration file <code>/etc/gitlab/gitlab.rb</code>.</p>
+
+<p>To access GitLab&#39;s configuration file, you can start a shell session in the
+context of a running container. This will allow you to browse all directories
+and use your favorite text editor:</p>
+<pre class="highlight shell"><code>sudo docker <span class="nb">exec</span> -it gitlab /bin/bash
+</code></pre>
+<p>You can also just edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight shell"><code>sudo docker <span class="nb">exec</span> -it gitlab vi /etc/gitlab/gitlab.rb
+</code></pre>
+<p>Once you open <code>/etc/gitlab/gitlab.rb</code> make sure to set the <code>external_url</code> to
+point to a valid URL.</p>
+
+<p>To receive e-mails from GitLab you have to configure the
+<a href="../settings/smtp.html">SMTP settings</a> because the GitLab Docker image doesn&#39;t
+have an SMTP server installed.</p>
+
+<p>You may also be interested in <a href="../settings/nginx.html#enable-https">Enabling HTTPS</a>.</p>
+
+<p>After you make all the changes you want, you will need to restart the container
+in order to reconfigure GitLab:</p>
+<pre class="highlight shell"><code>sudo docker restart gitlab
+</code></pre>
+<p><em><strong>Note:</strong> GitLab will reconfigure itself whenever the container starts.</em></p>
+
+<p>For more options about configuring GitLab please check the
+<a href="../settings/configuration.html">Omnibus GitLab documentation</a>.</p>
+<h3 id='pre-configure-docker-container'>Pre-configure Docker container <a class='anchor' href='README.html#pre-configure-docker-container' title='Permalink'></a></h3>
+<p>You can pre-configure the GitLab Docker image by adding the environment
+variable <code>GITLAB_OMNIBUS_CONFIG</code> to docker run command. This variable can
+contain any <code>gitlab.rb</code> setting and will be evaluated before loading the
+container&#39;s <code>gitlab.rb</code> file. That way you can easily configure GitLab&#39;s
+external URL, make any database configuration or any other option from the
+<a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template">Omnibus GitLab template</a>.</p>
+
+<p><em>Note: The settings contained in <code>GITLAB_OMNIBUS_CONFIG</code> will not be written to the <code>gitlab.rb</code> configuration file, they&#39;re evaluated on load.</em></p>
+
+<p>Here&#39;s an example that sets the external URL and enables LFS while starting
+the container:</p>
+<pre class="highlight shell"><code>sudo docker run --detach <span class="se">\</span>
+    --hostname gitlab.example.com <span class="se">\</span>
+    --env <span class="nv">GITLAB_OMNIBUS_CONFIG</span><span class="o">=</span><span class="s2">"external_url 'http://my.domain.com/'; gitlab_rails['lfs_enabled'] = true;"</span>
+    --publish 443:443 --publish 80:80 --publish 22:22 <span class="se">\</span>
+    --name gitlab <span class="se">\</span>
+    --restart always <span class="se">\</span>
+    --volume /srv/gitlab/config:/etc/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/logs:/var/log/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/data:/var/opt/gitlab <span class="se">\</span>
+    gitlab/gitlab-ce:latest
+</code></pre>
+<p>Note that every time you execute a <code>docker run</code> command, you need to provide
+the <code>GITLAB_OMNIBUS_CONFIG</code> option. The content of <code>GITLAB_OMNIBUS_CONFIG</code> is
+<em>not</em> preserved between subsequent runs.</p>
+
+<p>There are also a limited number of environment variables to configure GitLab.
+They are documented in the <a href="https://docs.gitlab.com/ce/administration/environment_variables.html">environment variables section of the GitLab documentation</a>.</p>
+<h2 id='after-starting-a-container'>After starting a container <a class='anchor' href='README.html#after-starting-a-container' title='Permalink'></a></h2>
+<p>After starting a container you can visit <a href="http://localhost/">http://localhost/</a> or
+<a href="http://192.168.59.103">http://192.168.59.103</a> if you use boot2docker. It might take a while before
+the Docker container starts to respond to queries.</p>
+
+<p>The very first time you visit GitLab, you will be asked to set up the admin
+password. After you change it, you can login with username <code>root</code> and the
+password you set up.</p>
+<h2 id='upgrade-gitlab-to-newer-version'>Upgrade GitLab to newer version <a class='anchor' href='README.html#upgrade-gitlab-to-newer-version' title='Permalink'></a></h2>
+<p>To upgrade GitLab to a new version you have to:</p>
+
+<ol>
+<li><p>Stop the running container:</p>
+<pre class="highlight shell"><code>sudo docker stop gitlab
+</code></pre></li>
+<li><p>Remove existing container:</p>
+<pre class="highlight shell"><code>sudo docker rm gitlab
+</code></pre></li>
+<li><p>Pull the new image:</p>
+<pre class="highlight shell"><code>sudo docker pull gitlab/gitlab-ce:latest
+</code></pre></li>
+<li><p>Create the container once again with previously specified options:</p>
+<pre class="highlight shell"><code>sudo docker run --detach <span class="se">\</span>
+--hostname gitlab.example.com <span class="se">\</span>
+--publish 443:443 --publish 80:80 --publish 22:22 <span class="se">\</span>
+--name gitlab <span class="se">\</span>
+--restart always <span class="se">\</span>
+--volume /srv/gitlab/config:/etc/gitlab <span class="se">\</span>
+--volume /srv/gitlab/logs:/var/log/gitlab <span class="se">\</span>
+--volume /srv/gitlab/data:/var/opt/gitlab <span class="se">\</span>
+gitlab/gitlab-ce:latest
+</code></pre></li>
+</ol>
+
+<p>On the first run, GitLab will reconfigure and update itself.</p>
+<h3 id='use-tagged-versions-of-gitlab'>Use tagged versions of GitLab <a class='anchor' href='README.html#use-tagged-versions-of-gitlab' title='Permalink'></a></h3>
+<p>We provide tagged versions of GitLab Docker images.</p>
+
+<p>To see all available tags check:</p>
+
+<ul>
+<li><a href="https://hub.docker.com/r/gitlab/gitlab-ce/tags/">GitLab-CE tags</a> and</li>
+<li><a href="https://hub.docker.com/r/gitlab/gitlab-ee/tags/">GitLab-EE tags</a></li>
+</ul>
+
+<p>To use a specific tagged version, replace <code>gitlab/gitlab-ce:latest</code> with
+the GitLab version you want to run, for example <code>gitlab/gitlab-ce:8.4.3</code>.</p>
+<h3 id='run-gitlab-ce-on-public-ip-address'>Run GitLab CE on public IP address <a class='anchor' href='README.html#run-gitlab-ce-on-public-ip-address' title='Permalink'></a></h3>
+<p>You can make Docker to use your IP address and forward all traffic to the
+GitLab CE container by modifying the <code>--publish</code> flag.</p>
+
+<p>To expose GitLab CE on IP 1.1.1.1:</p>
+<pre class="highlight shell"><code>sudo docker run --detach <span class="se">\</span>
+    --hostname gitlab.example.com <span class="se">\</span>
+    --publish 1.1.1.1:443:443 <span class="se">\</span>
+    --publish 1.1.1.1:80:80 <span class="se">\</span>
+    --publish 1.1.1.1:22:22 <span class="se">\</span>
+    --name gitlab <span class="se">\</span>
+    --restart always <span class="se">\</span>
+    --volume /srv/gitlab/config:/etc/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/logs:/var/log/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/data:/var/opt/gitlab <span class="se">\</span>
+    gitlab/gitlab-ce:latest
+</code></pre>
+<p>You can then access your GitLab instance at <code>http://1.1.1.1/</code> and <code>https://1.1.1.1/</code>.</p>
+<h3 id='expose-gitlab-on-different-ports'>Expose GitLab on different ports <a class='anchor' href='README.html#expose-gitlab-on-different-ports' title='Permalink'></a></h3>
+<p>GitLab will occupy by default the following ports inside the container:</p>
+
+<ul>
+<li><code>80</code> (HTTP)</li>
+<li><code>443</code> (if you configure HTTPS)</li>
+<li><code>8080</code> (used by Unicorn)</li>
+<li><code>22</code> (used by the SSH daemon)</li>
+</ul>
+
+<blockquote>
+<p><strong>Note:</strong>
+The format for publishing ports is <code>hostPort:containerPort</code>. Read more in
+Docker&#39;s documentation about <a href="https://docs.docker.com/engine/reference/run/#/expose-incoming-ports">exposing incoming ports</a>.</p>
+
+<p><strong>Warning:</strong>
+Do NOT use port <code>8080</code> otherwise there will be conflicts. This port is already
+used by Unicorn that runs internally in the container.</p>
+</blockquote>
+
+<p>If you want to use a different port than <code>80</code> (HTTP) or <code>443</code> (HTTPS) for the
+container, you need to add a separate <code>--publish</code> directive to the <code>docker run</code>
+command.</p>
+
+<p>For example, to expose the web interface on port <code>8929</code>, and the SSH service on
+port <code>2289</code>, use the following <code>docker run</code> command:</p>
+<pre class="highlight shell"><code>sudo docker run --detach <span class="se">\</span>
+    --hostname gitlab.example.com <span class="se">\</span>
+    --publish 8929:8929 --publish 2289:2289 <span class="se">\</span>
+    --name gitlab <span class="se">\</span>
+    --restart always <span class="se">\</span>
+    --volume /srv/gitlab/config:/etc/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/logs:/var/log/gitlab <span class="se">\</span>
+    --volume /srv/gitlab/data:/var/opt/gitlab <span class="se">\</span>
+    gitlab/gitlab-ce:latest
+</code></pre>
+<p>You then need to appropriately configure <code>gitlab.rb</code>:</p>
+
+<ol>
+<li><p>Set <code>external_url</code>:</p>
+<pre class="highlight plaintext"><code># For HTTP
+external_url "http://gitlab.example.com:8929"
+
+or
+
+# For HTTPS (notice the https)
+external_url "https://gitlab.example.com:8929"
+</code></pre>
+<p>For more information see the <a href="../settings/nginx.html">NGINX documentation</a>.</p></li>
+<li><p>Set <code>gitlab_shell_ssh_port</code>:</p>
+<pre class="highlight plaintext"><code>gitlab_rails['gitlab_shell_ssh_port'] = 2289
+</code></pre></li>
+</ol>
+
+<p>Following the above example you will be able to reach GitLab from your
+web browser under <code>&lt;hostIP&gt;:8929</code> and push using SSH under the port <code>2289</code>.</p>
+
+<p>A <code>docker-compose.yml</code> example that uses different ports can be found in the
+<a href="README.html#install-gitlab-using-docker-compose">docker-compose</a> section.</p>
+<h2 id='diagnose-potential-problems'>Diagnose potential problems <a class='anchor' href='README.html#diagnose-potential-problems' title='Permalink'></a></h2>
+<p>Read container logs:</p>
+<pre class="highlight shell"><code>sudo docker logs gitlab
+</code></pre>
+<p>Enter running container:</p>
+<pre class="highlight shell"><code>sudo docker <span class="nb">exec</span> -it gitlab /bin/bash
+</code></pre>
+<p>From within the container you can administer the GitLab container as you would
+normally administer an
+<a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md">Omnibus installation</a></p>
+<h2 id='install-gitlab-using-docker-compose'>Install GitLab using docker-compose <a class='anchor' href='README.html#install-gitlab-using-docker-compose' title='Permalink'></a></h2>
+<p>With <a href="https://docs.docker.com/compose/">Docker compose</a> you can easily configure, install, and upgrade your
+Docker-based GitLab installation.</p>
+
+<ol>
+<li><a href="https://docs.docker.com/compose/install/">Install</a> Docker Compose</li>
+<li><p>Create a <code>docker-compose.yml</code> file (or <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/docker/docker-compose.yml">download an example</a>):</p>
+<pre class="highlight plaintext"><code>web:
+  image: 'gitlab/gitlab-ce:latest'
+  restart: always
+  hostname: 'gitlab.example.com'
+  environment:
+    GITLAB_OMNIBUS_CONFIG: |
+      external_url 'https://gitlab.example.com'
+      # Add any other gitlab.rb configuration here, each on its own line
+  ports:
+    - '80:80'
+    - '443:443'
+    - '22:22'
+  volumes:
+    - '/srv/gitlab/config:/etc/gitlab'
+    - '/srv/gitlab/logs:/var/log/gitlab'
+    - '/srv/gitlab/data:/var/opt/gitlab'
+</code></pre></li>
+<li><p>Make sure you are in the same directory as <code>docker-compose.yml</code> and run
+<code>docker-compose up -d</code> to start GitLab</p></li>
+</ol>
+
+<p>Read <a href="README.html#pre-configure-docker-container">&quot;Pre-configure Docker container&quot;</a> to see
+how the <code>GITLAB_OMNIBUS_CONFIG</code> variable works.</p>
+
+<p>Below is another <code>docker-compose.yml</code> example with GitLab running on a custom
+HTTP and SSH port. Notice how the <code>GITLAB_OMNIBUS_CONFIG</code> variables match the
+<code>ports</code> section:</p>
+<pre class="highlight plaintext"><code>web:
+  image: 'gitlab/gitlab-ce:latest'
+  restart: always
+  hostname: 'gitlab.example.com'
+  environment:
+    GITLAB_OMNIBUS_CONFIG: |
+      external_url 'http://gitlab.example.com:9090'
+      gitlab_rails['gitlab_shell_ssh_port'] = 2224
+  ports:
+    - '9090:9090'
+    - '2224:2224'
+  volumes:
+    - '/srv/gitlab/config:/etc/gitlab'
+    - '/srv/gitlab/logs:/var/log/gitlab'
+    - '/srv/gitlab/data:/var/opt/gitlab'
+</code></pre>
+<p>This is the same as using <code>--publish 9090:9090 --publish 2224:2224</code>.</p>
+<h2 id='update-gitlab-using-docker-compose'>Update GitLab using Docker compose <a class='anchor' href='README.html#update-gitlab-using-docker-compose' title='Permalink'></a></h2>
+<p>Provided you <a href="README.html#install-gitlab-using-docker-compose">installed GitLab using docker-compose</a>,
+all you have to do is run <code>docker-compose pull</code> and <code>docker-compose up -d</code> to
+download a new release and upgrade your GitLab instance.</p>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='README.html#troubleshooting' title='Permalink'></a></h2><h3 id='500-internal-error'>500 Internal Error <a class='anchor' href='README.html#500-internal-error' title='Permalink'></a></h3>
+<p>When updating the Docker image you may encounter an issue where all paths
+display the infamous <strong>500</strong> page. If this occurs, try to run
+<code>sudo docker restart gitlab</code> to restart the container and rectify the issue.</p>
+<h3 id='permission-problems'>Permission problems <a class='anchor' href='README.html#permission-problems' title='Permalink'></a></h3>
+<p>When updating from older GitLab Docker images you might encounter permission
+problems. This happens due to a fact that users in previous images were not
+preserved correctly. There&#39;s script that fixes permissions for all files.</p>
+
+<p>To fix your container, simply execute <code>update-permissions</code> and restart the
+container afterwards:</p>
+<pre class="highlight plaintext"><code>sudo docker exec gitlab update-permissions
+sudo docker restart gitlab
+</code></pre><h3 id='windows-mac-error-executing-action-run-on-resource-ruby_block-directory-resource-data-gitlab'>Windows/Mac: Error executing action run on resource ruby_block[directory resource: /data/GitLab] <a class='anchor' href='README.html#windows-mac-error-executing-action-run-on-resource-ruby_block-directory-resource-data-gitlab' title='Permalink'></a></h3>
+<p>This error occurs when using Docker Toolbox with VirtualBox on Windows or Mac,
+and making use of Docker volumes. The /c/Users volume is mounted as a
+VirtualBox Shared Folder, and does not support the all POSIX filesystem features.
+The directory ownership and permissions cannot be changed without remounting, and
+GitLab fails.</p>
+
+<p>Our recommendation is to switch to using the native Docker install for your
+platform, instead of using Docker Toolbox.</p>
+
+<p>If you cannot use the native Docker install (Windows 10 Home Edition, or Windows &lt; 10),
+then an alternative solution is to setup NFS mounts instead of VirtualBox shares for
+Docker Toolbox&#39;s boot2docker.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/docker/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

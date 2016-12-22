@@ -1,0 +1,347 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Tags - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Tags</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="tags.html#tags">Tags</a>
+<ul>
+<li>
+<a href="tags.html#list-project-repository-tags">List project repository tags</a>
+</li>
+<li>
+<a href="tags.html#get-a-single-repository-tag">Get a single repository tag</a>
+</li>
+<li>
+<a href="tags.html#create-a-new-tag">Create a new tag</a>
+</li>
+<li>
+<a href="tags.html#delete-a-tag">Delete a tag</a>
+</li>
+<li>
+<a href="tags.html#create-a-new-release">Create a new release</a>
+</li>
+<li>
+<a href="tags.html#update-a-release">Update a release</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='tags'>Tags <a class='anchor' href='tags.html#tags' title='Permalink'></a></h1><h2 id='list-project-repository-tags'>List project repository tags <a class='anchor' href='tags.html#list-project-repository-tags' title='Permalink'></a></h2>
+<p>Get a list of repository tags from a project, sorted by name in reverse alphabetical order.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/repository/tags
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+</ul>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"authored_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-28T04:42:42-07:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committed_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-28T04:42:42-07:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committer_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jack Smith"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committer_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jack@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2695effb5807a22ff3d138d593fd856244e155e7"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Initial commit"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parents_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"2a4b78934375d7f53875269ffd4f45fd83a84ebe"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"release"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amazing release. Wow"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre><h2 id='get-a-single-repository-tag'>Get a single repository tag <a class='anchor' href='tags.html#get-a-single-repository-tag' title='Permalink'></a></h2>
+<p>Get a specific repository tag determined by its name. It returns <code>200</code> together
+with the tag information if the tag exists. It returns <code>404</code> if the tag does not
+exist.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/repository/tags/:tag_name
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a project</td>
+</tr>
+<tr>
+<td><code>tag_name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the tag</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/5/repository/tags/v1.0.0
+</code></pre>
+<p>Example Response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v5.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60a8ff033665e1207714d6670fcd7b65304ec02f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v5.0.0</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parent_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"f61c062ff8bcbdb00e0a1b3317a91aed6ceee06b"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"authored_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-02-01T21:56:31.000+01:00"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Arthur Verschaeve"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contact@arthurverschaeve.be"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"committed_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-02-01T21:56:31.000+01:00"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"committer_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Arthur Verschaeve"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"committer_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contact@arthurverschaeve.be"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"release"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='create-a-new-tag'>Create a new tag <a class='anchor' href='tags.html#create-a-new-tag' title='Permalink'></a></h2>
+<p>Creates a new tag in the repository that points to the supplied ref.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/repository/tags
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>tag_name</code> (required) - The name of a tag</li>
+<li><code>ref</code> (required) - Create tag using commit SHA, another tag name, or branch name.</li>
+<li><code>message</code> (optional) - Creates annotated tag.</li>
+<li><code>release_description</code> (optional) - Add release notes to the git tag and store it in the GitLab database.</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"authored_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-28T04:42:42-07:00"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"committed_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-05-28T04:42:42-07:00"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"committer_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jack Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"committer_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jack@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2695effb5807a22ff3d138d593fd856244e155e7"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Initial commit"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parents_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"2a4b78934375d7f53875269ffd4f45fd83a84ebe"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"release"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amazing release. Wow"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The message will be <code>nil</code> when creating a lightweight tag otherwise
+it will contain the annotation.</p>
+
+<p>It returns 201 if the operation succeed. In case of an error,
+405 with an explaining error message is returned.</p>
+<h2 id='delete-a-tag'>Delete a tag <a class='anchor' href='tags.html#delete-a-tag' title='Permalink'></a></h2>
+<p>Deletes a tag of a repository with given name. On success, this API method
+returns 200 with the name of the deleted tag. If the tag does not exist, the
+API returns 404.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/repository/tags/:tag_name
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>tag_name</code> (required) - The name of a tag</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v4.3.0"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='create-a-new-release'>Create a new release <a class='anchor' href='tags.html#create-a-new-release' title='Permalink'></a></h2>
+<p>Add release notes to the existing git tag. It returns 201 if the release is
+created successfully. If the tag does not exist, 404 is returned. If there
+already exists a release for the given tag, 409 is returned.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/repository/tags/:tag_name/release
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>tag_name</code> (required) - The name of a tag</li>
+<li><code>description</code> (required) - Release notes with markdown support</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amazing release. Wow"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='update-a-release'>Update a release <a class='anchor' href='tags.html#update-a-release' title='Permalink'></a></h2>
+<p>Updates the release notes of a given release. It returns 200 if the release is
+successfully updated. If the tag or the release does not exist, it returns 404
+with a proper error message.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/repository/tags/:tag_name/release
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>tag_name</code> (required) - The name of a tag</li>
+<li><code>description</code> (required) - Release notes with markdown support</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amazing release. Wow"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/api/tags.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>The Docker executor - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Executors</a></li>
+            
+          
+          <li class="breadcrumb">The Docker executor</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="docker.html#the-docker-executor">The Docker executor</a>
+<ul>
+<li>
+<a href="docker.html#workflow">Workflow</a>
+</li>
+<li>
+<a href="docker.html#the-image-keyword">The <code>image</code> keyword</a>
+</li>
+<li>
+<a href="docker.html#the-services-keyword">The <code>services</code> keyword</a>
+<ul>
+<li>
+<a href="docker.html#how-is-service-linked-to-the-build">How is service linked to the build</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="docker.html#define-image-and-services-from-gitlab-ci-yml">Define image and services from <code>.gitlab-ci.yml</code></a>
+</li>
+<li>
+<a href="docker.html#define-image-and-services-in-config-toml">Define image and services in <code>config.toml</code></a>
+</li>
+<li>
+<a href="docker.html#define-an-image-from-a-private-docker-registry">Define an image from a private Docker registry</a>
+</li>
+<li>
+<a href="docker.html#accessing-the-services">Accessing the services</a>
+</li>
+<li>
+<a href="docker.html#configuring-services">Configuring services</a>
+</li>
+<li>
+<a href="docker.html#build-directory-in-service">Build directory in service</a>
+<ul>
+<li>
+<a href="docker.html#postgresql-service-example">PostgreSQL service example</a>
+</li>
+<li>
+<a href="docker.html#mysql-service-example">MySQL service example</a>
+</li>
+<li>
+<a href="docker.html#the-services-health-check">The services health check</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="docker.html#the-builds-and-cache-storage">The builds and cache storage</a>
+</li>
+<li>
+<a href="docker.html#the-persistent-storage">The persistent storage</a>
+</li>
+<li>
+<a href="docker.html#the-persistent-storage-for-builds">The persistent storage for builds</a>
+</li>
+<li>
+<a href="docker.html#the-privileged-mode">The privileged mode</a>
+<ul>
+<li>
+<a href="docker.html#use-docker-in-docker-with-privileged-mode">Use docker-in-docker with privileged mode</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="docker.html#the-entrypoint">The ENTRYPOINT</a>
+</li>
+<li>
+<a href="docker.html#how-pull-policies-work">How pull policies work</a>
+<ul>
+<li>
+<a href="docker.html#using-the-never-pull-policy">Using the <code>never</code> pull policy</a>
+</li>
+<li>
+<a href="docker.html#using-the-if-not-present-pull-policy">Using the <code>if-not-present</code> pull policy</a>
+</li>
+<li>
+<a href="docker.html#using-the-always-pull-policy">Using the <code>always</code> pull policy</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="docker.html#docker-vs-docker-ssh">Docker vs Docker-SSH</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='the-docker-executor'>The Docker executor <a class='anchor' href='docker.html#the-docker-executor' title='Permalink'></a></h1>
+<p>GitLab Runner can use Docker to run builds on user provided images. This is
+possible with the use of <strong>Docker</strong> executor.</p>
+
+<p>The <strong>Docker</strong> executor when used with GitLab CI, connects to <a href="https://www.docker.com/products/docker-engine">Docker Engine</a>
+and runs each build in a separate and isolated container using the predefined
+image that is <a href="http://doc.gitlab.com/ce/ci/yaml/README.html">set up in <code>.gitlab-ci.yml</code></a> and in accordance in
+<a href="../commands/README.html#configuration-file"><code>config.toml</code></a>.</p>
+
+<p>That way you can have a simple and reproducible build environment that can also
+run on your workstation. The added benefit is that you can test all the
+commands that we will explore later from your shell, rather than having to test
+them on a dedicated CI server.</p>
+<h2 id='workflow'>Workflow <a class='anchor' href='docker.html#workflow' title='Permalink'></a></h2>
+<p>The Docker executor divides the build into multiple steps:</p>
+
+<ol>
+<li><strong>Prepare</strong>: Create and start the services.</li>
+<li><strong>Pre-build</strong>: Clone, restore cache and download artifacts from previous
+stages. This is run on a special Docker Image.</li>
+<li><strong>Build</strong>: User build. This is run on the user-provided docker image.</li>
+<li><strong>Post-build</strong>: Create cache, upload artifacts to GitLab. This is run on
+a special Docker Image.</li>
+</ol>
+
+<p>The special Docker Image is based on <a href="https://alpinelinux.org/">Alpine Linux</a> and contains all the tools
+required to run the prepare step the build: the Git binary and the Runner
+binary for supporting caching and artifacts. You can find the definition of
+this special image <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/tree/master/dockerfiles/build">in the official Runner repository</a>.</p>
+<h2 id='the-image-keyword'>The <code>image</code> keyword <a class='anchor' href='docker.html#the-image-keyword' title='Permalink'></a></h2>
+<p>The <code>image</code> keyword is the name of the Docker image that is present in the
+local Docker Engine (list all images with <code>docker images</code>) or any image that
+can be found at <a href="https://hub.docker.com/">Docker Hub</a>. For more information about images and Docker
+Hub please read the <a href="https://docs.docker.com/engine/understanding-docker/">Docker Fundamentals</a> documentation.</p>
+
+<p>In short, with <code>image</code> we refer to the docker image, which will be used to
+create a container on which your build will run.</p>
+
+<p>If you don&#39;t specify the namespace, Docker implies <code>library</code> which includes all
+<a href="https://hub.docker.com/u/library/">official images</a>. That&#39;s why you&#39;ll see
+many times the <code>library</code> part omitted in <code>.gitlab-ci.myl</code> and <code>config.toml</code>.
+For example you can define an image like <code>image: ruby:2.1</code>, which is a shortcut
+for <code>image: library/ruby:2.1</code>.</p>
+
+<p>Then, for each Docker image there are tags, denoting the version of the image.
+These are defined with a colon (<code>:</code>) after the image name. For example, for
+Ruby you can see the supported tags at <a href="https://hub.docker.com/_/ruby/">https://hub.docker.com/_/ruby/</a>. If you
+don&#39;t specify a tag (like <code>image: ruby</code>), <code>latest</code> is implied.</p>
+<h2 id='the-services-keyword'>The <code>services</code> keyword <a class='anchor' href='docker.html#the-services-keyword' title='Permalink'></a></h2>
+<p>The <code>services</code> keyword defines just another Docker image that is run during
+your build and is linked to the Docker image that the <code>image</code> keyword defines.
+This allows you to access the service image during build time.</p>
+
+<p>The service image can run any application, but the most common use case is to
+run a database container, e.g., <code>mysql</code>. It&#39;s easier and faster to use an
+existing image and run it as an additional container than install <code>mysql</code> every
+time the project is built.</p>
+
+<p>You can see some widely used services examples in the relevant documentation of
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/doc/ci/services/README.md">CI services examples</a>.</p>
+<h3 id='how-is-service-linked-to-the-build'>How is service linked to the build <a class='anchor' href='docker.html#how-is-service-linked-to-the-build' title='Permalink'></a></h3>
+<p>To better understand how the container linking works, read
+<a href="https://docs.docker.com/userguide/dockerlinks/">Linking containers together</a>.</p>
+
+<p>To summarize, if you add <code>mysql</code> as service to your application, this image
+will then be used to create a container that is linked to the build container.
+According to the <a href="docker.html#workflow">workflow</a> this is the first step that is performed
+before running the actual builds.</p>
+
+<p>The service container for MySQL will be accessible under the hostname <code>mysql</code>.
+So, in order to access your database service you have to connect to the host
+named <code>mysql</code> instead of a socket or <code>localhost</code>.</p>
+<h2 id='define-image-and-services-from-gitlab-ci-yml'>Define image and services from <code>.gitlab-ci.yml</code> <a class='anchor' href='docker.html#define-image-and-services-from-gitlab-ci-yml' title='Permalink'></a></h2>
+<p>You can simply define an image that will be used for all jobs and a list of
+services that you want to use during build time.</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.2</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres:9.3</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle install</span>
+
+<span class="na">test</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake spec</span>
+</code></pre>
+<p>It is also possible to define different images and services per job:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle install</span>
+
+<span class="s">test:2.1</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+  <span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres:9.3</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake spec</span>
+
+<span class="s">test:2.2</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.2</span>
+  <span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres:9.4</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake spec</span>
+</code></pre><h2 id='define-image-and-services-in-config-toml'>Define image and services in <code>config.toml</code> <a class='anchor' href='docker.html#define-image-and-services-in-config-toml' title='Permalink'></a></h2>
+<p>Look for the <code>[runners.docker]</code> section:</p>
+<pre class="highlight plaintext"><code>[runners.docker]
+  image = "ruby:2.1"
+  services = ["mysql:latest", "postgres:latest"]
+</code></pre>
+<p>The image and services defined this way will be added to all builds run by
+that Runner, so even if you don&#39;t define an <code>image</code> inside <code>.gitlab-ci.yml</code>,
+the one defined in <code>config.toml</code> will be used.</p>
+<h2 id='define-an-image-from-a-private-docker-registry'>Define an image from a private Docker registry <a class='anchor' href='docker.html#define-an-image-from-a-private-docker-registry' title='Permalink'></a></h2>
+<p>Starting with GitLab Runner 0.6.0, you are able to define images located to
+private registries that could also require authentication.</p>
+
+<p>All you have to do is be explicit on the image definition in <code>.gitlab-ci.yml</code>.</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">my.registry.tld:5000/namepace/image:tag</span>
+</code></pre>
+<p>In the example above, GitLab Runner will look at <code>my.registry.tld:5000</code> for the
+image <code>namespace/image:tag</code>.</p>
+
+<p>If the repository is private you need to authenticate your GitLab Runner in the
+registry. Read more on <a href="../configuration/advanced-configuration.html#using-a-private-container-registry">using a private Docker registry</a>.</p>
+<h2 id='accessing-the-services'>Accessing the services <a class='anchor' href='docker.html#accessing-the-services' title='Permalink'></a></h2>
+<p>Let&#39;s say that you need a Wordpress instance to test some API integration with
+your application.</p>
+
+<p>You can then use for example the <a href="https://registry.hub.docker.com/u/tutum/wordpress/">tutum/wordpress</a> as a service image in your
+<code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">services</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">tutum/wordpress:latest</span>
+</code></pre>
+<p>When the build is run, <code>tutum/wordpress</code> will be started first and you will have
+access to it from your build container under the hostname <code>tutum__wordpress</code>
+or <code>tutum-wordpress</code>.</p>
+
+<p>The GitLab Runner creates two alias hostnames for the service that you can use
+alternatively. The aliases are taken from the image name following these rules:</p>
+
+<ol>
+<li>Everything after <code>:</code> is stripped</li>
+<li>For the first alias, the slash (<code>/</code>) is replaced with double underscores (<code>__</code>)</li>
+<li>For the second alias, the slash (<code>/</code>) is replaced with a single dash (<code>-</code>)</li>
+</ol>
+<h2 id='configuring-services'>Configuring services <a class='anchor' href='docker.html#configuring-services' title='Permalink'></a></h2>
+<p>Many services accept environment variables which allow you to easily change
+database names or set account names depending on the environment.</p>
+
+<p>GitLab Runner 0.5.0 and up passes all YAML-defined variables to the created
+service containers.</p>
+
+<p>For all possible configuration variables check the documentation of each image
+provided in their corresponding Docker hub page.</p>
+
+<blockquote>
+<p><strong>Note</strong>:</p>
+
+<p>All variables will be passed to all services containers. It&#39;s not designed to
+distinguish which variable should go where.</p>
+
+<p>Secure variables are only passed to the build container.</p>
+</blockquote>
+<h2 id='build-directory-in-service'>Build directory in service <a class='anchor' href='docker.html#build-directory-in-service' title='Permalink'></a></h2>
+<p>Since version 1.5 GitLab Runner mounts a <code>/build</code> directory to all shared services.</p>
+
+<p>See an issue: <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1520">https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1520</a></p>
+<h3 id='postgresql-service-example'>PostgreSQL service example <a class='anchor' href='docker.html#postgresql-service-example' title='Permalink'></a></h3>
+<p>See the specific documentation for
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/services/postgres.md">using PostgreSQL as a service</a>.</p>
+<h3 id='mysql-service-example'>MySQL service example <a class='anchor' href='docker.html#mysql-service-example' title='Permalink'></a></h3>
+<p>See the specific documentation for
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/services/mysql.md">using MySQL as a service</a>.</p>
+<h3 id='the-services-health-check'>The services health check <a class='anchor' href='docker.html#the-services-health-check' title='Permalink'></a></h3>
+<p>After the service is started, GitLab Runner waits some time for the service to
+be responsive. Currently, the Docker executor tries to open a TCP connection to
+the first exposed service in the service container.</p>
+
+<p>You can see how it is implemented <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/tree/master/dockerfiles/service">in this Dockerfile</a>.</p>
+<h2 id='the-builds-and-cache-storage'>The builds and cache storage <a class='anchor' href='docker.html#the-builds-and-cache-storage' title='Permalink'></a></h2>
+<p>The Docker executor by default stores all builds in
+<code>/builds/&lt;namespace&gt;/&lt;project-name&gt;</code> and all caches in <code>/cache</code> (inside the
+container).</p>
+
+<p>You can overwrite the <code>/builds</code> and <code>/cache</code> directories by defining the
+<code>builds_dir</code> and <code>cache_dir</code> options under the <code>[[runners]]</code> section in
+<code>config.toml</code>. This will modify where the data are stored inside the container.</p>
+
+<p>If you modify the <code>/cache</code> storage path, you also need to make sure to mark this
+directory as persistent by defining it in <code>volumes = [&quot;/my/cache/&quot;]</code> under the
+<code>[runners.docker]</code> section in <code>config.toml</code>.</p>
+
+<p>Read the next section of persistent storage for more information.</p>
+<h2 id='the-persistent-storage'>The persistent storage <a class='anchor' href='docker.html#the-persistent-storage' title='Permalink'></a></h2>
+<p>The Docker executor can provide a persistent storage when running the containers.
+All directories defined under <code>volumes =</code> will be persistent between builds.</p>
+
+<p>The <code>volumes</code> directive supports 2 types of storage:</p>
+
+<ol>
+<li><code>&lt;path&gt;</code> - <strong>the dynamic storage</strong>. The <code>&lt;path&gt;</code> is persistent between subsequent
+runs of the same concurrent job for that project. The data is attached to a
+custom cache container: <code>runner-&lt;short-token&gt;-project-&lt;id&gt;-concurrent-&lt;job-id&gt;-cache-&lt;unique-id&gt;</code>.</li>
+<li><code>&lt;host-path&gt;:&lt;path&gt;[:&lt;mode&gt;]</code> - <strong>the host-bound storage</strong>. The <code>&lt;path&gt;</code> is
+bind to <code>&lt;host-path&gt;</code> on the host system. The optional <code>&lt;mode&gt;</code> can specify
+that this storage is read-only or read-write (default).</li>
+</ol>
+<h2 id='the-persistent-storage-for-builds'>The persistent storage for builds <a class='anchor' href='docker.html#the-persistent-storage-for-builds' title='Permalink'></a></h2>
+<p>If you make the <code>/builds</code> to be <strong>the host-bound storage</strong>, your builds will be stored in:
+<code>/builds/&lt;short-token&gt;/&lt;concurrent-id&gt;/&lt;namespace&gt;/&lt;project-name&gt;</code>, where:</p>
+
+<ul>
+<li><code>&lt;short-token&gt;</code> is a shortened version of the Runner&#39;s token (first 8 letters)</li>
+<li><code>&lt;concurrent-id&gt;</code> is a unique number, identifying the local job ID on the
+particular Runner in context of the project</li>
+</ul>
+<h2 id='the-privileged-mode'>The privileged mode <a class='anchor' href='docker.html#the-privileged-mode' title='Permalink'></a></h2>
+<p>The Docker executor supports a number of options that allows to fine tune the
+build container. One of these options is the <a href="https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities"><code>privileged</code> mode</a>.</p>
+<h3 id='use-docker-in-docker-with-privileged-mode'>Use docker-in-docker with privileged mode <a class='anchor' href='docker.html#use-docker-in-docker-with-privileged-mode' title='Permalink'></a></h3>
+<p>The configured <code>privileged</code> flag is passed to the build container and all
+services, thus allowing to easily use the docker-in-docker approach.</p>
+
+<p>First, configure your Runner (config.toml) to run in <code>privileged</code> mode:</p>
+<pre class="highlight toml"><code><span class="nn">[[runners]]</span>
+  <span class="py">executor</span> <span class="p">=</span> <span class="s">"docker"</span>
+  <span class="nn">[runners.docker]</span>
+    <span class="py">privileged</span> <span class="p">=</span> <span class="kc">true</span>
+</code></pre>
+<p>Then, make your build script (<code>.gitlab-ci.yml</code>) to use Docker-in-Docker
+container:</p>
+<pre class="highlight shell"><code>image: docker:git
+services:
+- docker:dind
+
+build:
+  script:
+  - docker build -t my-image .
+  - docker push my-image
+</code></pre><h2 id='the-entrypoint'>The ENTRYPOINT <a class='anchor' href='docker.html#the-entrypoint' title='Permalink'></a></h2>
+<p>The Docker executor doesn&#39;t overwrite the <a href="https://docs.docker.com/engine/reference/run/#entrypoint-default-command-to-execute-at-runtime"><code>ENTRYPOINT</code> of a Docker image</a>.</p>
+
+<p>That means that if your image defines the <code>ENTRYPOINT</code> and doesn&#39;t allow to run
+scripts with <code>CMD</code>, the image will not work with the Docker executor.</p>
+
+<p>With the use of <code>ENTRYPOINT</code> it is possible to create special Docker image that
+would run the build script in a custom environment, or in secure mode.</p>
+
+<p>You may think of creating a Docker image that uses an <code>ENTRYPOINT</code> that doesn&#39;t
+execute the build script, but does execute a predefined set of commands, for
+example to build the docker image from your directory. In that case, you can
+run the build container in <a href="docker.html#the-privileged-mode">privileged mode</a>, and make
+the build environment of the Runner secure.</p>
+
+<p>Consider the following example:</p>
+
+<ol>
+<li><p>Create a new Dockerfile:</p>
+<pre class="highlight shell"><code>FROM docker:dind
+ADD / /entrypoint.sh
+ENTRYPOINT <span class="o">[</span><span class="s2">"/bin/sh"</span>, <span class="s2">"/entrypoint.sh"</span><span class="o">]</span>
+</code></pre></li>
+<li><p>Create a bash script (<code>entrypoint.sh</code>) that will be used as the <code>ENTRYPOINT</code>:</p>
+<pre class="highlight shell"><code><span class="c">#!/bin/sh</span>
+
+dind docker daemon
+    --host<span class="o">=</span>unix:///var/run/docker.sock <span class="se">\</span>
+    --host<span class="o">=</span>tcp://0.0.0.0:2375 <span class="se">\</span>
+    --storage-driver<span class="o">=</span>vf &amp;
+
+docker build -t <span class="s2">"</span><span class="nv">$BUILD_IMAGE</span><span class="s2">"</span> .
+docker push <span class="s2">"</span><span class="nv">$BUILD_IMAGE</span><span class="s2">"</span>
+</code></pre></li>
+<li><p>Push the image to the Docker registry.</p></li>
+<li><p>Run Docker executor in <code>privileged</code> mode. In <code>config.toml</code> define:</p>
+<pre class="highlight toml"><code><span class="nn">[[runners]]</span>
+  <span class="py">executor</span> <span class="p">=</span> <span class="s">"docker"</span>
+  <span class="nn">[runners.docker]</span>
+    <span class="py">privileged</span> <span class="p">=</span> <span class="kc">true</span>
+</code></pre></li>
+<li><p>In your project use the following <code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">variables</span><span class="pi">:</span>
+  <span class="na">BUILD_IMAGE</span><span class="pi">:</span> <span class="s">my.image</span>
+<span class="na">build</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">my/docker-build:image</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Dummy Script</span>
+</code></pre></li>
+</ol>
+
+<p>This is just one of the examples. With this approach the possibilities are
+limitless.</p>
+<h2 id='how-pull-policies-work'>How pull policies work <a class='anchor' href='docker.html#how-pull-policies-work' title='Permalink'></a></h2>
+<p>When using the <code>docker</code>, <code>docker-ssh</code>, <code>docker+machine</code> or <code>docker-ssh+machine</code>
+executors, you can set the <code>pull_policy</code> parameter which defines how the
+Runner will work when pulling Docker images (for both <code>image</code> and <code>services</code>
+keywords).</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you don&#39;t set any value for the <code>pull_policy</code> parameter, then
+Runner will use the <code>always</code> pull policy as the default value.</p>
+</blockquote>
+
+<p>Now let&#39;s see how these policies work.</p>
+<h3 id='using-the-never-pull-policy'>Using the <code>never</code> pull policy <a class='anchor' href='docker.html#using-the-never-pull-policy' title='Permalink'></a></h3>
+<p>The <code>never</code> pull policy disables images pulling completely. If you set the
+<code>pull_policy</code> parameter of a Runner to <code>never</code>, then users will be able
+to use only the images that have been manually pulled on the docker host
+the Runner runs on.</p>
+
+<p>If an image cannot be found locally, then the Runner will fail the build
+with an error similar to:</p>
+<pre class="highlight plaintext"><code>Pulling docker image local_image:latest ...
+ERROR: Build failed: Error: image local_image:latest not found
+</code></pre>
+<p><strong>When to use this pull policy?</strong></p>
+
+<p>This pull policy should be used if you want or need to have a full
+control on which images are used by the Runner&#39;s users. It is a good choice
+for private Runners that are dedicated to a project where only specific images
+can be used (not publicly available on any registries).</p>
+
+<p><strong>When not to use this pull policy?</strong></p>
+
+<p>This pull policy will not work properly with most of <a href="../configuration/autoscale.html">auto-scaled</a>
+Docker executor use cases. Because of how auto-scaling works, the <code>never</code>
+pull policy may be usable only when using a pre-defined cloud instance
+images for chosen cloud provider. The image needs to contain installed
+Docker Engine and local copy of used images.</p>
+<h3 id='using-the-if-not-present-pull-policy'>Using the <code>if-not-present</code> pull policy <a class='anchor' href='docker.html#using-the-if-not-present-pull-policy' title='Permalink'></a></h3>
+<p>When the <code>if-not-present</code> pull policy is used, the Runner will first check
+if the image is present locally. If it is, then the local version of
+image will be used. Otherwise, the Runner will try to pull the image.</p>
+
+<p><strong>When to use this pull policy?</strong></p>
+
+<p>This pull policy is a good choice if you want to use images pulled from
+remote registries but you want to reduce time spent on analyzing image
+layers difference, when using heavy and rarely updated images.
+In that case, you will need once in a while to manually remove the image
+from the local Docker Engine store to force the update of the image.</p>
+
+<p>It is also the good choice if you need to use images that are built
+and available only locally, but on the other hand, also need to allow to
+pull images from remote registries.</p>
+
+<p><strong>When not to use this pull policy?</strong></p>
+
+<p>This pull policy should not be used if your builds use images that
+are updated frequently and need to be used in most recent versions.
+In such situation, the network load reduction created by this policy may
+be less worthy than the necessity of the very frequent deletion of local
+copies of images.</p>
+
+<p>This pull policy should also not be used if your Runner can be used by
+different users which should not have access to private images used
+by each other. Especially do not use this pull policy for shared Runners.</p>
+
+<p>To understand why the <code>if-not-present</code> pull policy creates security issues
+when used with private images, read the
+<a href="../security/index.html##usage-of-private-docker-images-with-if-not-present-pull-policy">security considerations documentation</a>.</p>
+<h3 id='using-the-always-pull-policy'>Using the <code>always</code> pull policy <a class='anchor' href='docker.html#using-the-always-pull-policy' title='Permalink'></a></h3>
+<p>The <code>always</code> pull policy will ensure that the image is <strong>always</strong> pulled.
+When <code>always</code> is used, the Runner will try to pull the image even if a local
+copy is available. If the image is not found, then the build will
+fail with an error similar to:</p>
+<pre class="highlight plaintext"><code>Pulling docker image registry.tld/my/image:latest ...
+ERROR: Build failed: Error: image registry.tld/my/image:latest not found
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong>
+For versions prior to <code>v1.8</code>, when using the <code>always</code> pull policy, it could
+fall back to local copy of an image and print a warning:</p>
+<pre class="highlight plaintext"><code>Pulling docker image registry.tld/my/image:latest ...
+WARNING: Cannot pull the latest version of image registry.tld/my/image:latest : Error: image registry.tld/my/image:latest not found
+WARNING: Locally found image will be used instead.
+</code></pre>
+<p>That is changed in version <code>v1.8</code>. To understand why we changed this and
+how incorrect usage of may be revealed please look into issue
+<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1905">#1905</a>.</p>
+</blockquote>
+
+<p><strong>When to use this pull policy?</strong></p>
+
+<p>This pull policy should be used if your Runner is publicly available
+and configured as a shared Runner in your GitLab instance. It is the
+only pull policy that can be considered as secure when the Runner will
+be used with private images.</p>
+
+<p>This is also a good choice if you want to force users to always use
+the newest images.</p>
+
+<p>Also, this will be the best solution for an <a href="../configuration/autoscale.html">auto-scaled</a>
+configuration of the Runner.</p>
+
+<p><strong>When not to use this pull policy?</strong></p>
+
+<p>This pull policy will definitely not work if you need to use locally
+stored images. In this case, the Runner will skip the local copy of the image
+and try to pull it from the remote registry. If the image was build locally
+and doesn&#39;t exist in any public registry (and especially in the default
+Docker registry), the build will fail with:</p>
+<pre class="highlight plaintext"><code>Pulling docker image local_image:latest ...
+ERROR: Build failed: Error: image local_image:latest not found
+</code></pre><h2 id='docker-vs-docker-ssh'>Docker vs Docker-SSH <a class='anchor' href='docker.html#docker-vs-docker-ssh' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note</strong>:
+The docker-ssh executor is deprecated and no new features will be added to it</p>
+</blockquote>
+
+<p>We provide a support for a special type of Docker executor, namely Docker-SSH.
+Docker-SSH uses the same logic as the Docker executor, but instead of executing
+the script directly, it uses an SSH client to connect to the build container.</p>
+
+<p>Docker-ssh then connects to the SSH server that is running inside the container
+using its internal IP.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/executors/docker.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Elasticsearch integration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Elasticsearch integration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="elasticsearch.html#elasticsearch-integration">Elasticsearch integration</a>
+<ul>
+<li>
+<a href="elasticsearch.html#requirements">Requirements</a>
+</li>
+<li>
+<a href="elasticsearch.html#install-elasticsearch">Install Elasticsearch</a>
+</li>
+<li>
+<a href="elasticsearch.html#enable-elasticsearch">Enable Elasticsearch</a>
+</li>
+<li>
+<a href="elasticsearch.html#add-gitlab-s-data-to-the-elasticsearch-index">Add GitLab's data to the Elasticsearch index</a>
+</li>
+<li>
+<a href="elasticsearch.html#disable-elasticsearch">Disable Elasticsearch</a>
+</li>
+<li>
+<a href="elasticsearch.html#special-recommendations">Special recommendations</a>
+<ul>
+<li>
+<a href="elasticsearch.html#indexing-large-repositories">Indexing large repositories</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='elasticsearch-integration'>Elasticsearch integration <a class='anchor' href='elasticsearch.html#elasticsearch-integration' title='Permalink'></a></h1>
+<p><em><strong>Note:</strong> This feature was <a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/109" title="Elasticsearch Merge Request">introduced</a> in GitLab EE 8.4.</em></p>
+
+<hr>
+
+<p><a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch website">Elasticsearch</a> is a flexible, scalable and powerful search service.</p>
+
+<p>If you want to keep GitLab&#39;s search fast when dealing with huge amount of data,
+you should consider <a href="elasticsearch.html#enable-elasticsearch">enabling Elasticsearch</a>.</p>
+
+<p>GitLab leverages the search capabilities of Elasticsearch and enables it when
+searching in:</p>
+
+<ul>
+<li>GitLab application</li>
+<li>issues</li>
+<li>merge requests</li>
+<li>milestones</li>
+<li>notes</li>
+<li>projects</li>
+<li>repositories</li>
+<li>snippets</li>
+<li>wiki repositories</li>
+</ul>
+
+<p>Once the data is added to the database or repository, search indexes will be updated
+automatically. Elasticsearch can be installed on the same machine that GitLab
+is installed or on a separate server.</p>
+<h2 id='requirements'>Requirements <a class='anchor' href='elasticsearch.html#requirements' title='Permalink'></a></h2>
+<p>These are the minimum requirements needed for Elasticsearch to work:</p>
+
+<ul>
+<li>GitLab 8.4+</li>
+<li>Elasticsearch 2.4.x (with <a href="https://www.elastic.co/guide/en/elasticsearch/plugins/2.4/plugins-delete-by-query.html">Delete By Query Plugin</a> installed)</li>
+</ul>
+<h2 id='install-elasticsearch'>Install Elasticsearch <a class='anchor' href='elasticsearch.html#install-elasticsearch' title='Permalink'></a></h2>
+<p>Elasticsearch is <em>not</em> included in the Omnibus packages. You will have to
+install it yourself whether you are using the Omnibus package or installed
+GitLab from source. Providing detailed information on installing Elasticsearch
+is out of the scope of this document.</p>
+
+<p>You can follow the steps as described in the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html" title="Elasticsearch installation documentation">official web site</a> or
+use the packages that are available for your OS.</p>
+<h2 id='enable-elasticsearch'>Enable Elasticsearch <a class='anchor' href='elasticsearch.html#enable-elasticsearch' title='Permalink'></a></h2>
+<p>In order to enable Elasticsearch you need to have access to the server that GitLab is hosted on, and an administrator account on your GitLab instance. Go to <strong>Admin &gt; Settings</strong> and find the &quot;Elasticsearch&quot; section.</p>
+
+<p>The following Elasticsearch settings are available:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>Elasticsearch indexing</code></td>
+<td>Enables/disables Elasticsearch indexing. You may want to enable indexing but disable search in order to give the index time to be fully completed, for example.</td>
+</tr>
+<tr>
+<td><code>Search with Elasticsearch enabled</code></td>
+<td>Enables/disables using Elasticsearch in search.</td>
+</tr>
+<tr>
+<td><code>Host</code></td>
+<td>The TCP/IP host to use for connecting to Elasticsearch. Use a comma-separated list to support clustering (e.g., &quot;host1, host2&quot;).</td>
+</tr>
+<tr>
+<td><code>Port</code></td>
+<td>The TCP port that Elasticsearch listens to. The default value is 9200</td>
+</tr>
+</tbody></table>
+<h2 id='add-gitlab-39-s-data-to-the-elasticsearch-index'>Add GitLab&#39;s data to the Elasticsearch index <a class='anchor' href='elasticsearch.html#add-gitlab-39-s-data-to-the-elasticsearch-index' title='Permalink'></a></h2>
+<p>Configure Elasticsearch&#39;s host and port in <strong>Admin &gt; Settings</strong>. Then create empty indexes using one of the following commands:</p>
+<pre class="highlight plaintext"><code>```
+# Omnibus installations
+sudo gitlab-rake gitlab:elastic:create_empty_index
+
+# Installations from source
+bundle exec rake gitlab:elastic:create_empty_index RAILS_ENV=production
+```
+</code></pre>
+<p>Then enable Elasticsearch indexing and run indexing tasks. It might take a while depending on how big your Git repositories are (see
+<a href="elasticsearch.html#indexing-large-repositories">Indexing large repositories</a>).</p>
+
+<hr>
+
+<p>To index all your repositories:</p>
+<pre class="highlight plaintext"><code># Omnibus installations
+sudo gitlab-rake gitlab:elastic:index_repositories
+
+# Installations from source
+bundle exec rake gitlab:elastic:index_repositories RAILS_ENV=production
+</code></pre>
+<p>If you want to run several tasks in parallel (probably in separate terminal
+windows) you can provide the <code>ID_FROM</code> and <code>ID_TO</code> parameters:</p>
+<pre class="highlight plaintext"><code>ID_FROM=1001 ID_TO=2000 sudo gitlab-rake gitlab:elastic:index_repositories
+
+</code></pre>
+<p>Both parameters are optional. Keep in mind that this task will skip repositories
+(and certain commits) that have already been indexed. It stores the last commit
+SHA of every indexed repository in the database. As an example, if you have
+3,000 repositories and you want to run three separate indexing tasks, you might
+run:</p>
+<pre class="highlight plaintext"><code>ID_TO=1000 sudo gitlab-rake gitlab:elastic:index_repositories
+ID_FROM=1001 ID_TO=2000 sudo gitlab-rake gitlab:elastic:index_repositories
+ID_FROM=2001 sudo gitlab-rake gitlab:elastic:index_repositories
+</code></pre>
+<p>If you need to update any outdated indexes, you can use
+the <code>UPDATE_INDEX</code> parameter:</p>
+<pre class="highlight plaintext"><code>UPDATE_INDEX=true ID_TO=1000 sudo gitlab-rake gitlab:elastic:index_repositories
+</code></pre>
+<p>Keep in mind that it will scan all repositories to make sure that last commit is already indexed.</p>
+
+<p>To index all wikis:</p>
+<pre class="highlight plaintext"><code># Omnibus installations
+sudo gitlab-rake gitlab:elastic:index_wikis
+
+# Installations from source
+bundle exec rake gitlab:elastic:index_wikis RAILS_ENV=production
+</code></pre>
+<p>The wiki indexer also supports the <code>ID_FROM</code> and <code>ID_TO</code> parameters if you want
+to limit a project set.</p>
+
+<p>To index all database entities:</p>
+<pre class="highlight plaintext"><code># Omnibus installations
+sudo gitlab-rake gitlab:elastic:index_database
+
+# Installations from source
+bundle exec rake gitlab:elastic:index_database RAILS_ENV=production
+</code></pre>
+<p>Or everything at once (database records, repositories, wikis):</p>
+<pre class="highlight plaintext"><code># Omnibus installations
+sudo gitlab-rake gitlab:elastic:index
+
+# Installations from source
+bundle exec rake gitlab:elastic:index RAILS_ENV=production
+</code></pre><h2 id='disable-elasticsearch'>Disable Elasticsearch <a class='anchor' href='elasticsearch.html#disable-elasticsearch' title='Permalink'></a></h2>
+<p>Disabling the Elasticsearch integration is as easy as unchecking <code>Search with Elasticsearch enabled</code> and <code>Elasticsearch indexing</code> in <strong>Admin &gt; Settings</strong>.</p>
+<h2 id='special-recommendations'>Special recommendations <a class='anchor' href='elasticsearch.html#special-recommendations' title='Permalink'></a></h2>
+<p>Here are some tips to use Elasticsearch with GitLab more efficiently.</p>
+<h3 id='indexing-large-repositories'>Indexing large repositories <a class='anchor' href='elasticsearch.html#indexing-large-repositories' title='Permalink'></a></h3>
+<p>Indexing large Git repositories can take a while. To speed up the process, you
+can temporarily disable auto-refreshing. In our experience you can expect a 20%
+time drop.</p>
+
+<ol>
+<li><p>Disable refreshing:</p>
+<pre class="highlight shell"><code>curl --request PUT localhost:9200/_settings --data <span class="s1">'{
+    "index" : {
+        "refresh_interval" : "-1"
+    } }'</span>
+</code></pre></li>
+<li><p>(optional) You may want to disable replication and enable it after indexing:</p>
+<pre class="highlight shell"><code>curl --request PUT localhost:9200/_settings --data <span class="s1">'{
+    "index" : {
+        "number_of_replicas" : 0
+    } }'</span>
+</code></pre></li>
+<li><p><a href="elasticsearch.html#add-gitlabs-data-to-the-elasticsearch-index">Create the indexes</a></p></li>
+<li><p>(optional) If you disabled replication in step 2, enable it after
+the indexing is done and set it to its default value, which is 1:</p>
+<pre class="highlight shell"><code>curl --request PUT localhost:9200/_settings --data <span class="s1">'{
+    "index" : {
+        "number_of_replicas" : 1
+    } }'</span>
+</code></pre></li>
+<li><p>Enable refreshing again (after indexing):</p>
+<pre class="highlight shell"><code>curl --request PUT localhost:9200/_settings --data <span class="s1">'{
+    "index" : {
+        "refresh_interval" : "1s"
+    } }'</span>
+</code></pre></li>
+<li><p>A force merge should be called after enabling the refreshing above:</p>
+<pre class="highlight shell"><code>curl --request POST <span class="s1">'http://localhost:9200/_forcemerge?max_num_segments=5'</span>
+</code></pre></li>
+</ol>
+
+<p>To minimize downtime of the search feature we recommend the following:</p>
+
+<ol>
+<li><p>Configure Elasticsearch in <strong>Admin &gt; Settings</strong>, but do not enable it, just set a host and port.</p></li>
+<li><p>Create empty indexes:</p>
+<pre class="highlight plaintext"><code># Omnibus installations
+sudo gitlab-rake gitlab:elastic:create_empty_index
+
+# Installations from source
+bundle exec rake gitlab:elastic:create_empty_index RAILS_ENV=production
+</code></pre></li>
+<li><p>Index all repositories using the <code>gitlab:elastic:index_repositories</code> Rake
+task (see above). You&#39;ll probably want to do this in parallel.</p></li>
+<li><p>Enable Elasticsearch indexing.</p></li>
+<li><p>Run indexers for database, wikis, and
+repositories (with the <code>UPDATE_INDEX=1</code> parameter). By running the repository indexer twice you will be sure that
+everything is indexed because some commits could be pushed while you
+performed the initial indexing. The repository indexer will skip
+repositories and commits that are already indexed, so it will be much
+shorter than the first run.</p></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/integration/elasticsearch.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

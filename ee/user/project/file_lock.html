@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>File Lock - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">File Lock</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="file_lock.html#file-lock">File Lock</a>
+<ul>
+<li>
+<a href="file_lock.html#permissions-on-file-locking">Permissions on file locking</a>
+</li>
+<li>
+<a href="file_lock.html#locking-a-file-or-a-directory">Locking a file or a directory</a>
+</li>
+<li>
+<a href="file_lock.html#unlocking-a-file-or-a-directory">Unlocking a file or a directory</a>
+</li>
+<li>
+<a href="file_lock.html#viewing-and-managing-existing-locks">Viewing and managing existing locks</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='file-lock'>File Lock <a class='anchor' href='file_lock.html#file-lock' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong>
+This feature was <a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/440" title="File Lock">introduced</a> in GitLab EE 8.9.</p>
+</blockquote>
+
+<hr>
+
+<blockquote>
+<p><strong>Note:</strong>
+This feature needs to have a license with the &quot;File Lock&quot; option enabled. If
+you are using Enterprise Edition but you don&#39;t see the &quot;Lock&quot; button,
+ask your GitLab administrator. Check GitLab&#39;s <a href="https://about.gitlab.com/pricing">pricing page</a> for more information.</p>
+</blockquote>
+
+<p>GitLab gives you the ability to lock any file or directory in the repository tree
+reserving you the right to make changes to that file or directory. <strong>Locking only
+works for the default branch you have set in the project&#39;s settings</strong> (usually
+<code>master</code>).</p>
+
+<p>The file locking feature is useful in situations when:</p>
+
+<ul>
+<li>Multiple people are working on the same file and you want to avoid merge
+conflicts.</li>
+<li>Your repository contains binary files in which situation there is no easy
+way to tell the diff between yours and your colleagues&#39; changes.</li>
+</ul>
+
+<p>Locked directories are locked recursively, which means that everything that
+lies under them is also locked.</p>
+<h2 id='permissions-on-file-locking'>Permissions on file locking <a class='anchor' href='file_lock.html#permissions-on-file-locking' title='Permalink'></a></h2>
+<p>The user that locks a file or directory <strong>is the only one</strong> that can edit and
+push their changes back to the repository where the locked objects are located.</p>
+
+<p>Locks can be created by any person who has <a href="../permissions.html">push access</a> to the repository; i.e.,
+Developer and higher level, and can be removed solely by their author and any
+user with Master permissions and above.</p>
+
+<p>If a file is locked and you are not the author of its locked state, a
+pre-receive hook will reject your changes when you try to push. In the
+following example, a user who has no permissions on the locked <code>.gitignore</code>
+file will see the message below:</p>
+<pre class="highlight shell"><code>Counting objects: 3, <span class="k">done</span>.
+Delta compression using up to 4 threads.
+Compressing objects: 100% <span class="o">(</span>3/3<span class="o">)</span>, <span class="k">done</span>.
+Writing objects: 100% <span class="o">(</span>3/3<span class="o">)</span>, 320 bytes | 0 bytes/s, <span class="k">done</span>.
+Total 3 <span class="o">(</span>delta 1<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
+remote: GitLab: The path <span class="s1">'.gitignore'</span> is locked by Administrator
+To https://example.com/gitlab-org/gitlab-ce.git
+ ! <span class="o">[</span>remote rejected] master -&gt; master <span class="o">(</span>pre-receive hook declined<span class="o">)</span>
+ error: failed to push some refs to <span class="s1">'https://example.com/gitlab-org/gitlab-ce.git'</span>
+</code></pre>
+<p>Similarly, when a user that is not the author of the locked state of a file
+accepts a merge request, an error message will appear stating that the file
+is locked.</p>
+
+<p><a target="_blank" href="img/file_lock_merge_request_error_message.png"><img src="img/file_lock_merge_request_error_message.png" title="" alt="Merge request error message"/></a></p>
+<h2 id='locking-a-file-or-a-directory'>Locking a file or a directory <a class='anchor' href='file_lock.html#locking-a-file-or-a-directory' title='Permalink'></a></h2>
+<p>To lock a file, navigate to the repository tree under the <strong>Repository &gt; Files</strong> tab,
+pick the file you want to lock and hit the &quot;Lock&quot; button.</p>
+
+<p><a target="_blank" href="img/file_lock.png"><img src="img/file_lock.png" title="" alt="Locking file"/></a></p>
+
+<hr>
+
+<p>To lock an entire directory, look for the &quot;Lock&quot; link next to &quot;History&quot;.</p>
+
+<p><a target="_blank" href="img/file_lock_folders.png"><img src="img/file_lock_folders.png" title="" alt="Locking directory"/></a></p>
+
+<hr>
+
+<p>After you lock a file or directory, it will appear as locked in the repository
+view.</p>
+
+<p><a target="_blank" href="img/file_lock_repository_view.png"><img src="img/file_lock_repository_view.png" title="" alt="Repository view"/></a></p>
+<h2 id='unlocking-a-file-or-a-directory'>Unlocking a file or a directory <a class='anchor' href='file_lock.html#unlocking-a-file-or-a-directory' title='Permalink'></a></h2>
+<p>To unlock a file or a directory, follow the same procedure as when you locked
+them. For a detailed view of every existing lock, see the next section on
+&quot;Viewing and managing existing locks&quot;.</p>
+<h2 id='viewing-and-managing-existing-locks'>Viewing and managing existing locks <a class='anchor' href='file_lock.html#viewing-and-managing-existing-locks' title='Permalink'></a></h2>
+<p>To view or manage every existing lock, navigate to the
+<strong>Project &gt; Repository &gt; Locked Files</strong> area. There, you can view all existing
+locks and <a href="file_lock.html#permissions-on-file-locking">remove the ones you have permission for</a>.</p>
+
+<p><a target="_blank" href="img/file_lock_list.png"><img src="img/file_lock_list.png" title="" alt="Locked Files"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/file_lock.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Using SSH keys - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Using SSH keys</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#using-ssh-keys">Using SSH keys</a>
+<ul>
+<li>
+<a href="README.html#inject-keys-in-your-build-server">Inject keys in your build server</a>
+<ul>
+<li>
+<a href="README.html#how-it-works">How it works</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#ssh-keys-when-using-the-docker-executor">SSH keys when using the Docker executor</a>
+</li>
+<li>
+<a href="README.html#ssh-keys-when-using-the-shell-executor">SSH keys when using the Shell executor</a>
+</li>
+<li>
+<a href="README.html#example-project">Example project</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='using-ssh-keys'>Using SSH keys <a class='anchor' href='README.html#using-ssh-keys' title='Permalink'></a></h1>
+<p>GitLab currently doesn&#39;t have built-in support for managing SSH keys in a build
+environment.</p>
+
+<p>The SSH keys can be useful when:</p>
+
+<ol>
+<li>You want to checkout internal submodules</li>
+<li>You want to download private packages using your package manager (eg. bundler)</li>
+<li>You want to deploy your application to eg. Heroku or your own server</li>
+<li>You want to execute SSH commands from the build server to the remote server</li>
+<li>You want to rsync files from your build server to the remote server</li>
+</ol>
+
+<p>If anything of the above rings a bell, then you most likely need an SSH key.</p>
+<h2 id='inject-keys-in-your-build-server'>Inject keys in your build server <a class='anchor' href='README.html#inject-keys-in-your-build-server' title='Permalink'></a></h2>
+<p>The most widely supported method is to inject an SSH key into your build
+environment by extending your <code>.gitlab-ci.yml</code>.</p>
+
+<p>This is the universal solution which works with any type of executor
+(docker, shell, etc.).</p>
+<h3 id='how-it-works'>How it works <a class='anchor' href='README.html#how-it-works' title='Permalink'></a></h3>
+<ol>
+<li>Create a new SSH key pair with <a href="http://linux.die.net/man/1/ssh-keygen">ssh-keygen</a></li>
+<li>Add the private key as a <strong>Secret Variable</strong> to the project</li>
+<li>Run the <a href="http://linux.die.net/man/1/ssh-agent">ssh-agent</a> during build to load the private key.</li>
+</ol>
+<h2 id='ssh-keys-when-using-the-docker-executor'>SSH keys when using the Docker executor <a class='anchor' href='README.html#ssh-keys-when-using-the-docker-executor' title='Permalink'></a></h2>
+<p>You will first need to create an SSH key pair. For more information, follow the
+instructions to <a href="../../ssh/README.html">generate an SSH key</a>. Do not add a comment
+to the SSH key, or the <code>before_script</code> will prompt for a passphrase.</p>
+
+<p>Then, create a new <strong>Secret Variable</strong> in your project settings on GitLab
+following <strong>Settings &gt; Variables</strong>. As <strong>Key</strong> add the name <code>SSH_PRIVATE_KEY</code>
+and in the <strong>Value</strong> field paste the content of your <em>private</em> key that you
+created earlier.</p>
+
+<p>Next you need to modify your <code>.gitlab-ci.yml</code> with a <code>before_script</code> action.
+Add it to the top:</p>
+<pre class="highlight plaintext"><code>before_script:
+  # Install ssh-agent if not already installed, it is required by Docker.
+  # (change apt-get to yum if you use a CentOS-based image)
+  - 'which ssh-agent || ( apt-get update -y &amp;&amp; apt-get install openssh-client -y )'
+
+  # Run ssh-agent (inside the build environment)
+  - eval $(ssh-agent -s)
+
+  # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+  - ssh-add &lt;(echo "$SSH_PRIVATE_KEY")
+
+  # For Docker builds disable host key checking. Be aware that by adding that
+  # you are suspectible to man-in-the-middle attacks.
+  # WARNING: Use this only with the Docker executor, if you use it with shell
+  # you will overwrite your user's SSH config.
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] &amp;&amp; echo -e "Host *\n\tStrictHostKeyChecking no\n\n" &gt; ~/.ssh/config'
+</code></pre>
+<p>As a final step, add the <em>public</em> key from the one you created earlier to the
+services that you want to have an access to from within the build environment.
+If you are accessing a private GitLab repository you need to add it as a
+<a href="../../ssh/README.html#deploy-keys">deploy key</a>.</p>
+
+<p>That&#39;s it! You can now have access to private servers or repositories in your
+build environment.</p>
+<h2 id='ssh-keys-when-using-the-shell-executor'>SSH keys when using the Shell executor <a class='anchor' href='README.html#ssh-keys-when-using-the-shell-executor' title='Permalink'></a></h2>
+<p>If you are using the Shell executor and not Docker, it is easier to set up an
+SSH key.</p>
+
+<p>You can generate the SSH key from the machine that GitLab Runner is installed
+on, and use that key for all projects that are run on this machine.</p>
+
+<p>First, you need to login to the server that runs your builds.</p>
+
+<p>Then from the terminal login as the <code>gitlab-runner</code> user and generate the SSH
+key pair as described in the <a href="../../ssh/README.html">SSH keys documentation</a>.</p>
+
+<p>As a final step, add the <em>public</em> key from the one you created earlier to the
+services that you want to have an access to from within the build environment.
+If you are accessing a private GitLab repository you need to add it as a
+<a href="../../ssh/README.html#deploy-keys">deploy key</a>.</p>
+
+<p>Once done, try to login to the remote server in order to accept the fingerprint:</p>
+<pre class="highlight shell"><code>ssh &lt;address-of-my-server&gt;
+</code></pre>
+<p>For accessing repositories on GitLab.com, the <code>&lt;address-of-my-server&gt;</code> would be
+<code>git@gitlab.com</code>.</p>
+<h2 id='example-project'>Example project <a class='anchor' href='README.html#example-project' title='Permalink'></a></h2>
+<p>We have set up an <a href="https://gitlab.com/gitlab-examples/ssh-private-key/">Example SSH Project</a> for your convenience
+that runs on <a href="https://gitlab.com">GitLab.com</a> using our publicly available
+<a href="../runners/README.html">shared runners</a>.</p>
+
+<p>Want to hack on it? Simply fork it, commit and push your changes. Within a few
+moments the changes will be picked by a public runner and the build will begin.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/ssh_keys/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

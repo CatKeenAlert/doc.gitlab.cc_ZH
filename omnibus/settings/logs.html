@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>查看所有的logs; 按 Ctrl-C 退出 - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Configuring omnibus settings</a></li>
+            
+          
+          <li class="breadcrumb">查看所有的logs; 按 Ctrl-C 退出</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="logs.html#logs">Logs</a>
+<ul>
+<li>
+<a href="logs.html#logs">使用控制台实时查看logs</a>
+</li>
+<li>
+<a href="logs.html#runit-logs">Runit logs</a>
+</li>
+<li>
+<a href="logs.html#logrotate">Logrotate日志管理</a>
+</li>
+<li>
+<a href="logs.html#udp-log-shipping-gitlab-enterprise-edition-only">UDP log shipping (GitLab Enterprise Edition only)</a>
+</li>
+<li>
+<a href="logs.html#using-a-custom-nginx-log-format">Using a custom NGINX log format</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='logs'>Logs <a class='anchor' href='logs.html#logs' title='Permalink'></a></h2><h3 id='logs'>使用控制台实时查看logs <a class='anchor' href='logs.html#logs' title='Permalink'></a></h3>
+<p>我们可以用<code>gitlab-ctl tail</code>
+命令查看实时log。</p>
+<pre class="highlight shell"><code><span class="c"># 查看所有的logs; 按 Ctrl-C 退出</span>
+sudo gitlab-ctl tail
+
+<span class="c"># 拉取/var/log/gitlab下子目录的日志</span>
+sudo gitlab-ctl tail gitlab-rails
+
+<span class="c"># 拉取某个指定的日志文件</span>
+sudo gitlab-ctl tail nginx/gitlab_error.log
+</code></pre><h3 id='runit-logs'>Runit logs <a class='anchor' href='logs.html#runit-logs' title='Permalink'></a></h3>
+<p>Runit-managed是一个跨平台的用来取代Linux系统默认的服务控制的一个init系统，
+想要了解更多知识，请自行搜索<a href="http://smarden.org/runit/">runit</a>及<a href="https://de.wikipedia.org/wiki/SysVinit">sysvinit</a>的相关信息。</p>
+
+<p>omnibus-gitlab生成logs用的Runit-managed服务是<a href="http://smarden.org/runit/svlogd.8.html">svlogd</a>，
+关于svlogd的详细介绍，
+请查看<a href="http://smarden.org/runit/svlogd.8.html">svlogd documentation</a>。</p>
+
+<p>修改<code>/etc/gitlab/gitlab.rb</code>文件里面如下参数可以自定义svlogd:</p>
+<pre class="highlight ruby"><code><span class="c1"># 下面的参数均为默认值</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'svlogd_size'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="c1"># 切割超过200M的日志文件</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'svlogd_num'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># 日志文件保留30天</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'svlogd_timeout'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="c1"># 每24 hours生成新一天的日志</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'svlogd_filter'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gzip"</span> <span class="c1"># 使用gzip压缩日志</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'svlogd_udp'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1"># 使用UDP协议传输日志</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'svlogd_prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1"># 自定义日志信息的prefix</span>
+
+<span class="c1"># 可以修改prefix,如修改为nginx</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'svlogd_prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nginx"</span>
+</code></pre><h3 id='logrotate'>Logrotate日志管理 <a class='anchor' href='logs.html#logrotate' title='Permalink'></a></h3>
+<p>Omnibus-gitlab从7.4版本开始内置了logrotate服务。
+这个服务用来切割、
+压缩并最终删除已不受Runit服务(即上节里面的svlogd)控制的日志文件，
+如<code>gitlab-rails/production.log</code>、<code>nginx/gitlab_access.log</code>。
+你可以根据需求修改<code>/etc/gitlab/gitlab.rb</code>中logrotate的参数。</p>
+<pre class="highlight ruby"><code><span class="c1"># 下面的参数均为默认值</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_frequency'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"daily"</span> <span class="c1"># 每天切割一次日志</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_size'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1"># 不按照默认值的大小切割日志</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_rotate'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># 日志文件保留30天</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_compress'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"compress"</span> <span class="c1"># 使用'man logrotate'查看详情</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_method'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"copytruncate"</span> <span class="c1"># 使用'man logrotate'查看详情</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_postrotate'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1"># 默认没有postrotate(切割后执行的)命令</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'logrotate_dateformat'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1"># 指定日志文件名格式(默认是数字表示)，比如该值修改为 "-%Y-%m-%d" ，那么切割的日志文件名为 production.log-2016-03-09.gz</span>
+
+
+<span class="c1"># 单个服务的设置会覆盖全局设置，如修改Nginx的logrotate配置</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'logrotate_frequency'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'logrotate_size'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"200M"</span>
+
+<span class="c1"># 当然你也可以任性的禁用内置的logrotate服务</span>
+<span class="n">logrotate</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre><h3 id='udp-log-shipping-gitlab-enterprise-edition-only'>UDP log shipping (GitLab Enterprise Edition only) <a class='anchor' href='logs.html#udp-log-shipping-gitlab-enterprise-edition-only' title='Permalink'></a></h3>
+<p>Omnibus-gitlab企业版可以配置使用UDP传输syslog-ish日志信息。</p>
+<pre class="highlight ruby"><code><span class="n">logging</span><span class="p">[</span><span class="s1">'udp_log_shipping_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'1.2.3.4'</span> <span class="c1"># syslog服务器地址</span>
+<span class="n">logging</span><span class="p">[</span><span class="s1">'udp_log_shipping_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1514</span> <span class="c1"># 可选，默认端口514 (syslog)</span>
+</code></pre>
+<p>log messages实例:</p>
+<pre class="highlight plaintext"><code>&lt;13&gt;Jun 26 06:33:46 ubuntu1204-test production.log: Started GET "/root/my-project/import" for 127.0.0.1 at 2014-06-26 06:33:46 -0700
+&lt;13&gt;Jun 26 06:33:46 ubuntu1204-test production.log: Processing by ProjectsController#import as HTML
+&lt;13&gt;Jun 26 06:33:46 ubuntu1204-test production.log: Parameters: {"id"=&gt;"root/my-project"}
+&lt;13&gt;Jun 26 06:33:46 ubuntu1204-test production.log: Completed 200 OK in 122ms (Views: 71.9ms | ActiveRecord: 12.2ms)
+&lt;13&gt;Jun 26 06:33:46 ubuntu1204-test gitlab_access.log: 172.16.228.1 - - [26/Jun/2014:06:33:46 -0700] "GET /root/my-project/import HTTP/1.1" 200 5775 "https://172.16.228.169/root/my-project/import" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36"
+2014-06-26_13:33:46.49866 ubuntu1204-test sidekiq: 2014-06-26T13:33:46Z 18107 TID-7nbj0 Sidekiq::Extensions::DelayedMailer JID-bbfb118dd1db20f6c39f5b50 INFO: start
+
+2014-06-26_13:33:46.52608 ubuntu1204-test sidekiq: 2014-06-26T13:33:46Z 18107 TID-7muoc RepositoryImportWorker JID-57ee926c3655fcfa062338ae INFO: start
+
+</code></pre><h3 id='using-a-custom-nginx-log-format'>Using a custom NGINX log format <a class='anchor' href='logs.html#using-a-custom-nginx-log-format' title='Permalink'></a></h3>
+<p>Nginx的access日志默认使用&#39;combined&#39;格式化日志，
+查看<a href="http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format">nginx日志格式</a>。
+如果你想用自定义日志的格式，
+修改<code>/etc/gitlab/gitlab.rb</code>
+文件如下的参数:</p>
+<pre class="highlight plaintext"><code>nginx['log_format'] = 'my format string $foo $bar'
+mattermost_nginx['log_format'] = 'my format string $foo $bar'
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/logs.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

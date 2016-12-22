@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Configuring GitLab for HA - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">High Availability</a></li>
+            
+          
+          <li class="breadcrumb">Configuring GitLab for HA</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="gitlab.html#configuring-gitlab-for-ha">Configuring GitLab for HA</a>
+<ul>
+<li>
+<a href="gitlab.html#primary-gitlab-application-server">Primary GitLab application server</a>
+</li>
+<li>
+<a href="gitlab.html#additional-configuration-for-secondary-gitlab-application-servers">Additional configuration for secondary GitLab application servers</a>
+</li>
+<li>
+<a href="gitlab.html#troubleshooting">Troubleshooting</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='configuring-gitlab-for-ha'>Configuring GitLab for HA <a class='anchor' href='gitlab.html#configuring-gitlab-for-ha' title='Permalink'></a></h1>
+<p>Assuming you have already configured a database, Redis, and NFS, you can
+configure the GitLab application server(s) now. Complete the steps below
+for each GitLab application server in your environment.</p>
+
+<blockquote>
+<p><strong>Note:</strong> There is some additional configuration near the bottom for
+  secondary GitLab application servers. It&#39;s important to read and understand
+  these additional steps before proceeding with GitLab installation.</p>
+</blockquote>
+
+<ol>
+<li><p>If necessary, install the NFS client utility packages using the following
+commands:</p>
+<pre class="highlight plaintext"><code># Ubuntu/Debian
+apt-get install nfs-common
+
+# CentOS/Red Hat
+yum install nfs-utils nfs-utils-lib
+</code></pre></li>
+<li><p>Specify the necessary NFS shares. Mounts are specified in
+<code>/etc/fstab</code>. The exact contents of <code>/etc/fstab</code> will depend on how you chose
+to configure your NFS server. See <a href="nfs.html">NFS documentation</a> for the various
+options. Here is an example snippet to add to <code>/etc/fstab</code>:</p>
+<pre class="highlight plaintext"><code>10.1.0.1:/var/opt/gitlab/.ssh /var/opt/gitlab/.ssh nfs defaults,soft,rsize=1048576,wsize=1048576,noatime,nobootwait,lookupcache=positive 0 2
+10.1.0.1:/var/opt/gitlab/gitlab-rails/uploads /var/opt/gitlab/gitlab-rails/uploads nfs defaults,soft,rsize=1048576,wsize=1048576,noatime,nobootwait,lookupcache=positive 0 2
+10.1.0.1:/var/opt/gitlab/gitlab-rails/shared /var/opt/gitlab/gitlab-rails/shared nfs defaults,soft,rsize=1048576,wsize=1048576,noatime,nobootwait,lookupcache=positive 0 2
+10.1.0.1:/var/opt/gitlab/gitlab-ci/builds /var/opt/gitlab/gitlab-ci/builds nfs defaults,soft,rsize=1048576,wsize=1048576,noatime,nobootwait,lookupcache=positive 0 2
+10.1.1.1:/var/opt/gitlab/git-data /var/opt/gitlab/git-data nfs defaults,soft,rsize=1048576,wsize=1048576,noatime,nobootwait,lookupcache=positive 0 2
+</code></pre></li>
+<li><p>Create the shared directories. These may be different depending on your NFS
+mount locations.</p>
+<pre class="highlight plaintext"><code>mkdir -p /var/opt/gitlab/.ssh /var/opt/gitlab/gitlab-rails/uploads /var/opt/gitlab/gitlab-rails/shared /var/opt/gitlab/gitlab-ci/builds /var/opt/gitlab/git-data
+</code></pre></li>
+<li><p>Download/install GitLab Omnibus using <strong>steps 1 and 2</strong> from
+<a href="https://about.gitlab.com/downloads">GitLab downloads</a>. Do not complete other
+steps on the download page.</p></li>
+<li><p>Create/edit <code>/etc/gitlab/gitlab.rb</code> and use the following configuration.
+Be sure to change the <code>external_url</code> to match your eventual GitLab front-end
+URL. Depending your the NFS configuration, you may need to change some GitLab
+data locations. See <a href="nfs.html">NFS documentation</a> for <code>/etc/gitlab/gitlab.rb</code>
+configuration values for various scenarios. The example below assumes you&#39;ve
+added NFS mounts in the default data locations.</p>
+<pre class="highlight ruby"><code><span class="n">external_url</span> <span class="s1">'https://gitlab.example.com'</span>
+
+<span class="c1"># Prevent GitLab from starting if NFS data mounts are not available</span>
+<span class="n">high_availability</span><span class="p">[</span><span class="s1">'mountpoint'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/var/opt/gitlab/git-data'</span>
+
+<span class="c1"># Disable components that will not be on the GitLab application server</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># PostgreSQL connection details</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_adapter'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'postgresql'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_encoding'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'unicode'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.1.0.5'</span> <span class="c1"># IP/hostname of database server</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'DB password'</span>
+
+<span class="c1"># Redis connection details</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'redis_port'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'6379'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'redis_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.1.0.6'</span> <span class="c1"># IP/hostname of Redis server</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'redis_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Redis Password'</span>
+</code></pre></li>
+<li><p>Run <code>sudo gitlab-ctl reconfigure</code> to compile the configuration.</p></li>
+</ol>
+<h2 id='primary-gitlab-application-server'>Primary GitLab application server <a class='anchor' href='gitlab.html#primary-gitlab-application-server' title='Permalink'></a></h2>
+<p>As a final step, run the setup rake task on the first GitLab application server.
+It is not necessary to run this on additional application servers.</p>
+
+<ol>
+<li>Initialize the database by running <code>sudo gitlab-rake gitlab:setup</code>.</li>
+</ol>
+
+<blockquote>
+<p><strong>WARNING:</strong> Only run this setup task on <strong>NEW</strong> GitLab instances because it
+  will wipe any existing data.</p>
+
+<p><strong>Note:</strong> When you specify <code>https</code> in the <code>external_url</code>, as in the example
+  above, GitLab assumes you have SSL certificates in <code>/etc/gitlab/ssl/</code>. If
+  certificates are not present, Nginx will fail to start. See
+  <a href="http://docs.gitlab.com/omnibus/settings/nginx.html#enable-https">Nginx documentation</a>
+  for more information.</p>
+</blockquote>
+<h2 id='additional-configuration-for-secondary-gitlab-application-servers'>Additional configuration for secondary GitLab application servers <a class='anchor' href='gitlab.html#additional-configuration-for-secondary-gitlab-application-servers' title='Permalink'></a></h2>
+<p>Secondary GitLab servers (servers configured <strong>after</strong> the first GitLab server)
+need some additional configuration.</p>
+
+<ol>
+<li><p>Configure shared secrets. These values can be obtained from the primary
+GitLab server in <code>/etc/gitlab/gitlab-secrets.json</code>. Add these to
+<code>/etc/gitlab/gitlab.rb</code> <strong>prior to</strong> running the first <code>reconfigure</code> in
+the steps above.</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_shell</span><span class="p">[</span><span class="s1">'secret_token'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'fbfb19c355066a9afb030992231c4a363357f77345edd0f2e772359e5be59b02538e1fa6cae8f93f7d23355341cea2b93600dab6d6c3edcdced558fc6d739860'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'otp_key_base'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'b719fe119132c7810908bba18315259ed12888d4f5ee5430c42a776d840a396799b0a5ef0a801348c8a357f07aa72bbd58e25a84b8f247a25c72f539c7a6c5fa'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'secret_key_base'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'6e657410d57c71b4fc3ed0d694e7842b1895a8b401d812c17fe61caf95b48a6d703cb53c112bc01ebd197a85da81b18e29682040e99b4f26594772a4a2c98c6d'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_key_base'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'bf2e47b68d6cafaef1d767e628b619365becf27571e10f196f98dc85e7771042b9203199d39aff91fcb6837c8ed83f2a912b278da50999bb11a2fbc0fba52964'</span>
+</code></pre></li>
+<li><p>Run <code>touch /etc/gitlab/skip-auto-migrations</code> to prevent database migrations
+from running on upgrade. Only the primary GitLab application server should
+handle migrations.</p></li>
+</ol>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='gitlab.html#troubleshooting' title='Permalink'></a></h2>
+<ul>
+<li><code>mount: wrong fs type, bad option, bad superblock on</code></li>
+</ul>
+
+<p>You have not installed the necessary NFS client utilities. See step 1 above.</p>
+
+<ul>
+<li><code>mount: mount point /var/opt/gitlab/... does not exist</code></li>
+</ul>
+
+<p>This particular directory does not exist on the NFS server. Ensure
+the share is exported and exists on the NFS server and try to remount.</p>
+
+<hr>
+
+<p>Read more on high-availability configuration:</p>
+
+<ol>
+<li><a href="database.html">Configure the database</a></li>
+<li><a href="redis.html">Configure Redis</a></li>
+<li><a href="nfs.html">Configure NFS</a></li>
+<li><a href="load_balancer.html">Configure the load balancers</a></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/high_availability/gitlab.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

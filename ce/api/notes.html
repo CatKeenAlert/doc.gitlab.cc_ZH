@@ -1,0 +1,606 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Notes - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Notes</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="notes.html#notes">Notes</a>
+<ul>
+<li>
+<a href="notes.html#issues">Issues</a>
+<ul>
+<li>
+<a href="notes.html#list-project-issue-notes">List project issue notes</a>
+</li>
+<li>
+<a href="notes.html#get-single-issue-note">Get single issue note</a>
+</li>
+<li>
+<a href="notes.html#create-new-issue-note">Create new issue note</a>
+</li>
+<li>
+<a href="notes.html#modify-existing-issue-note">Modify existing issue note</a>
+</li>
+<li>
+<a href="notes.html#delete-an-issue-note">Delete an issue note</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="notes.html#snippets">Snippets</a>
+<ul>
+<li>
+<a href="notes.html#list-all-snippet-notes">List all snippet notes</a>
+</li>
+<li>
+<a href="notes.html#get-single-snippet-note">Get single snippet note</a>
+</li>
+<li>
+<a href="notes.html#create-new-snippet-note">Create new snippet note</a>
+</li>
+<li>
+<a href="notes.html#modify-existing-snippet-note">Modify existing snippet note</a>
+</li>
+<li>
+<a href="notes.html#delete-a-snippet-note">Delete a snippet note</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="notes.html#merge-requests">Merge Requests</a>
+<ul>
+<li>
+<a href="notes.html#list-all-merge-request-notes">List all merge request notes</a>
+</li>
+<li>
+<a href="notes.html#get-single-merge-request-note">Get single merge request note</a>
+</li>
+<li>
+<a href="notes.html#create-new-merge-request-note">Create new merge request note</a>
+</li>
+<li>
+<a href="notes.html#modify-existing-merge-request-note">Modify existing merge request note</a>
+</li>
+<li>
+<a href="notes.html#delete-a-merge-request-note">Delete a merge request note</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='notes'>Notes <a class='anchor' href='notes.html#notes' title='Permalink'></a></h1>
+<p>Notes are comments on snippets, issues or merge requests.</p>
+<h2 id='issues'>Issues <a class='anchor' href='notes.html#issues' title='Permalink'></a></h2><h3 id='list-project-issue-notes'>List project issue notes <a class='anchor' href='notes.html#list-project-issue-notes' title='Permalink'></a></h3>
+<p>Gets a list of all notes for a single issue.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/issues/:issue_id/notes
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>issue_id</code> (required) - The ID of an issue</li>
+</ul>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">302</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"closed"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T09:22:45Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T10:22:45Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">377</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">305</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Text of the comment</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T09:56:03Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T09:56:03Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">121</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre><h3 id='get-single-issue-note'>Get single issue note <a class='anchor' href='notes.html#get-single-issue-note' title='Permalink'></a></h3>
+<p>Returns a single note for a specific project issue</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/issues/:issue_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>issue_id</code> (required) - The ID of a project issue</li>
+<li><code>note_id</code> (required) - The ID of an issue note</li>
+</ul>
+<h3 id='create-new-issue-note'>Create new issue note <a class='anchor' href='notes.html#create-new-issue-note' title='Permalink'></a></h3>
+<p>Creates a new note to a single project issue. If you create a note where the body
+only contains an Award Emoji, you&#39;ll receive this object back.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/issues/:issue_id/notes
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>issue_id</code> (required) - The ID of an issue</li>
+<li><code>body</code> (required) - The content of a note</li>
+<li><code>created_at</code> (optional) - Date time string, ISO 8601 formatted, e.g. 2016-03-11T03:45:40Z</li>
+</ul>
+<h3 id='modify-existing-issue-note'>Modify existing issue note <a class='anchor' href='notes.html#modify-existing-issue-note' title='Permalink'></a></h3>
+<p>Modify existing note of an issue.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/issues/:issue_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>issue_id</code> (required) - The ID of an issue</li>
+<li><code>note_id</code> (required) - The ID of a note</li>
+<li><code>body</code> (required) - The content of a note</li>
+</ul>
+<h3 id='delete-an-issue-note'>Delete an issue note <a class='anchor' href='notes.html#delete-an-issue-note' title='Permalink'></a></h3>
+<p>Deletes an existing note of an issue.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/issues/:issue_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a project</td>
+</tr>
+<tr>
+<td><code>issue_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an issue</td>
+</tr>
+<tr>
+<td><code>note_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a note</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request DELETE --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/5/issues/11/notes/636
+</code></pre>
+<p>Example Response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">636</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a good idea."</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.gravatar.com/avatar/5224fd70153710e92fb8bcf79ac29d67?s=80&amp;d=identicon"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gitlab.example.com/pipin"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-04-05T22:10:44.164Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='snippets'>Snippets <a class='anchor' href='notes.html#snippets' title='Permalink'></a></h2><h3 id='list-all-snippet-notes'>List all snippet notes <a class='anchor' href='notes.html#list-all-snippet-notes' title='Permalink'></a></h3>
+<p>Gets a list of all notes for a single snippet. Snippet notes are comments users can post to a snippet.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/snippets/:snippet_id/notes
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>snippet_id</code> (required) - The ID of a project snippet</li>
+</ul>
+<h3 id='get-single-snippet-note'>Get single snippet note <a class='anchor' href='notes.html#get-single-snippet-note' title='Permalink'></a></h3>
+<p>Returns a single note for a given snippet.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/snippets/:snippet_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>snippet_id</code> (required) - The ID of a project snippet</li>
+<li><code>note_id</code> (required) - The ID of an snippet note</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Snippet"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"file_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"snippet.rb"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T07:34:20Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T07:34:20Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='create-new-snippet-note'>Create new snippet note <a class='anchor' href='notes.html#create-new-snippet-note' title='Permalink'></a></h3>
+<p>Creates a new note for a single snippet. Snippet notes are comments users can post to a snippet.
+If you create a note where the body only contains an Award Emoji, you&#39;ll receive this object back.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/snippets/:snippet_id/notes
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>snippet_id</code> (required) - The ID of a snippet</li>
+<li><code>body</code> (required) - The content of a note</li>
+</ul>
+<h3 id='modify-existing-snippet-note'>Modify existing snippet note <a class='anchor' href='notes.html#modify-existing-snippet-note' title='Permalink'></a></h3>
+<p>Modify existing note of a snippet.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/snippets/:snippet_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>snippet_id</code> (required) - The ID of a snippet</li>
+<li><code>note_id</code> (required) - The ID of a note</li>
+<li><code>body</code> (required) - The content of a note</li>
+</ul>
+<h3 id='delete-a-snippet-note'>Delete a snippet note <a class='anchor' href='notes.html#delete-a-snippet-note' title='Permalink'></a></h3>
+<p>Deletes an existing note of a snippet.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/snippets/:snippet_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a project</td>
+</tr>
+<tr>
+<td><code>snippet_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a snippet</td>
+</tr>
+<tr>
+<td><code>note_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a note</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request DELETE --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/5/snippets/52/notes/1659
+</code></pre>
+<p>Example Response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1659</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a good idea."</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.gravatar.com/avatar/5224fd70153710e92fb8bcf79ac29d67?s=80&amp;d=identicon"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gitlab.example.com/pipin"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-04-06T16:51:53.239Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Snippet"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='merge-requests'>Merge Requests <a class='anchor' href='notes.html#merge-requests' title='Permalink'></a></h2><h3 id='list-all-merge-request-notes'>List all merge request notes <a class='anchor' href='notes.html#list-all-merge-request-notes' title='Permalink'></a></h3>
+<p>Gets a list of all notes for a single merge request.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/merge_requests/:merge_request_id/notes
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>merge_request_id</code> (required) - The ID of a project merge request</li>
+</ul>
+<h3 id='get-single-merge-request-note'>Get single merge request note <a class='anchor' href='notes.html#get-single-merge-request-note' title='Permalink'></a></h3>
+<p>Returns a single note for a given merge request.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/merge_requests/:merge_request_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>merge_request_id</code> (required) - The ID of a project merge request</li>
+<li><code>note_id</code> (required) - The ID of a merge request note</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">301</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Comment for MR"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T08:57:14Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-10-02T08:57:14Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MergeRequest"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='create-new-merge-request-note'>Create new merge request note <a class='anchor' href='notes.html#create-new-merge-request-note' title='Permalink'></a></h3>
+<p>Creates a new note for a single merge request.
+If you create a note where the body only contains an Award Emoji, you&#39;ll receive
+this object back.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/merge_requests/:merge_request_id/notes
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>merge_request_id</code> (required) - The ID of a merge request</li>
+<li><code>body</code> (required) - The content of a note</li>
+</ul>
+<h3 id='modify-existing-merge-request-note'>Modify existing merge request note <a class='anchor' href='notes.html#modify-existing-merge-request-note' title='Permalink'></a></h3>
+<p>Modify existing note of a merge request.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/merge_requests/:merge_request_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>merge_request_id</code> (required) - The ID of a merge request</li>
+<li><code>note_id</code> (required) - The ID of a note</li>
+<li><code>body</code> (required) - The content of a note</li>
+</ul>
+<h3 id='delete-a-merge-request-note'>Delete a merge request note <a class='anchor' href='notes.html#delete-a-merge-request-note' title='Permalink'></a></h3>
+<p>Deletes an existing note of a merge request.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/merge_requests/:merge_request_id/notes/:note_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a project</td>
+</tr>
+<tr>
+<td><code>merge_request_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a merge request</td>
+</tr>
+<tr>
+<td><code>note_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a note</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request DELETE --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/5/merge_requests/7/notes/1602
+</code></pre>
+<p>Example Response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1602</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a good idea."</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pipin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pip"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:01Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.gravatar.com/avatar/5224fd70153710e92fb8bcf79ac29d67?s=80&amp;d=identicon"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gitlab.example.com/pipin"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-04-05T22:11:59.923Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MergeRequest"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/api/notes.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

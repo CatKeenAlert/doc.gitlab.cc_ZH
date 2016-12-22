@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab as OAuth2 authentication service provider - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">GitLab as OAuth2 authentication service provider</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="oauth_provider.html#gitlab-as-oauth2-authentication-service-provider">GitLab as OAuth2 authentication service provider</a>
+<ul>
+<li>
+<a href="oauth_provider.html#introduction-to-oauth">Introduction to OAuth</a>
+</li>
+<li>
+<a href="oauth_provider.html#adding-an-application-through-the-profile">Adding an application through the profile</a>
+</li>
+<li>
+<a href="oauth_provider.html#oauth-applications-in-the-admin-area">OAuth applications in the admin area</a>
+</li>
+<li>
+<a href="oauth_provider.html#authorized-applications">Authorized applications</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-as-oauth2-authentication-service-provider'>GitLab as OAuth2 authentication service provider <a class='anchor' href='oauth_provider.html#gitlab-as-oauth2-authentication-service-provider' title='Permalink'></a></h1>
+<p>This document is about using GitLab as an OAuth authentication service provider
+to sign in to other services.</p>
+
+<p>If you want to use other OAuth authentication service providers to sign in to
+GitLab, please see the <a href="../api/oauth2.html">OAuth2 client documentation</a>.</p>
+<h2 id='introduction-to-oauth'>Introduction to OAuth <a class='anchor' href='oauth_provider.html#introduction-to-oauth' title='Permalink'></a></h2>
+<p><a href="http://oauth.net/2/" title="OAuth website">OAuth</a> provides to client applications a &#39;secure delegated access&#39; to server
+resources on behalf of a resource owner. In fact, OAuth allows an authorization
+server to issue access tokens to third-party clients with the approval of the
+resource owner, or the end-user.</p>
+
+<p>OAuth is mostly used as a Single Sign-On service (SSO), but you can find a
+lot of different uses for this functionality. For example, you can allow users
+to sign in to your application with their GitLab.com account, or GitLab.com
+can be used for authentication to your GitLab instance
+(see <a href="gitlab.html">GitLab OmniAuth</a>).</p>
+
+<p>The &#39;GitLab Importer&#39; feature is also using the OAuth protocol to give access
+to repositories without sharing user credentials to your GitLab.com account.</p>
+
+<hr>
+
+<p>GitLab supports two ways of adding a new OAuth2 application to an instance. You
+can either add an application as a regular user or add it in the admin area.
+What this means is that GitLab can actually have instance-wide and a user-wide
+applications. There is no difference between them except for the different
+permission levels they are set (user/admin). The default callback URL is 
+<code>http://your-gitlab.example.com/users/auth/gitlab/callback</code></p>
+<h2 id='adding-an-application-through-the-profile'>Adding an application through the profile <a class='anchor' href='oauth_provider.html#adding-an-application-through-the-profile' title='Permalink'></a></h2>
+<p>In order to add a new application via your profile, navigate to
+<strong>Profile Settings &gt; Applications</strong> and select <strong>New Application</strong>.</p>
+
+<p><a target="_blank" href="img/oauth_provider_user_wide_applications.png"><img src="img/oauth_provider_user_wide_applications.png" title="" alt="New OAuth application"/></a></p>
+
+<hr>
+
+<p>In the application form, enter a <strong>Name</strong> (arbitrary), and make sure to set up
+correctly the <strong>Redirect URI</strong> which is the URL where users will be sent after
+they authorize with GitLab.</p>
+
+<p><a target="_blank" href="img/oauth_provider_application_form.png"><img src="img/oauth_provider_application_form.png" title="" alt="New OAuth application form"/></a></p>
+
+<hr>
+
+<p>When you hit <strong>Submit</strong> you will be provided with the application ID and
+the application secret which you can then use with your application that
+connects to GitLab.</p>
+
+<p><a target="_blank" href="img/oauth_provider_application_id_secret.png"><img src="img/oauth_provider_application_id_secret.png" title="" alt="OAuth application ID and secret"/></a></p>
+
+<hr>
+<h2 id='oauth-applications-in-the-admin-area'>OAuth applications in the admin area <a class='anchor' href='oauth_provider.html#oauth-applications-in-the-admin-area' title='Permalink'></a></h2>
+<p>To create an application that does not belong to a certain user, you can create
+it from the admin area.</p>
+
+<p><a target="_blank" href="img/oauth_provider_admin_application.png"><img src="img/oauth_provider_admin_application.png" title="" alt="OAuth admin_applications"/></a></p>
+
+<hr>
+<h2 id='authorized-applications'>Authorized applications <a class='anchor' href='oauth_provider.html#authorized-applications' title='Permalink'></a></h2>
+<p>Every application you authorized to use your GitLab credentials will be shown
+in the <strong>Authorized applications</strong> section under <strong>Profile Settings &gt; Applications</strong>.</p>
+
+<p><a target="_blank" href="img/oauth_provider_authorized_application.png"><img src="img/oauth_provider_authorized_application.png" title="" alt="Authorized_applications"/></a></p>
+
+<hr>
+
+<p>As you can see, the default scope <code>api</code> is used, which is the only scope that
+GitLab supports so far. At any time you can revoke any access by just clicking
+<strong>Revoke</strong>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/integration/oauth_provider.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

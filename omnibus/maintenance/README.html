@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Maintenance commands 维护命令 - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+          
+          <li class="breadcrumb">Maintenance commands 维护命令</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#maintenance-commands">Maintenance commands 维护命令</a>
+<ul>
+<li>
+<a href="README.html#after-installation">After installation 部署成功后可用的命令</a>
+<ul>
+<li>
+<a href="README.html#get-service-status">Get service status 查看各服务状态</a>
+</li>
+<li>
+<a href="README.html#tail-process-logs-logs">Tail process logs 终端滚动打印logs</a>
+</li>
+<li>
+<a href="README.html#starting-and-stopping">Starting and stopping 启动停止服务</a>
+</li>
+<li>
+<a href="README.html#invoking-rake-tasks-rake-tasks">Invoking Rake tasks 唤醒Rake tasks</a>
+</li>
+<li>
+<a href="README.html#starting-a-rails-console-session-rails">Starting a Rails console session 启动Rails控制台会话</a>
+</li>
+<li>
+<a href="README.html#starting-a-postgres-superuser-psql-session-postgres-psql">Starting a Postgres superuser psql session 启动Postgres超级用户psql会话</a>
+</li>
+<li>
+<a href="README.html#container-registry-garbage-collection">Container registry garbage collection 容器注册服务垃圾回收</a>
+<ul>
+<li>
+<a href="README.html#doing-garbage-collect-without-downtime-registry">Doing garbage collect without downtime 不停机回收registry垃圾</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='maintenance-commands'>Maintenance commands 维护命令 <a class='anchor' href='README.html#maintenance-commands' title='Permalink'></a></h1><h2 id='after-installation'>After installation 部署成功后可用的命令 <a class='anchor' href='README.html#after-installation' title='Permalink'></a></h2><h3 id='get-service-status'>Get service status 查看各服务状态 <a class='anchor' href='README.html#get-service-status' title='Permalink'></a></h3>
+<p>运行<code>sudo gitlab-ctl status</code>，将打印如下所示内容：</p>
+<pre class="highlight plaintext"><code>run: nginx: (pid 972) 7s; run: log: (pid 971) 7s
+run: postgresql: (pid 962) 7s; run: log: (pid 959) 7s
+run: redis: (pid 964) 7s; run: log: (pid 963) 7s
+run: sidekiq: (pid 967) 7s; run: log: (pid 966) 7s
+run: unicorn: (pid 961) 7s; run: log: (pid 960) 7s
+</code></pre><h3 id='tail-process-logs-logs'>Tail process logs 终端滚动打印logs <a class='anchor' href='README.html#tail-process-logs-logs' title='Permalink'></a></h3>
+<p>前往 <a href="../settings/logs.html">settings/logs.md.</a> 查看。</p>
+<h3 id='starting-and-stopping'>Starting and stopping 启动停止服务 <a class='anchor' href='README.html#starting-and-stopping' title='Permalink'></a></h3>
+<p>omnibus-gitlab安装配置完成后，服务器会生成一个Runit的服务目录，
+(<code>runsvdir</code>)通过<code>/etc/inittab</code> 或 <code>/etc/init/gitlab-runsvdir.conf</code>
+配置文件引导运行GitLab服务。我们不建议用<code>runsvdir</code>直接控制服务的运行状态，
+Gitlab提供了<code>gitlab-ctl</code>这个前端命令代替<code>runsvdir</code>。
+<a href="http://www.cnblogs.com/wellbye/p/3164162.html">什么是runit,runsvdir?</a></p>
+
+<p>Gitlab可以用下面这些指定启动、停止或者重启
+Gitlab所有的组件。</p>
+<pre class="highlight shell"><code><span class="c"># 启动Gitlab所有组件</span>
+sudo gitlab-ctl start
+
+<span class="c"># 停止Gitlab所有组件</span>
+sudo gitlab-ctl stop
+
+<span class="c"># 重启Gitlab所有组件</span>
+sudo gitlab-ctl restart
+</code></pre>
+<p><strong>Note</strong> 单核的服务器重启Unicorn和Sidekiq会多需要点时间。
+在Unicorn重启完成之前GitLab会报502错误，
+如一直是502错误就需要查看logs来定位错误原因了。</p>
+
+<p><code>gitlab-ctl</code>也可以单独对GitLab的组件进行重启、停止和启动的操作：</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl restart sidekiq
+</code></pre>
+<p>Unicorn 支持zero-downtime(零停机)重载，可以用如下命令触发：</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl hup unicorn  <span class="c">#使unicorn进程HUP,即挂起unicorn</span>
+</code></pre>
+<p><strong>Note</strong> 重载Unicorn不能更新Ruby runtime.</p>
+<h3 id='invoking-rake-tasks-rake-tasks'>Invoking Rake tasks 唤醒Rake tasks <a class='anchor' href='README.html#invoking-rake-tasks-rake-tasks' title='Permalink'></a></h3>
+<p>可以用<code>gitlab-rake</code>唤醒Gitlab Rake task，如：</p>
+<pre class="highlight shell"><code>sudo gitlab-rake gitlab:check   <span class="c">#运行gitlab体检任务</span>
+</code></pre>
+<p>如果你当前是&#39;git&#39;用户，可以不用&#39;sudo&#39;。</p>
+
+<p>与传统方式安装的Gitlab相反，
+Omnibus唤醒rake task不需要切换用户或使用<code>RAILS_ENV</code>环境变量，
+可以放心的用<code>gitlab-rake</code>这个封装脚本。</p>
+<h3 id='starting-a-rails-console-session-rails'>Starting a Rails console session 启动Rails控制台会话 <a class='anchor' href='README.html#starting-a-rails-console-session-rails' title='Permalink'></a></h3>
+<p>如需要访问GitLab的Rails控制台，只需要如下所示的一个命令即可。
+但是一定要谨慎，在该控制台下很容易无意中修改、污染，
+甚至销毁数据。</p>
+<pre class="highlight shell"><code><span class="c"># 启动GitLab Rails控制台</span>
+sudo gitlab-rails console
+</code></pre>
+<p>在控制台修改的内容，需要运行<code>gitlab-ctl reconfigure</code>后才会生效。</p>
+<h3 id='starting-a-postgres-superuser-psql-session-postgres-psql'>Starting a Postgres superuser psql session 启动Postgres超级用户psql会话 <a class='anchor' href='README.html#starting-a-postgres-superuser-psql-session-postgres-psql' title='Permalink'></a></h3>
+<p>如需要用超级用户访问GitLab内置的Postgres服务，
+可以用GitLab封装的<code>gitlab-psql</code>命令。
+这个命令和常规的<code>psql</code>命令的参数是一样的。</p>
+<pre class="highlight shell"><code><span class="c"># 使用超级用户启动psql访问Gitlab数据库</span>
+sudo gitlab-psql -d gitlabhq_production
+</code></pre>
+<p>所有更新都需要运行 <code>gitlab-ctl reconfigure</code> 才会生效。
+<code>gitlab-psql</code> 命令不能连接远程Postgres服务，
+也不能连接本地的
+non-Omnibus Postgres 服务。</p>
+
+<p>如果你是从一个没有 world-readable (全局可读)的目录运行 <code>gitlab-psql</code>
+命令(如在 /root目录)，<code>psql</code> 会打印如下警告信息：</p>
+<pre class="highlight plaintext"><code>could not change directory to "/root"  #不能更改到 /root 目录
+</code></pre>
+<p>这是个正常的警告，可以忽略。</p>
+<h3 id='container-registry-garbage-collection'>Container registry garbage collection 容器注册服务垃圾回收 <a class='anchor' href='README.html#container-registry-garbage-collection' title='Permalink'></a></h3>
+<p>Container registry会占用大量的磁盘空间。
+垃圾回收命令可清理未使用的layers(与Docker容器的layers同理)。</p>
+
+<blockquote>
+<p>Container registry ：GitLab的容器注册服务，与Docker registry同理，
+下文中不对registry独立翻译。</p>
+</blockquote>
+
+<p>运行内置的垃圾回收命令前，
+有一系列的注意事项需要了解：</p>
+
+<ul>
+<li>内置垃圾回收命令在回收垃圾前会停止registry服务</li>
+<li>垃圾回收需要一定的时间处理，
+消耗的时间取决于存储数据的大小。</li>
+<li>如果你修改了registry 配置文件的路径，
+需要指定下修改后的路径。</li>
+<li>垃圾回收完成后，registry服务会自动启动。</li>
+</ul>
+
+<p><strong>警告</strong> 下面的命令将导致Container registry停止服务。</p>
+
+<p>如未修改过registry的配置文件路径，
+直接运行下面的命令进行垃圾回收：</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ctl registry-garbage-collect
+</code></pre>
+<p>垃圾回收需要一定的时间处理，消耗的时间取决于存储数据的大小。</p>
+
+<p>如修改过registry配置文件 &#39;config.yml&#39;的路径，用下面的方式执行垃圾回收：</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ctl registry-garbage-collect /path/to/config.yml
+</code></pre><h4 id='doing-garbage-collect-without-downtime-registry'>Doing garbage collect without downtime 不停机回收registry垃圾 <a class='anchor' href='README.html#doing-garbage-collect-without-downtime-registry' title='Permalink'></a></h4>
+<p>你也通过把Container registry设置成只读模式来实现不停机回收垃圾。
+在垃圾回收期间，客户端允许从Container registry拉取(pull)
+但不能推送(push)。</p>
+
+<p>按顺序进行下面几个步骤的操作，就可以完成垃圾回收了：</p>
+
+<ol>
+<li><p>修改<code>/etc/gitlab/gitlab.rb</code> 文件，把registry指定为只读模式：</p>
+<pre class="highlight ruby"><code><span class="n">registry</span><span class="p">[</span><span class="s1">'storage'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'maintenance'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">'readonly'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s1">'enabled'</span> <span class="o">=&gt;</span> <span class="s1">'true'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<p>保存退出，运行<code>sudo gitlab-ctl reconfigure</code>。此时
+Container registry 将转为只读模式。</p></li>
+<li><p>触发垃圾回收命令：</p>
+<pre class="highlight plaintext"><code>sudo /opt/gitlab/embedded/bin/registry garbage-collect /var/opt/gitlab/registry/config.yml
+</code></pre>
+<p>运行上面的命令后就会开始垃圾回收了，这个命令会消耗一定的时间来完成垃圾回收任务。</p></li>
+<li><p>修改 <code>/etc/gitlab/gitlab.rb</code> 文件，关闭registry的只读模式:</p>
+<pre class="highlight ruby"><code><span class="n">registry</span><span class="p">[</span><span class="s1">'storage'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'maintenance'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">'readonly'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s1">'enabled'</span> <span class="o">=&gt;</span> <span class="s1">'false'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></li>
+</ol>
+
+<p>最后运行 <code>sudo gitlab-ctl reconfigure</code>。</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/maintenance/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

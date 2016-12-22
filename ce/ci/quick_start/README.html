@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>快速开始 - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI 中文文档</a></li>
+            
+          
+          <li class="breadcrumb">快速开始</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html">快速开始</a>
+<ul>
+<li>
+<a href="README.html#gitlab-ci-yml">创建<code>.gitlab-ci.yml</code></a>
+<ul>
+<li>
+<a href="README.html#what-is-gitlab-ci-yml">What is <code>.gitlab-ci.yml</code></a>
+</li>
+<li>
+<a href="README.html#gitlab-ci-yml">创建一个简单的<code>.gitlab-ci.yml</code>文件</a>
+</li>
+<li>
+<a href="README.html#push-gitlab-ci-yml-gitlab">Push <code>.gitlab-ci.yml</code> 到GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#runner">配置Runner</a>
+<ul>
+<li>
+<a href="README.html#shared-runners-runners">Shared Runners(共享Runners)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#pipleline-build">可视化的pipleline和build状态</a>
+</li>
+<li>
+<a href="README.html#build">启用Build邮件通知</a>
+</li>
+<li>
+<a href="README.html">示例</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id=''>快速开始 <a class='anchor' href='README.html#' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong> 从8.0版本开始, GitLab <a href="https://www.gitlab.cc/gitlab-ci/">Continuous Integration</a> (CI)
+已经完全集成到GitLab里面，
+默认情况下所有项目都会[启用]CI功能。</p>
+</blockquote>
+
+<p>下面的长篇大论将讲述GitLab CI是如何工作的。</p>
+
+<hr>
+
+<p>GitLab提供<a href="https://www.gitlab.cc/gitlab-ci/">可持续集成</a>服务。只要在你的仓库根目录
+[创建一个<code>.gitlab-ci.yml</code> 文件][yaml语法]，
+并为该项目指派一个<a href="../runners/README.html">Runner</a>，当有合并请求或者
+push的时候就会触发build。</p>
+
+<p>这个<code>.gitlab-ci.yml</code> 文件定义GitLab runner要做哪些操作。
+默认有3个[stages(阶段)]: <code>build</code>、<code>test</code>、<code>deploy</code>。</p>
+
+<p>当build完成后(返回非零值)，你会看到push的
+commit或者合并请求前面出现一个绿色的对号。
+这个功能很方便的让你检查出来合并请求是否会导致build失败，
+免的你去检查代码。</p>
+
+<p>大部分项目用GitLab&#39;s CI服务跑build测试，
+开发者会很快得到反馈，知道自己是否写出了BUG。</p>
+
+<p>所以简单的说，要让CI工作可总结为以下几点:</p>
+
+<ol>
+<li>在仓库根目录创建一个名为<code>.gitlab-ci.yml</code> 的文件</li>
+<li>为该项目配置一个Runner</li>
+</ol>
+
+<p>完成上面的步骤后，每次push代码到Git仓库，
+Runner就会自动开始pipeline，
+pipeline的进度可以在该项目的<code>/pipelines</code>页面查看。</p>
+
+<hr>
+
+<p>上面的手册都假定你符合下面的条件:</p>
+
+<ul>
+<li>你的GitLab实例版本不低于8.0，或者你的代码托管在
+<a href="https://gitlab.com/users/sign_in">GitLab.com</a></li>
+<li>即将使用CI的项目是托管在GitLab上的</li>
+</ul>
+
+<p>下面让我们分几个部分解开GitLab CI的疑惑。</p>
+<h2 id='gitlab-ci-yml'>创建<code>.gitlab-ci.yml</code> <a class='anchor' href='README.html#gitlab-ci-yml' title='Permalink'></a></h2>
+<p>在创建 <code>.gitlab-ci.yml</code>文件前，
+我们先简单的解释下关于这个文件的一些知识。</p>
+<h3 id='what-is-gitlab-ci-yml'>What is <code>.gitlab-ci.yml</code> <a class='anchor' href='README.html#what-is-gitlab-ci-yml' title='Permalink'></a></h3>
+<p><code>.gitlab-ci.yml</code> 是配置CI在你的项目中会做哪些操作，
+这个文件位于仓库的根目录。</p>
+
+<p>当有新内容push到仓库后，GitLab会查找是否有<code>.gitlab-ci.yml</code>文件，如果文件存在，
+<em>Runners</em> 将会根据该文件的内容开始build
+本次commit。</p>
+
+<p>因为<code>.gitlab-ci.yml</code>文件放在仓库里，所以这个文件是受版本控制的，
+旧版本的<code>.gitlab-ci.yml</code>也能build成功，使用forks可以解决这个问题。
+同时也可以指定CI单独build某个分支。
+你可以查阅更多关于我们用 <code>.gitlab-ci.yml</code>而抛弃原来独立CI的原因。
+<a href="https://www.gitlab.cc/2015/05/06/why-were-replacing-gitlab-ci-jobs-with-gitlab-ci-dot-yml/">点此查看</a>.</p>
+
+<p><strong>Note:</strong> <code>.gitlab-ci.yml</code> 使用<a href="https://en.wikipedia.org/wiki/YAML">YAML</a>语法，
+你需要格外注意缩进格式，要用空格来缩进，不能用tabs来缩进。</p>
+<h3 id='gitlab-ci-yml'>创建一个简单的<code>.gitlab-ci.yml</code>文件 <a class='anchor' href='README.html#gitlab-ci-yml' title='Permalink'></a></h3>
+<p>在你的仓库跟目录创建一个名为<code>.gitlab-ci.yml</code>的文件。
+下面是针对Ruby on Rails项目的一个例子。</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">apt-get update -qq &amp;&amp; apt-get install -y -qq sqlite3 libsqlite3-dev nodejs</span>
+  <span class="pi">-</span> <span class="s">ruby -v</span>
+  <span class="pi">-</span> <span class="s">which ruby</span>
+  <span class="pi">-</span> <span class="s">gem install bundler --no-ri --no-rdoc</span>
+  <span class="pi">-</span> <span class="s">bundle install --jobs $(nproc)  "${FLAGS[@]}"</span>
+
+<span class="na">rspec</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">bundle exec rspec</span>
+
+<span class="na">rubocop</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">bundle exec rubocop</span>
+</code></pre>
+<p>这是一个最简单的build配置，
+大部分Ruby程序都可以套用这个例子。</p>
+
+<ol>
+<li>定义两个任务，<code>rspec</code>和<code>rubocop</code>(名字可以随便起,这两个其实都是ruby程序中的库)，这两个任务会执行两段不同的命令。</li>
+<li>在每个任务之前，定义为<code>before_script</code>里面的命令会优先执行。</li>
+</ol>
+
+<p><code>.gitlab-ci.yml</code>文件定义了任务应该在何时以何种方式来运行。
+任务的定义应以一个处在顶级的元素开始(如上面例子中的<code>rspec</code>和<code>rubocop</code>)，
+之后一般都会包含<code>script</code>这个关键字。
+任务用来构建你的应用，它会被指定的<a href="../runners/README.html">Runners</a>来执行，
+Runners会以它自己的系统环境来构建你的应用。</p>
+
+<p>需要特别注意的是，每个任务都是彼此独立运行的。</p>
+
+<p>GitLab服务器上有一个Lint工具可以用来检查你的<code>.gitlab-ci.yml</code>是否有效，
+你可用通过访问你的域名加<code>ci/lint</code>这个路径来打开Lint工具。
+也可以点击 <strong>项目 &gt; Builds</strong>
+页面的右上角的&quot;CI Lint&quot;按钮打开Lint工具。</p>
+
+<p>查看更多信息关于<code>.gitlab-ci.yml</code>语法的信息，请点击
+<a href="../yaml/README.html">.gitlab-ci.yml详解</a>.</p>
+<h3 id='push-gitlab-ci-yml-gitlab'>Push <code>.gitlab-ci.yml</code> 到GitLab <a class='anchor' href='README.html#push-gitlab-ci-yml-gitlab' title='Permalink'></a></h3>
+<p>如果你已经创建好<code>.gitlab-ci.yml</code>，
+现在应该把它push到GitLab上你的仓库里面了。</p>
+<pre class="highlight shell"><code>git add .gitlab-ci.yml
+git commit -m <span class="s2">"Add .gitlab-ci.yml"</span>
+git push origin master
+</code></pre>
+<p>现在在项目首页的 <strong>Pipelines</strong> 页面可以看到这个pipeline已经处于pending状态了。</p>
+
+<p>你也可以在 <strong>Commits</strong> 页面注意到
+commit SHA前面会有一个小时钟的小图标。</p>
+
+<p><a target="_blank" href="img/new_commit.png"><img src="img/new_commit.png" title="" alt="New commit pending"/></a></p>
+
+<p>点击这个小图标就可以看到该
+commit相关的Build状态了。</p>
+
+<p><a target="_blank" href="img/single_commit_status_pending.png"><img src="img/single_commit_status_pending.png" title="" alt="Single commit builds page"/></a></p>
+
+<p>我们可以看到这里有两个任务处于挂起(pending)状态，
+这两个任务就是我们之前写在<code>.gitlab-ci.yml</code>里面的。
+红色的三角警告标志的意思是我们还没有给这次build配置Runner。</p>
+
+<p>下面我们就来讲解下如何给挂起的builds配置Runner。</p>
+<h2 id='runner'>配置Runner <a class='anchor' href='README.html#runner' title='Permalink'></a></h2>
+<p>在GitLab中，Runners会按照你在<code>.gitlab-ci.yml</code>里面定义的任务进行Builds。
+Runner可以运行在虚拟机、VPS、物理机、docker容器甚至集群上。
+GitLab与Runners通过API进行通信，
+所以只要Runners能访问网络就能与GitLab通信。</p>
+
+<p>一个Runner可以指定给特定的或者多个项目，
+如果一个Runner给所有的项目提供服务，我们叫它 <em>Shared Runner</em> 。</p>
+
+<p>想了解更过专用Runner和共享Runner的区别，请查看
+<a href="../runners/README.html">Runners</a> 文档。</p>
+
+<p>在 <strong>Settings &gt; Runners</strong> 页面可以查看这个项目使用了哪些Runners。
+安装一个Runner超级简单，
+官方的Runner是用Go语言开发的，
+源码可以在后面的地址下载<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner">https://gitlab.com/gitlab-org/gitlab-ci-multi-runner</a>。</p>
+
+<p>按照下面的两个步骤就可以配置一个整装待发的Runner:</p>
+
+<ol>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/tree/master#install-gitlab-runner">安装Runner</a></li>
+<li><a href="../runners/README.html#registering-a-specific-runner">配置Runner</a></li>
+</ol>
+
+<p>掌握上面的两点后，你可以安装一个属于你自己的Runner，
+或者使用下面章节介绍的Shared Runner(共享Runner)。</p>
+
+<p>关于其他语言开发的非官方的Runners，请查看
+<a href="http://www.gitlab.cc/gitlab-ci/#gitlab-runner">多样化的GitLab Runners介绍</a>.</p>
+
+<p>Runner安装配置好后，
+在 <strong>Settings &gt; Runners</strong> 页面就可以看到已经激活的Runners了。</p>
+
+<p><a target="_blank" href="img/runners_activated.png"><img src="img/runners_activated.png" title="" alt="Activated runners"/></a></p>
+<h3 id='shared-runners-runners'>Shared Runners(共享Runners) <a class='anchor' href='README.html#shared-runners-runners' title='Permalink'></a></h3>
+<p>如果你的代码托管在<a href="https://gitlab.com/">GitLab.com</a>，
+你可以使用GitLab Inc提供的 <strong>Shared Runners</strong> 。</p>
+
+<p>基于<a href="https://gitlab.com/">GitLab.com</a>
+基础架构的虚拟器可以Build任何项目。</p>
+
+<p>在项目的 <strong>Settings &gt; Runners</strong> 页面点击 <strong>Enable shared runners</strong>
+可以启用 <strong>Shared Runners</strong> 。</p>
+
+<p><a href="../runners/README.html">关于Shared Runners</a>.</p>
+<h2 id='pipleline-build'>可视化的pipleline和build状态 <a class='anchor' href='README.html#pipleline-build' title='Permalink'></a></h2>
+<p>成功配置Runner后,你会发现最后一次提交的状态由 <em>pengding</em> 变成了
+<em>running</em>,<em>success</em> 或者 <em>failed</em>.</p>
+
+<p>你可以在 <strong>Pipelines</strong> 页面可以查看该项目所有的 pipelise.</p>
+
+<p><a target="_blank" href="img/pipelines_status.png"><img src="img/pipelines_status.png" title="" alt="Commit status"/></a></p>
+
+<p>或者在 <strong>Pipelines &gt; Builds</strong> 页面查看所有的builds.</p>
+
+<p><a target="_blank" href="img/builds_status.png"><img src="img/builds_status.png" title="" alt="Commit status"/></a></p>
+
+<p>点击Build ID,可以看到这个build的所有log。
+这是诊断build失败原因
+或者build的结果与你的期望值不一样的关键方法。</p>
+
+<p><a target="_blank" href="img/build_log.png"><img src="img/build_log.png" title="" alt="Build log"/></a></p>
+
+<p>当然，你也能在GitLab的其他很多页面查看任何commit的build
+status,比如 <strong>Commits</strong> 和  <strong>Merge Requests</strong> 页面。</p>
+<h2 id='build'>启用Build邮件通知 <a class='anchor' href='README.html#build' title='Permalink'></a></h2>
+<p>如果你想收到builds返回状态的邮件
+通知，必须在该项目的设置里面
+启用 <strong>Builds Emails</strong> 服务。</p>
+
+<p>更多内容请查看
+<a href="../../project_services/builds_emails.html">Builds邮件通知文档</a>.</p>
+<h2 id=''>示例 <a class='anchor' href='README.html#' title='Permalink'></a></h2>
+<p>你可以在<a href="../examples/README.html">examples README</a>查看各种语言使用
+GitLab CI的列表。</p>
+
+<p>Awesome! You started using CI in GitLab!</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/quick_start/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

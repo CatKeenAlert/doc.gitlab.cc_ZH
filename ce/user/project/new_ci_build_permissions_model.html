@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>New CI build permissions model - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">New CI build permissions model</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="new_ci_build_permissions_model.html#new-ci-build-permissions-model">New CI build permissions model</a>
+<ul>
+<li>
+<a href="new_ci_build_permissions_model.html#types-of-users">Types of users</a>
+</li>
+<li>
+<a href="new_ci_build_permissions_model.html#build-token">Build token</a>
+</li>
+<li>
+<a href="new_ci_build_permissions_model.html#build-triggers">Build triggers</a>
+</li>
+<li>
+<a href="new_ci_build_permissions_model.html#before-gitlab-8-12">Before GitLab 8.12</a>
+</li>
+<li>
+<a href="new_ci_build_permissions_model.html#making-use-of-the-new-ci-build-permissions-model">Making use of the new CI build permissions model</a>
+<ul>
+<li>
+<a href="new_ci_build_permissions_model.html#prerequisites-to-use-the-new-permissions-model">Prerequisites to use the new permissions model</a>
+</li>
+<li>
+<a href="new_ci_build_permissions_model.html#git-submodules">Git submodules</a>
+</li>
+<li>
+<a href="new_ci_build_permissions_model.html#container-registry">Container Registry</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='new-ci-build-permissions-model'>New CI build permissions model <a class='anchor' href='new_ci_build_permissions_model.html#new-ci-build-permissions-model' title='Permalink'></a></h1>
+<blockquote>
+<p>Introduced in GitLab 8.12.</p>
+</blockquote>
+
+<p>GitLab 8.12 has a completely redesigned <a href="../permissions.html#builds-permissions">build permissions</a> system. You can find
+all discussion and all our concerns when choosing the current approach in issue
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/18994">#18994</a>.</p>
+
+<hr>
+
+<p>Builds permissions should be tightly integrated with the permissions of a user
+who is triggering a build.</p>
+
+<p>The reasons to do it like that are:</p>
+
+<ul>
+<li>We already have a permissions system in place: group and project membership
+of users.</li>
+<li>We already fully know who is triggering a build (using <code>git push</code>, using the
+web UI, executing triggers).</li>
+<li>We already know what user is allowed to do.</li>
+<li>We use the user permissions for builds that are triggered by the user.</li>
+<li>It opens a lot of possibilities to further enforce user permissions, like
+allowing only specific users to access runners or use secure variables and
+environments.</li>
+<li>It is simple and convenient that your build can access everything that you
+as a user have access to.</li>
+<li>Short living unique tokens are now used, granting access for time of the build
+and maximizing security.</li>
+</ul>
+
+<p>With the new behavior, any build that is triggered by the user, is also marked
+with their permissions. When a user does a <code>git push</code> or changes files through
+the web UI, a new pipeline will be usually created. This pipeline will be marked
+as created be the pusher (local push or via the UI) and any build created in this
+pipeline will have the permissions of the pusher.</p>
+
+<p>This allows us to make it really easy to evaluate the access for all projects
+that have <a href="../../ci/git_submodules.html">Git submodules</a> or are using container images that the pusher
+would have access too. <strong>The permission is granted only for time that build is
+running. The access is revoked after the build is finished.</strong></p>
+<h2 id='types-of-users'>Types of users <a class='anchor' href='new_ci_build_permissions_model.html#types-of-users' title='Permalink'></a></h2>
+<p>It is important to note that we have a few types of users:</p>
+
+<ul>
+<li><p><strong>Administrators</strong>: CI builds created by Administrators will not have access
+to all GitLab projects, but only to projects and container images of projects
+that the administrator is a member of.That means that if a project is either
+public or internal users have access anyway, but if a project is private, the
+Administrator will have to be a member of it in order to have access to it
+via another project&#39;s build.</p></li>
+<li><p><strong>External users</strong>: CI builds created by <a href="../permissions.html#external-users">external users</a> will have
+access only to projects to which user has at least reporter access. This
+rules out accessing all internal projects by default,</p></li>
+</ul>
+
+<p>This allows us to make the CI and permission system more trustworthy.
+Let&#39;s consider the following scenario:</p>
+
+<ol>
+<li><p>You are an employee of a company. Your company has a number of internal tools
+hosted in private repositories and you have multiple CI builds that make use
+of these repositories.</p></li>
+<li><p>You invite a new <a href="../permissions.html#external-users">external user</a>. CI builds created by that user do not
+have access to internal repositories, because the user also doesn&#39;t have the
+access from within GitLab. You as an employee have to grant explicit access
+for this user. This allows us to prevent from accidental data leakage.</p></li>
+</ol>
+<h2 id='build-token'>Build token <a class='anchor' href='new_ci_build_permissions_model.html#build-token' title='Permalink'></a></h2>
+<p>A unique build token is generated for each build and it allows the user to
+access all projects that would be normally accessible to the user creating that
+build.</p>
+
+<p>We try to make sure that this token doesn&#39;t leak by:</p>
+
+<ol>
+<li>Securing all API endpoints to not expose the build token.</li>
+<li>Masking the build token from build logs.</li>
+<li>Allowing to use the build token <strong>only</strong> when build is running.</li>
+</ol>
+
+<p>However, this brings a question about the Runners security. To make sure that
+this token doesn&#39;t leak, you should also make sure that you configure
+your Runners in the most possible secure way, by avoiding the following:</p>
+
+<ol>
+<li>Any usage of Docker&#39;s <code>privileged</code> mode is risky if the machines are re-used.</li>
+<li>Using the <code>shell</code> executor since builds run on the same machine.</li>
+</ol>
+
+<p>By using an insecure GitLab Runner configuration, you allow the rogue developers
+to steal the tokens of other builds.</p>
+<h2 id='build-triggers'>Build triggers <a class='anchor' href='new_ci_build_permissions_model.html#build-triggers' title='Permalink'></a></h2>
+<p><a href="../../ci/triggers/README.html">Build triggers</a> do not support the new permission model.
+They continue to use the old authentication mechanism where the CI build
+can access only its own sources. We plan to remove that limitation in one of
+the upcoming releases.</p>
+<h2 id='before-gitlab-8-12'>Before GitLab 8.12 <a class='anchor' href='new_ci_build_permissions_model.html#before-gitlab-8-12' title='Permalink'></a></h2>
+<p>In versions before GitLab 8.12, all CI builds would use the CI Runner&#39;s token
+to checkout project sources.</p>
+
+<p>The project&#39;s Runner&#39;s token was a token that you could find under the
+project&#39;s <strong>Settings &gt; CI/CD Pipelines</strong> and was limited to access only that
+project.
+It could be used for registering new specific Runners assigned to the project
+and to checkout project sources.
+It could also be used with the GitLab Container Registry for that project,
+allowing pulling and pushing Docker images from within the CI build.</p>
+
+<hr>
+
+<p>GitLab would create a special checkout URL like:</p>
+<pre class="highlight plaintext"><code>https://gitlab-ci-token:&lt;project-runners-token&gt;/gitlab.com/gitlab-org/gitlab-ce.git
+</code></pre>
+<p>And then the users could also use it in their CI builds all Docker related
+commands to interact with GitLab Container Registry. For example:</p>
+<pre class="highlight plaintext"><code>docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+</code></pre>
+<p>Using single token had multiple security implications:</p>
+
+<ul>
+<li>The token would be readable to anyone who had developer access to a project
+that could run CI builds, allowing the developer to register any specific
+Runner for that project.</li>
+<li>The token would allow to access only the project&#39;s sources, forbidding from
+accessing any other projects.</li>
+<li>The token was not expiring and was multi-purpose: used for checking out sources,
+for registering specific runners and for accessing a project&#39;s container
+registry with read-write permissions.</li>
+</ul>
+
+<p>All the above led to a new permission model for builds that was introduced
+with GitLab 8.12.</p>
+<h2 id='making-use-of-the-new-ci-build-permissions-model'>Making use of the new CI build permissions model <a class='anchor' href='new_ci_build_permissions_model.html#making-use-of-the-new-ci-build-permissions-model' title='Permalink'></a></h2>
+<p>With the new build permissions model, there is now an easy way to access all
+dependent source code in a project. That way, we can:</p>
+
+<ol>
+<li>Access a project&#39;s <a href="../../ci/git_submodules.html">Git submodules</a></li>
+<li>Access private container images</li>
+<li>Access project&#39;s and submodule LFS objects</li>
+</ol>
+
+<p>Below you can see the prerequisites needed to make use of the new permissions
+model and how that works with Git submodules and private Docker images hosted on
+the container registry.</p>
+<h3 id='prerequisites-to-use-the-new-permissions-model'>Prerequisites to use the new permissions model <a class='anchor' href='new_ci_build_permissions_model.html#prerequisites-to-use-the-new-permissions-model' title='Permalink'></a></h3>
+<p>With the new permissions model in place, there may be times that your build will
+fail. This is most likely because your project tries to access other project&#39;s
+sources, and you don&#39;t have the appropriate permissions. In the build log look
+for information about 403 or forbidden access messages.</p>
+
+<p>In short here&#39;s what you need to do should you encounter any issues.</p>
+
+<p>As an administrator:</p>
+
+<ul>
+<li><strong>500 errors</strong>: You will need to update <a href="https://gitlab.com/gitlab-org/gitlab-workhorse">GitLab Workhorse</a> to at
+least 0.8.2. This is done automatically for Omnibus installations, you need to
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/doc/update">check manually</a> for installations from source.</li>
+<li><strong>500 errors</strong>: Check if you have another web proxy sitting in front of NGINX (HAProxy,
+Apache, etc.). It might be a good idea to let GitLab use the internal NGINX
+web server and not disable it completely. See <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/22484#note_16648302">this comment</a> for an
+example.</li>
+<li><strong>403 errors</strong>: You need to make sure that your installation has <a href="../admin_area/settings/visibility_and_access_controls.html#enabled-git-access-protocols">HTTP(S)
+cloning enabled</a>. HTTP(S) support is now a <strong>requirement</strong> by GitLab CI
+to clone all sources.</li>
+</ul>
+
+<p>As a user:</p>
+
+<ul>
+<li>Make sure you are a member of the group or project you&#39;re trying to have
+access to. As an Administrator, you can verify that by impersonating the user
+and retry the failing build in order to verify that everything is correct.</li>
+</ul>
+<h3 id='git-submodules'>Git submodules <a class='anchor' href='new_ci_build_permissions_model.html#git-submodules' title='Permalink'></a></h3>
+<p>To properly configure submodules with GitLab CI, read the
+<a href="../../ci/git_submodules.html">Git submodules documentation</a>.</p>
+<h3 id='container-registry'>Container Registry <a class='anchor' href='new_ci_build_permissions_model.html#container-registry' title='Permalink'></a></h3>
+<p>With the update permission model we also extended the support for accessing
+Container Registries for private projects.</p>
+
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>GitLab Runner versions prior to 1.8 don&#39;t incorporate the introduced changes
+for permissions. This makes the <code>image:</code> directive to not work with private
+projects automatically and it needs to be configured manually on Runner&#39;s host
+with a predefined account (for example administrator&#39;s personal account with
+access token created explicitly for this purpose). This issue is resolved with
+latest changes in GitLab Runner 1.8 which receives GitLab credentials with
+build data.</li>
+<li>Starting with GitLab 8.12, if you have 2FA enabled in your account, you need
+to pass a personal access token instead of your password in order to login to
+GitLab&#39;s Container Registry.</li>
+</ul>
+</blockquote>
+
+<p>Your builds can access all container images that you would normally have access
+to. The only implication is that you can push to the Container Registry of the
+project for which the build is triggered.</p>
+
+<p>This is how an example usage can look like:</p>
+<pre class="highlight plaintext"><code>test:
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY/group/other-project:latest
+    - docker run $CI_REGISTRY/group/other-project:latest
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/user/project/new_ci_build_permissions_model.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

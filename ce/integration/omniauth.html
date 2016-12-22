@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>OmniAuth - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">OmniAuth</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="omniauth.html#omniauth">OmniAuth</a>
+<ul>
+<li>
+<a href="omniauth.html#supported-providers">Supported Providers</a>
+</li>
+<li>
+<a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth Configuration</a>
+</li>
+<li>
+<a href="omniauth.html#enable-omniauth-for-an-existing-user">Enable OmniAuth for an Existing User</a>
+</li>
+<li>
+<a href="omniauth.html#configure-omniauth-providers-as-external">Configure OmniAuth Providers as External</a>
+</li>
+<li>
+<a href="omniauth.html#using-custom-omniauth-providers">Using Custom Omniauth Providers</a>
+<ul>
+<li>
+<a href="omniauth.html#steps">Steps</a>
+</li>
+<li>
+<a href="omniauth.html#examples">Examples</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="omniauth.html#enable-or-disable-sign-in-with-an-omniauth-provider-without-disabling-import-sources">Enable or disable Sign In with an OmniAuth provider without disabling import sources</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='omniauth'>OmniAuth <a class='anchor' href='omniauth.html#omniauth' title='Permalink'></a></h1>
+<p>GitLab leverages OmniAuth to allow users to sign in using Twitter, GitHub, and
+other popular services.</p>
+
+<p>Configuring OmniAuth does not prevent standard GitLab authentication or LDAP
+(if configured) from continuing to work. Users can choose to sign in using any
+of the configured mechanisms.</p>
+
+<ul>
+<li><a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth Configuration</a></li>
+<li><a href="omniauth.html#supported-providers">Supported Providers</a></li>
+<li><a href="omniauth.html#enable-omniauth-for-an-existing-user">Enable OmniAuth for an Existing User</a></li>
+<li><a href="https://gitlab.com/gitlab-org/omnibus-gitlab/tree/master#omniauth-google-twitter-github-login">OmniAuth configuration sample when using Omnibus GitLab</a></li>
+<li><a href="omniauth.html#enable-or-disable-sign-in-with-an-omniauth-provider-without-disabling-import-sources">Enable or disable Sign In with an OmniAuth provider without disabling import sources</a></li>
+</ul>
+<h2 id='supported-providers'>Supported Providers <a class='anchor' href='omniauth.html#supported-providers' title='Permalink'></a></h2>
+<p>This is a list of the current supported OmniAuth providers. Before proceeding
+on each provider&#39;s documentation, make sure to first read this document as it
+contains some settings that are common for all providers.</p>
+
+<ul>
+<li><a href="github.html">GitHub</a></li>
+<li><a href="bitbucket.html">Bitbucket</a></li>
+<li><a href="gitlab.html">GitLab.com</a></li>
+<li><a href="google.html">Google</a></li>
+<li><a href="facebook.html">Facebook</a></li>
+<li><a href="twitter.html">Twitter</a></li>
+<li><a href="shibboleth.html">Shibboleth</a></li>
+<li><a href="saml.html">SAML</a></li>
+<li><a href="crowd.html">Crowd</a></li>
+<li><a href="azure.html">Azure</a></li>
+<li><a href="auth0.html">Auth0</a></li>
+</ul>
+<h2 id='initial-omniauth-configuration'>Initial OmniAuth Configuration <a class='anchor' href='omniauth.html#initial-omniauth-configuration' title='Permalink'></a></h2>
+<p>Before configuring individual OmniAuth providers there are a few global settings
+that are in common for all providers that we need to consider.</p>
+
+<ul>
+<li>Omniauth needs to be enabled, see details below for example.</li>
+<li><code>allow_single_sign_on</code> allows you to specify the providers you want to allow to
+automatically create an account. It defaults to <code>false</code>. If <code>false</code> users must
+be created manually or they will not be able to sign in via OmniAuth.</li>
+<li><code>block_auto_created_users</code> defaults to <code>true</code>. If <code>true</code> auto created users will
+be blocked by default and will have to be unblocked by an administrator before
+they are able to sign in.</li>
+</ul>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you set <code>block_auto_created_users</code> to <code>false</code>, make sure to only
+define providers under <code>allow_single_sign_on</code> that you are able to control, like
+SAML, Shibboleth, Crowd or Google, or set it to <code>false</code> otherwise any user on
+the Internet will be able to successfully sign in to your GitLab without
+administrative approval.</p>
+</blockquote>
+
+<p>To change these settings:</p>
+
+<ul>
+<li><p><strong>For omnibus package</strong></p>
+
+<p>Open the configuration file:</p>
+<pre class="highlight shell"><code>sudo editor /etc/gitlab/gitlab.rb
+</code></pre>
+<p>and change:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># CAUTION!</span>
+<span class="c1"># This allows users to login without having a user account first. Define the allowed providers</span>
+<span class="c1"># using an array, e.g. ["saml", "twitter"], or as true/false to allow all providers or none.</span>
+<span class="c1"># User accounts will be created automatically when authentication was successful.</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_allow_single_sign_on'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'saml'</span><span class="p">,</span> <span class="s1">'twitter'</span><span class="p">]</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_block_auto_created_users'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre></li>
+<li><p><strong>For installations from source</strong></p>
+
+<p>Open the configuration file:</p>
+<pre class="highlight shell"><code><span class="nb">cd</span> /home/git/gitlab
+
+sudo -u git -H editor config/gitlab.yml
+</code></pre>
+<p>and change the following section:</p>
+<pre class="highlight yaml"><code> <span class="c1">## OmniAuth settings</span>
+  <span class="na">omniauth</span><span class="pi">:</span>
+    <span class="c1"># Allow login via Twitter, Google, etc. using OmniAuth providers</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+
+    <span class="c1"># CAUTION!</span>
+    <span class="c1"># This allows users to login without having a user account first. Define the allowed providers</span>
+    <span class="c1"># using an array, e.g. ["saml", "twitter"], or as true/false to allow all providers or none.</span>
+    <span class="c1"># User accounts will be created automatically when authentication was successful.</span>
+    <span class="na">allow_single_sign_on</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">saml"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">twitter"</span><span class="pi">]</span>
+
+    <span class="c1"># Locks down those users until they have been cleared by the admin (default: true).</span>
+    <span class="na">block_auto_created_users</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre></li>
+</ul>
+
+<p>Now we can choose one or more of the <a href="omniauth.html#supported-providers">Supported Providers</a>
+listed above to continue the configuration process.</p>
+<h2 id='enable-omniauth-for-an-existing-user'>Enable OmniAuth for an Existing User <a class='anchor' href='omniauth.html#enable-omniauth-for-an-existing-user' title='Permalink'></a></h2>
+<p>Existing users can enable OmniAuth for specific providers after the account is
+created. For example, if the user originally signed in with LDAP, an OmniAuth
+provider such as Twitter can be enabled. Follow the steps below to enable an
+OmniAuth provider for an existing user.</p>
+
+<ol>
+<li>Sign in normally - whether standard sign in, LDAP, or another OmniAuth provider.</li>
+<li>Go to profile settings (the silhouette icon in the top right corner).</li>
+<li>Select the &quot;Account&quot; tab.</li>
+<li>Under &quot;Connected Accounts&quot; select the desired OmniAuth provider, such as Twitter.</li>
+<li>The user will be redirected to the provider. Once the user authorized GitLab
+they will be redirected back to GitLab.</li>
+</ol>
+
+<p>The chosen OmniAuth provider is now active and can be used to sign in to GitLab from then on.</p>
+<h2 id='configure-omniauth-providers-as-external'>Configure OmniAuth Providers as External <a class='anchor' href='omniauth.html#configure-omniauth-providers-as-external' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+This setting was introduced with version 8.7 of GitLab</p>
+</blockquote>
+
+<p>You can define which OmniAuth providers you want to be <code>external</code> so that all users
+<strong>creating accounts, or logging in via these providers</strong> will not be able to have
+access to internal projects. You will need to use the full name of the provider,
+like <code>google_oauth2</code> for Google. Refer to the examples for the full names of the
+supported providers.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you decide to remove an OmniAuth provider from the external providers list
+you will need to manually update the users that use this method to login, if you
+want their accounts to be upgraded to full internal accounts.</p>
+</blockquote>
+
+<p><strong>For Omnibus installations</strong></p>
+<pre class="highlight ruby"><code>  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_external_providers'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'twitter'</span><span class="p">,</span> <span class="s1">'google_oauth2'</span><span class="p">]</span>
+</code></pre>
+<p><strong>For installations from source</strong></p>
+<pre class="highlight yaml"><code>  <span class="na">omniauth</span><span class="pi">:</span>
+    <span class="na">external_providers</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">twitter'</span><span class="pi">,</span> <span class="s1">'</span><span class="s">google_oauth2'</span><span class="pi">]</span>
+</code></pre><h2 id='using-custom-omniauth-providers'>Using Custom Omniauth Providers <a class='anchor' href='omniauth.html#using-custom-omniauth-providers' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+The following information only applies for installations from source.</p>
+</blockquote>
+
+<p>GitLab uses <a href="http://www.omniauth.org/">Omniauth</a> for authentication and already ships
+with a few providers pre-installed (e.g. LDAP, GitHub, Twitter). But sometimes that
+is not enough and you need to integrate with other authentication solutions. For
+these cases you can use the Omniauth provider.</p>
+<h3 id='steps'>Steps <a class='anchor' href='omniauth.html#steps' title='Permalink'></a></h3>
+<p>These steps are fairly general and you will need to figure out the exact details
+from the Omniauth provider&#39;s documentation.</p>
+
+<ul>
+<li><p>Stop GitLab:</p>
+<pre class="highlight plaintext"><code>sudo service gitlab stop
+</code></pre></li>
+<li><p>Add the gem to your <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/Gemfile">Gemfile</a>:</p>
+<pre class="highlight plaintext"><code>gem "omniauth-your-auth-provider"
+</code></pre></li>
+<li><p>If you&#39;re using MySQL, install the new Omniauth provider gem by running the following command:</p>
+<pre class="highlight plaintext"><code>sudo -u git -H bundle install --without development test postgres --path vendor/bundle --no-deployment
+</code></pre></li>
+<li><p>If you&#39;re using PostgreSQL, install the new Omniauth provider gem by running the following command:</p>
+<pre class="highlight plaintext"><code>sudo -u git -H bundle install --without development test mysql --path vendor/bundle --no-deployment
+</code></pre>
+<blockquote>
+<p>These are the same commands you used in the <a href="omniauth.html#install-gems">Install Gems section</a> with <code>--path vendor/bundle --no-deployment</code> instead of <code>--deployment</code>.</p>
+</blockquote></li>
+<li><p>Start GitLab:</p>
+<pre class="highlight plaintext"><code>sudo service gitlab start
+</code></pre></li>
+</ul>
+<h3 id='examples'>Examples <a class='anchor' href='omniauth.html#examples' title='Permalink'></a></h3>
+<p>If you have successfully set up a provider that is not shipped with GitLab itself,
+please let us know.</p>
+
+<p>You can help others by reporting successful configurations and probably share a
+few insights or provide warnings for common errors or pitfalls by sharing your
+experience <a href="https://github.com/gitlabhq/gitlab-public-wiki/wiki/Custom-omniauth-provider-configurations">in the public Wiki</a>.</p>
+
+<p>While we can&#39;t officially support every possible authentication mechanism out there,
+we&#39;d like to at least help those with specific needs.</p>
+<h2 id='enable-or-disable-sign-in-with-an-omniauth-provider-without-disabling-import-sources'>Enable or disable Sign In with an OmniAuth provider without disabling import sources <a class='anchor' href='omniauth.html#enable-or-disable-sign-in-with-an-omniauth-provider-without-disabling-import-sources' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+This setting was introduced with version 8.8 of GitLab.</p>
+</blockquote>
+
+<p>Administrators are able to enable or disable Sign In via some OmniAuth providers.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+By default Sign In is enabled via all the OAuth Providers that have been configured in <code>config/gitlab.yml</code>.</p>
+</blockquote>
+
+<p>In order to enable/disable an OmniAuth provider, go to Admin Area -&gt; Settings -&gt; Sign-in Restrictions section -&gt; Enabled OAuth Sign-In sources and select the providers you want to enable or disable.</p>
+
+<p><a target="_blank" href="img/enabled-oauth-sign-in-sources.png"><img src="img/enabled-oauth-sign-in-sources.png" title="" alt="Enabled OAuth Sign-In sources"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/integration/omniauth.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

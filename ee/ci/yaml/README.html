@@ -1,0 +1,1479 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Configuration of your builds with .gitlab-ci.yml - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Configuration of your builds with .gitlab-ci.yml</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#configuration-of-your-builds-with-gitlab-ci-yml">Configuration of your builds with .gitlab-ci.yml</a>
+<ul>
+<li>
+<a href="README.html#gitlab-ci-yml">.gitlab-ci.yml</a>
+<ul>
+<li>
+<a href="README.html#image-and-services">image and services</a>
+</li>
+<li>
+<a href="README.html#before_script">before_script</a>
+</li>
+<li>
+<a href="README.html#after_script">after_script</a>
+</li>
+<li>
+<a href="README.html#stages">stages</a>
+</li>
+<li>
+<a href="README.html#types">types</a>
+</li>
+<li>
+<a href="README.html#variables">variables</a>
+</li>
+<li>
+<a href="README.html#cache">cache</a>
+<ul>
+<li>
+<a href="README.html#cache-key">cache:key</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#jobs">Jobs</a>
+<ul>
+<li>
+<a href="README.html#script">script</a>
+</li>
+<li>
+<a href="README.html#stage">stage</a>
+</li>
+<li>
+<a href="README.html#only-and-except">only and except</a>
+</li>
+<li>
+<a href="README.html#job-variables">job variables</a>
+</li>
+<li>
+<a href="README.html#tags">tags</a>
+</li>
+<li>
+<a href="README.html#allow_failure">allow_failure</a>
+</li>
+<li>
+<a href="README.html#when">when</a>
+<ul>
+<li>
+<a href="README.html#manual-actions">Manual actions</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#environment">environment</a>
+<ul>
+<li>
+<a href="README.html#environment-name">environment:name</a>
+</li>
+<li>
+<a href="README.html#environment-url">environment:url</a>
+</li>
+<li>
+<a href="README.html#environment-on_stop">environment:on_stop</a>
+</li>
+<li>
+<a href="README.html#environment-action">environment:action</a>
+</li>
+<li>
+<a href="README.html#dynamic-environments">dynamic environments</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#artifacts">artifacts</a>
+<ul>
+<li>
+<a href="README.html#artifacts-name">artifacts:name</a>
+</li>
+<li>
+<a href="README.html#artifacts-when">artifacts:when</a>
+</li>
+<li>
+<a href="README.html#artifacts-expire_in">artifacts:expire_in</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#dependencies">dependencies</a>
+</li>
+<li>
+<a href="README.html#before_script-and-after_script">before_script and after_script</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#git-strategy">Git Strategy</a>
+</li>
+<li>
+<a href="README.html#shallow-cloning">Shallow cloning</a>
+</li>
+<li>
+<a href="README.html#hidden-keys">Hidden keys</a>
+</li>
+<li>
+<a href="README.html#special-yaml-features">Special YAML features</a>
+<ul>
+<li>
+<a href="README.html#anchors">Anchors</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#triggers">Triggers</a>
+</li>
+<li>
+<a href="README.html#validate-the-gitlab-ci-yml">Validate the .gitlab-ci.yml</a>
+</li>
+<li>
+<a href="README.html#skipping-builds">Skipping builds</a>
+</li>
+<li>
+<a href="README.html#examples">Examples</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='configuration-of-your-builds-with-gitlab-ci-yml'>Configuration of your builds with .gitlab-ci.yml <a class='anchor' href='README.html#configuration-of-your-builds-with-gitlab-ci-yml' title='Permalink'></a></h1>
+<p>This document describes the usage of <code>.gitlab-ci.yml</code>, the file that is used by
+GitLab Runner to manage your project&#39;s builds.</p>
+
+<p>If you want a quick introduction to GitLab CI, follow our
+<a href="../quick_start/README.html">quick start guide</a>.</p>
+<h2 id='gitlab-ci-yml'>.gitlab-ci.yml <a class='anchor' href='README.html#gitlab-ci-yml' title='Permalink'></a></h2>
+<p>From version 7.12, GitLab CI uses a <a href="https://en.wikipedia.org/wiki/YAML">YAML</a>
+file (<code>.gitlab-ci.yml</code>) for the project configuration. It is placed in the root
+of your repository and contains definitions of how your project should be built.</p>
+
+<p>The YAML file defines a set of jobs with constraints stating when they should
+be run. The jobs are defined as top-level elements with a name and always have
+to contain at least the <code>script</code> clause:</p>
+<pre class="highlight yaml"><code><span class="na">job1</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s2">"</span><span class="s">execute-script-for-job1"</span>
+
+<span class="na">job2</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s2">"</span><span class="s">execute-script-for-job2"</span>
+</code></pre>
+<p>The above example is the simplest possible CI configuration with two separate
+jobs, where each of the jobs executes a different command.</p>
+
+<p>Of course a command can execute code directly (<code>./configure;make;make install</code>)
+or run a script (<code>test.sh</code>) in the repository.</p>
+
+<p>Jobs are used to create builds, which are then picked up by
+<a href="../runners/README.html">Runners</a> and executed within the environment of the
+Runner. What is important, is that each job is run independently from each
+other.</p>
+
+<p>The YAML syntax allows for using more complex job specifications than in the
+above example:</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle install</span>
+
+<span class="na">after_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">rm secrets</span>
+
+<span class="na">stages</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">build</span>
+  <span class="pi">-</span> <span class="s">test</span>
+  <span class="pi">-</span> <span class="s">deploy</span>
+
+<span class="na">job1</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">execute-script-for-job1</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">master</span>
+  <span class="na">tags</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">docker</span>
+</code></pre>
+<p>There are a few reserved <code>keywords</code> that <strong>cannot</strong> be used as job names:</p>
+
+<table><thead>
+<tr>
+<th>Keyword</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>image</td>
+<td>no</td>
+<td>Use docker image, covered in <a href="../docker/README.html">Use Docker</a></td>
+</tr>
+<tr>
+<td>services</td>
+<td>no</td>
+<td>Use docker services, covered in <a href="../docker/README.html">Use Docker</a></td>
+</tr>
+<tr>
+<td>stages</td>
+<td>no</td>
+<td>Define build stages</td>
+</tr>
+<tr>
+<td>types</td>
+<td>no</td>
+<td>Alias for <code>stages</code></td>
+</tr>
+<tr>
+<td>before_script</td>
+<td>no</td>
+<td>Define commands that run before each job&#39;s script</td>
+</tr>
+<tr>
+<td>after_script</td>
+<td>no</td>
+<td>Define commands that run after each job&#39;s script</td>
+</tr>
+<tr>
+<td>variables</td>
+<td>no</td>
+<td>Define build variables</td>
+</tr>
+<tr>
+<td>cache</td>
+<td>no</td>
+<td>Define list of files that should be cached between subsequent runs</td>
+</tr>
+</tbody></table>
+<h3 id='image-and-services'>image and services <a class='anchor' href='README.html#image-and-services' title='Permalink'></a></h3>
+<p>This allows to specify a custom Docker image and a list of services that can be
+used for time of the build. The configuration of this feature is covered in
+<a href="../docker/README.html">a separate document</a>.</p>
+<h3 id='before_script'>before_script <a class='anchor' href='README.html#before_script' title='Permalink'></a></h3>
+<p><code>before_script</code> is used to define the command that should be run before all
+builds, including deploy builds. This can be an array or a multi-line string.</p>
+<h3 id='after_script'>after_script <a class='anchor' href='README.html#after_script' title='Permalink'></a></h3>
+<blockquote>
+<p>Introduced in GitLab 8.7 and requires Gitlab Runner v1.2</p>
+</blockquote>
+
+<p><code>after_script</code> is used to define the command that will be run after for all
+builds. This has to be an array or a multi-line string.</p>
+<h3 id='stages'>stages <a class='anchor' href='README.html#stages' title='Permalink'></a></h3>
+<p><code>stages</code> is used to define build stages that can be used by jobs.
+The specification of <code>stages</code> allows for having flexible multi stage pipelines.</p>
+
+<p>The ordering of elements in <code>stages</code> defines the ordering of builds&#39; execution:</p>
+
+<ol>
+<li>Builds of the same stage are run in parallel.</li>
+<li>Builds of the next stage are run after the jobs from the previous stage
+complete successfully.</li>
+</ol>
+
+<p>Let&#39;s consider the following example, which defines 3 stages:</p>
+<pre class="highlight yaml"><code><span class="na">stages</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">build</span>
+  <span class="pi">-</span> <span class="s">test</span>
+  <span class="pi">-</span> <span class="s">deploy</span>
+</code></pre>
+<ol>
+<li>First all jobs of <code>build</code> are executed in parallel.</li>
+<li>If all jobs of <code>build</code> succeed, the <code>test</code> jobs are executed in parallel.</li>
+<li>If all jobs of <code>test</code> succeed, the <code>deploy</code> jobs are executed in parallel.</li>
+<li>If all jobs of <code>deploy</code> succeed, the commit is marked as <code>success</code>.</li>
+<li>If any of the previous jobs fails, the commit is marked as <code>failed</code> and no
+jobs of further stage are executed.</li>
+</ol>
+
+<p>There are also two edge cases worth mentioning:</p>
+
+<ol>
+<li>If no <code>stages</code> are defined in <code>.gitlab-ci.yml</code>, then by default the <code>build</code>,
+<code>test</code> and <code>deploy</code> are allowed to be used as job&#39;s stage by default.</li>
+<li>If a job doesn&#39;t specify a <code>stage</code>, the job is assigned the <code>test</code> stage.</li>
+</ol>
+<h3 id='types'>types <a class='anchor' href='README.html#types' title='Permalink'></a></h3>
+<p>Alias for <a href="README.html#stages">stages</a>.</p>
+<h3 id='variables'>variables <a class='anchor' href='README.html#variables' title='Permalink'></a></h3>
+<blockquote>
+<p>Introduced in GitLab Runner v0.5.0.</p>
+</blockquote>
+
+<p>GitLab CI allows you to add variables to <code>.gitlab-ci.yml</code> that are set in the
+build environment. The variables are stored in the Git repository and are meant
+to store non-sensitive project configuration, for example:</p>
+<pre class="highlight yaml"><code><span class="na">variables</span><span class="pi">:</span>
+  <span class="na">DATABASE_URL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">postgres://postgres@postgres/my_database"</span>
+</code></pre>
+<p>These variables can be later used in all executed commands and scripts.
+The YAML-defined variables are also set to all created service containers,
+thus allowing to fine tune them. Variables can be also defined on a
+<a href="README.html#job-variables">job level</a>.</p>
+
+<p>Except for the user defined variables, there are also the ones set up by the
+Runner itself. One example would be <code>CI_BUILD_REF_NAME</code> which has the value of
+the branch or tag name for which project is built. Apart from the variables
+you can set in <code>.gitlab-ci.yml</code>, there are also the so called secret variables
+which can be set in GitLab&#39;s UI.</p>
+
+<p><a href="../variables/README.html">Learn more about variables.</a></p>
+<h3 id='cache'>cache <a class='anchor' href='README.html#cache' title='Permalink'></a></h3>
+<blockquote>
+<p>Introduced in GitLab Runner v0.7.0.</p>
+</blockquote>
+
+<p><code>cache</code> is used to specify a list of files and directories which should be
+cached between builds. You can only use paths that are within the project
+workspace.</p>
+
+<p><strong>By default the caching is enabled per-job and per-branch.</strong></p>
+
+<p>If <code>cache</code> is defined outside the scope of the jobs, it means it is set
+globally and all jobs will use its definition.</p>
+
+<p>Cache all files in <code>binaries</code> and <code>.config</code>:</p>
+<pre class="highlight yaml"><code><span class="na">rspec</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">cache</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">binaries/</span>
+    <span class="pi">-</span> <span class="s">.config</span>
+</code></pre>
+<p>Cache all Git untracked files:</p>
+<pre class="highlight yaml"><code><span class="na">rspec</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">cache</span><span class="pi">:</span>
+    <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>Cache all Git untracked files and files in <code>binaries</code>:</p>
+<pre class="highlight yaml"><code><span class="na">rspec</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">cache</span><span class="pi">:</span>
+    <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">binaries/</span>
+</code></pre>
+<p>Locally defined cache overwrites globally defined options. This will cache only
+<code>binaries/</code>:</p>
+<pre class="highlight yaml"><code><span class="na">cache</span><span class="pi">:</span>
+  <span class="na">paths</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">my/files</span>
+
+<span class="na">rspec</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">cache</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">binaries/</span>
+</code></pre>
+<p>The cache is provided on a best-effort basis, so don&#39;t expect that the cache
+will be always present. For implementation details, please check GitLab Runner.</p>
+<h4 id='cache-key'>cache:key <a class='anchor' href='README.html#cache-key' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab Runner v1.0.0.</p>
+</blockquote>
+
+<p>The <code>key</code> directive allows you to define the affinity of caching
+between jobs, allowing to have a single cache for all jobs,
+cache per-job, cache per-branch or any other way you deem proper.</p>
+
+<p>This allows you to fine tune caching, allowing you to cache data between
+different jobs or even different branches.</p>
+
+<p>The <code>cache:key</code> variable can use any of the <a href="../variables/README.html">predefined variables</a>.</p>
+
+<hr>
+
+<p><strong>Example configurations</strong></p>
+
+<p>To enable per-job caching:</p>
+<pre class="highlight yaml"><code><span class="na">cache</span><span class="pi">:</span>
+  <span class="na">key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$CI_BUILD_NAME"</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>To enable per-branch caching:</p>
+<pre class="highlight yaml"><code><span class="na">cache</span><span class="pi">:</span>
+  <span class="na">key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$CI_BUILD_REF_NAME"</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>To enable per-job and per-branch caching:</p>
+<pre class="highlight yaml"><code><span class="na">cache</span><span class="pi">:</span>
+  <span class="na">key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$CI_BUILD_NAME/$CI_BUILD_REF_NAME"</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>To enable per-branch and per-stage caching:</p>
+<pre class="highlight yaml"><code><span class="na">cache</span><span class="pi">:</span>
+  <span class="na">key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$CI_BUILD_STAGE/$CI_BUILD_REF_NAME"</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>If you use <strong>Windows Batch</strong> to run your shell scripts you need to replace
+<code>$</code> with <code>%</code>:</p>
+<pre class="highlight yaml"><code><span class="na">cache</span><span class="pi">:</span>
+  <span class="na">key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">%CI_BUILD_STAGE%/%CI_BUILD_REF_NAME%"</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre><h2 id='jobs'>Jobs <a class='anchor' href='README.html#jobs' title='Permalink'></a></h2>
+<p><code>.gitlab-ci.yml</code> allows you to specify an unlimited number of jobs. Each job
+must have a unique name, which is not one of the Keywords mentioned above.
+A job is defined by a list of parameters that define the build behavior.</p>
+<pre class="highlight yaml"><code><span class="na">job_name</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">rake spec</span>
+    <span class="pi">-</span> <span class="s">coverage</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">master</span>
+  <span class="na">except</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">develop</span>
+  <span class="na">tags</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+  <span class="na">allow_failure</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Keyword</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>script</td>
+<td>yes</td>
+<td>Defines a shell script which is executed by Runner</td>
+</tr>
+<tr>
+<td>image</td>
+<td>no</td>
+<td>Use docker image, covered in <a href="../docker/using_docker_images.html#define-image-and-services-from-gitlab-ciyml">Using Docker Images</a></td>
+</tr>
+<tr>
+<td>services</td>
+<td>no</td>
+<td>Use docker services, covered in <a href="../docker/using_docker_images.html#define-image-and-services-from-gitlab-ciyml">Using Docker Images</a></td>
+</tr>
+<tr>
+<td>stage</td>
+<td>no</td>
+<td>Defines a build stage (default: <code>test</code>)</td>
+</tr>
+<tr>
+<td>type</td>
+<td>no</td>
+<td>Alias for <code>stage</code></td>
+</tr>
+<tr>
+<td>variables</td>
+<td>no</td>
+<td>Define build variables on a job level</td>
+</tr>
+<tr>
+<td>only</td>
+<td>no</td>
+<td>Defines a list of git refs for which build is created</td>
+</tr>
+<tr>
+<td>except</td>
+<td>no</td>
+<td>Defines a list of git refs for which build is not created</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>no</td>
+<td>Defines a list of tags which are used to select Runner</td>
+</tr>
+<tr>
+<td>allow_failure</td>
+<td>no</td>
+<td>Allow build to fail. Failed build doesn&#39;t contribute to commit status</td>
+</tr>
+<tr>
+<td>when</td>
+<td>no</td>
+<td>Define when to run build. Can be <code>on_success</code>, <code>on_failure</code>, <code>always</code> or <code>manual</code></td>
+</tr>
+<tr>
+<td>dependencies</td>
+<td>no</td>
+<td>Define other builds that a build depends on so that you can pass artifacts between them</td>
+</tr>
+<tr>
+<td>artifacts</td>
+<td>no</td>
+<td>Define list of build artifacts</td>
+</tr>
+<tr>
+<td>cache</td>
+<td>no</td>
+<td>Define list of files that should be cached between subsequent runs</td>
+</tr>
+<tr>
+<td>before_script</td>
+<td>no</td>
+<td>Override a set of commands that are executed before build</td>
+</tr>
+<tr>
+<td>after_script</td>
+<td>no</td>
+<td>Override a set of commands that are executed after build</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>no</td>
+<td>Defines a name of environment to which deployment is done by this build</td>
+</tr>
+</tbody></table>
+<h3 id='script'>script <a class='anchor' href='README.html#script' title='Permalink'></a></h3>
+<p><code>script</code> is a shell script which is executed by the Runner. For example:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s2">"</span><span class="s">bundle</span><span class="nv"> </span><span class="s">exec</span><span class="nv"> </span><span class="s">rspec"</span>
+</code></pre>
+<p>This parameter can also contain several commands using an array:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">uname -a</span>
+    <span class="pi">-</span> <span class="s">bundle exec rspec</span>
+</code></pre>
+<p>Sometimes, <code>script</code> commands will need to be wrapped in single or double quotes. For example, commands that contain a colon (<code>:</code>) need to be wrapped in quotes so that the YAML parser knows to interpret the whole thing as a string rather than a &quot;key: value&quot; pair. Be careful when using special characters (<code>:</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>,</code>, <code>&amp;</code>, <code>*</code>, <code>#</code>, <code>?</code>, <code>|</code>, <code>-</code>, <code>&lt;</code>, <code>&gt;</code>, <code>=</code>, <code>!</code>, <code>%</code>, <code>@</code>, <code>`</code>).</p>
+<h3 id='stage'>stage <a class='anchor' href='README.html#stage' title='Permalink'></a></h3>
+<p><code>stage</code> allows to group build into different stages. Builds of the same <code>stage</code>
+are executed in <code>parallel</code>. For more info about the use of <code>stage</code> please check
+<a href="README.html#stages">stages</a>.</p>
+<h3 id='only-and-except'>only and except <a class='anchor' href='README.html#only-and-except' title='Permalink'></a></h3>
+<p><code>only</code> and <code>except</code> are two parameters that set a refs policy to limit when
+jobs are built:</p>
+
+<ol>
+<li><code>only</code> defines the names of branches and tags for which the job will be
+built.</li>
+<li><code>except</code> defines the names of branches and tags for which the job will
+<strong>not</strong> be built.</li>
+</ol>
+
+<p>There are a few rules that apply to the usage of refs policy:</p>
+
+<ul>
+<li><code>only</code> and <code>except</code> are inclusive. If both <code>only</code> and <code>except</code> are defined
+in a job specification, the ref is filtered by <code>only</code> and <code>except</code>.</li>
+<li><code>only</code> and <code>except</code> allow the use of regular expressions.</li>
+<li><code>only</code> and <code>except</code> allow the use of special keywords: <code>branches</code>, <code>tags</code>, and <code>triggers</code>.</li>
+<li><code>only</code> and <code>except</code> allow to specify a repository path to filter jobs for
+forks.</li>
+</ul>
+
+<p>In the example below, <code>job</code> will run only for refs that start with <code>issue-</code>,
+whereas all branches will be skipped.</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="c1"># use regexp</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">/^issue-.*$/</span>
+  <span class="c1"># use special keyword</span>
+  <span class="na">except</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">branches</span>
+</code></pre>
+<p>In this example, <code>job</code> will run only for refs that are tagged, or if a build is explicitly requested
+via an API trigger.</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="c1"># use special keywords</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">tags</span>
+    <span class="pi">-</span> <span class="s">triggers</span>
+</code></pre>
+<p>The repository path can be used to have jobs executed only for the parent
+repository and not forks:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">branches@gitlab-org/gitlab-ce</span>
+  <span class="na">except</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">master@gitlab-org/gitlab-ce</span>
+</code></pre>
+<p>The above example will run <code>job</code> for all branches on <code>gitlab-org/gitlab-ce</code>,
+except master.</p>
+<h3 id='job-variables'>job variables <a class='anchor' href='README.html#job-variables' title='Permalink'></a></h3>
+<p>It is possible to define build variables using a <code>variables</code> keyword on a job
+level. It works basically the same way as its global-level equivalent but
+allows you to define job-specific build variables.</p>
+
+<p>When the <code>variables</code> keyword is used on a job level, it overrides global YAML
+build variables and predefined variables.</p>
+
+<p>Build variables priority is defined in
+<a href="../variables/README.html">variables documentation</a>.</p>
+<h3 id='tags'>tags <a class='anchor' href='README.html#tags' title='Permalink'></a></h3>
+<p><code>tags</code> is used to select specific Runners from the list of all Runners that are
+allowed to run this project.</p>
+
+<p>During the registration of a Runner, you can specify the Runner&#39;s tags, for
+example <code>ruby</code>, <code>postgres</code>, <code>development</code>.</p>
+
+<p><code>tags</code> allow you to run builds with Runners that have the specified tags
+assigned to them:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">tags</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+</code></pre>
+<p>The specification above, will make sure that <code>job</code> is built by a Runner that
+has both <code>ruby</code> AND <code>postgres</code> tags defined.</p>
+<h3 id='allow_failure'>allow_failure <a class='anchor' href='README.html#allow_failure' title='Permalink'></a></h3>
+<p><code>allow_failure</code> is used when you want to allow a build to fail without impacting
+the rest of the CI suite. Failed builds don&#39;t contribute to the commit status.</p>
+
+<p>When enabled and the build fails, the pipeline will be successful/green for all
+intents and purposes, but a &quot;CI build passed with warnings&quot; message  will be
+displayed on the merge request or commit or build page. This is to be used by
+builds that are allowed to fail, but where failure indicates some other (manual)
+steps should be taken elsewhere.</p>
+
+<p>In the example below, <code>job1</code> and <code>job2</code> will run in parallel, but if <code>job1</code>
+fails, it will not stop the next stage from running, since it&#39;s marked with
+<code>allow_failure: true</code>:</p>
+<pre class="highlight yaml"><code><span class="na">job1</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">execute_script_that_will_fail</span>
+  <span class="na">allow_failure</span><span class="pi">:</span> <span class="s">true</span>
+
+<span class="na">job2</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">execute_script_that_will_succeed</span>
+
+<span class="na">job3</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">deploy_to_staging</span>
+</code></pre><h3 id='when'>when <a class='anchor' href='README.html#when' title='Permalink'></a></h3>
+<p><code>when</code> is used to implement jobs that are run in case of failure or despite the
+failure.</p>
+
+<p><code>when</code> can be set to one of the following values:</p>
+
+<ol>
+<li><code>on_success</code> - execute build only when all builds from prior stages
+succeed. This is the default.</li>
+<li><code>on_failure</code> - execute build only when at least one build from prior stages
+fails.</li>
+<li><code>always</code> - execute build regardless of the status of builds from prior stages.</li>
+<li><code>manual</code> - execute build manually (added in GitLab 8.10). Read about
+<a href="README.html#manual-actions">manual actions</a> below.</li>
+</ol>
+
+<p>For example:</p>
+<pre class="highlight yaml"><code><span class="na">stages</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">build</span>
+<span class="pi">-</span> <span class="s">cleanup_build</span>
+<span class="pi">-</span> <span class="s">test</span>
+<span class="pi">-</span> <span class="s">deploy</span>
+<span class="pi">-</span> <span class="s">cleanup</span>
+
+<span class="na">build_job</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">make build</span>
+
+<span class="na">cleanup_build_job</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">cleanup_build</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">cleanup build when failed</span>
+  <span class="na">when</span><span class="pi">:</span> <span class="s">on_failure</span>
+
+<span class="na">test_job</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">make test</span>
+
+<span class="na">deploy_job</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">make deploy</span>
+  <span class="na">when</span><span class="pi">:</span> <span class="s">manual</span>
+
+<span class="na">cleanup_job</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">cleanup</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">cleanup after builds</span>
+  <span class="na">when</span><span class="pi">:</span> <span class="s">always</span>
+</code></pre>
+<p>The above script will:</p>
+
+<ol>
+<li>Execute <code>cleanup_build_job</code> only when <code>build_job</code> fails.</li>
+<li>Always execute <code>cleanup_job</code> as the last step in pipeline regardless of
+success or failure.</li>
+<li>Allow you to manually execute <code>deploy_job</code> from GitLab&#39;s UI.</li>
+</ol>
+<h4 id='manual-actions'>Manual actions <a class='anchor' href='README.html#manual-actions' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab 8.10.</p>
+</blockquote>
+
+<p>Manual actions are a special type of job that are not executed automatically;
+they need to be explicitly started by a user. Manual actions can be started
+from pipeline, build, environment, and deployment views. You can execute the
+same manual action multiple times.</p>
+
+<p>An example usage of manual actions is deployment to production.</p>
+
+<p>Read more at the <a href="../environments.html#manually-deploying-to-environments">environments documentation</a>.</p>
+<h3 id='environment'>environment <a class='anchor' href='README.html#environment' title='Permalink'></a></h3>
+<blockquote>
+<p>Introduced in GitLab 8.9.</p>
+
+<p>You can read more about environments and find more examples in the
+<a href="../environments.html">documentation about environments</a>.</p>
+</blockquote>
+
+<p><code>environment</code> is used to define that a job deploys to a specific environment.
+If <code>environment</code> is specified and no environment under that name exists, a new
+one will be created automatically.</p>
+
+<p>In its simplest form, the <code>environment</code> keyword can be defined like:</p>
+<pre class="highlight plaintext"><code>deploy to production:
+  stage: deploy
+  script: git push production HEAD:master
+  environment:
+    name: production
+</code></pre>
+<p>In the above example, the <code>deploy to production</code> job will be marked as doing a
+deployment to the <code>production</code> environment.</p>
+<h4 id='environment-name'>environment:name <a class='anchor' href='README.html#environment-name' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab 8.11.</p>
+
+<p><strong>Note:</strong>
+Before GitLab 8.11, the name of an environment could be defined as a string like
+<code>environment: production</code>. The recommended way now is to define it under the
+<code>name</code> keyword.</p>
+</blockquote>
+
+<p>The <code>environment</code> name can contain:</p>
+
+<ul>
+<li>letters</li>
+<li>digits</li>
+<li>spaces</li>
+<li><code>-</code></li>
+<li><code>_</code></li>
+<li><code>/</code></li>
+<li><code>$</code></li>
+<li><code>{</code></li>
+<li><code>}</code></li>
+</ul>
+
+<p>Common names are <code>qa</code>, <code>staging</code>, and <code>production</code>, but you can use whatever
+name works with your workflow.</p>
+
+<p>Instead of defining the name of the environment right after the <code>environment</code>
+keyword, it is also possible to define it as a separate value. For that, use
+the <code>name</code> keyword under <code>environment</code>:</p>
+<pre class="highlight plaintext"><code>deploy to production:
+  stage: deploy
+  script: git push production HEAD:master
+  environment:
+    name: production
+</code></pre><h4 id='environment-url'>environment:url <a class='anchor' href='README.html#environment-url' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab 8.11.</p>
+
+<p><strong>Note:</strong>
+Before GitLab 8.11, the URL could be added only in GitLab&#39;s UI. The
+recommended way now is to define it in <code>.gitlab-ci.yml</code>.</p>
+</blockquote>
+
+<p>This is an optional value that when set, it exposes buttons in various places
+in GitLab which when clicked take you to the defined URL.</p>
+
+<p>In the example below, if the job finishes successfully, it will create buttons
+in the merge requests and in the environments/deployments pages which will point
+to <code>https://prod.example.com</code>.</p>
+<pre class="highlight plaintext"><code>deploy to production:
+  stage: deploy
+  script: git push production HEAD:master
+  environment:
+    name: production
+    url: https://prod.example.com
+</code></pre><h4 id='environment-on_stop'>environment:on_stop <a class='anchor' href='README.html#environment-on_stop' title='Permalink'></a></h4>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/6669">Introduced</a> in GitLab 8.13.</li>
+<li>Starting with GitLab 8.14, when you have an environment that has a stop action
+defined, GitLab will automatically trigger a stop action when the associated
+branch is deleted.</li>
+</ul>
+</blockquote>
+
+<p>Closing (stoping) environments can be achieved with the <code>on_stop</code> keyword defined under
+<code>environment</code>. It declares a different job that runs in order to close
+the environment.</p>
+
+<p>Read the <code>environment:action</code> section for an example.</p>
+<h4 id='environment-action'>environment:action <a class='anchor' href='README.html#environment-action' title='Permalink'></a></h4>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/6669">Introduced</a> in GitLab 8.13.</p>
+</blockquote>
+
+<p>The <code>action</code> keyword is to be used in conjunction with <code>on_stop</code> and is defined
+in the job that is called to close the environment.</p>
+
+<p>Take for instance:</p>
+<pre class="highlight yaml"><code><span class="na">review_app</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make deploy-app</span>
+  <span class="na">environment</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">review</span>
+    <span class="na">on_stop</span><span class="pi">:</span> <span class="s">stop_review_app</span>
+
+<span class="na">stop_review_app</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make delete-app</span>
+  <span class="na">when</span><span class="pi">:</span> <span class="s">manual</span>
+  <span class="na">environment</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">review</span>
+    <span class="na">action</span><span class="pi">:</span> <span class="s">stop</span>
+</code></pre>
+<p>In the above example we set up the <code>review_app</code> job to deploy to the <code>review</code>
+environment, and we also defined a new <code>stop_review_app</code> job under <code>on_stop</code>.
+Once the <code>review_app</code> job is successfully finished, it will trigger the
+<code>stop_review_app</code> job based on what is defined under <code>when</code>. In this case we
+set it up to <code>manual</code> so it will need a <a href="README.html#manual-actions">manual action</a> via
+GitLab&#39;s web interface in order to run.</p>
+
+<p>The <code>stop_review_app</code> job is <strong>required</strong> to have the following keywords defined:</p>
+
+<ul>
+<li><code>when</code> - <a href="README.html#when">reference</a></li>
+<li><code>environment:name</code></li>
+<li><code>environment:action</code></li>
+</ul>
+<h4 id='dynamic-environments'>dynamic environments <a class='anchor' href='README.html#dynamic-environments' title='Permalink'></a></h4>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/6323">Introduced</a> in GitLab 8.12 and GitLab Runner 1.6.</p>
+</blockquote>
+
+<p><code>environment</code> can also represent a configuration hash with <code>name</code> and <code>url</code>.
+These parameters can use any of the defined <a href="README.html#variables">CI variables</a>
+(including predefined, secure variables and <code>.gitlab-ci.yml</code> variables).</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+Be aware than if the branch name contains special characters and you use the
+<code>$CI_BUILD_REF_NAME</code> variable to dynamically create environments, there might
+be complications during deployment. Follow the
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/22849">issue 22849</a> for more
+information.</p>
+</blockquote>
+
+<p>For example:</p>
+<pre class="highlight plaintext"><code>deploy as review app:
+  stage: deploy
+  script: make deploy
+  environment:
+    name: review-apps/$CI_BUILD_REF_NAME
+    url: https://$CI_BUILD_REF_NAME.review.example.com/
+</code></pre>
+<p>The <code>deploy as review app</code> job will be marked as deployment to dynamically
+create the <code>review-apps/$CI_BUILD_REF_NAME</code> environment, which <code>$CI_BUILD_REF_NAME</code>
+is an <a href="../variables/README.html">environment variable</a> set by the Runner. If for example the
+<code>deploy as review app</code> job was run in a branch named <code>pow</code>, this environment
+should be accessible under <code>https://pow.review.example.com/</code>.</p>
+
+<p>This of course implies that the underlying server which hosts the application
+is properly configured.</p>
+
+<p>The common use case is to create dynamic environments for branches and use them
+as Review Apps. You can see a simple example using Review Apps at
+<a href="https://gitlab.com/gitlab-examples/review-apps-nginx/">https://gitlab.com/gitlab-examples/review-apps-nginx/</a>.</p>
+<h3 id='artifacts'>artifacts <a class='anchor' href='README.html#artifacts' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Introduced in GitLab Runner v0.7.0 for non-Windows platforms.</li>
+<li>Windows support was added in GitLab Runner v.1.0.0.</li>
+<li>Currently not all executors are supported.</li>
+<li>Build artifacts are only collected for successful builds by default.</li>
+</ul>
+</blockquote>
+
+<p><code>artifacts</code> is used to specify a list of files and directories which should be
+attached to the build after success. You can only use paths that are within the
+project workspace. To pass artifacts between different builds, see <a href="README.html#dependencies">dependencies</a>.</p>
+
+<p>Below are some examples.</p>
+
+<p>Send all files in <code>binaries</code> and <code>.config</code>:</p>
+<pre class="highlight yaml"><code><span class="na">artifacts</span><span class="pi">:</span>
+  <span class="na">paths</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">binaries/</span>
+  <span class="pi">-</span> <span class="s">.config</span>
+</code></pre>
+<p>Send all Git untracked files:</p>
+<pre class="highlight yaml"><code><span class="na">artifacts</span><span class="pi">:</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>Send all Git untracked files and files in <code>binaries</code>:</p>
+<pre class="highlight yaml"><code><span class="na">artifacts</span><span class="pi">:</span>
+  <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+  <span class="na">paths</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">binaries/</span>
+</code></pre>
+<p>To disable artifact passing, define the job with empty <a href="README.html#dependencies">dependencies</a>:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make build</span>
+  <span class="na">dependencies</span><span class="pi">:</span> <span class="pi">[]</span>
+</code></pre>
+<p>You may want to create artifacts only for tagged releases to avoid filling the
+build server storage with temporary build artifacts.</p>
+
+<p>Create artifacts only for tags (<code>default-job</code> will not create artifacts):</p>
+<pre class="highlight yaml"><code><span class="na">default-job</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mvn test -U</span>
+  <span class="na">except</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">tags</span>
+
+<span class="na">release-job</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mvn package -U</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">target/*.war</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">tags</span>
+</code></pre>
+<p>The artifacts will be sent to GitLab after a successful build and will
+be available for download in the GitLab UI.</p>
+<h4 id='artifacts-name'>artifacts:name <a class='anchor' href='README.html#artifacts-name' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab 8.6 and GitLab Runner v1.1.0.</p>
+</blockquote>
+
+<p>The <code>name</code> directive allows you to define the name of the created artifacts
+archive. That way, you can have a unique name for every archive which could be
+useful when you&#39;d like to download the archive from GitLab. The <code>artifacts:name</code>
+variable can make use of any of the <a href="../variables/README.html">predefined variables</a>.
+The default name is <code>artifacts</code>, which becomes <code>artifacts.zip</code> when downloaded.</p>
+
+<hr>
+
+<p><strong>Example configurations</strong></p>
+
+<p>To create an archive with a name of the current build:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$CI_BUILD_NAME"</span>
+</code></pre>
+<p>To create an archive with a name of the current branch or tag including only
+the files that are untracked by Git:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+   <span class="na">artifacts</span><span class="pi">:</span>
+     <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$CI_BUILD_REF_NAME"</span>
+     <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>To create an archive with a name of the current build and the current branch or
+tag including only the files that are untracked by Git:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}"</span>
+    <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<p>To create an archive with a name of the current <a href="README.html#stages">stage</a> and branch name:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">${CI_BUILD_STAGE}_${CI_BUILD_REF_NAME}"</span>
+    <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+<hr>
+
+<p>If you use <strong>Windows Batch</strong> to run your shell scripts you need to replace
+<code>$</code> with <code>%</code>:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">%CI_BUILD_STAGE%_%CI_BUILD_REF_NAME%"</span>
+    <span class="na">untracked</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre><h4 id='artifacts-when'>artifacts:when <a class='anchor' href='README.html#artifacts-when' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab 8.9 and GitLab Runner v1.3.0.</p>
+</blockquote>
+
+<p><code>artifacts:when</code> is used to upload artifacts on build failure or despite the
+failure.</p>
+
+<p><code>artifacts:when</code> can be set to one of the following values:</p>
+
+<ol>
+<li><code>on_success</code> - upload artifacts only when the build succeeds. This is the default.</li>
+<li><code>on_failure</code> - upload artifacts only when the build fails.</li>
+<li><code>always</code> - upload artifacts regardless of the build status.</li>
+</ol>
+
+<hr>
+
+<p><strong>Example configurations</strong></p>
+
+<p>To upload artifacts only when build fails.</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">when</span><span class="pi">:</span> <span class="s">on_failure</span>
+</code></pre><h4 id='artifacts-expire_in'>artifacts:expire_in <a class='anchor' href='README.html#artifacts-expire_in' title='Permalink'></a></h4>
+<blockquote>
+<p>Introduced in GitLab 8.9 and GitLab Runner v1.3.0.</p>
+</blockquote>
+
+<p><code>artifacts:expire_in</code> is used to delete uploaded artifacts after the specified
+time. By default, artifacts are stored on GitLab forever. <code>expire_in</code> allows you
+to specify how long artifacts should live before they expire, counting from the
+time they are uploaded and stored on GitLab.</p>
+
+<p>You can use the <strong>Keep</strong> button on the build page to override expiration and
+keep artifacts forever.</p>
+
+<p>After expiry, artifacts are actually deleted hourly by default (via a cron job),
+but they are not accessible after expiry.</p>
+
+<p>The value of <code>expire_in</code> is an elapsed time. Examples of parseable values:</p>
+
+<ul>
+<li>&#39;3 mins 4 sec&#39;</li>
+<li>&#39;2 hrs 20 min&#39;</li>
+<li>&#39;2h20min&#39;</li>
+<li>&#39;6 mos 1 day&#39;</li>
+<li>&#39;47 yrs 6 mos and 4d&#39;</li>
+<li>&#39;3 weeks and 2 days&#39;</li>
+</ul>
+
+<hr>
+
+<p><strong>Example configurations</strong></p>
+
+<p>To expire artifacts 1 week after being uploaded:</p>
+<pre class="highlight yaml"><code><span class="na">job</span><span class="pi">:</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">expire_in</span><span class="pi">:</span> <span class="s">1 week</span>
+</code></pre><h3 id='dependencies'>dependencies <a class='anchor' href='README.html#dependencies' title='Permalink'></a></h3>
+<blockquote>
+<p>Introduced in GitLab 8.6 and GitLab Runner v1.1.1.</p>
+</blockquote>
+
+<p>This feature should be used in conjunction with <a href="README.html#artifacts"><code>artifacts</code></a> and
+allows you to define the artifacts to pass between different builds.</p>
+
+<p>Note that <code>artifacts</code> from all previous <a href="README.html#stages">stages</a> are passed by default.</p>
+
+<p>To use this feature, define <code>dependencies</code> in context of the job and pass
+a list of all previous builds from which the artifacts should be downloaded.
+You can only define builds from stages that are executed before the current one.
+An error will be shown if you define builds from the current stage or next ones.
+Defining an empty array will skip downloading any artifacts for that job.</p>
+
+<hr>
+
+<p>In the following example, we define two jobs with artifacts, <code>build:osx</code> and
+<code>build:linux</code>. When the <code>test:osx</code> is executed, the artifacts from <code>build:osx</code>
+will be downloaded and extracted in the context of the build. The same happens
+for <code>test:linux</code> and artifacts from <code>build:linux</code>.</p>
+
+<p>The job <code>deploy</code> will download artifacts from all previous builds because of
+the <a href="README.html#stages">stage</a> precedence:</p>
+<pre class="highlight yaml"><code><span class="s">build:osx</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make build:osx</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">binaries/</span>
+
+<span class="s">build:linux</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make build:linux</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">binaries/</span>
+
+<span class="s">test:osx</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make test:osx</span>
+  <span class="na">dependencies</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">build:osx</span>
+
+<span class="s">test:linux</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make test:linux</span>
+  <span class="na">dependencies</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">build:linux</span>
+
+<span class="na">deploy</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span> <span class="s">make deploy</span>
+</code></pre><h3 id='before_script-and-after_script'>before_script and after_script <a class='anchor' href='README.html#before_script-and-after_script' title='Permalink'></a></h3>
+<p>It&#39;s possible to overwrite globally defined <code>before_script</code> and <code>after_script</code>:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">global before script</span>
+
+<span class="na">job</span><span class="pi">:</span>
+  <span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">execute this instead of global before script</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">my command</span>
+  <span class="na">after_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">execute this after my script</span>
+</code></pre><h2 id='git-strategy'>Git Strategy <a class='anchor' href='README.html#git-strategy' title='Permalink'></a></h2>
+<blockquote>
+<p>Introduced in GitLab 8.9 as an experimental feature.  May change or be removed
+  completely in future releases. <code>GIT_STRATEGY=none</code> requires GitLab Runner
+  v1.7+.</p>
+</blockquote>
+
+<p>You can set the <code>GIT_STRATEGY</code> used for getting recent application code, either
+in the global <a href="README.html#variables"><code>variables</code></a> section or the <a href="README.html#job-variables"><code>variables</code></a>
+section for individual jobs. If left unspecified, the default from project
+settings will be used.</p>
+
+<p>There are three possible values: <code>clone</code>, <code>fetch</code>, and <code>none</code>.</p>
+
+<p><code>clone</code> is the slowest option. It clones the repository from scratch for every
+job, ensuring that the project workspace is always pristine.</p>
+<pre class="highlight plaintext"><code>variables:
+  GIT_STRATEGY: clone
+</code></pre>
+<p><code>fetch</code> is faster as it re-uses the project workspace (falling back to <code>clone</code>
+if it doesn&#39;t exist). <code>git clean</code> is used to undo any changes made by the last
+job, and <code>git fetch</code> is used to retrieve commits made since the last job ran.</p>
+<pre class="highlight plaintext"><code>variables:
+  GIT_STRATEGY: fetch
+</code></pre>
+<p><code>none</code> also re-uses the project workspace, but skips all Git operations
+(including GitLab Runner&#39;s pre-clone script, if present). It is mostly useful
+for jobs that operate exclusively on artifacts (e.g., <code>deploy</code>). Git repository
+data may be present, but it is certain to be out of date, so you should only
+rely on files brought into the project workspace from cache or artifacts.</p>
+<pre class="highlight plaintext"><code>variables:
+  GIT_STRATEGY: none
+</code></pre><h2 id='shallow-cloning'>Shallow cloning <a class='anchor' href='README.html#shallow-cloning' title='Permalink'></a></h2>
+<blockquote>
+<p>Introduced in GitLab 8.9 as an experimental feature. May change in future
+releases or be removed completely.</p>
+</blockquote>
+
+<p>You can specify the depth of fetching and cloning using <code>GIT_DEPTH</code>. This allows
+shallow cloning of the repository which can significantly speed up cloning for
+repositories with a large number of commits or old, large binaries. The value is
+passed to <code>git fetch</code> and <code>git clone</code>.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you use a depth of 1 and have a queue of builds or retry
+builds, jobs may fail.</p>
+</blockquote>
+
+<p>Since Git fetching and cloning is based on a ref, such as a branch name, runners
+can&#39;t clone a specific commit SHA. If there are multiple builds in the queue, or
+you are retrying an old build, the commit to be tested needs to be within the
+git history that is cloned. Setting too small a value for <code>GIT_DEPTH</code> can make
+it impossible to run these old commits. You will see <code>unresolved reference</code> in
+build logs. You should then reconsider changing <code>GIT_DEPTH</code> to a higher value.</p>
+
+<p>Builds that rely on <code>git describe</code> may not work correctly when <code>GIT_DEPTH</code> is
+set since only part of the git history is present.</p>
+
+<p>To fetch or clone only the last 3 commits:</p>
+<pre class="highlight plaintext"><code>variables:
+  GIT_DEPTH: "3"
+</code></pre><h2 id='hidden-keys'>Hidden keys <a class='anchor' href='README.html#hidden-keys' title='Permalink'></a></h2>
+<blockquote>
+<p>Introduced in GitLab 8.6 and GitLab Runner v1.1.1.</p>
+</blockquote>
+
+<p>Keys that start with a dot (<code>.</code>) will be not processed by GitLab CI. You can
+use this feature to ignore jobs, or use the
+<a href="README.html#special-yaml-features">special YAML features</a> and transform the hidden keys
+into templates.</p>
+
+<p>In the following example, <code>.key_name</code> will be ignored:</p>
+<pre class="highlight yaml"><code><span class="s">.key_name</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">rake spec</span>
+</code></pre>
+<p>Hidden keys can be hashes like normal CI jobs, but you are also allowed to use
+different types of structures to leverage special YAML features.</p>
+<h2 id='special-yaml-features'>Special YAML features <a class='anchor' href='README.html#special-yaml-features' title='Permalink'></a></h2>
+<p>It&#39;s possible to use special YAML features like anchors (<code>&amp;</code>), aliases (<code>*</code>)
+and map merging (<code>&lt;&lt;</code>), which will allow you to greatly reduce the complexity
+of <code>.gitlab-ci.yml</code>.</p>
+
+<p>Read more about the various <a href="https://learnxinyminutes.com/docs/yaml/">YAML features</a>.</p>
+<h3 id='anchors'>Anchors <a class='anchor' href='README.html#anchors' title='Permalink'></a></h3>
+<blockquote>
+<p>Introduced in GitLab 8.6 and GitLab Runner v1.1.1.</p>
+</blockquote>
+
+<p>YAML also has a handy feature called &#39;anchors&#39;, which let you easily duplicate
+content across your document. Anchors can be used to duplicate/inherit
+properties, and is a perfect example to be used with <a href="README.html#hidden-keys">hidden keys</a>
+to provide templates for your jobs.</p>
+
+<p>The following example uses anchors and map merging. It will create two jobs,
+<code>test1</code> and <code>test2</code>, that will inherit the parameters of <code>.job_template</code>, each
+having their own custom <code>script</code> defined:</p>
+<pre class="highlight yaml"><code><span class="s">.job_template</span><span class="pi">:</span> <span class="nl">&amp;job_definition</span>  <span class="c1"># Hidden key that defines an anchor named 'job_definition'</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">redis</span>
+
+<span class="na">test1</span><span class="pi">:</span>
+  <span class="s">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*job_definition</span>           <span class="c1"># Merge the contents of the 'job_definition' alias</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test1 project</span>
+
+<span class="na">test2</span><span class="pi">:</span>
+  <span class="s">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*job_definition</span>           <span class="c1"># Merge the contents of the 'job_definition' alias</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test2 project</span>
+</code></pre>
+<p><code>&amp;</code> sets up the name of the anchor (<code>job_definition</code>), <code>&lt;&lt;</code> means &quot;merge the
+given hash into the current one&quot;, and <code>*</code> includes the named anchor
+(<code>job_definition</code> again). The expanded version looks like this:</p>
+<pre class="highlight yaml"><code><span class="s">.job_template</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">redis</span>
+
+<span class="na">test1</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">redis</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test1 project</span>
+
+<span class="na">test2</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">redis</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test2 project</span>
+</code></pre>
+<p>Let&#39;s see another one example. This time we will use anchors to define two sets
+of services. This will create two jobs, <code>test:postgres</code> and <code>test:mysql</code>, that
+will share the <code>script</code> directive defined in <code>.job_template</code>, and the <code>services</code>
+directive defined in <code>.postgres_services</code> and <code>.mysql_services</code> respectively:</p>
+<pre class="highlight yaml"><code><span class="s">.job_template</span><span class="pi">:</span> <span class="nl">&amp;job_definition</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test project</span>
+
+<span class="s">.postgres_services</span><span class="pi">:</span>
+  <span class="na">services</span><span class="pi">:</span> <span class="nl">&amp;postgres_definition</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+
+<span class="s">.mysql_services</span><span class="pi">:</span>
+  <span class="na">services</span><span class="pi">:</span> <span class="nl">&amp;mysql_definition</span>
+    <span class="pi">-</span> <span class="s">mysql</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+
+<span class="s">test:postgres</span><span class="pi">:</span>
+  <span class="s">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*job_definition</span>
+  <span class="na">services</span><span class="pi">:</span> <span class="nv">*postgres_definition</span>
+
+<span class="s">test:mysql</span><span class="pi">:</span>
+  <span class="s">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*job_definition</span>
+  <span class="na">services</span><span class="pi">:</span> <span class="nv">*mysql_definition</span>
+</code></pre>
+<p>The expanded version looks like this:</p>
+<pre class="highlight yaml"><code><span class="s">.job_template</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test project</span>
+
+<span class="s">.postgres_services</span><span class="pi">:</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+
+<span class="s">.mysql_services</span><span class="pi">:</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mysql</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+
+<span class="s">test:postgres</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test project</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgres</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+
+<span class="s">test:mysql</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">test project</span>
+  <span class="na">services</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mysql</span>
+    <span class="pi">-</span> <span class="s">ruby</span>
+</code></pre>
+<p>You can see that the hidden keys are conveniently used as templates.</p>
+<h2 id='triggers'>Triggers <a class='anchor' href='README.html#triggers' title='Permalink'></a></h2>
+<p>Triggers can be used to force a rebuild of a specific branch, tag or commit,
+with an API call.</p>
+
+<p><a href="../triggers/README.html">Read more in the triggers documentation.</a></p>
+<h2 id='validate-the-gitlab-ci-yml'>Validate the .gitlab-ci.yml <a class='anchor' href='README.html#validate-the-gitlab-ci-yml' title='Permalink'></a></h2>
+<p>Each instance of GitLab CI has an embedded debug tool called Lint.
+You can find the link under <code>/ci/lint</code> of your gitlab instance.</p>
+<h2 id='skipping-builds'>Skipping builds <a class='anchor' href='README.html#skipping-builds' title='Permalink'></a></h2>
+<p>If your commit message contains <code>[ci skip]</code> or <code>[skip ci]</code>, using any
+capitalization, the commit will be created but the builds will be skipped.</p>
+<h2 id='examples'>Examples <a class='anchor' href='README.html#examples' title='Permalink'></a></h2>
+<p>Visit the <a href="../examples/README.html">examples README</a> to see a list of examples using GitLab
+CI with various languages.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/yaml/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

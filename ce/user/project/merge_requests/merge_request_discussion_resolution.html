@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Merge Request discussion resolution - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Merge Request discussion resolution</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="merge_request_discussion_resolution.html#merge-request-discussion-resolution">Merge Request discussion resolution</a>
+<ul>
+<li>
+<a href="merge_request_discussion_resolution.html#marking-a-comment-or-discussion-as-resolved">Marking a comment or discussion as resolved</a>
+</li>
+<li>
+<a href="merge_request_discussion_resolution.html#jumping-between-unresolved-discussions">Jumping between unresolved discussions</a>
+</li>
+<li>
+<a href="merge_request_discussion_resolution.html#only-allow-merge-requests-to-be-merged-if-all-discussions-are-resolved">Only allow merge requests to be merged if all discussions are resolved</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='merge-request-discussion-resolution'>Merge Request discussion resolution <a class='anchor' href='merge_request_discussion_resolution.html#merge-request-discussion-resolution' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5022">Introduced</a> in GitLab 8.11.</p>
+</blockquote>
+
+<p>Discussion resolution helps keep track of progress during code review.
+Resolving comments prevents you from forgetting to address feedback and lets you
+hide discussions that are no longer relevant.</p>
+
+<p><a target="_blank" href="img/discussion_view.png"><img src="img/discussion_view.png" title="" alt=""A discussion between two people on a piece of code""/></a></p>
+
+<p>Comments and discussions can be resolved by anyone with at least Developer
+access to the project, as well as by the author of the merge request.</p>
+<h2 id='marking-a-comment-or-discussion-as-resolved'>Marking a comment or discussion as resolved <a class='anchor' href='merge_request_discussion_resolution.html#marking-a-comment-or-discussion-as-resolved' title='Permalink'></a></h2>
+<p>You can mark a discussion as resolved by clicking the &quot;Resolve discussion&quot;
+button at the bottom of the discussion.</p>
+
+<p><a target="_blank" href="img/resolve_discussion_button.png"><img src="img/resolve_discussion_button.png" title="" alt=""Resolve discussion" button"/></a></p>
+
+<p>Alternatively, you can mark each comment as resolved individually.</p>
+
+<p><a target="_blank" href="img/resolve_comment_button.png"><img src="img/resolve_comment_button.png" title="" alt=""Resolve comment" button"/></a></p>
+<h2 id='jumping-between-unresolved-discussions'>Jumping between unresolved discussions <a class='anchor' href='merge_request_discussion_resolution.html#jumping-between-unresolved-discussions' title='Permalink'></a></h2>
+<p>When a merge request has a large number of comments it can be difficult to track
+what remains unresolved. You can jump between unresolved discussions with the
+Jump button next to the Reply field on a discussion.</p>
+
+<p>You can also jump to the first unresolved discussion from the button next to the
+resolved discussions tracker.</p>
+
+<p><a target="_blank" href="img/discussions_resolved.png"><img src="img/discussions_resolved.png" title="" alt=""3/4 discussions resolved""/></a></p>
+<h2 id='only-allow-merge-requests-to-be-merged-if-all-discussions-are-resolved'>Only allow merge requests to be merged if all discussions are resolved <a class='anchor' href='merge_request_discussion_resolution.html#only-allow-merge-requests-to-be-merged-if-all-discussions-are-resolved' title='Permalink'></a></h2>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/7125">Introduced</a> in GitLab 8.14.</p>
+</blockquote>
+
+<p>You can prevent merge requests from being merged until all discussions are resolved.</p>
+
+<p>Navigate to your project&#39;s settings page, select the
+<strong>Only allow merge requests to be merged if all discussions are resolved</strong> check
+box and hit <strong>Save</strong> for the changes to take effect.</p>
+
+<p><a target="_blank" href="img/only_allow_merge_if_all_discussions_are_resolved.png"><img src="img/only_allow_merge_if_all_discussions_are_resolved.png" title="" alt="Only allow merge if all the discussions are resolved settings"/></a></p>
+
+<p>From now on, you will not be able to merge from the UI until all discussions
+are resolved.</p>
+
+<p><a target="_blank" href="img/only_allow_merge_if_all_discussions_are_resolved_msg.png"><img src="img/only_allow_merge_if_all_discussions_are_resolved_msg.png" title="" alt="Only allow merge if all the discussions are resolved message"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/user/project/merge_requests/merge_request_discussion_resolution.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

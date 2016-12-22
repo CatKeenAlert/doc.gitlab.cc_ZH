@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Triggering Builds through the API - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Triggering Builds through the API</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#triggering-builds-through-the-api">Triggering Builds through the API</a>
+<ul>
+<li>
+<a href="README.html#add-a-trigger">Add a trigger</a>
+</li>
+<li>
+<a href="README.html#revoke-a-trigger">Revoke a trigger</a>
+</li>
+<li>
+<a href="README.html#trigger-a-build">Trigger a build</a>
+</li>
+<li>
+<a href="README.html#trigger-a-build-from-webhook">Trigger a build from webhook</a>
+</li>
+<li>
+<a href="README.html#pass-build-variables-to-a-trigger">Pass build variables to a trigger</a>
+</li>
+<li>
+<a href="README.html#examples">Examples</a>
+<ul>
+<li>
+<a href="README.html#triggering-a-build-within-gitlab-ci-yml">Triggering a build within <code>.gitlab-ci.yml</code></a>
+</li>
+<li>
+<a href="README.html#making-use-of-trigger-variables">Making use of trigger variables</a>
+</li>
+<li>
+<a href="README.html#using-webhook-to-trigger-builds">Using webhook to trigger builds</a>
+</li>
+<li>
+<a href="README.html#using-cron-to-trigger-nightly-builds">Using cron to trigger nightly builds</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='triggering-builds-through-the-api'>Triggering Builds through the API <a class='anchor' href='README.html#triggering-builds-through-the-api' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ci/merge_requests/229">Introduced</a> in GitLab CE 7.14.</p>
+
+<p><strong>Note</strong>:
+GitLab 8.12 has a completely redesigned build permissions system.
+Read all about the <a href="../../user/project/new_ci_build_permissions_model.html#build-triggers">new model and its implications</a>.</p>
+</blockquote>
+
+<p>Triggers can be used to force a rebuild of a specific branch, tag or commit,
+with an API call.</p>
+<h2 id='add-a-trigger'>Add a trigger <a class='anchor' href='README.html#add-a-trigger' title='Permalink'></a></h2>
+<p>You can add a new trigger by going to your project&#39;s <strong>Settings &gt; Triggers</strong>.
+The <strong>Add trigger</strong> button will create a new token which you can then use to
+trigger a rebuild of this particular project.</p>
+
+<p>Every new trigger you create, gets assigned a different token which you can
+then use inside your scripts or <code>.gitlab-ci.yml</code>. You also have a nice
+overview of the time the triggers were last used.</p>
+
+<p><a target="_blank" href="img/triggers_page.png"><img src="img/triggers_page.png" title="" alt="Triggers page overview"/></a></p>
+<h2 id='revoke-a-trigger'>Revoke a trigger <a class='anchor' href='README.html#revoke-a-trigger' title='Permalink'></a></h2>
+<p>You can revoke a trigger any time by going at your project&#39;s
+<strong>Settings &gt; Triggers</strong> and hitting the <strong>Revoke</strong> button. The action is
+irreversible.</p>
+<h2 id='trigger-a-build'>Trigger a build <a class='anchor' href='README.html#trigger-a-build' title='Permalink'></a></h2>
+<p>To trigger a build you need to send a <code>POST</code> request to GitLab&#39;s API endpoint:</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/trigger/builds
+</code></pre>
+<p>The required parameters are the trigger&#39;s <code>token</code> and the Git <code>ref</code> on which
+the trigger will be performed. Valid refs are the branch, the tag or the commit
+SHA. The <code>:id</code> of a project can be found by <a href="../../api/projects.html">querying the API</a>
+or by visiting the <strong>Triggers</strong> page which provides self-explanatory examples.</p>
+
+<p>When a rebuild is triggered, the information is exposed in GitLab&#39;s UI under
+the <strong>Builds</strong> page and the builds are marked as <code>triggered</code>.</p>
+
+<p><a target="_blank" href="img/builds_page.png"><img src="img/builds_page.png" title="" alt="Marked rebuilds as triggered on builds page"/></a></p>
+
+<hr>
+
+<p>You can see which trigger caused the rebuild by visiting the single build page.
+The token of the trigger is exposed in the UI as you can see from the image
+below.</p>
+
+<p><a target="_blank" href="img/trigger_single_build.png"><img src="img/trigger_single_build.png" title="" alt="Marked rebuilds as triggered on a single build page"/></a></p>
+
+<hr>
+
+<p>See the <a href="README.html#examples">Examples</a> section for more details on how to actually
+trigger a rebuild.</p>
+<h2 id='trigger-a-build-from-webhook'>Trigger a build from webhook <a class='anchor' href='README.html#trigger-a-build-from-webhook' title='Permalink'></a></h2>
+<blockquote>
+<p>Introduced in GitLab 8.14.</p>
+</blockquote>
+
+<p>To trigger a build from webhook of another project you need to add the following
+webhook url for Push and Tag push events:</p>
+<pre class="highlight plaintext"><code>https://gitlab.example.com/api/v3/projects/:id/ref/:ref/trigger/builds?token=TOKEN
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>:</p>
+
+<ul>
+<li><code>ref</code> should be passed as part of url in order to take precedence over <code>ref</code>
+from webhook body that designates the branchref that fired the trigger in the source repository.</li>
+<li><code>ref</code> should be url encoded if contains slashes.</li>
+</ul>
+</blockquote>
+<h2 id='pass-build-variables-to-a-trigger'>Pass build variables to a trigger <a class='anchor' href='README.html#pass-build-variables-to-a-trigger' title='Permalink'></a></h2>
+<p>You can pass any number of arbitrary variables in the trigger API call and they
+will be available in GitLab CI so that they can be used in your <code>.gitlab-ci.yml</code>
+file. The parameter is of the form:</p>
+<pre class="highlight plaintext"><code>variables[key]=value
+</code></pre>
+<p>This information is also exposed in the UI.</p>
+
+<p><a target="_blank" href="img/trigger_variables.png"><img src="img/trigger_variables.png" title="" alt="Build variables in UI"/></a></p>
+
+<hr>
+
+<p>See the <a href="README.html#examples">Examples</a> section below for more details.</p>
+<h2 id='examples'>Examples <a class='anchor' href='README.html#examples' title='Permalink'></a></h2>
+<p>Using cURL you can trigger a rebuild with minimal effort, for example:</p>
+<pre class="highlight shell"><code>curl --request POST <span class="se">\</span>
+     --form <span class="nv">token</span><span class="o">=</span>TOKEN <span class="se">\</span>
+     --form <span class="nv">ref</span><span class="o">=</span>master <span class="se">\</span>
+     https://gitlab.example.com/api/v3/projects/9/trigger/builds
+</code></pre>
+<p>In this case, the project with ID <code>9</code> will get rebuilt on <code>master</code> branch.</p>
+
+<p>Alternatively, you can pass the <code>token</code> and <code>ref</code> arguments in the query string:</p>
+<pre class="highlight shell"><code>curl --request POST <span class="se">\</span>
+    <span class="s2">"https://gitlab.example.com/api/v3/projects/9/trigger/builds?token=TOKEN&amp;ref=master"</span>
+</code></pre><h3 id='triggering-a-build-within-gitlab-ci-yml'>Triggering a build within <code>.gitlab-ci.yml</code> <a class='anchor' href='README.html#triggering-a-build-within-gitlab-ci-yml' title='Permalink'></a></h3>
+<p>You can also benefit by using triggers in your <code>.gitlab-ci.yml</code>. Let&#39;s say that
+you have two projects, A and B, and you want to trigger a rebuild on the <code>master</code>
+branch of project B whenever a tag on project A is created. This is the job you
+need to add in project&#39;s A <code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">build_docs</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s2">"</span><span class="s">curl</span><span class="nv"> </span><span class="s">--request</span><span class="nv"> </span><span class="s">POST</span><span class="nv"> </span><span class="s">--form</span><span class="nv"> </span><span class="s">token=TOKEN</span><span class="nv"> </span><span class="s">--form</span><span class="nv"> </span><span class="s">ref=master</span><span class="nv"> </span><span class="s">https://gitlab.example.com/api/v3/projects/9/trigger/builds"</span>
+  <span class="na">only</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">tags</span>
+</code></pre>
+<p>Now, whenever a new tag is pushed on project A, the build will run and the
+<code>build_docs</code> job will be executed, triggering a rebuild of project B. The
+<code>stage: deploy</code> ensures that this job will run only after all jobs with
+<code>stage: test</code> complete successfully.</p>
+
+<p><em><strong>Note:</strong> If your project is public, passing the token in plain text is
+probably not the wisest idea, so you might want to use a
+<a href="../variables/README.html#user-defined-variables-secure-variables">secure variable</a>
+for that purpose.</em></p>
+<h3 id='making-use-of-trigger-variables'>Making use of trigger variables <a class='anchor' href='README.html#making-use-of-trigger-variables' title='Permalink'></a></h3>
+<p>Using trigger variables can be proven useful for a variety of reasons.</p>
+
+<ul>
+<li>Identifiable jobs. Since the variable is exposed in the UI you can know
+why the rebuild was triggered if you pass a variable that explains the
+purpose.</li>
+<li>Conditional job processing. You can have conditional jobs that run whenever
+a certain variable is present.</li>
+</ul>
+
+<p>Consider the following <code>.gitlab-ci.yml</code> where we set three
+<a href="../yaml/README.html#stages">stages</a> and the <code>upload_package</code> job is run only
+when all jobs from the test and build stages pass. When the <code>UPLOAD_TO_S3</code>
+variable is non-zero, <code>make upload</code> is run.</p>
+<pre class="highlight yaml"><code><span class="na">stages</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">test</span>
+<span class="pi">-</span> <span class="s">build</span>
+<span class="pi">-</span> <span class="s">package</span>
+
+<span class="na">run_tests</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">make test</span>
+
+<span class="na">build_package</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">make build</span>
+
+<span class="na">upload_package</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">package</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">if [ -n "${UPLOAD_TO_S3}" ]; then make upload; fi</span>
+</code></pre>
+<p>You can then trigger a rebuild while you pass the <code>UPLOAD_TO_S3</code> variable
+and the script of the <code>upload_package</code> job will run:</p>
+<pre class="highlight shell"><code>curl --request POST <span class="se">\</span>
+  --form <span class="nv">token</span><span class="o">=</span>TOKEN <span class="se">\</span>
+  --form <span class="nv">ref</span><span class="o">=</span>master <span class="se">\</span>
+  --form <span class="s2">"variables[UPLOAD_TO_S3]=true"</span> <span class="se">\</span>
+  https://gitlab.example.com/api/v3/projects/9/trigger/builds
+</code></pre><h3 id='using-webhook-to-trigger-builds'>Using webhook to trigger builds <a class='anchor' href='README.html#using-webhook-to-trigger-builds' title='Permalink'></a></h3>
+<p>You can add the following webhook to another project in order to trigger a build:</p>
+<pre class="highlight plaintext"><code>https://gitlab.example.com/api/v3/projects/9/ref/master/trigger/builds?token=TOKEN&amp;variables[UPLOAD_TO_S3]=true
+</code></pre><h3 id='using-cron-to-trigger-nightly-builds'>Using cron to trigger nightly builds <a class='anchor' href='README.html#using-cron-to-trigger-nightly-builds' title='Permalink'></a></h3>
+<p>Whether you craft a script or just run cURL directly, you can trigger builds
+in conjunction with cron. The example below triggers a build on the <code>master</code>
+branch of project with ID <code>9</code> every night at <code>00:30</code>:</p>
+<pre class="highlight shell"><code>30 0 <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> curl --request POST --form <span class="nv">token</span><span class="o">=</span>TOKEN --form <span class="nv">ref</span><span class="o">=</span>master https://gitlab.example.com/api/v3/projects/9/trigger/builds
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/triggers/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

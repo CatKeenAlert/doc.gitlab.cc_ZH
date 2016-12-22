@@ -1,0 +1,781 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Runner Commands - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Runner Commands</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-runner-commands">GitLab Runner Commands</a>
+<ul>
+<li>
+<a href="README.html#using-environment-variables">Using environment variables</a>
+</li>
+<li>
+<a href="README.html#running-in-debug-mode">Running in debug mode</a>
+</li>
+<li>
+<a href="README.html#super-user-permission">Super-user permission</a>
+</li>
+<li>
+<a href="README.html#configuration-file">Configuration file</a>
+</li>
+<li>
+<a href="README.html#signals">Signals</a>
+</li>
+<li>
+<a href="README.html#commands-overview">Commands overview</a>
+</li>
+<li>
+<a href="README.html#registration-related-commands">Registration-related commands</a>
+<ul>
+<li>
+<a href="README.html#gitlab-runner-register">gitlab-runner register</a>
+<ul>
+<li>
+<a href="README.html#interactive-registration">Interactive registration</a>
+</li>
+<li>
+<a href="README.html#non-interactive-registration">Non-interactive registration</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#gitlab-runner-list">gitlab-runner list</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-verify">gitlab-runner verify</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-unregister">gitlab-runner unregister</a>
+<ul>
+<li>
+<a href="README.html#by-url-and-token">By URL and token:</a>
+</li>
+<li>
+<a href="README.html#by-name">By name:</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#service-related-commands">Service-related commands</a>
+<ul>
+<li>
+<a href="README.html#gitlab-runner-install">gitlab-runner install</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-uninstall">gitlab-runner uninstall</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-start">gitlab-runner start</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-stop">gitlab-runner stop</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-restart">gitlab-runner restart</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-status">gitlab-runner status</a>
+</li>
+<li>
+<a href="README.html#multiple-services">Multiple services</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#run-related-commands">Run-related commands</a>
+<ul>
+<li>
+<a href="README.html#gitlab-runner-run">gitlab-runner run</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-run-single">gitlab-runner run-single</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-exec">gitlab-runner exec</a>
+</li>
+<li>
+<a href="README.html#limitations-of-gitlab-runner-exec">Limitations of <code>gitlab-runner exec</code></a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#internal-commands">Internal commands</a>
+<ul>
+<li>
+<a href="README.html#gitlab-runner-artifacts-downloader">gitlab-runner artifacts-downloader</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-artifacts-uploader">gitlab-runner artifacts-uploader</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-cache-archiver">gitlab-runner cache-archiver</a>
+</li>
+<li>
+<a href="README.html#gitlab-runner-cache-extractor">gitlab-runner cache-extractor</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="README.html#access-denied-when-running-the-service-related-commands"><strong>Access Denied</strong> when running the service-related commands</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-runner-commands'>GitLab Runner Commands <a class='anchor' href='README.html#gitlab-runner-commands' title='Permalink'></a></h1>
+<p>GitLab Runner contains a set of commands with which you register, manage and
+run your builds.</p>
+
+<p>You can check a recent list of commands by executing:</p>
+<pre class="highlight shell"><code>gitlab-runner --help
+</code></pre>
+<p>Append <code>--help</code> after a command to see its specific help page:</p>
+<pre class="highlight shell"><code>gitlab-runner &lt;<span class="nb">command</span>&gt; --help
+</code></pre>
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="README.html#using-environment-variables">Using environment variables</a></li>
+<li><a href="README.html#running-in-debug-mode">Running in debug mode</a></li>
+<li><a href="README.html#super-user-permission">Super-user permission</a></li>
+<li><a href="README.html#configuration-file">Configuration file</a></li>
+<li><a href="README.html#signals">Signals</a></li>
+<li><a href="README.html#commands-overview">Commands overview</a></li>
+<li><a href="README.html#registration-related-commands">Registration-related commands</a>
+
+<ul>
+<li><a href="README.html#gitlab-runner-register">gitlab-runner register</a>
+
+<ul>
+<li><a href="README.html#interactive-registration">Interactive registration</a></li>
+<li><a href="README.html#non-interactive-registration">Non-interactive registration</a></li>
+</ul></li>
+<li><a href="README.html#gitlab-runner-list">gitlab-runner list</a></li>
+<li><a href="README.html#gitlab-runner-verify">gitlab-runner verify</a></li>
+<li><a href="README.html#gitlab-runner-unregister">gitlab-runner unregister</a></li>
+</ul></li>
+<li><a href="README.html#service-related-commands">Service-related commands</a>
+
+<ul>
+<li><a href="README.html#gitlab-runner-install">gitlab-runner install</a></li>
+<li><a href="README.html#gitlab-runner-uninstall">gitlab-runner uninstall</a></li>
+<li><a href="README.html#gitlab-runner-start">gitlab-runner start</a></li>
+<li><a href="README.html#gitlab-runner-stop">gitlab-runner stop</a></li>
+<li><a href="README.html#gitlab-runner-restart">gitlab-runner restart</a></li>
+<li><a href="README.html#gitlab-runner-status">gitlab-runner status</a></li>
+<li><a href="README.html#multiple-services">Multiple services</a></li>
+</ul></li>
+<li><a href="README.html#run-related-commands">Run-related commands</a>
+
+<ul>
+<li><a href="README.html#gitlab-runner-run">gitlab-runner run</a></li>
+<li><a href="README.html#gitlab-runner-run-single">gitlab-runner run-single</a></li>
+<li><a href="README.html#gitlab-runner-exec">gitlab-runner exec</a></li>
+<li><a href="README.html#limitations-of-gitlab-runner-exec">Limitations of <code>gitlab-runner exec</code></a></li>
+</ul></li>
+<li><a href="README.html#internal-commands">Internal commands</a>
+
+<ul>
+<li><a href="README.html#gitlab-runner-artifacts-downloader">gitlab-runner artifacts-downloader</a></li>
+<li><a href="README.html#gitlab-runner-artifacts-uploader">gitlab-runner artifacts-uploader</a></li>
+<li><a href="README.html#gitlab-runner-cache-archiver">gitlab-runner cache-archiver</a></li>
+<li><a href="README.html#gitlab-runner-cache-extractor">gitlab-runner cache-extractor</a></li>
+</ul></li>
+<li><a href="README.html#troubleshooting">Troubleshooting</a>
+
+<ul>
+<li><a href="README.html#access-denied-when-running-the-service-related-commands"><strong>Access Denied</strong> when running the service-related commands</a></li>
+</ul></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='using-environment-variables'>Using environment variables <a class='anchor' href='README.html#using-environment-variables' title='Permalink'></a></h2>
+<p>Most of the commands support environment variables as a method to pass the
+configuration to the command.</p>
+
+<p>You can see the name of the environment variable when invoking <code>--help</code> for a
+specific command. For example, you can see below the help message for the <code>run</code>
+command:</p>
+<pre class="highlight shell"><code>gitlab-runner run --help
+</code></pre>
+<p>The output would be similar to:</p>
+<pre class="highlight shell"><code>NAME:
+   gitlab-runner run - run multi runner service
+
+USAGE:
+   gitlab-runner run <span class="o">[</span><span class="nb">command </span>options] <span class="o">[</span>arguments...]
+
+OPTIONS:
+   -c, --config <span class="s2">"/Users/ayufan/.gitlab-runner/config.toml"</span>  Config file <span class="o">[</span><span class="nv">$CONFIG_FILE</span><span class="o">]</span>
+</code></pre><h2 id='running-in-debug-mode'>Running in debug mode <a class='anchor' href='README.html#running-in-debug-mode' title='Permalink'></a></h2>
+<p>Debug mode is especially useful when looking for the cause of some undefined
+behavior or error.</p>
+
+<p>To run a command in debug mode, prepend the command with <code>--debug</code>:</p>
+<pre class="highlight shell"><code>gitlab-runner --debug &lt;<span class="nb">command</span>&gt;
+</code></pre><h2 id='super-user-permission'>Super-user permission <a class='anchor' href='README.html#super-user-permission' title='Permalink'></a></h2>
+<p>Commands that access the configuration of GitLab Runner behave differently when
+executed as super-user (<code>root</code>). The file location depends on the user executing
+the command.</p>
+
+<p>Be aware of the notice that is written when executing the commands that are
+used for running builds, registering services or managing registered runners:</p>
+<pre class="highlight shell"><code>gitlab-runner run
+
+INFO[0000] Starting multi-runner from /Users/ayufan/.gitlab-runner/config.toml ...  <span class="nv">builds</span><span class="o">=</span>0
+WARN[0000] Running <span class="k">in </span>user-mode.
+WARN[0000] Use sudo <span class="k">for </span>system-mode:
+WARN[0000] <span class="nv">$ </span>sudo gitlab-runner...
+</code></pre>
+<p>You should use <code>user-mode</code> if you are really sure that this is a mode that you
+want to work with. Otherwise, prefix your command with <code>sudo</code>:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-runner run
+
+INFO[0000] Starting multi-runner from /etc/gitlab-runner/config.toml ...  builds=0
+INFO[0000] Running in system-mode.
+</code></pre>
+<p>In the case of <strong>Windows</strong> you may need to run the <strong>Command Prompt</strong> in
+<strong>Administrative Mode</strong>.</p>
+<h2 id='configuration-file'>Configuration file <a class='anchor' href='README.html#configuration-file' title='Permalink'></a></h2>
+<p>GitLab Runner configuration uses the <a href="https://github.com/toml-lang/toml">TOML</a> format.</p>
+
+<p>The file to be edited can be found in:</p>
+
+<ol>
+<li><code>/etc/gitlab-runner/config.toml</code> on *nix systems when gitlab-runner is
+executed as super-user (<code>root</code>)</li>
+<li><code>~/.gitlab-runner/config.toml</code> on *nix systems when gitlab-runner is
+executed as non-root</li>
+<li><code>./config.toml</code> on other systems</li>
+</ol>
+
+<p>Most of the commands accept an argument to specify a custom configuration file,
+allowing you to have a multiple different configurations on a single machine.
+To specify a custom configuration file use the <code>-c</code> or <code>--config</code> flag, or use
+the <code>CONFIG_FILE</code> environment variable.</p>
+<h2 id='signals'>Signals <a class='anchor' href='README.html#signals' title='Permalink'></a></h2>
+<p>It is possible to use system signals to interact with GitLab Runner. The
+following commands support the following signals:</p>
+
+<table><thead>
+<tr>
+<th>Command</th>
+<th>Signal</th>
+<th>Action</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>register</code></td>
+<td><strong>SIGINT</strong></td>
+<td>Cancel runner registration and delete if it was already registered</td>
+</tr>
+<tr>
+<td><code>run</code>, <code>exec</code>, <code>run-single</code></td>
+<td><strong>SIGINT</strong>, <strong>SIGTERM</strong></td>
+<td>Abort all running builds and exit as soon as possible. Use twice to exit now (<strong>forceful shutdown</strong>).</td>
+</tr>
+<tr>
+<td><code>run</code>, <code>exec</code>, <code>run-single</code></td>
+<td><strong>SIGQUIT</strong></td>
+<td>Stop accepting a new builds. Exit as soon as currently running builds do finish (<strong>graceful shutdown</strong>).</td>
+</tr>
+<tr>
+<td><code>run</code></td>
+<td><strong>SIGHUP</strong></td>
+<td>Force to reload configuration file</td>
+</tr>
+</tbody></table>
+<h2 id='commands-overview'>Commands overview <a class='anchor' href='README.html#commands-overview' title='Permalink'></a></h2>
+<p>This is what you see if you run <code>gitlab-runner</code> without any arguments:</p>
+<pre class="highlight shell"><code>NAME:
+   gitlab-runner - a GitLab Runner
+
+USAGE:
+   gitlab-runner <span class="o">[</span>global options] <span class="nb">command</span> <span class="o">[</span><span class="nb">command </span>options] <span class="o">[</span>arguments...]
+
+VERSION:
+   1.0.0~beta.142.ga8d37f3 <span class="o">(</span>a8d37f3<span class="o">)</span>
+
+AUTHOR<span class="o">(</span>S<span class="o">)</span>:
+   Kamil Trzciński &lt;ayufan@ayufan.eu&gt;
+
+COMMANDS:
+   <span class="nb">exec     </span>execute a build locally
+   run      run multi runner service
+   register register a new runner
+   install  install service
+   uninstall    uninstall service
+   start    start service
+   stop     stop service
+   restart  restart service
+   status   get status of a service
+   run-single   start single runner
+   unregister   unregister specific runner
+   verify   verify all registered runners
+   archive  find and archive files <span class="o">(</span>internal<span class="o">)</span>
+   artifacts    upload build artifacts <span class="o">(</span>internal<span class="o">)</span>
+   extract  extract files from an archive <span class="o">(</span>internal<span class="o">)</span>
+   <span class="nb">help</span>, h  Shows a list of commands or <span class="nb">help </span><span class="k">for </span>one <span class="nb">command</span>
+</code></pre>
+<p>Below we will explain what each command does in detail.</p>
+<h2 id='registration-related-commands'>Registration-related commands <a class='anchor' href='README.html#registration-related-commands' title='Permalink'></a></h2>
+<p>The following commands allow you to register a new runner, or list and verify
+them if they are still registered.</p>
+
+<ul>
+<li><a href="README.html#gitlab-runner-register">gitlab-runner register</a>
+
+<ul>
+<li><a href="README.html#interactive-registration">Interactive registration</a></li>
+<li><a href="README.html#non-interactive-registration">Non-interactive registration</a></li>
+</ul></li>
+<li><a href="README.html#gitlab-runner-list">gitlab-runner list</a></li>
+<li><a href="README.html#gitlab-runner-verify">gitlab-runner verify</a></li>
+<li><a href="README.html#gitlab-runner-unregister">gitlab-runner unregister</a></li>
+</ul>
+
+<p>The above commands support the following arguments:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>--config</code></td>
+<td>See the <a href="README.html#configuration-file">configuration file section</a></td>
+<td>Specify a custom configuration file to be used</td>
+</tr>
+</tbody></table>
+<h3 id='gitlab-runner-register'>gitlab-runner register <a class='anchor' href='README.html#gitlab-runner-register' title='Permalink'></a></h3>
+<p>This command registers your GitLab Runner in GitLab. The registered runner is
+added to the <a href="README.html#configuration-file">configuration file</a>.
+You can use multiple configurations in a single GitLab Runner. Executing
+<code>gitlab-runner register</code> adds a new configuration entry, it doesn&#39;t remove the
+previous ones.</p>
+
+<p>There are two options to register a Runner, interactive and non-interactive.</p>
+<h4 id='interactive-registration'>Interactive registration <a class='anchor' href='README.html#interactive-registration' title='Permalink'></a></h4>
+<p>This command is usually used in interactive mode (<strong>default</strong>). You will be
+asked multiple questions during a Runner&#39;s registration.</p>
+
+<p>This question can be pre-filled by adding arguments when invoking the registration command:</p>
+<pre class="highlight plaintext"><code>gitlab-runner register --name my-runner --url http://gitlab.example.com --registration-token my-registration-token
+</code></pre>
+<p>Or by configuring the environment variable before the <code>register</code> command:</p>
+<pre class="highlight plaintext"><code>export CI_SERVER_URL=http://gitlab.example.com
+export RUNNER_NAME=my-runner
+export REGISTRATION_TOKEN=my-registration-token
+export REGISTER_NON_INTERACTIVE=true
+gitlab-runner register
+</code></pre>
+<p>To check all possible arguments and environments execute:</p>
+<pre class="highlight plaintext"><code>gitlab-runner register --help
+</code></pre><h4 id='non-interactive-registration'>Non-interactive registration <a class='anchor' href='README.html#non-interactive-registration' title='Permalink'></a></h4>
+<p>It&#39;s possible to use registration in non-interactive / unattended mode.</p>
+
+<p>You can specify the arguments when invoking the registration command:</p>
+<pre class="highlight plaintext"><code>gitlab-runner register --non-interactive &lt;other-arguments&gt;
+</code></pre>
+<p>Or by configuring the environment variable before the <code>register</code> command:</p>
+<pre class="highlight plaintext"><code>&lt;other-environment-variables&gt;
+export REGISTER_NON_INTERACTIVE=true
+gitlab-runner register
+</code></pre><h3 id='gitlab-runner-list'>gitlab-runner list <a class='anchor' href='README.html#gitlab-runner-list' title='Permalink'></a></h3>
+<p>This command lists all runners saved in the
+<a href="README.html#configuration-file">configuration file</a>.</p>
+<h3 id='gitlab-runner-verify'>gitlab-runner verify <a class='anchor' href='README.html#gitlab-runner-verify' title='Permalink'></a></h3>
+<p>This command checks if the registered runners can connect to GitLab, but it
+doesn&#39;t verify if the runners are being used by the GitLab Runner service. An
+example output is:</p>
+<pre class="highlight shell"><code>Verifying runner... is alive                        <span class="nv">runner</span><span class="o">=</span>fee9938e
+Verifying runner... is alive                        <span class="nv">runner</span><span class="o">=</span>0db52b31
+Verifying runner... is alive                        <span class="nv">runner</span><span class="o">=</span>826f687f
+Verifying runner... is alive                        <span class="nv">runner</span><span class="o">=</span>32773c0f
+</code></pre>
+<p>To delete the old and removed from GitLab runners, execute the following
+command.</p>
+
+<blockquote>
+<p><strong>Warning:</strong>
+This operation cannot be undone, it will update the configuration file, so
+make sure to have a backup of <code>config.toml</code> before executing it.</p>
+</blockquote>
+<pre class="highlight shell"><code>gitlab-runner verify --delete
+</code></pre><h3 id='gitlab-runner-unregister'>gitlab-runner unregister <a class='anchor' href='README.html#gitlab-runner-unregister' title='Permalink'></a></h3>
+<p>This command allows to unregister one of the registered runners. It expects either
+a full URL and the runner&#39;s token, or the runner&#39;s name. First get the runner&#39;s details by
+executing <code>gitlab-runner list</code>:</p>
+<pre class="highlight shell"><code><span class="nb">test</span>-runner     <span class="nv">Executor</span><span class="o">=</span>shell <span class="nv">Token</span><span class="o">=</span>t0k3n <span class="nv">URL</span><span class="o">=</span>http://gitlab.example.com
+</code></pre>
+<p>Then use this information to unregister it, using one of the following commands.</p>
+
+<blockquote>
+<p><strong>Warning:</strong>
+This operation cannot be undone, it will update the configuration file, so
+make sure to have a backup of <code>config.toml</code> before executing it.</p>
+</blockquote>
+<h4 id='by-url-and-token'>By URL and token: <a class='anchor' href='README.html#by-url-and-token' title='Permalink'></a></h4><pre class="highlight shell"><code>gitlab-runner unregister --url http://gitlab.example.com/ --token t0k3n
+</code></pre><h4 id='by-name'>By name: <a class='anchor' href='README.html#by-name' title='Permalink'></a></h4>
+<blockquote>
+<p><strong>Note:</strong> If there is more than one runner with the given name, only the first one will be removed</p>
+</blockquote>
+<pre class="highlight shell"><code>gitlab-runner unregister --name <span class="nb">test</span>-runner
+</code></pre><h2 id='service-related-commands'>Service-related commands <a class='anchor' href='README.html#service-related-commands' title='Permalink'></a></h2>
+<p>The following commands allow you to manage the runner as a system or user
+service. Use them to install, uninstall, start and stop the runner service.</p>
+
+<ul>
+<li><a href="README.html#gitlab-runner-install">gitlab-runner install</a></li>
+<li><a href="README.html#gitlab-runner-uninstall">gitlab-runner uninstall</a></li>
+<li><a href="README.html#gitlab-runner-start">gitlab-runner start</a></li>
+<li><a href="README.html#gitlab-runner-stop">gitlab-runner stop</a></li>
+<li><a href="README.html#gitlab-runner-restart">gitlab-runner restart</a></li>
+<li><a href="README.html#gitlab-runner-status">gitlab-runner status</a></li>
+<li><a href="README.html#multiple-services">Multiple services</a></li>
+<li><a href="README.html#access-denied-when-running-the-service-related-commands"><strong>Access Denied</strong> when running the service-related commands</a></li>
+</ul>
+
+<p>All service related commands accept these arguments:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>--service-name</code></td>
+<td><code>gitlab-runner</code></td>
+<td>Specify custom service name</td>
+</tr>
+<tr>
+<td><code>--config</code></td>
+<td>See the <a href="README.html#configuration-file">configuration file</a></td>
+<td>Specify a custom configuration file to use</td>
+</tr>
+</tbody></table>
+<h3 id='gitlab-runner-install'>gitlab-runner install <a class='anchor' href='README.html#gitlab-runner-install' title='Permalink'></a></h3>
+<p>This command installs GitLab Runner as a service. It accepts different sets of
+arguments depending on which system it&#39;s run on.</p>
+
+<p>When run on <strong>Windows</strong> or as super-user, it accepts the <code>--user</code> flag which
+allows you to drop privileges of builds run with the <strong>shell</strong> executor.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>--service-name</code></td>
+<td><code>gitlab-runner</code></td>
+<td>Specify a custom name for the Runner</td>
+</tr>
+<tr>
+<td><code>--working-directory</code></td>
+<td>the current directory</td>
+<td>Specify the root directory where all data will be stored when builds will be run with the <strong>shell</strong> executor</td>
+</tr>
+<tr>
+<td><code>--user</code></td>
+<td><code>root</code></td>
+<td>Specify the user which will be used to execute builds</td>
+</tr>
+<tr>
+<td><code>--password</code></td>
+<td>none</td>
+<td>Specify the password for the user that will be used to execute the builds</td>
+</tr>
+</tbody></table>
+<h3 id='gitlab-runner-uninstall'>gitlab-runner uninstall <a class='anchor' href='README.html#gitlab-runner-uninstall' title='Permalink'></a></h3>
+<p>This command stops and uninstalls the GitLab Runner from being run as an
+service.</p>
+<h3 id='gitlab-runner-start'>gitlab-runner start <a class='anchor' href='README.html#gitlab-runner-start' title='Permalink'></a></h3>
+<p>This command starts the GitLab Runner service.</p>
+<h3 id='gitlab-runner-stop'>gitlab-runner stop <a class='anchor' href='README.html#gitlab-runner-stop' title='Permalink'></a></h3>
+<p>This command stops the GitLab Runner service.</p>
+<h3 id='gitlab-runner-restart'>gitlab-runner restart <a class='anchor' href='README.html#gitlab-runner-restart' title='Permalink'></a></h3>
+<p>This command stops and then starts the GitLab Runner service.</p>
+<h3 id='gitlab-runner-status'>gitlab-runner status <a class='anchor' href='README.html#gitlab-runner-status' title='Permalink'></a></h3>
+<p>This command prints the status of the GitLab Runner service.</p>
+<h3 id='multiple-services'>Multiple services <a class='anchor' href='README.html#multiple-services' title='Permalink'></a></h3>
+<p>By specifying the <code>--service-name</code> flag, it is possible to have multiple GitLab
+Runner services installed, with multiple separate configurations.</p>
+<h2 id='run-related-commands'>Run-related commands <a class='anchor' href='README.html#run-related-commands' title='Permalink'></a></h2>
+<p>This command allows to fetch and process builds from GitLab.</p>
+<h3 id='gitlab-runner-run'>gitlab-runner run <a class='anchor' href='README.html#gitlab-runner-run' title='Permalink'></a></h3>
+<p>This is main command that is executed when GitLab Runner is started as a
+service. It reads all defined Runners from <code>config.toml</code> and tries to run all
+of them.</p>
+
+<p>The command is executed and works until it <a href="README.html#signals">receives a signal</a>.</p>
+
+<p>It accepts the following parameters.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>--config</code></td>
+<td>See <a href="README.html#configuration-file">#configuration-file</a></td>
+<td>Specify a custom configuration file to be used</td>
+</tr>
+<tr>
+<td><code>--working-directory</code></td>
+<td>the current directory</td>
+<td>Specify the root directory where all data will be stored when builds will be run with the <strong>shell</strong> executor</td>
+</tr>
+<tr>
+<td><code>--user</code></td>
+<td>the current user</td>
+<td>Specify the user that will be used to execute builds</td>
+</tr>
+<tr>
+<td><code>--syslog</code></td>
+<td><code>false</code></td>
+<td>Send all logs to SysLog (Unix) or EventLog (Windows)</td>
+</tr>
+<tr>
+<td><code>--metrics-server</code></td>
+<td>empty</td>
+<td>Address (<code>&lt;host&gt;:&lt;port&gt;</code>) on which the Prometheus metrics HTTP server should be listening</td>
+</tr>
+</tbody></table>
+<h3 id='gitlab-runner-run-single'>gitlab-runner run-single <a class='anchor' href='README.html#gitlab-runner-run-single' title='Permalink'></a></h3>
+<p>This is a supplementary command that can be used to run only a single build
+from a single GitLab instance. It doesn&#39;t use any configuration file and
+requires to pass all options either as parameters or environment variables.
+The GitLab URL and Runner token need to be specified too.</p>
+
+<p>For example:</p>
+<pre class="highlight shell"><code>gitlab-runner run-single -u http://gitlab.example.com -t my-runner-token --executor docker --docker-image ruby:2.1
+</code></pre>
+<p>You can see all possible configuration options by using the <code>--help</code> flag:</p>
+<pre class="highlight shell"><code>gitlab-runner run-single --help
+</code></pre><h3 id='gitlab-runner-exec'>gitlab-runner exec <a class='anchor' href='README.html#gitlab-runner-exec' title='Permalink'></a></h3>
+<p>This command allows you to run builds locally, trying to replicate the CI
+environment as much as possible. It doesn&#39;t need to connect to GitLab, instead
+it reads the local <code>.gitlab-ci.yml</code> and creates a new build environment in
+which all the build steps are executed.</p>
+
+<p>This command is useful for fast checking and verifying <code>.gitlab-ci.yml</code> as well
+as debugging broken builds since everything is run locally.</p>
+
+<p>When executing <code>exec</code> you need to specify the executor and the job name that is
+present in <code>.gitlab-ci.yml</code>. The command should be executed from the root
+directory of your Git repository that contains <code>.gitlab-ci.yml</code>.</p>
+
+<p><code>gitlab-runner exec</code> will clone the current state of the local Git repository.
+Make sure you have committed any changes you want to test beforehand.</p>
+
+<p>For example, the following command will execute the job named <strong>tests</strong> locally
+using a shell executor:</p>
+<pre class="highlight shell"><code>gitlab-runner <span class="nb">exec </span>shell tests
+</code></pre>
+<p>To see a list of available executors, run:</p>
+<pre class="highlight shell"><code>gitlab-runner <span class="nb">exec</span>
+</code></pre>
+<p>To see a list of all available options for the <code>shell</code> executor, run:</p>
+<pre class="highlight shell"><code>gitlab-runner <span class="nb">exec </span>shell
+</code></pre>
+<p>If you want to use the <code>docker</code> executor with the <code>exec</code> command, use that in
+context of <code>docker-machine shell</code> or <code>boot2docker shell</code>. This is required to
+properly map your local directory to the directory inside the Docker container.</p>
+<h3 id='limitations-of-gitlab-runner-exec'>Limitations of <code>gitlab-runner exec</code> <a class='anchor' href='README.html#limitations-of-gitlab-runner-exec' title='Permalink'></a></h3>
+<p>Some of the features may or may not work, like: <code>cache</code> or <code>artifacts</code>.</p>
+
+<p><code>gitlab-runner exec docker</code> can only be used when Docker is installed locally.
+This is needed because GitLab Runner is using host-bind volumes to access the
+Git sources.</p>
+<h2 id='internal-commands'>Internal commands <a class='anchor' href='README.html#internal-commands' title='Permalink'></a></h2>
+<p>GitLab Runner is distributed as a single binary and contains a few internal
+commands that are used during builds.</p>
+<h3 id='gitlab-runner-artifacts-downloader'>gitlab-runner artifacts-downloader <a class='anchor' href='README.html#gitlab-runner-artifacts-downloader' title='Permalink'></a></h3>
+<p>Download the artifacts archive from GitLab.</p>
+<h3 id='gitlab-runner-artifacts-uploader'>gitlab-runner artifacts-uploader <a class='anchor' href='README.html#gitlab-runner-artifacts-uploader' title='Permalink'></a></h3>
+<p>Upload the artifacts archive to GitLab.</p>
+<h3 id='gitlab-runner-cache-archiver'>gitlab-runner cache-archiver <a class='anchor' href='README.html#gitlab-runner-cache-archiver' title='Permalink'></a></h3>
+<p>Create a cache archive, store it locally or upload it to an external server.</p>
+<h3 id='gitlab-runner-cache-extractor'>gitlab-runner cache-extractor <a class='anchor' href='README.html#gitlab-runner-cache-extractor' title='Permalink'></a></h3>
+<p>Restore the cache archive from a locally or externally stored file.</p>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='README.html#troubleshooting' title='Permalink'></a></h2>
+<p>Below are some common pitfalls.</p>
+<h3 id='access-denied-when-running-the-service-related-commands'><strong>Access Denied</strong> when running the service-related commands <a class='anchor' href='README.html#access-denied-when-running-the-service-related-commands' title='Permalink'></a></h3>
+<p>Usually the <a href="README.html#service-related-commands">service related commands</a> require
+administrator privileges:</p>
+
+<ul>
+<li>On Unix (Linux, OSX, FreeBSD) systems, prefix <code>gitlab-runner</code> with <code>sudo</code></li>
+<li>On Windows systems use the elevated command prompt.
+Run an <code>Administrator</code> command prompt ([How to][prompt]).
+The simplest way is to write <code>Command Prompt</code> in the Windows search field,
+right click and select <code>Run as administrator</code>. You will be asked to confirm
+that you want to execute the elevated command prompt.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/commands/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>What requires downtime? - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">What requires downtime?</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="what_requires_downtime.html#what-requires-downtime">What requires downtime?</a>
+<ul>
+<li>
+<a href="what_requires_downtime.html#adding-columns">Adding Columns</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#dropping-columns">Dropping Columns</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#renaming-columns">Renaming Columns</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#changing-column-constraints">Changing Column Constraints</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#changing-column-types">Changing Column Types</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#adding-indexes">Adding Indexes</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#dropping-indexes">Dropping Indexes</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#adding-tables">Adding Tables</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#dropping-tables">Dropping Tables</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#adding-foreign-keys">Adding Foreign Keys</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#removing-foreign-keys">Removing Foreign Keys</a>
+</li>
+<li>
+<a href="what_requires_downtime.html#updating-data">Updating Data</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='what-requires-downtime'>What requires downtime? <a class='anchor' href='what_requires_downtime.html#what-requires-downtime' title='Permalink'></a></h1>
+<p>When working with a database certain operations can be performed without taking
+GitLab offline, others do require a downtime period. This guide describes
+various operations and their impact.</p>
+<h2 id='adding-columns'>Adding Columns <a class='anchor' href='what_requires_downtime.html#adding-columns' title='Permalink'></a></h2>
+<p>On PostgreSQL you can safely add a new column to an existing table as long as it
+does <strong>not</strong> have a default value. For example, this query would not require
+downtime:</p>
+<pre class="highlight sql"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">projects</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">random_value</span> <span class="n">int</span><span class="p">;</span>
+</code></pre>
+<p>Add a column <em>with</em> a default however does require downtime. For example,
+consider this query:</p>
+<pre class="highlight sql"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">projects</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">random_value</span> <span class="n">int</span> <span class="k">DEFAULT</span> <span class="mi">42</span><span class="p">;</span>
+</code></pre>
+<p>This requires updating every single row in the <code>projects</code> table so that
+<code>random_value</code> is set to <code>42</code> by default. This requires updating all rows and
+indexes in a table. This in turn acquires enough locks on the table for it to
+effectively block any other queries.</p>
+
+<p>As of MySQL 5.6 adding a column to a table is still quite an expensive
+operation, even when using <code>ALGORITHM=INPLACE</code> and <code>LOCK=NONE</code>. This means
+downtime <em>may</em> be required when modifying large tables as otherwise the
+operation could potentially take hours to complete.</p>
+
+<p>Adding a column with a default value <em>can</em> be done without requiring downtime
+when using the migration helper method
+<code>Gitlab::Database::MigrationHelpers#add_column_with_default</code>. This method works
+similar to <code>add_column</code> except it updates existing rows in batches without
+blocking access to the table being modified. See <a href="migration_style_guide.html#adding-columns-with-default-values">&quot;Adding Columns With Default
+Values&quot;</a> for more
+information on how to use this method.</p>
+<h2 id='dropping-columns'>Dropping Columns <a class='anchor' href='what_requires_downtime.html#dropping-columns' title='Permalink'></a></h2>
+<p>On PostgreSQL you can safely remove an existing column without the need for
+downtime. When you drop a column in PostgreSQL it&#39;s not immediately removed,
+instead it is simply disabled. The data is removed on the next vacuum run.</p>
+
+<p>On MySQL this operation requires downtime.</p>
+
+<p>While database wise dropping a column may be fine on PostgreSQL this operation
+still requires downtime because the application code may still be using the
+column that was removed. For example, consider the following migration:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyMigration</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">remove_column</span> <span class="ss">:projects</span><span class="p">,</span> <span class="ss">:dummy</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>Now imagine that the GitLab instance is running and actively uses the <code>dummy</code>
+column. If we were to run the migration this would result in the GitLab instance
+producing errors whenever it tries to use the <code>dummy</code> column.</p>
+
+<p>As a result of the above downtime <em>is</em> required when removing a column, even
+when using PostgreSQL.</p>
+<h2 id='renaming-columns'>Renaming Columns <a class='anchor' href='what_requires_downtime.html#renaming-columns' title='Permalink'></a></h2>
+<p>Renaming columns requires downtime as running GitLab instances will continue
+using the old column name until a new version is deployed. This can result
+in the instance producing errors, which in turn can impact the user experience.</p>
+<h2 id='changing-column-constraints'>Changing Column Constraints <a class='anchor' href='what_requires_downtime.html#changing-column-constraints' title='Permalink'></a></h2>
+<p>Generally changing column constraints requires checking all rows in the table to
+see if they meet the new constraint, unless a constraint is <em>removed</em>. For
+example, changing a column that previously allowed NULL values to not allow NULL
+values requires the database to verify all existing rows.</p>
+
+<p>The specific behaviour varies a bit between databases but in general the safest
+approach is to assume changing constraints requires downtime.</p>
+<h2 id='changing-column-types'>Changing Column Types <a class='anchor' href='what_requires_downtime.html#changing-column-types' title='Permalink'></a></h2>
+<p>This operation requires downtime.</p>
+<h2 id='adding-indexes'>Adding Indexes <a class='anchor' href='what_requires_downtime.html#adding-indexes' title='Permalink'></a></h2>
+<p>Adding indexes is an expensive process that blocks INSERT and UPDATE queries for
+the duration. When using PostgreSQL one can work arounds this by using the
+<code>CONCURRENTLY</code> option:</p>
+<pre class="highlight sql"><code><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">index_name</span> <span class="k">ON</span> <span class="n">projects</span> <span class="p">(</span><span class="k">column_name</span><span class="p">);</span>
+</code></pre>
+<p>Migrations can take advantage of this by using the method
+<code>add_concurrent_index</code>. For example:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyMigration</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_concurrent_index</span> <span class="ss">:projects</span><span class="p">,</span> <span class="ss">:column_name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>When running this on PostgreSQL the <code>CONCURRENTLY</code> option mentioned above is
+used. On MySQL this method produces a regular <code>CREATE INDEX</code> query.</p>
+
+<p>MySQL doesn&#39;t really have a workaround for this. Supposedly it <em>can</em> create
+indexes without the need for downtime but only for variable width columns. The
+details on this are a bit sketchy. Since it&#39;s better to be safe than sorry one
+should assume that adding indexes requires downtime on MySQL.</p>
+<h2 id='dropping-indexes'>Dropping Indexes <a class='anchor' href='what_requires_downtime.html#dropping-indexes' title='Permalink'></a></h2>
+<p>Dropping an index does not require downtime on both PostgreSQL and MySQL.</p>
+<h2 id='adding-tables'>Adding Tables <a class='anchor' href='what_requires_downtime.html#adding-tables' title='Permalink'></a></h2>
+<p>This operation is safe as there&#39;s no code using the table just yet.</p>
+<h2 id='dropping-tables'>Dropping Tables <a class='anchor' href='what_requires_downtime.html#dropping-tables' title='Permalink'></a></h2>
+<p>This operation requires downtime as application code may still be using the
+table.</p>
+<h2 id='adding-foreign-keys'>Adding Foreign Keys <a class='anchor' href='what_requires_downtime.html#adding-foreign-keys' title='Permalink'></a></h2>
+<p>Adding foreign keys acquires an exclusive lock on both the source and target
+tables in PostgreSQL. This requires downtime as otherwise the entire application
+grinds to a halt for the duration of the operation.</p>
+
+<p>On MySQL this operation also requires downtime <em>unless</em> foreign key checks are
+disabled. Because this means checks aren&#39;t enforced this is not ideal, as such
+one should assume MySQL also requires downtime.</p>
+<h2 id='removing-foreign-keys'>Removing Foreign Keys <a class='anchor' href='what_requires_downtime.html#removing-foreign-keys' title='Permalink'></a></h2>
+<p>This operation should not require downtime on both PostgreSQL and MySQL.</p>
+<h2 id='updating-data'>Updating Data <a class='anchor' href='what_requires_downtime.html#updating-data' title='Permalink'></a></h2>
+<p>Updating data should generally be safe. The exception to this is data that&#39;s
+being migrated from one version to another while the application still produces
+data in the old version.</p>
+
+<p>For example, imagine the application writes the string <code>&#39;dog&#39;</code> to a column but
+it really is meant to write <code>&#39;cat&#39;</code> instead. One might think that the following
+migration is all that is needed to solve this problem:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyMigration</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="k">def</span> <span class="nf">up</span>
+    <span class="n">execute</span><span class="p">(</span><span class="s2">"UPDATE some_table SET column = 'cat' WHERE column = 'dog';"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>Unfortunately this is not enough. Because the application is still running and
+using the old value this may result in the table still containing rows where
+<code>column</code> is set to <code>dog</code>, even after the migration finished.</p>
+
+<p>In these cases downtime <em>is</em> required, even for rarely updated tables.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/what_requires_downtime.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

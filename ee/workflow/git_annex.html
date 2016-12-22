@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Git annex - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Workflow</a></li>
+            
+          
+          <li class="breadcrumb">Git annex</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="git_annex.html#git-annex">Git annex</a>
+<ul>
+<li>
+<a href="git_annex.html#gitlab-git-annex-configuration">GitLab git-annex Configuration</a>
+<ul>
+<li>
+<a href="git_annex.html#requirements">Requirements</a>
+</li>
+<li>
+<a href="git_annex.html#configuration-for-omnibus-packages">Configuration for Omnibus packages</a>
+</li>
+<li>
+<a href="git_annex.html#configuration-for-installations-from-source">Configuration for installations from source</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="git_annex.html#using-gitlab-git-annex">Using GitLab git-annex</a>
+</li>
+<li>
+<a href="git_annex.html#how-it-works">How it works</a>
+</li>
+<li>
+<a href="git_annex.html#troubleshooting-tips">Troubleshooting tips</a>
+<ul>
+<li>
+<a href="git_annex.html#git-annex-shell-not-a-git-annex-or-gcrypt-repository">git-annex-shell: Not a git-annex or gcrypt repository.</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='git-annex'>Git annex <a class='anchor' href='git_annex.html#git-annex' title='Permalink'></a></h1>
+<p>The biggest limitation of Git, compared to some older centralized version
+control systems, has been the maximum size of the repositories.</p>
+
+<p>The general recommendation is to not have Git repositories larger than 1GB to
+preserve performance. Although GitLab has no limit (some repositories in GitLab
+are over 50GB!), we subscribe to the advice to keep repositories as small as
+you can.</p>
+
+<p>Not being able to version control large binaries is a big problem for many
+larger organizations.
+Videos, photos, audio, compiled binaries and many other types of files are too
+large. As a workaround, people keep artwork-in-progress in a Dropbox folder and
+only check in the final result. This results in using outdated files, not
+having a complete history and increases the risk of losing work.</p>
+
+<p>This problem is solved in GitLab Enterprise Edition by integrating the
+<a href="https://git-annex.branchable.com/" title="git-annex website">git-annex</a> application.</p>
+
+<p><code>git-annex</code> allows managing large binaries with Git without checking the
+contents into Git.
+You check-in only a symlink that contains the SHA-1 of the large binary. If you
+need the large binary, you can sync it from the GitLab server over <code>rsync</code>, a
+very fast file copying tool.</p>
+<h2 id='gitlab-git-annex-configuration'>GitLab git-annex Configuration <a class='anchor' href='git_annex.html#gitlab-git-annex-configuration' title='Permalink'></a></h2>
+<p><code>git-annex</code> is disabled by default in GitLab. Below you will find the
+configuration options required to enable it.</p>
+<h3 id='requirements'>Requirements <a class='anchor' href='git_annex.html#requirements' title='Permalink'></a></h3>
+<p><code>git-annex</code> needs to be installed both on the server and the client side.</p>
+
+<p>For Debian-like systems (e.g., Debian, Ubuntu) this can be achieved by running:</p>
+<pre class="highlight plaintext"><code>sudo apt-get update &amp;&amp; sudo apt-get install git-annex
+</code></pre>
+<p>For RedHat-like systems (e.g., CentOS, RHEL) this can be achieved by running:</p>
+<pre class="highlight plaintext"><code>sudo yum install epel-release &amp;&amp; sudo yum install git-annex
+</code></pre><h3 id='configuration-for-omnibus-packages'>Configuration for Omnibus packages <a class='anchor' href='git_annex.html#configuration-for-omnibus-packages' title='Permalink'></a></h3>
+<p>For omnibus-gitlab packages, only one configuration setting is needed.
+The Omnibus package will internally set the correct options in all locations.</p>
+
+<ol>
+<li><p>In <code>/etc/gitlab/gitlab.rb</code> add the following line:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_shell</span><span class="p">[</span><span class="s1">'git_annex_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre></li>
+<li><p>Save the file and
+<a href="../administration/restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a>
+for the changes to take effect.</p></li>
+</ol>
+<h3 id='configuration-for-installations-from-source'>Configuration for installations from source <a class='anchor' href='git_annex.html#configuration-for-installations-from-source' title='Permalink'></a></h3>
+<p>There are 2 settings to enable git-annex on your GitLab server.</p>
+
+<p>One is located in <code>config/gitlab.yml</code> of the GitLab repository and the other
+one is located in <code>config.yml</code> of gitlab-shell.</p>
+
+<ol>
+<li><p>In <code>config/gitlab.yml</code> add or edit the following lines:</p>
+<pre class="highlight yaml"><code><span class="na">gitlab_shell</span><span class="pi">:</span>
+  <span class="na">git_annex_enabled</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre></li>
+<li><p>In <code>config.yml</code> of gitlab-shell add or edit the following lines:</p>
+<pre class="highlight yaml"><code><span class="na">git_annex_enabled</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre></li>
+<li><p>Save the files and
+<a href="https://doc.gitlab.cc/ee/workflow/administration/restart_gitlab.html#installations-from-source">restart GitLab</a>
+for the changes to take effect.</p></li>
+</ol>
+<h2 id='using-gitlab-git-annex'>Using GitLab git-annex <a class='anchor' href='git_annex.html#using-gitlab-git-annex' title='Permalink'></a></h2>
+<p><em><strong>Important note:</strong> Your Git remotes must be using the SSH protocol, not HTTP(S).</em></p>
+
+<p>Here is an example workflow of uploading a very large file and then checking it
+into your Git repository:</p>
+<pre class="highlight shell"><code>git clone git@gitlab.example.com:group/project.git
+git annex init <span class="s1">'My Laptop'</span>       <span class="c"># initialize the annex project</span>
+cp ~/tmp/debian.iso ./           <span class="c"># copy a large file into the current directory</span>
+git annex add .                  <span class="c"># add the large file to git annex</span>
+git commit -am <span class="s2">"Add Debian iso"</span>  <span class="c"># commit the file metadata</span>
+git annex sync --content         <span class="c"># sync the git repo and large file to the GitLab server</span>
+</code></pre>
+<p>Downloading a single large file is also very simple:</p>
+<pre class="highlight shell"><code>git clone git@gitlab.example.com:group/project.git
+git annex sync             <span class="c"># sync git branches but not the large file</span>
+git annex get debian.iso   <span class="c"># download the large file</span>
+</code></pre>
+<p>To download all files:</p>
+<pre class="highlight shell"><code>git clone git@gitlab.example.com:group/project.git
+git annex sync --content  <span class="c"># sync git branches and download all the large files</span>
+</code></pre>
+<p>You don&#39;t have to setup <code>git-annex</code> on a separate server or add annex remotes
+to the repository.</p>
+
+<p>By using <code>git-annex</code> without GitLab, anyone that can access the server can also
+access the files of all projects.</p>
+
+<p>GitLab annex ensures that you can only access files of projects you have access
+to (developer, master, or owner role).</p>
+<h2 id='how-it-works'>How it works <a class='anchor' href='git_annex.html#how-it-works' title='Permalink'></a></h2>
+<p>Internally GitLab uses <a href="https://gitlab.com/gitlab-org/gitlab-shell" title="GitLab Shell repository">GitLab Shell</a> to handle SSH access and this was a great
+integration point for <code>git-annex</code>.
+There is a setting in gitlab-shell so you can disable GitLab Annex support
+if you want to.</p>
+
+<p><em><strong>Important note:</strong> Your Git remotes must be using the SSH protocol, not HTTP(S).</em></p>
+<h2 id='troubleshooting-tips'>Troubleshooting tips <a class='anchor' href='git_annex.html#troubleshooting-tips' title='Permalink'></a></h2>
+<p>Differences in version of <code>git-annex</code> on the GitLab server and on local machines
+can cause <code>git-annex</code> to raise unpredicted warnings and errors.</p>
+
+<p>Although there is no general guide for <code>git-annex</code> errors, there are a few tips
+on how to go around the warnings.</p>
+<h3 id='git-annex-shell-not-a-git-annex-or-gcrypt-repository'>git-annex-shell: Not a git-annex or gcrypt repository. <a class='anchor' href='git_annex.html#git-annex-shell-not-a-git-annex-or-gcrypt-repository' title='Permalink'></a></h3>
+<p>This warning can appear on the initial <code>git annex sync --content</code> and is caused
+by differences in <code>git-annex-shell</code>. You can read more about it
+<a href="https://git-annex.branchable.com/forum/Error_from_git-annex-shell_on_creation_of_gcrypt_special_remote/" title="git-annex issue">in this git-annex issue</a>.</p>
+
+<p>One important thing to note is that despite the warning, the <code>sync</code> succeeds
+and the files are pushed to the GitLab repository.</p>
+
+<p>If you get hit by this, you can run the following command inside the repository
+that the warning was raised:</p>
+<pre class="highlight plaintext"><code>git config remote.origin.annex-ignore false
+</code></pre>
+<p>Consecutive runs of <code>git annex sync --content</code> <strong>should not</strong> produce this
+warning and the output should look like this:</p>
+<pre class="highlight plaintext"><code>commit  ok
+pull origin
+ok
+pull origin
+ok
+push origin
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/git_annex.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

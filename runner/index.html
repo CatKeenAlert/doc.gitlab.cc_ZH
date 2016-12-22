@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Runner - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../assets/stylesheets/highlight-v4.css">
+  <script async src="../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../index.html">
+    <img src="../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+          <li class="breadcrumb">GitLab Runner</li>
+        </ul>
+      
+      <h1 id='gitlab-runner'>GitLab Runner <a class='anchor' href='index.html#gitlab-runner' title='Permalink'></a></h1>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner"><a target="_blank" href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/badges/master/build.svg"><img src="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/badges/master/build.svg" title="" alt="Build Status"/></a></a></p>
+
+<p>GitLab Runner is the open source project that is used to run your jobs and
+send the results back to GitLab. It is used in conjunction with <a href="https://about.gitlab.com/gitlab-ci">GitLab CI</a>,
+the open-source continuous integration service included with GitLab that
+coordinates the jobs.</p>
+<h2 id='requirements'>Requirements <a class='anchor' href='index.html#requirements' title='Permalink'></a></h2>
+<p>GitLab Runner is written in <a href="https://golang.org/">Go</a> and can be run as a single binary, no
+language specific requirements are needed.</p>
+
+<p>It is designed to run on the GNU/Linux, macOS, and Windows operating systems.
+Other operating systems will probably work as long as you can compile a Go
+binary on them.</p>
+
+<p>If you want to use Docker make sure that you have version <code>v1.5.0</code> at least
+installed.</p>
+<h2 id='features'>Features <a class='anchor' href='index.html#features' title='Permalink'></a></h2>
+<ul>
+<li>Allows to run:
+
+<ul>
+<li>multiple jobs concurrently</li>
+<li>use multiple tokens with multiple server (even per-project)</li>
+<li>limit number of concurrent jobs per-token</li>
+</ul></li>
+<li>Jobs can be run:
+
+<ul>
+<li>locally</li>
+<li>using Docker containers</li>
+<li>using Docker containers and executing job over SSH</li>
+<li>using Docker containers with autoscaling on different clouds and virtualization hypervisors</li>
+<li>connecting to remote SSH server</li>
+</ul></li>
+<li>Is written in Go and distributed as single binary without any other requirements</li>
+<li>Supports Bash, Windows Batch and Windows PowerShell</li>
+<li>Works on GNU/Linux, OS X and Windows (pretty much anywhere you can run Docker)</li>
+<li>Allows to customize the job running environment</li>
+<li>Automatic configuration reload without restart</li>
+<li>Easy to use setup with support for Docker, Docker-SSH, Parallels or SSH running environments</li>
+<li>Enables caching of Docker containers</li>
+<li>Easy installation as a service for GNU/Linux, OSX and Windows</li>
+<li>Embedded Prometheus metrics HTTP server</li>
+</ul>
+<h2 id='install-gitlab-runner'>Install GitLab Runner <a class='anchor' href='index.html#install-gitlab-runner' title='Permalink'></a></h2>
+<p>GitLab Runner can be installed and used on GNU/Linux, macOS, FreeBSD and Windows.
+You can install it Using Docker, download the binary manually or use the
+repository for rpm/deb packages that GitLab offers. Below you can find
+information on the different installation methods:</p>
+
+<ul>
+<li><a href="install/linux-repository.html">Install using GitLab&#39;s repository for Debian/Ubuntu/CentOS/RedHat (preferred)</a></li>
+<li><a href="install/linux-manually.html">Install on GNU/Linux manually (advanced)</a></li>
+<li><a href="install/osx.html">Install on macOS (preferred)</a></li>
+<li><a href="install/windows.html">Install on Windows (preferred)</a></li>
+<li><a href="install/docker.html">Install as a Docker Service</a></li>
+<li><a href="install/autoscaling.html">Install in Auto-scaling mode using Docker machine</a></li>
+<li><a href="install/freebsd.html">Install on FreeBSD</a></li>
+<li><a href="install/kubernetes.html">Install on Kubernetes</a></li>
+<li><a href="install/bleeding-edge.html">Install the nightly binary manually (development)</a></li>
+</ul>
+<h2 id='using-gitlab-runner'>Using GitLab Runner <a class='anchor' href='index.html#using-gitlab-runner' title='Permalink'></a></h2>
+<ul>
+<li><a href="commands/README.html">See the commands documentation</a></li>
+</ul>
+<h2 id='selecting-the-executor'>Selecting the executor <a class='anchor' href='index.html#selecting-the-executor' title='Permalink'></a></h2>
+<p>GitLab Runner implements a number of executors that can be used to run your
+builds in different scenarios. If you are not sure what to select, read the
+<a href="executors/README.html#imnotsure">I&#39;m not sure</a> section.
+Visit the <a href="executors/README.html#compatibility-chart">compatibility chart</a> to find
+out what features each executor supports and what not.</p>
+
+<p>To jump into the specific documentation of each executor, visit:</p>
+
+<ul>
+<li><a href="executors/shell.html">Shell</a></li>
+<li><a href="executors/docker.html">Docker</a></li>
+<li><a href="install/autoscaling.html">Docker Machine and Docker Machine SSH (auto-scaling)</a></li>
+<li><a href="executors/parallels.html">Parallels</a></li>
+<li><a href="executors/virtualbox.html">VirtualBox</a></li>
+<li><a href="executors/ssh.html">SSH</a></li>
+<li><a href="executors/kubernetes.html">Kubernetes</a></li>
+</ul>
+<h2 id='advanced-configuration'>Advanced Configuration <a class='anchor' href='index.html#advanced-configuration' title='Permalink'></a></h2>
+<ul>
+<li><a href="configuration/advanced-configuration.html">Advanced configuration options</a> Learn how to use the <a href="https://github.com/toml-lang/toml">TOML</a> configuration file that GitLab Runner uses.</li>
+<li><a href="configuration/tls-self-signed.html">Use self-signed certificates</a> Configure certificates that are used to verify TLS peer when connecting to the GitLab server.</li>
+<li><a href="configuration/autoscale.html">Auto-scaling using Docker machine</a> Execute jobs on machines that are created on demand using Docker machine.</li>
+<li><a href="shells/README.html">Supported shells</a> Learn what shell script generators are supported that allow to execute builds on different systems.</li>
+<li><a href="security/index.html">Security considerations</a> Be aware of potential security implications when running your jobs with GitLab Runner.</li>
+<li><a href="monitoring/README.html">Runner monitoring</a> Learn how to monitor Runner&#39;s behavior.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-runner-docker-cleanup">Cleanup the Docker images automatically</a> A simple Docker application that automatically garbage collects the GitLab Runner caches and images when running low on disk space.</li>
+</ul>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='index.html#troubleshooting' title='Permalink'></a></h2>
+<p>Read the <a href="faq/README.html">FAQ</a> for troubleshooting common issues.</p>
+<h2 id='release-process'>Release process <a class='anchor' href='index.html#release-process' title='Permalink'></a></h2>
+<p>The description of release process of the GitLab Runner project can be found in
+the <a href="release_process/README.html">release documentation</a>.</p>
+<h2 id='contributing'>Contributing <a class='anchor' href='index.html#contributing' title='Permalink'></a></h2>
+<p>Contributions are welcome, see <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> for more details.</p>
+<h2 id='changelog'>Changelog <a class='anchor' href='index.html#changelog' title='Permalink'></a></h2>
+<p>Visit <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/CHANGELOG.md">Changelog</a> to view recent changes.</p>
+<h2 id='license'>License <a class='anchor' href='index.html#license' title='Permalink'></a></h2>
+<p>This code is distributed under the MIT license, see the <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/LICENSE">LICENSE</a> file.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/index.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab as an OAuth2 provider - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">GitLab as an OAuth2 provider</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="oauth2.html#gitlab-as-an-oauth2-provider">GitLab as an OAuth2 provider</a>
+<ul>
+<li>
+<a href="oauth2.html#web-application-flow">Web Application Flow</a>
+<ul>
+<li>
+<a href="oauth2.html#1-registering-the-client">1. Registering the client</a>
+</li>
+<li>
+<a href="oauth2.html#2-requesting-authorization">2. Requesting authorization</a>
+</li>
+<li>
+<a href="oauth2.html#3-requesting-the-access-token">3. Requesting the access token</a>
+</li>
+<li>
+<a href="oauth2.html#use-the-access-token-to-access-the-api">Use the access token to access the API</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="oauth2.html#resource-owner-password-credentials">Resource Owner Password Credentials</a>
+</li>
+<li>
+<a href="oauth2.html#deprecation-notice">Deprecation Notice</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-as-an-oauth2-provider'>GitLab as an OAuth2 provider <a class='anchor' href='oauth2.html#gitlab-as-an-oauth2-provider' title='Permalink'></a></h1>
+<p>This document covers using the OAuth2 protocol to access GitLab.</p>
+
+<p>If you want GitLab to be an OAuth authentication service provider to sign into other services please see the <a href="../integration/oauth_provider.html">Oauth2 provider documentation</a>.</p>
+
+<p>OAuth2 is a protocol that enables us to authenticate a user without requiring them to give their password to a third-party.</p>
+
+<p>This functionality is based on <a href="https://github.com/doorkeeper-gem/doorkeeper">doorkeeper gem</a></p>
+<h2 id='web-application-flow'>Web Application Flow <a class='anchor' href='oauth2.html#web-application-flow' title='Permalink'></a></h2>
+<p>This is the most common type of flow and is used by server-side clients that wish to access GitLab on a user&#39;s behalf.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+This flow <strong>should not</strong> be used for client-side clients as you would leak your <code>client_secret</code>. Client-side clients should use the Implicit Grant (which is currently unsupported).</p>
+</blockquote>
+
+<p>For more detailed information, check out the <a href="http://tools.ietf.org/html/rfc6749#section-4.1">RFC spec</a></p>
+
+<p>In the following sections you will be introduced to the three steps needed for this flow.</p>
+<h3 id='1-registering-the-client'>1. Registering the client <a class='anchor' href='oauth2.html#1-registering-the-client' title='Permalink'></a></h3>
+<p>First, you should create an application (<code>/profile/applications</code>) in your user&#39;s account.
+Each application gets a unique App ID and App Secret parameters.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+<strong>You should not share/leak your App ID or App Secret.</strong></p>
+</blockquote>
+<h3 id='2-requesting-authorization'>2. Requesting authorization <a class='anchor' href='oauth2.html#2-requesting-authorization' title='Permalink'></a></h3>
+<p>To request the authorization code, you should redirect the user to the <code>/oauth/authorize</code> endpoint:</p>
+<pre class="highlight plaintext"><code>https://gitlab.example.com/oauth/authorize?client_id=APP_ID&amp;redirect_uri=REDIRECT_URI&amp;response_type=code&amp;state=your_unique_state_hash
+</code></pre>
+<p>This will ask the user to approve the applications access to their account and then redirect back to the <code>REDIRECT_URI</code> you provided.</p>
+
+<p>The redirect will include the GET <code>code</code> parameter, for example:</p>
+<pre class="highlight plaintext"><code>http://myapp.com/oauth/redirect?code=1234567890&amp;state=your_unique_state_hash
+</code></pre>
+<p>You should then use the <code>code</code> to request an access token.</p>
+
+<blockquote>
+<p><strong>Important:</strong>
+It is highly recommended that you send a <code>state</code> value with the request to <code>/oauth/authorize</code> and
+validate that value is returned and matches in the redirect request.
+This is important to prevent <a href="http://www.oauthsecurity.com/#user-content-authorization-code-flow">CSRF attacks</a>,
+<code>state</code> really should have been a requirement in the standard!</p>
+</blockquote>
+<h3 id='3-requesting-the-access-token'>3. Requesting the access token <a class='anchor' href='oauth2.html#3-requesting-the-access-token' title='Permalink'></a></h3>
+<p>Once you have the authorization code you can request an <code>access_token</code> using the code, to do that you can use any HTTP client. In the following example, we are using Ruby&#39;s <code>rest-client</code>:</p>
+<pre class="highlight plaintext"><code>parameters = 'client_id=APP_ID&amp;client_secret=APP_SECRET&amp;code=RETURNED_CODE&amp;grant_type=authorization_code&amp;redirect_uri=REDIRECT_URI'
+RestClient.post 'http://localhost:3000/oauth/token', parameters
+
+# The response will be
+{
+ "access_token": "de6780bc506a0446309bd9362820ba8aed28aa506c71eedbe1c5c4f9dd350e54",
+ "token_type": "bearer",
+ "expires_in": 7200,
+ "refresh_token": "8257e65c97202ed1726cf9571600918f3bffb2544b26e00a61df9897668c33a1"
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong>
+The <code>redirect_uri</code> must match the <code>redirect_uri</code> used in the original authorization request.</p>
+</blockquote>
+
+<p>You can now make requests to the API with the access token returned.</p>
+<h3 id='use-the-access-token-to-access-the-api'>Use the access token to access the API <a class='anchor' href='oauth2.html#use-the-access-token-to-access-the-api' title='Permalink'></a></h3>
+<p>The access token allows you to make requests to the API on a behalf of a user.</p>
+<pre class="highlight plaintext"><code>GET https://localhost:3000/api/v3/user?access_token=OAUTH-TOKEN
+</code></pre>
+<p>Or you can put the token to the Authorization header:</p>
+<pre class="highlight plaintext"><code>curl --header "Authorization: Bearer OAUTH-TOKEN" https://localhost:3000/api/v3/user
+</code></pre><h2 id='resource-owner-password-credentials'>Resource Owner Password Credentials <a class='anchor' href='oauth2.html#resource-owner-password-credentials' title='Permalink'></a></h2><h2 id='deprecation-notice'>Deprecation Notice <a class='anchor' href='oauth2.html#deprecation-notice' title='Permalink'></a></h2>
+<ol>
+<li>Starting in GitLab 8.11, the Resource Owner Password Credentials has been <em>disabled</em> for users with two-factor authentication turned on.</li>
+<li>These users can access the API using <a href="README.html#personal-access-tokens">personal access tokens</a> instead.</li>
+</ol>
+
+<hr>
+
+<p>In this flow, a token is requested in exchange for the resource owner credentials (username and password).
+The credentials should only be used when there is a high degree of trust between the resource owner and the client (e.g. the
+client is part of the device operating system or a highly privileged application), and when other authorization grant types are not
+available (such as an authorization code).</p>
+
+<blockquote>
+<p><strong>Important:</strong>
+Never store the users credentials and only use this grant type when your client is deployed to a trusted environment, in 99% of cases <a href="README.html#personal-access-tokens">personal access tokens</a> are a better choice.</p>
+</blockquote>
+
+<p>Even though this grant type requires direct client access to the resource owner credentials, the resource owner credentials are used
+for a single request and are exchanged for an access token.  This grant type can eliminate the need for the client to store the
+resource owner credentials for future use, by exchanging the credentials with a long-lived access token or refresh token.
+You can do POST request to <code>/oauth/token</code> with parameters:</p>
+<pre class="highlight plaintext"><code>{
+  "grant_type"    : "password",
+  "username"      : "user@example.com",
+  "password"      : "secret"
+}
+</code></pre>
+<p>Then, you&#39;ll receive the access token back in the response:</p>
+<pre class="highlight plaintext"><code>{
+  "access_token": "1f0af717251950dbd4d73154fdf0a474a5c5119adad999683f5b450c460726aa",
+  "token_type": "bearer",
+  "expires_in": 7200
+}
+</code></pre>
+<p>For testing you can use the oauth2 ruby gem:</p>
+<pre class="highlight plaintext"><code>client = OAuth2::Client.new('the_client_id', 'the_client_secret', :site =&gt; "http://example.com")
+access_token = client.password.get_token('user@example.com', 'secret')
+puts access_token.token
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/api/oauth2.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

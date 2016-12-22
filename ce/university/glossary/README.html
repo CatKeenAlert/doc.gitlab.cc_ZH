@@ -1,0 +1,897 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab University</a></li>
+            
+          
+          <li class="breadcrumb">Current page</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#what-is-the-glossary">What is the Glossary</a>
+<ul>
+<li>
+<a href="README.html#2fa">2FA</a>
+</li>
+<li>
+<a href="README.html#access-levels">Access Levels</a>
+</li>
+<li>
+<a href="README.html#active-directory-ad">Active Directory (AD)</a>
+</li>
+<li>
+<a href="README.html#agile">Agile</a>
+</li>
+<li>
+<a href="README.html#application-lifecycle-management-alm">Application Lifecycle Management (ALM)</a>
+</li>
+<li>
+<a href="README.html#artifactory">Artifactory</a>
+</li>
+<li>
+<a href="README.html#artifacts">Artifacts</a>
+</li>
+<li>
+<a href="README.html#atlassian">Atlassian</a>
+</li>
+<li>
+<a href="README.html#audit-log">Audit Log</a>
+</li>
+<li>
+<a href="README.html#auto-defined-user-group">Auto Defined User Group</a>
+</li>
+<li>
+<a href="README.html#bamboo">Bamboo</a>
+</li>
+<li>
+<a href="README.html#basic-subscription">Basic Subscription</a>
+</li>
+<li>
+<a href="README.html#bitbucket">Bitbucket</a>
+</li>
+<li>
+<a href="README.html#branch">Branch</a>
+</li>
+<li>
+<a href="README.html#branded-login">Branded Login</a>
+</li>
+<li>
+<a href="README.html#build-triggers">Build triggers</a>
+</li>
+<li>
+<a href="README.html#ceph">CEPH</a>
+</li>
+<li>
+<a href="README.html#chatops">ChatOps</a>
+</li>
+<li>
+<a href="README.html#clone">Clone</a>
+</li>
+<li>
+<a href="README.html#code-review">Code Review</a>
+</li>
+<li>
+<a href="README.html#code-snippet">Code Snippet</a>
+</li>
+<li>
+<a href="README.html#collaborator">Collaborator</a>
+</li>
+<li>
+<a href="README.html#commit">Commit</a>
+</li>
+<li>
+<a href="README.html#community">Community</a>
+</li>
+<li>
+<a href="README.html#confluence">Confluence</a>
+</li>
+<li>
+<a href="README.html#continuous-delivery">Continuous Delivery</a>
+</li>
+<li>
+<a href="README.html#continuous-deployment">Continuous Deployment</a>
+</li>
+<li>
+<a href="README.html#continuous-integration">Continuous Integration</a>
+</li>
+<li>
+<a href="README.html#contributor">Contributor</a>
+</li>
+<li>
+<a href="README.html#conversational-development-convdev">Conversational Development (ConvDev)</a>
+</li>
+<li>
+<a href="README.html#cycle-time">Cycle Time</a>
+</li>
+<li>
+<a href="README.html#data-centre">Data Centre</a>
+</li>
+<li>
+<a href="README.html#deploy-keys">Deploy Keys</a>
+</li>
+<li>
+<a href="README.html#developer">Developer</a>
+</li>
+<li>
+<a href="README.html#devops">DevOps</a>
+</li>
+<li>
+<a href="README.html#diff">Diff</a>
+<ul>
+<li>
+<a href="README.html#directory">Directory</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#docker-container-registry">Docker Container Registry</a>
+</li>
+<li>
+<a href="README.html#dynamic-environment">Dynamic Environment</a>
+</li>
+<li>
+<a href="README.html#elasticsearch">ElasticSearch</a>
+</li>
+<li>
+<a href="README.html#emacs">Emacs</a>
+</li>
+<li>
+<a href="README.html#fork">Fork</a>
+</li>
+<li>
+<a href="README.html#gerrit">Gerrit</a>
+</li>
+<li>
+<a href="README.html#git-attributes">Git Attributes</a>
+</li>
+<li>
+<a href="README.html#git-hooks">Git Hooks</a>
+</li>
+<li>
+<a href="README.html#githost-io">GitHost.io</a>
+</li>
+<li>
+<a href="README.html#github">GitHub</a>
+</li>
+<li>
+<a href="README.html#gitlab-ce">GitLab CE</a>
+</li>
+<li>
+<a href="README.html#gitlab-ci">GitLab CI</a>
+</li>
+<li>
+<a href="README.html#gitlab-ee">GitLab EE</a>
+</li>
+<li>
+<a href="README.html#gitlab-com">GitLab.com</a>
+</li>
+<li>
+<a href="README.html#gitlab-geo">GitLab Geo</a>
+</li>
+<li>
+<a href="README.html#gitlab-pages">GitLab Pages</a>
+</li>
+<li>
+<a href="README.html#gitolite">Gitolite</a>
+</li>
+<li>
+<a href="README.html#gitorious">Gitorious</a>
+</li>
+<li>
+<a href="README.html#go">Go</a>
+</li>
+<li>
+<a href="README.html#gui-git-gui">GUI/ Git GUI</a>
+</li>
+<li>
+<a href="README.html#high-availability-for-disaster-recovery-hadr">High Availability for Disaster Recovery (HADR)</a>
+</li>
+<li>
+<a href="README.html#hip-chat">Hip Chat</a>
+</li>
+<li>
+<a href="README.html#high-availability">High Availability</a>
+</li>
+<li>
+<a href="README.html#inner-sourcing">Inner-sourcing</a>
+</li>
+<li>
+<a href="README.html#internet-relay-chat-irc">Internet Relay Chat (IRC)</a>
+</li>
+<li>
+<a href="README.html#issue-tracker">Issue Tracker</a>
+</li>
+<li>
+<a href="README.html#jenkins">Jenkins</a>
+</li>
+<li>
+<a href="README.html#jira">Jira</a>
+</li>
+<li>
+<a href="README.html#junit">JUnit</a>
+</li>
+<li>
+<a href="README.html#kerberos">Kerberos</a>
+</li>
+<li>
+<a href="README.html#kubernetes">Kubernetes</a>
+</li>
+<li>
+<a href="README.html#labels">Labels</a>
+</li>
+<li>
+<a href="README.html#lightweight-directory-access-protocol-ldap">Lightweight Directory Access Protocol (LDAP)</a>
+</li>
+<li>
+<a href="README.html#ldap-user-authentication">LDAP User Authentication</a>
+</li>
+<li>
+<a href="README.html#ldap-group-sync">LDAP Group Sync</a>
+</li>
+<li>
+<a href="README.html#load-balancer">Load Balancer</a>
+</li>
+<li>
+<a href="README.html#git-large-file-storage-lfs">Git Large File Storage (LFS)</a>
+</li>
+<li>
+<a href="README.html#linux">Linux</a>
+</li>
+<li>
+<a href="README.html#markdown">Markdown</a>
+</li>
+<li>
+<a href="README.html#maria-db">Maria DB</a>
+</li>
+<li>
+<a href="README.html#master">Master</a>
+</li>
+<li>
+<a href="README.html#mattermost">Mattermost</a>
+</li>
+<li>
+<a href="README.html#mercurial">Mercurial</a>
+</li>
+<li>
+<a href="README.html#merge">Merge</a>
+</li>
+<li>
+<a href="README.html#merge-conflict">Merge Conflict</a>
+</li>
+<li>
+<a href="README.html#meteor">Meteor</a>
+</li>
+<li>
+<a href="README.html#milestones">Milestones</a>
+</li>
+<li>
+<a href="README.html#mirror-repositories">Mirror Repositories</a>
+</li>
+<li>
+<a href="README.html#mit-license">MIT License</a>
+</li>
+<li>
+<a href="README.html#mondo-rescue">Mondo Rescue</a>
+</li>
+<li>
+<a href="README.html#mysql">MySQL</a>
+</li>
+<li>
+<a href="README.html#namespace">Namespace</a>
+</li>
+<li>
+<a href="README.html#nginx">Nginx</a>
+</li>
+<li>
+<a href="README.html#oauth">OAuth</a>
+</li>
+<li>
+<a href="README.html#omnibus-packages">Omnibus Packages</a>
+</li>
+<li>
+<a href="README.html#on-premise">On Premise</a>
+</li>
+<li>
+<a href="README.html#open-core">Open Core</a>
+</li>
+<li>
+<a href="README.html#open-source-software">Open Source Software</a>
+</li>
+<li>
+<a href="README.html#owner">Owner</a>
+</li>
+<li>
+<a href="README.html#platform-as-a-service-paas">Platform as a Service (PaaS)</a>
+</li>
+<li>
+<a href="README.html#perforce">Perforce</a>
+</li>
+<li>
+<a href="README.html#phabricator">Phabricator</a>
+</li>
+<li>
+<a href="README.html#piwik-analytics">Piwik Analytics</a>
+</li>
+<li>
+<a href="README.html#plus-subscription">Plus Subscription</a>
+</li>
+<li>
+<a href="README.html#postgresql">PostgreSQL</a>
+</li>
+<li>
+<a href="README.html#protected-branches">Protected Branches</a>
+</li>
+<li>
+<a href="README.html#pull">Pull</a>
+</li>
+<li>
+<a href="README.html#puppet">Puppet</a>
+</li>
+<li>
+<a href="README.html#push">Push</a>
+</li>
+<li>
+<a href="README.html#re-read-only">RE Read Only</a>
+</li>
+<li>
+<a href="README.html#rebase">Rebase</a>
+</li>
+<li>
+<a href="README.html#git-repository">(Git) Repository</a>
+</li>
+<li>
+<a href="README.html#requirements-management">Requirements management</a>
+</li>
+<li>
+<a href="README.html#revision-control">Revision Control</a>
+</li>
+<li>
+<a href="README.html#rocketchat">RocketChat</a>
+</li>
+<li>
+<a href="README.html#route-table">Route Table</a>
+</li>
+<li>
+<a href="README.html#runners">Runners</a>
+</li>
+<li>
+<a href="README.html#sidekiq">Sidekiq</a>
+</li>
+<li>
+<a href="README.html#software-as-a-service-saas">Software as a service (SaaS)</a>
+</li>
+<li>
+<a href="README.html#software-configuration-management-scm">Software Configuration Management (SCM)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#scrum">Scrum</a>
+<ul>
+<li>
+<a href="README.html#scrum-board">Scrum Board</a>
+</li>
+<li>
+<a href="README.html#shell">Shell</a>
+</li>
+<li>
+<a href="README.html#single-tenant">Single-tenant</a>
+</li>
+<li>
+<a href="README.html#slack">Slack</a>
+</li>
+<li>
+<a href="README.html#slave-servers">Slave Servers</a>
+</li>
+<li>
+<a href="README.html#source-code">Source Code</a>
+</li>
+<li>
+<a href="README.html#ssh-key">SSH Key</a>
+</li>
+<li>
+<a href="README.html#single-sign-on-sso">Single Sign On (SSO)</a>
+</li>
+<li>
+<a href="README.html#staging-area">Staging Area</a>
+</li>
+<li>
+<a href="README.html#standard-subscription">Standard Subscription</a>
+</li>
+<li>
+<a href="README.html#stash">Stash</a>
+</li>
+<li>
+<a href="README.html#static-site-generators-ssgs">Static Site Generators (SSGs)</a>
+</li>
+<li>
+<a href="README.html#subversion">Subversion</a>
+</li>
+<li>
+<a href="README.html#sudo">Sudo</a>
+</li>
+<li>
+<a href="README.html#subversion-svn">Subversion (SVN)</a>
+</li>
+<li>
+<a href="README.html#tag">Tag</a>
+</li>
+<li>
+<a href="README.html#tool-stack">Tool Stack</a>
+</li>
+<li>
+<a href="README.html#trac">Trac</a>
+</li>
+<li>
+<a href="README.html#untracked-files">Untracked files</a>
+</li>
+<li>
+<a href="README.html#user">User</a>
+</li>
+<li>
+<a href="README.html#version-control-software-vcs">Version Control Software (VCS)</a>
+</li>
+<li>
+<a href="README.html#virtual-private-cloud-vpc">Virtual Private Cloud (VPC)</a>
+</li>
+<li>
+<a href="README.html#virtual-private-server-vps">Virtual private server (VPS)</a>
+</li>
+<li>
+<a href="README.html#vm-instance">VM Instance</a>
+</li>
+<li>
+<a href="README.html#waterfall">Waterfall</a>
+</li>
+<li>
+<a href="README.html#webhooks">Webhooks</a>
+</li>
+<li>
+<a href="README.html#wiki">Wiki</a>
+</li>
+<li>
+<a href="README.html#working-tree">Working Tree</a>
+</li>
+<li>
+<a href="README.html#yaml">YAML</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='what-is-the-glossary'>What is the Glossary <a class='anchor' href='README.html#what-is-the-glossary' title='Permalink'></a></h2>
+<p>This contains a simplified list and definitions of some of the terms that you will encounter in your day to day activities when working with GitLab.
+Please add any terms that you discover that you think would be useful for others.</p>
+<h3 id='2fa'>2FA <a class='anchor' href='README.html#2fa' title='Permalink'></a></h3>
+<p>User authentication by combination of 2 different steps during login. This allows for <a href="https://about.gitlab.com/handbook/security/">more security</a>.</p>
+<h3 id='access-levels'>Access Levels <a class='anchor' href='README.html#access-levels' title='Permalink'></a></h3>
+<p>Process of selective restriction to create, view, modify or delete a resource based on a set of assigned permissions. See [GitLab&#39;s Permission Guidelines](../../permissions/permissions.md</p>
+<h3 id='active-directory-ad'>Active Directory (AD) <a class='anchor' href='README.html#active-directory-ad' title='Permalink'></a></h3>
+<p>A Microsoft-based <a href="https://msdn.microsoft.com/en-us/library/bb742424.aspx">directory service</a> for windows domain networks. It uses LDAP technology under the hood.</p>
+<h3 id='agile'>Agile <a class='anchor' href='README.html#agile' title='Permalink'></a></h3>
+<p>Building and <a href="http://agilemethodology.org/">delivering software</a> in phases/parts rather than trying to build everything at once then delivering to the user/client. The latter is known as the WaterFall model.</p>
+<h3 id='application-lifecycle-management-alm'>Application Lifecycle Management (ALM) <a class='anchor' href='README.html#application-lifecycle-management-alm' title='Permalink'></a></h3>
+<p>The entire product lifecycle management process for an application, from requirements management, development, and testing until deployment. GitLab has <a href="https://docs.google.com/presentation/d/1vCU-NbZWz8NTNK8Vu3y4zGMAHb5DpC8PE5mHtw1PWfI/edit#slide=id.g72f2e4906_2_288">advantages</a> over both legacy and modern ALM tools.</p>
+<h3 id='artifactory'>Artifactory <a class='anchor' href='README.html#artifactory' title='Permalink'></a></h3>
+<p>A version control <a href="https://www.jfrog.com/open-source/#os-arti">system</a> for non-text files.</p>
+<h3 id='artifacts'>Artifacts <a class='anchor' href='README.html#artifacts' title='Permalink'></a></h3>
+<p>Objects (usually binary and large) created by a build process. These can include use cases, class diagrams, requirements and design documents. </p>
+<h3 id='atlassian'>Atlassian <a class='anchor' href='README.html#atlassian' title='Permalink'></a></h3>
+<p>A <a href="https://www.atlassian.com">company</a> that develops software products for developers and project managers including Bitbucket, Jira, Hipchat, Confluence, Bamboo. </p>
+<h3 id='audit-log'>Audit Log <a class='anchor' href='README.html#audit-log' title='Permalink'></a></h3>
+<p>Also called an <a href="https://en.wikipedia.org/wiki/Audit_trail">audit trail</a>, an audit log is a document that records an event in an IT system. </p>
+<h3 id='auto-defined-user-group'>Auto Defined User Group <a class='anchor' href='README.html#auto-defined-user-group' title='Permalink'></a></h3>
+<p>User groups are a way of centralizing control over important management tasks, particularly access control and password policies. A simple example of such groups are the users and the admins groups.
+In most of the cases these groups are auto defined in terms of access, rules of usage, conditions to be part of, etc.</p>
+<h3 id='bamboo'>Bamboo <a class='anchor' href='README.html#bamboo' title='Permalink'></a></h3>
+<p>Atlassian&#39;s CI tool similar to GitLab CI and Jenkins.</p>
+<h3 id='basic-subscription'>Basic Subscription <a class='anchor' href='README.html#basic-subscription' title='Permalink'></a></h3>
+<p>Entry level <a href="https://about.gitlab.com/pricing/">subscription</a> for GitLab EE currently available in packs of 10.</p>
+<h3 id='bitbucket'>Bitbucket <a class='anchor' href='README.html#bitbucket' title='Permalink'></a></h3>
+<p>Atlassian&#39;s web hosting service for Git and Mercurial Projects. Read about <a href="https://docs.gitlab.com/ce/workflow/importing/import_projects_from_bitbucket.html">migrating</a> from BitBucket to a GitLab instance. </p>
+<h3 id='branch'>Branch <a class='anchor' href='README.html#branch' title='Permalink'></a></h3>
+<p>A branch is a parallel version of a repository. This allows you to work on the repository without affecting the &quot;master&quot; branch, and without affecting the current &quot;live&quot; version. When you have made all your changes to your branch you can then merge to the master. When your merge request is accepted your changes will be &quot;live.&quot;</p>
+<h3 id='branded-login'>Branded Login <a class='anchor' href='README.html#branded-login' title='Permalink'></a></h3>
+<p>Having your own logo on <a href="https://docs.gitlab.com/ee/customization/branded_login_page.html">your GitLab instance login page</a> instead of the GitLab logo.</p>
+<h3 id='build-triggers'>Build triggers <a class='anchor' href='README.html#build-triggers' title='Permalink'></a></h3>
+<p>These protect your code base against breaks, for instance when a team is working on the same project. Learn about <a href="https://docs.gitlab.com/ce/ci/triggers/README.html">setting up</a> build triggers.</p>
+<h3 id='ceph'>CEPH <a class='anchor' href='README.html#ceph' title='Permalink'></a></h3>
+<p>A distributed object store and file <a href="http://ceph.com/">system</a> designed to provide excellent performance, reliability and scalability.</p>
+<h3 id='chatops'>ChatOps <a class='anchor' href='README.html#chatops' title='Permalink'></a></h3>
+<p>The ability to <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/issues/1412">initiate an action</a> from chat. ChatBots run in your chat application and give you the ability to do &quot;anything&quot; from chat. </p>
+<h3 id='clone'>Clone <a class='anchor' href='README.html#clone' title='Permalink'></a></h3>
+<p>A <a href="https://git-scm.com/docs/git-clone">copy</a> of a repository stored on your machine that allows you to use your own editor without being online, but still tracks the changes made remotely.</p>
+<h3 id='code-review'>Code Review <a class='anchor' href='README.html#code-review' title='Permalink'></a></h3>
+<p>Examination of a progam&#39;s code. The main aim is to maintain high quality standards of code that is being shipped. Merge requests <a href="https://about.gitlab.com/2014/09/29/gitlab-flow/">serve as a code review tool</a> in GitLab. </p>
+<h3 id='code-snippet'>Code Snippet <a class='anchor' href='README.html#code-snippet' title='Permalink'></a></h3>
+<p>A small amount of code, usually selected for the purpose of showing other developers how to do something specific or reproduce a problem.</p>
+<h3 id='collaborator'>Collaborator <a class='anchor' href='README.html#collaborator' title='Permalink'></a></h3>
+<p>Person with read and write access to a repository who has been invited by repository owner.</p>
+<h3 id='commit'>Commit <a class='anchor' href='README.html#commit' title='Permalink'></a></h3>
+<p>A <a href="https://git-scm.com/docs/git-commit">change</a> (revision) to a file that also creates an ID, allowing you to see revision history and the author of the changes.</p>
+<h3 id='community'>Community <a class='anchor' href='README.html#community' title='Permalink'></a></h3>
+<p><a href="https://about.gitlab.com/community/">Everyone</a> who uses GitLab.</p>
+<h3 id='confluence'>Confluence <a class='anchor' href='README.html#confluence' title='Permalink'></a></h3>
+<p>Atlassian&#39;s product for collaboration on documents and projects.</p>
+<h3 id='continuous-delivery'>Continuous Delivery <a class='anchor' href='README.html#continuous-delivery' title='Permalink'></a></h3>
+<p>A <a href="https://about.gitlab.com/2016/08/05/continuous-integration-delivery-and-deployment-with-gitlab/">software engineering approach</a> in which continuous integration, automated testing, and automated deployment capabilities allow software to be developed and deployed rapidly, reliably and repeatedly with minimal human intervention. Still, the deployment to production is defined strategically and triggered manually.</p>
+<h3 id='continuous-deployment'>Continuous Deployment <a class='anchor' href='README.html#continuous-deployment' title='Permalink'></a></h3>
+<p>A <a href="https://about.gitlab.com/2016/08/05/continuous-integration-delivery-and-deployment-with-gitlab/">software development practice</a> in which every code change goes through the entire pipeline and is put into production automatically, resulting in many production deployments every day. It does everything that Continuous Delivery does, but the process is fully automated, there&#39;s no human intervention at all.</p>
+<h3 id='continuous-integration'>Continuous Integration <a class='anchor' href='README.html#continuous-integration' title='Permalink'></a></h3>
+<p>A <a href="https://about.gitlab.com/2016/08/05/continuous-integration-delivery-and-deployment-with-gitlab/">software development practice</a> in which you build and test software every time a developer pushes code to the application, and it happens several times a day.</p>
+<h3 id='contributor'>Contributor <a class='anchor' href='README.html#contributor' title='Permalink'></a></h3>
+<p>Term used for a person contributing to an open source project.</p>
+<h3 id='conversational-development-convdev'>Conversational Development (ConvDev) <a class='anchor' href='README.html#conversational-development-convdev' title='Permalink'></a></h3>
+<p>A <a href="https://about.gitlab.com/2016/09/14/gitlab-live-event-recap/">natural evolution</a> of software development that carries a conversation across functional groups throughout the development process, enabling developers to track the full path of development in a cohesive and intuitive way. ConvDev accelerates the development lifecycle by fostering collaboration and knowledge sharing from idea to production.</p>
+<h3 id='cycle-time'>Cycle Time <a class='anchor' href='README.html#cycle-time' title='Permalink'></a></h3>
+<p>The time it takes to move from <a href="https://about.gitlab.com/2016/08/05/continuous-integration-delivery-and-deployment-with-gitlab/#from-idea-to-production-with-gitlab">idea to production</a>.</p>
+<h3 id='data-centre'>Data Centre <a class='anchor' href='README.html#data-centre' title='Permalink'></a></h3>
+<p>Atlassian product for High Availability.</p>
+<h3 id='deploy-keys'>Deploy Keys <a class='anchor' href='README.html#deploy-keys' title='Permalink'></a></h3>
+<p>A <a href="https://docs.gitlab.com/ce/gitlab-basics/create-your-ssh-keys.html">SSH key</a>stored on your server that grants access to a single GitLab repository. This is used by a GitLab runner to clone a project&#39;s code so that tests can be run against the checked out code.</p>
+<h3 id='developer'>Developer <a class='anchor' href='README.html#developer' title='Permalink'></a></h3>
+<p>For us at GitLab, this means a software developer, or someone who makes software. It is also one of the levels of access in our multi-level approval system.</p>
+<h3 id='devops'>DevOps <a class='anchor' href='README.html#devops' title='Permalink'></a></h3>
+<p>The intersection of software engineering, quality assurance, and technology operations. Explore more DevOps topics in the <a href="https://xebialabs.com/glossary/">glossary by XebiaLabs</a></p>
+<h3 id='diff'>Diff <a class='anchor' href='README.html#diff' title='Permalink'></a></h3>
+<p>The difference between two commits, or saved changes. This will also be shown visually after the changes.</p>
+<h4 id='directory'>Directory <a class='anchor' href='README.html#directory' title='Permalink'></a></h4>
+<p>A folder used for storing multiple files.</p>
+<h3 id='docker-container-registry'>Docker Container Registry <a class='anchor' href='README.html#docker-container-registry' title='Permalink'></a></h3>
+<p>A <a href="https://docs.gitlab.com/ce/user/project/container_registry.html">feature</a> of GitLab projects. Containers wrap up a piece of software in a complete filesystem that contains everything it needs to run: code, runtime, system tools, system libraries – anything you can install on a server. This guarantees that it will always run the same, regardless of the environment it is running in.</p>
+<h3 id='dynamic-environment'>Dynamic Environment <a class='anchor' href='README.html#dynamic-environment' title='Permalink'></a></h3><h3 id='elasticsearch'>ElasticSearch <a class='anchor' href='README.html#elasticsearch' title='Permalink'></a></h3>
+<p>Elasticsearch is a flexible, scalable and powerful search service. When <a href="https://gitlab.com/help/integration/elasticsearch.md">enabled</a>, it helps keep GitLab&#39;s search fast when dealing with a huge amount of data. </p>
+<h3 id='emacs'>Emacs <a class='anchor' href='README.html#emacs' title='Permalink'></a></h3><h3 id='fork'>Fork <a class='anchor' href='README.html#fork' title='Permalink'></a></h3>
+<p>Your <a href="https://docs.gitlab.com/ce/workflow/forking_workflow.html">own copy</a> of a repository that allows you to make changes to the repository without affecting the original.</p>
+<h3 id='gerrit'>Gerrit <a class='anchor' href='README.html#gerrit' title='Permalink'></a></h3>
+<p>A code review <a href="https://www.gerritcodereview.com/">tool</a> built on top of Git.</p>
+<h3 id='git-attributes'>Git Attributes <a class='anchor' href='README.html#git-attributes' title='Permalink'></a></h3>
+<p>A <a href="https://git-scm.com/docs/gitattributes">git attributes file</a> is a simple text file that gives attributes to pathnames. </p>
+<h3 id='git-hooks'>Git Hooks <a class='anchor' href='README.html#git-hooks' title='Permalink'></a></h3>
+<p><a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Scripts</a> you can use to trigger actions at certain points.</p>
+<h3 id='githost-io'>GitHost.io <a class='anchor' href='README.html#githost-io' title='Permalink'></a></h3>
+<p>A single-tenant solution that provides GitLab CE or EE as a managed service. GitLab Inc. is responsible for installing, updating, hosting, and backing up customers&#39; own private and secure GitLab instance.</p>
+<h3 id='github'>GitHub <a class='anchor' href='README.html#github' title='Permalink'></a></h3>
+<p>A web-based Git repository hosting service with an enterprise offering. Its main features are: issue tracking, pull request with code review, abundancy of integrations and wiki. It offers free public repos, private repos and enterprise services are paid. Read about <a href="https://docs.gitlab.com/ce/workflow/importing/import_projects_from_github.html">importing a project</a> from GitHub to GitLab.</p>
+<h3 id='gitlab-ce'>GitLab CE <a class='anchor' href='README.html#gitlab-ce' title='Permalink'></a></h3>
+<p>Our free on Premise solution with &gt;100,000 users</p>
+<h3 id='gitlab-ci'>GitLab CI <a class='anchor' href='README.html#gitlab-ci' title='Permalink'></a></h3>
+<p>Our own Continuos Integration <a href="https://about.gitlab.com/gitlab-ci/">feature</a> that is shipped with each instance</p>
+<h3 id='gitlab-ee'>GitLab EE <a class='anchor' href='README.html#gitlab-ee' title='Permalink'></a></h3>
+<p>Our premium on premise <a href="https://about.gitlab.com/features/#enterprise">solution</a> that currently has Basic, Standard and Plus subscription packages with additional features and support.</p>
+<h3 id='gitlab-com'>GitLab.com <a class='anchor' href='README.html#gitlab-com' title='Permalink'></a></h3>
+<p>Our free SaaS for public and private repositories.</p>
+<h3 id='gitlab-geo'>GitLab Geo <a class='anchor' href='README.html#gitlab-geo' title='Permalink'></a></h3>
+<p>Allows you to replicate your GitLab instance to other geographical locations as a read-only fully operational version. It <a href="https://docs.gitlab.com/ee/gitlab-geo/README.html">can be used</a> for cloning and fetching projects, in addition to reading any data. This will make working with large repositories over large distances much faster.</p>
+<h3 id='gitlab-pages'>GitLab Pages <a class='anchor' href='README.html#gitlab-pages' title='Permalink'></a></h3>
+<p>These allow you to <a href="https://gitlab.com/help/pages/README.md">create websites</a> for your GitLab projects, groups, or user account. </p>
+<h3 id='gitolite'>Gitolite <a class='anchor' href='README.html#gitolite' title='Permalink'></a></h3>
+<p>An <a href="https://git-scm.com/book/en/v1/Git-on-the-Server-Gitolite">access layer</a> that sits on top of Git. Users are granted access to repos via a simple config file. As an admin, you only need the users&#39; public SSH key and a username.</p>
+<h3 id='gitorious'>Gitorious <a class='anchor' href='README.html#gitorious' title='Permalink'></a></h3>
+<p>A web-based hosting service for projects using Git. It was acquired by GitLab and we discontinued the service. Read the<a href="https://about.gitlab.com/2015/03/03/gitlab-acquires-gitorious/">Gitorious Acquisition Blog Post</a>.</p>
+<h3 id='go'>Go <a class='anchor' href='README.html#go' title='Permalink'></a></h3>
+<p>An open source programming <a href="https://golang.org/">language</a>.</p>
+<h3 id='gui-git-gui'>GUI/ Git GUI <a class='anchor' href='README.html#gui-git-gui' title='Permalink'></a></h3>
+<p>A portable <a href="https://git-scm.com/docs/git-gui">graphical interface</a> to Git that allows users to make changes to their repository by making new commits, amending existing ones, creating branches, performing local merges, and fetching/pushing to remote repositories.</p>
+<h3 id='high-availability-for-disaster-recovery-hadr'>High Availability for Disaster Recovery (HADR) <a class='anchor' href='README.html#high-availability-for-disaster-recovery-hadr' title='Permalink'></a></h3>
+<p>Sometimes written HA/DR, this usually refers to a strategy for having a failover server in place in case the main server fails.</p>
+<h3 id='hip-chat'>Hip Chat <a class='anchor' href='README.html#hip-chat' title='Permalink'></a></h3>
+<p>Atlassian&#39;s real time chat application for teams, Hip Chat is a competitor to Slack, RocketChat and MatterMost.</p>
+<h3 id='high-availability'>High Availability <a class='anchor' href='README.html#high-availability' title='Permalink'></a></h3>
+<p>Refers to a <a href="https://about.gitlab.com/high-availability/">system or component</a> that is continuously operational for a desirably long length of time. Availability can be measured relative to &quot;100% operational&quot; or &quot;never failing.&quot;</p>
+<h3 id='inner-sourcing'>Inner-sourcing <a class='anchor' href='README.html#inner-sourcing' title='Permalink'></a></h3>
+<p>The <a href="https://about.gitlab.com/2014/09/05/innersourcing-using-the-open-source-workflow-to-improve-collaboration-within-an-organization/">use of</a> open source development techniques within the corporation.</p>
+<h3 id='internet-relay-chat-irc'>Internet Relay Chat (IRC) <a class='anchor' href='README.html#internet-relay-chat-irc' title='Permalink'></a></h3>
+<p>An <a href="http://www.irchelp.org/">application layer protocol</a> that facilitates communication in the form of text.</p>
+<h3 id='issue-tracker'>Issue Tracker <a class='anchor' href='README.html#issue-tracker' title='Permalink'></a></h3>
+<p>A <a href="https://docs.gitlab.com/ee/integration/external-issue-tracker.html">tool</a> used to manage, organize, and maintain a list of issues, making it easier for an organization to manage.</p>
+<h3 id='jenkins'>Jenkins <a class='anchor' href='README.html#jenkins' title='Permalink'></a></h3>
+<p>An Open Source CI tool written using the Java programming language. <a href="https://jenkins-ci.org/">Jenkins</a> does the same job as GitLab CI, Bamboo, and Travis CI. It is extremely popular. </p>
+<h3 id='jira'>Jira <a class='anchor' href='README.html#jira' title='Permalink'></a></h3>
+<p>Atlassian&#39;s <a href="https://www.atlassian.com/software/jira">project management software</a>, i.e. a complex issue tracker. GitLab <a href="https://docs.gitlab.com/ee/project_services/jira.html">can be configured</a> to interact with JIRA Core either using an on-premise instance or the SaaS solution that Atlassian offers.</p>
+<h3 id='junit'>JUnit <a class='anchor' href='README.html#junit' title='Permalink'></a></h3>
+<p>A testing framework for the Java programming language, <a href="http://junit.org/junit4/">JUnit</a> has been important in the evolution of test-driven development.</p>
+<h3 id='kerberos'>Kerberos <a class='anchor' href='README.html#kerberos' title='Permalink'></a></h3>
+<p>A network authentication <a href="http://web.mit.edu/kerberos/">protocol</a> that uses secret-key cryptography for security.</p>
+<h3 id='kubernetes'>Kubernetes <a class='anchor' href='README.html#kubernetes' title='Permalink'></a></h3>
+<p>An open source container cluster manager originally designed by Google. It&#39;s basically a platform for automating deployment, scaling, and operations of application containers over clusters of hosts.</p>
+<h3 id='labels'>Labels <a class='anchor' href='README.html#labels' title='Permalink'></a></h3>
+<p>An <a href="https://docs.gitlab.com/ce/user/project/labels.html">identifier</a> to describe a group of one or more specific file revisions.</p>
+<h3 id='lightweight-directory-access-protocol-ldap'>Lightweight Directory Access Protocol (LDAP) <a class='anchor' href='README.html#lightweight-directory-access-protocol-ldap' title='Permalink'></a></h3>
+<p>A directory (electronic address book) with user information (e.g. name, phone_number etc.)</p>
+<h3 id='ldap-user-authentication'>LDAP User Authentication <a class='anchor' href='README.html#ldap-user-authentication' title='Permalink'></a></h3>
+<p>GitLab <a href="https://docs.gitlab.com/ce/administration/auth/ldap.html">integrates</a> with LDAP to support user authentication. This enables GitLab to sign in people from an LDAP server (i.e., allowing people whose names are on the electronic user directory server to be able to use their LDAP accounts to login.)</p>
+<h3 id='ldap-group-sync'>LDAP Group Sync <a class='anchor' href='README.html#ldap-group-sync' title='Permalink'></a></h3>
+<p>Allows you to synchronize the members of a GitLab group with one or more LDAP groups.</p>
+<h3 id='load-balancer'>Load Balancer <a class='anchor' href='README.html#load-balancer' title='Permalink'></a></h3>
+<p>A <a href="https://en.wikipedia.org/wiki/Load_balancing_(computing)">device</a> that distributes network or application traffic across multiple servers. </p>
+<h3 id='git-large-file-storage-lfs'>Git Large File Storage (LFS) <a class='anchor' href='README.html#git-large-file-storage-lfs' title='Permalink'></a></h3>
+<p>A way <a href="https://about.gitlab.com/2015/11/23/announcing-git-lfs-support-in-gitlab/">to enable</a> git to handle large binary files by using reference pointers within small text files to point to the large files. Large files such as high resolution images and videos, audio files, and assets can be called from a remote server.</p>
+<h3 id='linux'>Linux <a class='anchor' href='README.html#linux' title='Permalink'></a></h3>
+<p>An operating system like Windows or OS X. It is mostly used by software developers and on servers.</p>
+<h3 id='markdown'>Markdown <a class='anchor' href='README.html#markdown' title='Permalink'></a></h3>
+<p>A lightweight markup language with plain text formatting syntax designed so that it can be converted to HTML and many other formats using a tool by the same name. Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor. Checkout GitLab&#39;s <a href="https://gitlab.com/help/user/markdown.md">Markdown guide</a>. </p>
+<h3 id='maria-db'>Maria DB <a class='anchor' href='README.html#maria-db' title='Permalink'></a></h3>
+<p>A community developed fork/variation of MySQL. MySQL is owned by Oracle.</p>
+<h3 id='master'>Master <a class='anchor' href='README.html#master' title='Permalink'></a></h3>
+<p>Name of the <a href="https://git-scm.com/book/en/v1/Git-Branching-What-a-Branch-Is">default branch</a> in every git repository.</p>
+<h3 id='mattermost'>Mattermost <a class='anchor' href='README.html#mattermost' title='Permalink'></a></h3>
+<p>An open source, self-hosted messaging alternative to Slack. View GitLab&#39;s Mattermost <a href="https://gitlab.com/gitlab-org/gitlab-mattermost">feature</a>. </p>
+<h3 id='mercurial'>Mercurial <a class='anchor' href='README.html#mercurial' title='Permalink'></a></h3>
+<p>A free distributed version control system similar to and a competitor with Git. </p>
+<h3 id='merge'>Merge <a class='anchor' href='README.html#merge' title='Permalink'></a></h3>
+<p>Takes changes from one branch, and <a href="https://git-scm.com/docs/git-merge">applies them</a> into another branch.</p>
+<h3 id='merge-conflict'>Merge Conflict <a class='anchor' href='README.html#merge-conflict' title='Permalink'></a></h3>
+<p><a href="https://about.gitlab.com/2016/09/06/resolving-merge-conflicts-from-the-gitlab-ui/">Arises</a> when a merge can&#39;t be performed cleanly between two versions of the same file. </p>
+<h3 id='meteor'>Meteor <a class='anchor' href='README.html#meteor' title='Permalink'></a></h3>
+<p>A <a href="https://www.meteor.com">platform</a> for building javascript apps.</p>
+<h3 id='milestones'>Milestones <a class='anchor' href='README.html#milestones' title='Permalink'></a></h3>
+<p>Allow you to <a href="https://docs.gitlab.com/ce/workflow/milestones.html">organize issues</a> and merge requests in GitLab into a cohesive group, optionally setting a due date. A common use is keeping track of an upcoming software version. Milestones are created per-project.</p>
+<h3 id='mirror-repositories'>Mirror Repositories <a class='anchor' href='README.html#mirror-repositories' title='Permalink'></a></h3>
+<p>A project that is setup to automatically have its branches, tags, and commits <a href="https://docs.gitlab.com/ee/workflow/repository_mirroring.html">updated from an upstream repository</a>. This is useful when a repository you&#39;re interested in is located on a different server, and you want to be able to browse its content and activity using the familiar GitLab interface.</p>
+<h3 id='mit-license'>MIT License <a class='anchor' href='README.html#mit-license' title='Permalink'></a></h3>
+<p>A type of software license. It lets people do anything with your code with proper attribution and without warranty. It is the most common license for open source applications written in Ruby on Rails. GitLab CE is issued under this <a href="https://docs.gitlab.com/ce/development/licensing.html">license</a>. This means you can download the code, modify it as you want, and even build a new commercial product using the underlying code and it&#39;s not illegal. The only condition is that there is no form of warranty provided by GitLab so whatever happens when you use the code is your own problem.</p>
+<h3 id='mondo-rescue'>Mondo Rescue <a class='anchor' href='README.html#mondo-rescue' title='Permalink'></a></h3>
+<p>A free disaster recovery <a href="https://help.ubuntu.com/community/MondoMindi">software</a>. </p>
+<h3 id='mysql'>MySQL <a class='anchor' href='README.html#mysql' title='Permalink'></a></h3>
+<p>A relational <a href="http://www.mysql.com/">database</a> owned by Oracle. Currently only supported if you are using EE.</p>
+<h3 id='namespace'>Namespace <a class='anchor' href='README.html#namespace' title='Permalink'></a></h3>
+<p>A set of symbols that are used to organize objects of various kinds so that these objects may be referred to by name. Examples of namespaces in action include file systems that assign names to files; programming languages that organize their variables and subroutines in namespaces; and computer networks and distributed systems that assign names to resources, such as computers, printers, websites, (remote) files, etc.</p>
+<h3 id='nginx'>Nginx <a class='anchor' href='README.html#nginx' title='Permalink'></a></h3>
+<p>A web <a href="https://www.nginx.com/resources/wiki/">server</a> (pronounced &quot;engine x&quot;). It can act as a reverse proxy server for HTTP, HTTPS, SMTP, POP3, and IMAP protocols, as well as a load balancer and an HTTP cache.</p>
+<h3 id='oauth'>OAuth <a class='anchor' href='README.html#oauth' title='Permalink'></a></h3>
+<p>An open standard for authorization, commonly used as a way for internet users to log into third party websites using their Microsoft, Google, Facebook or Twitter accounts without exposing their password. GitLab <a href="https://docs.gitlab.com/ce/integration/oauth_provider.html">is</a> an OAuth2 authentication service provider. </p>
+<h3 id='omnibus-packages'>Omnibus Packages <a class='anchor' href='README.html#omnibus-packages' title='Permalink'></a></h3>
+<p>A way to <a href="https://docs.gitlab.com/omnibus/">package different services and tools</a> required to run GitLab, so that most developers can install it without laborious configuration.</p>
+<h3 id='on-premise'>On Premise <a class='anchor' href='README.html#on-premise' title='Permalink'></a></h3>
+<p>On your own server. In GitLab, this <a href="https://about.gitlab.com/2015/02/12/why-ship-on-premises-in-the-saas-era/">refers</a> to the ability to download GitLab EE/GitLab CE and host it on your own server rather than using GitLab.com, which is hosted by GitLab Inc&#39;s servers.</p>
+<h3 id='open-core'>Open Core <a class='anchor' href='README.html#open-core' title='Permalink'></a></h3>
+<p>GitLab&#39;s <a href="https://about.gitlab.com/2016/07/20/gitlab-is-open-core-github-is-closed-source/">business model</a>. Coined by Andrew Lampitt in 2008, the <a href="https://en.wikipedia.org/wiki/Open_core">open core model</a> primarily involves offering a &quot;core&quot; or feature-limited version of a software product as free and open-source software, while offering &quot;commercial&quot; versions or add-ons as proprietary software.</p>
+<h3 id='open-source-software'>Open Source Software <a class='anchor' href='README.html#open-source-software' title='Permalink'></a></h3>
+<p>Software for which the original source code is freely <a href="https://opensource.org/docs/osd">available</a> and may be redistributed and modified. GitLab prioritizes open source <a href="https://about.gitlab.com/2016/01/11/being-a-good-open-source-steward/">stewardship</a>. </p>
+<h3 id='owner'>Owner <a class='anchor' href='README.html#owner' title='Permalink'></a></h3>
+<p>The most powerful person on a GitLab project. They have the permissions of all the other users plus the additional permission of being able to destroy (i.e. delete) the project.</p>
+<h3 id='platform-as-a-service-paas'>Platform as a Service (PaaS) <a class='anchor' href='README.html#platform-as-a-service-paas' title='Permalink'></a></h3>
+<p>Typically referred to in regards to application development, PaaS is a model in which a cloud provider delivers hardware and software tools to its users as a service.</p>
+<h3 id='perforce'>Perforce <a class='anchor' href='README.html#perforce' title='Permalink'></a></h3>
+<p>The company that produces Helix.  A commercial, proprietary, centralised VCS well known for its ability to version files of any size and type.  They OEM a re-branded version of GitLab called &quot;GitSwarm&quot; that is tightly integrated with their &quot;GitFusion&quot; product, which in turn represents a portion of a Helix repository (called a depot) as a git repo.</p>
+<h3 id='phabricator'>Phabricator <a class='anchor' href='README.html#phabricator' title='Permalink'></a></h3>
+<p>A suite of web-based software development collaboration tools, including the Differential code review tool, the Diffusion repository browser, the Herald change monitoring tool, the Maniphest bug tracker and the Phriction wiki. Phabricator integrates with Git, Mercurial, and Subversion.</p>
+<h3 id='piwik-analytics'>Piwik Analytics <a class='anchor' href='README.html#piwik-analytics' title='Permalink'></a></h3>
+<p>An open source analytics software to help you analyze web traffic. It is similar to Google Analytics, except that the latter is not open source and information is stored by Google. In Piwik, the information is stored on your own server and hence is fully private.</p>
+<h3 id='plus-subscription'>Plus Subscription <a class='anchor' href='README.html#plus-subscription' title='Permalink'></a></h3>
+<p>GitLab Premium EE <a href="https://about.gitlab.com/pricing/">subscription</a> that includes training and dedicated Account Management and Service Engineer and complete support package.</p>
+<h3 id='postgresql'>PostgreSQL <a class='anchor' href='README.html#postgresql' title='Permalink'></a></h3>
+<p>An <a href="https://en.wikipedia.org/wiki/PostgreSQL">object-relational</a> database. Touted as the most advanced open source database, it is one of two database management systems <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/database.md">supported by</a> GitLab, the other being MySQL. </p>
+<h3 id='protected-branches'>Protected Branches <a class='anchor' href='README.html#protected-branches' title='Permalink'></a></h3>
+<p>A <a href="https://docs.gitlab.com/ce/user/project/protected_branches.html">feature</a> that protects branches from unauthorized pushes, force pushing or deletion.</p>
+<h3 id='pull'>Pull <a class='anchor' href='README.html#pull' title='Permalink'></a></h3>
+<p>Git command to <a href="https://git-scm.com/docs/git-pull">synchronize</a> the local repository with the remote repository, by fetching all remote changes and merging them into the local repository.</p>
+<h3 id='puppet'>Puppet <a class='anchor' href='README.html#puppet' title='Permalink'></a></h3>
+<p>A popular DevOps <a href="https://puppet.com/product/how-puppet-works">automation tool</a>.</p>
+<h3 id='push'>Push <a class='anchor' href='README.html#push' title='Permalink'></a></h3>
+<p>Git <a href="https://git-scm.com/docs/git-push">command</a> to send commits from the local repository to the remote repository. Read about <a href="https://gitlab.com/help/pages/README.md">advanced push rules</a> in GitLab. </p>
+<h3 id='re-read-only'>RE Read Only <a class='anchor' href='README.html#re-read-only' title='Permalink'></a></h3>
+<p>Permissions to see a file and its contents, but not change it.</p>
+<h3 id='rebase'>Rebase <a class='anchor' href='README.html#rebase' title='Permalink'></a></h3>
+<p>In addition to the merge, the <a href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing">rebase</a> is a main way to integrate changes from one branch into another. </p>
+<h3 id='git-repository'>(Git) Repository <a class='anchor' href='README.html#git-repository' title='Permalink'></a></h3>
+<p>A directory where Git <a href="https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository">has been initiatlized</a> to start version controlling your files. The history of your work is stored here. A remote repository is not on your machine, but usually online (like on GitLab.com, for instance). The main remote repository is usually called &quot;Origin.&quot;</p>
+<h3 id='requirements-management'>Requirements management <a class='anchor' href='README.html#requirements-management' title='Permalink'></a></h3>
+<p>Gives your distributed teams a single shared repository to collaborate and share requirements, understand their relationship to tests, and evaluate linked defects. It includes multiple, preconfigured requirement types.</p>
+<h3 id='revision-control'>Revision Control <a class='anchor' href='README.html#revision-control' title='Permalink'></a></h3>
+<p>Also known as version control or source control, this is the management of changes to documents, computer programs, large web sites, and other collections of information. Changes are usually identified by a number or letter code, termed the &quot;revision number,&quot; &quot;revision level,&quot; or simply &quot;revision.&quot;</p>
+<h3 id='rocketchat'>RocketChat <a class='anchor' href='README.html#rocketchat' title='Permalink'></a></h3>
+<p>An open source chat application for teams, RocketChat is very similar to Slack but it is also open-source.</p>
+<h3 id='route-table'>Route Table <a class='anchor' href='README.html#route-table' title='Permalink'></a></h3>
+<p>A route table contains rules (called routes) that determine where network traffic is directed. Each <a href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Route_Tables.html">subnet in a VPC</a> must be associated with a route table. </p>
+<h3 id='runners'>Runners <a class='anchor' href='README.html#runners' title='Permalink'></a></h3>
+<p>Actual build machines/containers that <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner">run and execute tests</a> you have specified to be run on GitLab CI.</p>
+<h3 id='sidekiq'>Sidekiq <a class='anchor' href='README.html#sidekiq' title='Permalink'></a></h3>
+<p>The background job processor GitLab <a href="https://docs.gitlab.com/ce/administration/troubleshooting/sidekiq.html">uses</a> to asynchronously run tasks.</p>
+<h3 id='software-as-a-service-saas'>Software as a service (SaaS) <a class='anchor' href='README.html#software-as-a-service-saas' title='Permalink'></a></h3>
+<p>Software that is hosted centrally and accessed on-demand (i.e. whenever you want to). This applies to GitLab.com.</p>
+<h3 id='software-configuration-management-scm'>Software Configuration Management (SCM) <a class='anchor' href='README.html#software-configuration-management-scm' title='Permalink'></a></h3>
+<p>This term is often used by people when they mean &quot;Version Control.&quot;</p>
+<h2 id='scrum'>Scrum <a class='anchor' href='README.html#scrum' title='Permalink'></a></h2>
+<p>An Agile <a href="https://www.scrum.org/Resources/What-is-Scrum">framework</a> designed to typically help complete complex software projects. It&#39;s made up of several parts: product requirements backlog, sprint planning, sprint (development), sprint review, and retrospec (analyzing the sprint). The goal is to end up with potentially shippable products.</p>
+<h3 id='scrum-board'>Scrum Board <a class='anchor' href='README.html#scrum-board' title='Permalink'></a></h3>
+<p>The board used to track the status and progress of each of the sprint backlog items.</p>
+<h3 id='shell'>Shell <a class='anchor' href='README.html#shell' title='Permalink'></a></h3>
+<p>Terminal on Mac OSX, GitBash on Windows, or Linux Terminal on Linux. You <a href="README.html">use git</a> and make changes to GitLab projects in your shell. You <a href="https://docs.gitlab.com/ce/gitlab-basics/start-using-git.html">use git</a> and make changes to GitLab projects in your shell. </p>
+<h3 id='single-tenant'>Single-tenant <a class='anchor' href='README.html#single-tenant' title='Permalink'></a></h3>
+<p>The tenant purchases their own copy of the software and the software can be customized to meet the specific and needs of that customer. <a href="https://about.gitlab.com/handbook/positioning-faq/">GitHost.io</a> is our provider of single-tenant &#39;managed cloud&#39; GitLab instances. </p>
+<h3 id='slack'>Slack <a class='anchor' href='README.html#slack' title='Permalink'></a></h3>
+<p>Real time messaging app for teams that is used internally by  GitLab team members. GitLab users can enable <a href="https://docs.gitlab.com/ce/project_services/slack.html">Slack integration</a> to trigger push, issue, and merge request events among others. </p>
+<h3 id='slave-servers'>Slave Servers <a class='anchor' href='README.html#slave-servers' title='Permalink'></a></h3>
+<p>Also known as secondary servers, these help to spread the load over multiple machines. They also provide backups when the master/primary server crashes.</p>
+<h3 id='source-code'>Source Code <a class='anchor' href='README.html#source-code' title='Permalink'></a></h3>
+<p>Program code as typed by a computer programmer (i.e. it has not yet been compiled/translated by the computer to machine language).</p>
+<h3 id='ssh-key'>SSH Key <a class='anchor' href='README.html#ssh-key' title='Permalink'></a></h3>
+<p>A unique identifier of a computer. It is used to identify computers without the need for a password (e.g., On GitLab I have <a href="https://docs.gitlab.com/ce/gitlab-basics/create-your-ssh-keys.html">added the ssh key</a> of all my work machines so that the GitLab instance knows that it can accept code pushes and pulls from this trusted machines whose keys are I have added.)</p>
+<h3 id='single-sign-on-sso'>Single Sign On (SSO) <a class='anchor' href='README.html#single-sign-on-sso' title='Permalink'></a></h3>
+<p>An authentication process that allows you enter one username and password to access multiple applications.</p>
+<h3 id='staging-area'>Staging Area <a class='anchor' href='README.html#staging-area' title='Permalink'></a></h3>
+<p><a href="https://git-scm.com/book/en/v2/Getting-Started-Git-Basics">Staging occurs</a> before the commit process in git. The staging area is a file, generally contained in your Git directory, that stores information about what will go into your next commit. It’s sometimes referred to as the “index.&quot;&quot;</p>
+<h3 id='standard-subscription'>Standard Subscription <a class='anchor' href='README.html#standard-subscription' title='Permalink'></a></h3>
+<p>Our mid range EE subscription that includes 24/7 support and support for High Availability <a href="https://about.gitlab.com/pricing/">Standard Subscription</a>.</p>
+<h3 id='stash'>Stash <a class='anchor' href='README.html#stash' title='Permalink'></a></h3>
+<p>Atlassian&#39;s Git on-premise solution. Think of it as Atlassian&#39;s GitLab EE, now known as BitBucket Server.</p>
+<h3 id='static-site-generators-ssgs'>Static Site Generators (SSGs) <a class='anchor' href='README.html#static-site-generators-ssgs' title='Permalink'></a></h3>
+<p>A <a href="https://wiki.python.org/moin/StaticSiteGenerator">software</a> that takes some text and templates as input and produces html files on the output.</p>
+<h3 id='subversion'>Subversion <a class='anchor' href='README.html#subversion' title='Permalink'></a></h3>
+<p>Non-proprietary, centralized version control system.</p>
+<h3 id='sudo'>Sudo <a class='anchor' href='README.html#sudo' title='Permalink'></a></h3>
+<p>A program that allows you to perform superuser/administrator actions on Unix Operating Systems (e.g., Linux, OS X.) It actually stands for &#39;superuser do.&#39;</p>
+<h3 id='subversion-svn'>Subversion (SVN) <a class='anchor' href='README.html#subversion-svn' title='Permalink'></a></h3>
+<p>An open source version control system. Read about <a href="https://docs.gitlab.com/ce/workflow/importing/migrating_from_svn.html">migrating from SVN</a> to GitLab using SubGit. </p>
+<h3 id='tag'>Tag <a class='anchor' href='README.html#tag' title='Permalink'></a></h3>
+<p><a href="https://docs.gitlab.com/ce/api/tags.html">Represents</a> a version of a particular branch at a moment in time.</p>
+<h3 id='tool-stack'>Tool Stack <a class='anchor' href='README.html#tool-stack' title='Permalink'></a></h3>
+<p>The set of tools used in a process to achieve a common outcome (e.g. set of tools used in Application Lifecycle Management).</p>
+<h3 id='trac'>Trac <a class='anchor' href='README.html#trac' title='Permalink'></a></h3>
+<p>An open source project management and bug tracking web <a href="https://trac.edgewall.org/">application</a>.</p>
+<h3 id='untracked-files'>Untracked files <a class='anchor' href='README.html#untracked-files' title='Permalink'></a></h3>
+<p>New files that Git has not <a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">been told</a> to track previously. </p>
+<h3 id='user'>User <a class='anchor' href='README.html#user' title='Permalink'></a></h3>
+<p>Anyone interacting with the software.</p>
+<h3 id='version-control-software-vcs'>Version Control Software (VCS) <a class='anchor' href='README.html#version-control-software-vcs' title='Permalink'></a></h3>
+<p>Version control is a system that records changes to a file or set of files over time so that you can recall specific versions later. VCS <a href="https://docs.google.com/presentation/d/16sX7hUrCZyOFbpvnrAFrg6tVO5_yT98IgdAqOmXwBho/edit#slide=id.gd69537a19_0_32">has evolved</a> from local version control systems, to centralized version control systems, to the present distributed version control systems like Git, Mercurial, Bazaar, and Darcs. </p>
+<h3 id='virtual-private-cloud-vpc'>Virtual Private Cloud (VPC) <a class='anchor' href='README.html#virtual-private-cloud-vpc' title='Permalink'></a></h3>
+<p>An on demand configurable pool of shared computing resources allocated within a public cloud environment, providing some isolation between the different users using the resources. GitLab users need to create a new Amazon VPC in order to <a href="https://docs.gitlab.com/ce/university/high-availability/aws/">setup High Availability</a>. </p>
+<h3 id='virtual-private-server-vps'>Virtual private server (VPS) <a class='anchor' href='README.html#virtual-private-server-vps' title='Permalink'></a></h3>
+<p>A <a href="https://en.wikipedia.org/wiki/Virtual_private_server">virtual machine</a> sold as a service by an Internet hosting service. A VPS runs its own copy of an operating system, and customers have superuser-level access to that operating system instance, so they can install almost any software that runs on that OS.</p>
+<h3 id='vm-instance'>VM Instance <a class='anchor' href='README.html#vm-instance' title='Permalink'></a></h3>
+<p>In object-oriented programming, an <a href="http://stackoverflow.com/questions/20461907/what-is-meaning-of-instance-in-programming">instance</a> is a specific realization of any object. An object may be varied in a number of ways. Each realized variation of that object is an instance. Therefore, a VM instance is an instance of a virtual machine, which is an emulation of a computer system. </p>
+<h3 id='waterfall'>Waterfall <a class='anchor' href='README.html#waterfall' title='Permalink'></a></h3>
+<p>A <a href="http://www.umsl.edu/%7Ehugheyd/is6840/waterfall.html">model</a> of building software that involves collecting all requirements from the customer, then building and refining all the requirements and finally delivering the complete software to the customer that meets all the requirements they specified. </p>
+<h3 id='webhooks'>Webhooks <a class='anchor' href='README.html#webhooks' title='Permalink'></a></h3>
+<p>A way for for an app to <a href="https://docs.gitlab.com/ce/web_hooks/web_hooks.html">provide</a> other applications with real-time information (e.g., send a message to a slack channel when a commit is pushed.) Read about setting up <a href="https://gitlab.com/help/administration/custom_hooks.md">custom git hooks</a> for when webhooks are insufficient. </p>
+<h3 id='wiki'>Wiki <a class='anchor' href='README.html#wiki' title='Permalink'></a></h3>
+<p>A <a href="http://www.wiki.com/">website/system</a> that allows for collaborative editing of its content by the users. In programming, wikis usually contain documentation of how to use the software.</p>
+<h3 id='working-tree'>Working Tree <a class='anchor' href='README.html#working-tree' title='Permalink'></a></h3>
+<p><a href="http://stackoverflow.com/questions/3689838/difference-between-head-working-tree-index-in-git">Consists of files</a> that you are currently working on.</p>
+<h3 id='yaml'>YAML <a class='anchor' href='README.html#yaml' title='Permalink'></a></h3>
+<p>A human-readable data serialization <a href="http://www.yaml.org/about.html">language</a> that takes concepts from programming languages such as C, Perl, and Python, and ideas from XML and the data format of electronic mail. </p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/university/glossary/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

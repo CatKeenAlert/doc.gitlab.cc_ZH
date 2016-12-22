@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Rake tasks for developers - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Rake tasks for developers</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="rake_tasks.html#rake-tasks-for-developers">Rake tasks for developers</a>
+<ul>
+<li>
+<a href="rake_tasks.html#setup-db-with-developer-seeds">Setup db with developer seeds</a>
+</li>
+<li>
+<a href="rake_tasks.html#run-tests">Run tests</a>
+</li>
+<li>
+<a href="rake_tasks.html#generate-api-documentation-for-project-services-e-g-slack">Generate API documentation for project services (e.g. Slack)</a>
+</li>
+<li>
+<a href="rake_tasks.html#updating-emoji-digests">Updating Emoji Digests</a>
+</li>
+<li>
+<a href="rake_tasks.html#emoji-sprites">Emoji Sprites</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='rake-tasks-for-developers'>Rake tasks for developers <a class='anchor' href='rake_tasks.html#rake-tasks-for-developers' title='Permalink'></a></h1><h2 id='setup-db-with-developer-seeds'>Setup db with developer seeds <a class='anchor' href='rake_tasks.html#setup-db-with-developer-seeds' title='Permalink'></a></h2>
+<p>Note that if your db user does not have advanced privileges you must create the db manually before running this command.</p>
+<pre class="highlight plaintext"><code>bundle exec rake setup
+</code></pre>
+<p>The <code>setup</code> task is a alias for <code>gitlab:setup</code>.
+This tasks calls <code>db:reset</code> to create the database, calls <code>add_limits_mysql</code> that adds limits to the database schema in case of a MySQL database and finally it calls <code>db:seed_fu</code> to seed the database.
+Note: <code>db:setup</code> calls <code>db:seed</code> but this does nothing.</p>
+<h2 id='run-tests'>Run tests <a class='anchor' href='rake_tasks.html#run-tests' title='Permalink'></a></h2>
+<p>In order to run the test you can use the following commands:</p>
+
+<ul>
+<li><code>rake spinach</code> to run the spinach suite</li>
+<li><code>rake spec</code> to run the rspec suite</li>
+<li><code>rake teaspoon</code> to run the teaspoon test suite</li>
+<li><code>rake gitlab:test</code> to run all the tests</li>
+</ul>
+
+<p>Note: Both <code>rake spinach</code> and <code>rake spec</code> takes significant time to pass. 
+Instead of running full test suite locally you can save a lot of time by running
+a single test or directory related to your changes. After you submit merge request 
+CI will run full test suite for you. Green CI status in the merge request means 
+full test suite is passed.  </p>
+
+<p>Note: You can&#39;t run <code>rspec .</code> since this will try to run all the <code>_spec.rb</code>
+files it can find, also the ones in <code>/tmp</code></p>
+
+<p>To run a single test file you can use:</p>
+
+<ul>
+<li><code>bundle exec rspec spec/controllers/commit_controller_spec.rb</code> for a rspec test</li>
+<li><code>bundle exec spinach features/project/issues/milestones.feature</code> for a spinach test</li>
+</ul>
+
+<p>To run several tests inside one directory:</p>
+
+<ul>
+<li><code>bundle exec rspec spec/requests/api/</code> for the rspec tests if you want to test API only</li>
+<li><code>bundle exec spinach features/profile/</code> for the spinach tests if you want to test only profile pages</li>
+</ul>
+
+<p>If you want to use <a href="https://github.com/rails/spring">Spring</a> set
+<code>ENABLE_SPRING=1</code> in your environment.</p>
+<h2 id='generate-api-documentation-for-project-services-e-g-slack'>Generate API documentation for project services (e.g. Slack) <a class='anchor' href='rake_tasks.html#generate-api-documentation-for-project-services-e-g-slack' title='Permalink'></a></h2><pre class="highlight plaintext"><code>bundle exec rake services:doc
+</code></pre><h2 id='updating-emoji-digests'>Updating Emoji Digests <a class='anchor' href='rake_tasks.html#updating-emoji-digests' title='Permalink'></a></h2>
+<p>To update the Emoji digests file (used for Emoji autocomplete) you must run the
+following:</p>
+<pre class="highlight plaintext"><code>bundle exec rake gemojione:digests
+</code></pre>
+<p>This will update the file <code>fixtures/emojis/digests.json</code> based on the currently
+available Emoji.</p>
+<h2 id='emoji-sprites'>Emoji Sprites <a class='anchor' href='rake_tasks.html#emoji-sprites' title='Permalink'></a></h2>
+<p>Generating a sprite file containing all the Emoji can be done by running:</p>
+<pre class="highlight plaintext"><code>bundle exec rake gemojione:sprite
+</code></pre>
+<p>If new emoji are added, the spritesheet may change size. To compensate for
+such changes, first generate the <code>emoji.png</code> spritesheet with the above Rake
+task, then check the dimensions of the new spritesheet and update the
+<code>SPRITESHEET_WIDTH</code> and <code>SPRITESHEET_HEIGHT</code> constants accordingly.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/development/rake_tasks.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

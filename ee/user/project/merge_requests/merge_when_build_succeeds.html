@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Merge When Build Succeeds - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Merge When Build Succeeds</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="merge_when_build_succeeds.html#merge-when-build-succeeds">Merge When Build Succeeds</a>
+<ul>
+<li>
+<a href="merge_when_build_succeeds.html#only-allow-merge-requests-to-be-merged-if-the-build-succeeds">Only allow merge requests to be merged if the build succeeds</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='merge-when-build-succeeds'>Merge When Build Succeeds <a class='anchor' href='merge_when_build_succeeds.html#merge-when-build-succeeds' title='Permalink'></a></h1>
+<p>When reviewing a merge request that looks ready to merge but still has one or
+more CI builds running, you can set it to be merged automatically when the
+builds pipeline succeed. This way, you don&#39;t have to wait for the builds to
+finish and remember to merge the request manually.</p>
+
+<p><a target="_blank" href="img/merge_when_build_succeeds_enable.png"><img src="img/merge_when_build_succeeds_enable.png" title="" alt="Enable"/></a></p>
+
+<p>When you hit the &quot;Merge When Build Succeeds&quot; button, the status of the merge
+request will be updated to represent the impending merge. If you cannot wait
+for the pipeline to succeed and want to merge immediately, this option is
+available in the dropdown menu on the right of the main button.</p>
+
+<p>Both team developers and the author of the merge request have the option to
+cancel the automatic merge if they find a reason why it shouldn&#39;t be merged
+after all.</p>
+
+<p><a target="_blank" href="img/merge_when_build_succeeds_status.png"><img src="img/merge_when_build_succeeds_status.png" title="" alt="Status"/></a></p>
+
+<p>When the pipeline succeeds, the merge request will automatically be merged.
+When the pipeline fails, the author gets a chance to retry any failed builds,
+or to push new commits to fix the failure.</p>
+
+<p>When the builds are retried and succeed on the second try, the merge request
+will automatically be merged after all. When the merge request is updated with
+new commits, the automatic merge is automatically canceled to allow the new
+changes to be reviewed.</p>
+<h2 id='only-allow-merge-requests-to-be-merged-if-the-build-succeeds'>Only allow merge requests to be merged if the build succeeds <a class='anchor' href='merge_when_build_succeeds.html#only-allow-merge-requests-to-be-merged-if-the-build-succeeds' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+You need to have builds configured to enable this feature.</p>
+</blockquote>
+
+<p>You can prevent merge requests from being merged if their build did not succeed.</p>
+
+<p>Navigate to your project&#39;s settings page, select the
+<strong>Only allow merge requests to be merged if the build succeeds</strong> check box and
+hit <strong>Save</strong> for the changes to take effect.</p>
+
+<p><a target="_blank" href="img/merge_when_build_succeeds_only_if_succeeds_settings.png"><img src="img/merge_when_build_succeeds_only_if_succeeds_settings.png" title="" alt="Only allow merge if build succeeds settings"/></a></p>
+
+<p>From now on, every time the pipeline fails you will not be able to merge the
+merge request from the UI, until you make all relevant builds pass.</p>
+
+<p><a target="_blank" href="img/merge_when_build_succeeds_only_if_succeeds_msg.png"><img src="img/merge_when_build_succeeds_only_if_succeeds_msg.png" title="" alt="Only allow merge if build succeeds message"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/merge_requests/merge_when_build_succeeds.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

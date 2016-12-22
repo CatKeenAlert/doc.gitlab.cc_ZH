@@ -1,0 +1,673 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Updating GitLab via omnibus-gitlab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+          
+          <li class="breadcrumb">Updating GitLab via omnibus-gitlab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#updating-gitlab-via-omnibus-gitlab">Updating GitLab via omnibus-gitlab</a>
+<ul>
+<li>
+<a href="README.html#documentation-version">Documentation version</a>
+</li>
+<li>
+<a href="README.html#updating-using-the-official-repositories">Updating using the official repositories</a>
+</li>
+<li>
+<a href="README.html#updating-by-manually-downloading-the-official-packages">Updating by manually downloading the official packages</a>
+</li>
+<li>
+<a href="README.html#from-community-edition-to-enterprise-edition">From Community Edition to Enterprise Edition</a>
+</li>
+<li>
+<a href="README.html#updating-from-gitlab-8-10-and-lower-to-8-11-or-newer">Updating from GitLab 8.10 and lower to 8.11 or newer</a>
+<ul>
+<li>
+<a href="README.html#migrating-legacy-secrets">Migrating legacy secrets</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#updating-from-gitlab-6-6-and-higher-to-7-10-or-newer">Updating from GitLab 6.6 and higher to 7.10 or newer</a>
+</li>
+<li>
+<a href="README.html#updating-from-gitlab-6-6-and-higher-to-the-latest-version">Updating from GitLab 6.6 and higher to the latest version</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="README.html#stop-services-but-leave-postgresql-running-for-the-database-migrations-and-create-a-backup">Stop services but leave postgresql running for the database migrations and create a backup</a>
+</li>
+<li>
+<a href="README.html#install-the-latest-package">Install the latest package</a>
+</li>
+<li>
+<a href="README.html#reconfigure-gitlab-includes-running-database-migrations-and-restart-all-services">Reconfigure GitLab (includes running database migrations) and restart all services</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#updating-from-gitlab-6-6-0-pre1-to-6-6-4">Updating from GitLab 6.6.0.pre1 to 6.6.4</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="README.html#stop-unicorn-and-sidekiq-so-we-can-do-database-migrations">Stop unicorn and sidekiq so we can do database migrations</a>
+</li>
+<li>
+<a href="README.html#one-time-migration-because-we-changed-some-directories-since-6-6-0-pre1">One-time migration because we changed some directories since 6.6.0.pre1</a>
+</li>
+<li>
+<a href="README.html#install-the-latest-package">Install the latest package</a>
+</li>
+<li>
+<a href="README.html#reconfigure-gitlab-includes-database-migrations">Reconfigure GitLab (includes database migrations)</a>
+</li>
+<li>
+<a href="README.html#start-unicorn-and-sidekiq">Start unicorn and sidekiq</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#reverting-to-gitlab-6-6-x-or-later">Reverting to GitLab 6.6.x or later</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="README.html#stop-gitlab">Stop GitLab</a>
+</li>
+<li>
+<a href="README.html#downgrade-gitlab-to-6-x">Downgrade GitLab to 6.x</a>
+</li>
+<li>
+<a href="README.html#prepare-gitlab-for-receiving-the-backup-restore">Prepare GitLab for receiving the backup restore</a>
+</li>
+<li>
+<a href="README.html#reconfigure-gitlab-includes-database-migrations">Reconfigure GitLab (includes database migrations)</a>
+</li>
+<li>
+<a href="README.html#restore-your-backup">Restore your backup</a>
+</li>
+<li>
+<a href="README.html#start-gitlab">Start GitLab</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#upgrading-from-a-non-omnibus-installation-to-an-omnibus-installation">Upgrading from a non-Omnibus installation to an Omnibus installation</a>
+<ul>
+<li>
+<a href="README.html#upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-using-a-backup">Upgrading from non-Omnibus PostgreSQL to an Omnibus installation using a backup</a>
+</li>
+<li>
+<a href="README.html#upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-in-place">Upgrading from non-Omnibus PostgreSQL to an Omnibus installation in-place</a>
+</li>
+<li>
+<a href="README.html#upgrading-from-non-omnibus-mysql-to-an-omnibus-installation-version-6-8">Upgrading from non-Omnibus MySQL to an Omnibus installation (version 6.8+)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#rpm-package-is-already-installed-error">RPM 'package is already installed' error</a>
+</li>
+<li>
+<a href="README.html#updating-gitlab-ci-via-omnibus-gitlab">Updating GitLab CI via omnibus-gitlab</a>
+<ul>
+<li>
+<a href="README.html#updating-from-gitlab-ci-version-prior-to-5-4-0-to-version-7-14">Updating from GitLab CI version prior to 5.4.0 to version 7.14</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#troubleshooting">Troubleshooting</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='updating-gitlab-via-omnibus-gitlab'>Updating GitLab via omnibus-gitlab <a class='anchor' href='README.html#updating-gitlab-via-omnibus-gitlab' title='Permalink'></a></h1>
+<p>This document will help you update Omnibus GitLab.</p>
+<h2 id='documentation-version'>Documentation version <a class='anchor' href='README.html#documentation-version' title='Permalink'></a></h2>
+<p>Please make sure you are viewing this file on the master branch.</p>
+<h2 id='updating-using-the-official-repositories'>Updating using the official repositories <a class='anchor' href='README.html#updating-using-the-official-repositories' title='Permalink'></a></h2>
+<p>If you have installed Omnibus GitLab <a href="https://www.gitlab.cc/downloads">Community Edition</a>
+or <a href="https://www.gitlab.cc/downloads-ee/">Enterprise Edition</a>, then the
+official GitLab repository should have already been set up for you.</p>
+
+<p>To update to a newer GitLab version, all you have to do is:</p>
+<pre class="highlight plaintext"><code># Debian/Ubuntu
+sudo apt-get update
+sudo apt-get install gitlab-ce
+
+# Centos/RHEL
+sudo yum install gitlab-ce
+</code></pre>
+<p>If you are an Enterprise Edition user, replace <code>gitlab-ce</code> with <code>gitlab-ee</code> in
+the above commands.</p>
+<h2 id='updating-by-manually-downloading-the-official-packages'>Updating by manually downloading the official packages <a class='anchor' href='README.html#updating-by-manually-downloading-the-official-packages' title='Permalink'></a></h2>
+<p>If for some reason you don&#39;t use the official repositories, it is possible to
+download the package and install it manually.</p>
+
+<ol>
+<li>Visit the <a href="https://packages.gitlab.com/gitlab/gitlab-ce">Community Edition repository</a>
+or the <a href="https://packages.gitlab.com/gitlab/gitlab-ee">Enterprise Edition repository</a>
+depending on the edition you already have installed.</li>
+<li>Find the package version you wish to install and click on it.</li>
+<li>Click the &#39;Download&#39; button in the upper right corner to download the package.</li>
+<li><p>Once the GitLab package is downloaded, install it using the following
+commands, replacing <code>XXX</code> with the Omnibus GitLab version you downloaded:</p>
+<pre class="highlight plaintext"><code># Debian/Ubuntu
+dpkg -i gitlab-ce-XXX.deb
+
+# CentOS/RHEL
+rpm -Uvh gitlab-ce-XXX.rpm
+</code></pre>
+<p>If you are an Enterprise Edition user, replace <code>gitlab-ce</code> with <code>gitlab-ee</code>
+in the above commands.</p></li>
+</ol>
+<h2 id='from-community-edition-to-enterprise-edition'>From Community Edition to Enterprise Edition <a class='anchor' href='README.html#from-community-edition-to-enterprise-edition' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+Make sure you have retrieved your license file before installing
+GitLab Enterprise Edition, otherwise you will not be able to use certain
+features.</p>
+</blockquote>
+
+<p>To upgrade an existing GitLab Community Edition (CE) server, installed using the
+Omnibus packages, to GitLab Enterprise Edition (EE), all you have to do is
+install the EE package on top of CE. While upgrading from the same version of
+CE to EE is not explicitly necessary, and any standard upgrade jump (i.e. 8.0
+to 8.7) should work, in the following steps we assume that you are upgrading the
+same versions.</p>
+
+<p>The steps can be summed up to:</p>
+
+<ol>
+<li><p>Find the currently installed GitLab version:</p>
+
+<p><strong>For Debian/Ubuntu</strong></p>
+<pre class="highlight plaintext"><code>sudo apt-cache policy gitlab-ce | grep Installed
+</code></pre>
+<p>The output should be similar to: <code>Installed: 8.6.7-ce.0</code>. In that case,
+the equivalent Enterprise Edition version will be: <code>8.6.7-ee.0</code>. Write this
+value down.</p>
+
+<hr>
+
+<p><strong>For CentOS/RHEL</strong></p>
+<pre class="highlight plaintext"><code>sudo rpm -q gitlab-ce
+</code></pre>
+<p>The output should be similar to: <code>gitlab-ce-8.6.7-ce.0.el7.x86_64</code>. In that
+case, the equivalent Enterprise Edition version will be:
+<code>gitlab-ee-8.6.7-ee.0.el7.x86_64</code>. Write this value down.</p></li>
+<li><p>Add the <code>gitlab-ee</code> <a href="https://packages.gitlab.com/gitlab/gitlab-ee/install">Apt or Yum repository</a>:</p>
+
+<p><strong>For Debian/Ubuntu</strong></p>
+<pre class="highlight plaintext"><code>curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+</code></pre>
+<p><strong>For CentOS/RHEL</strong></p>
+<pre class="highlight plaintext"><code>curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
+</code></pre>
+<hr>
+
+<p>The above command will find your OS version and automatically set up the
+repository. If you are not comfortable installing the repository through a
+piped script, you can first
+<a href="https://packages.gitlab.com/gitlab/gitlab-ee/install">check its contents</a>.</p></li>
+<li><p>Next, install the <code>gitlab-ee</code> package. Note that this will automatically
+uninstall the <code>gitlab-ce</code> package on your GitLab server. Reconfigure
+Omnibus right after the <code>gitlab-ee</code> package is installed. Make sure that you
+install the exact same GitLab version:</p>
+
+<p><strong>For Debian/Ubuntu</strong></p>
+<pre class="highlight plaintext"><code>## Make sure the repositories are up-to-date
+sudo apt-get update
+
+## Install the package using the version you wrote down from step 1
+sudo apt-get install gitlab-ee=8.6.7-ee.0
+
+## Reconfigure GitLab
+sudo gitlab-ctl reconfigure
+</code></pre>
+<p><strong>For CentOS/RHEL</strong></p>
+<pre class="highlight plaintext"><code>## Install the package using the version you wrote down from step 1
+sudo yum install gitlab-ee-8.6.7-ee.0.el7.x86_64
+
+## Reconfigure GitLab
+sudo gitlab-ctl reconfigure
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong>
+If you want to upgrade to EE and at the same time also update GitLab to the
+latest version, you can omit the version check in the above commands. For
+Debian/Ubuntu that would be <code>sudo apt-get install gitlab-ee</code> and for
+CentOS/RHEL <code>sudo yum install gitlab-ee</code>.</p>
+</blockquote></li>
+<li><p>Now go to the GitLab admin panel of your server (<code>/admin/license/new</code>) and
+upload your license file.</p></li>
+<li><p>After you confirm that GitLab is working as expected, you may remove the old
+Community Edition repository:</p>
+
+<p><strong>For Debian/Ubuntu</strong></p>
+<pre class="highlight plaintext"><code>sudo rm /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+</code></pre>
+<hr>
+
+<p><strong>For CentOS/RHEL</strong></p>
+<pre class="highlight plaintext"><code>sudo rm /etc/yum.repos.d/gitlab_gitlab-ce.repo
+</code></pre></li>
+</ol>
+
+<p>That&#39;s it! You can now use GitLab Enterprise Edition! To update to a newer
+version follow the section on
+<a href="README.html#updating-using-the-official-repositories">Updating using the official repositories</a>.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you want to use <code>dpkg</code>/<code>rpm</code> instead of <code>apt-get</code>/<code>yum</code>, go through the first
+step to find the current GitLab version and then follow the steps in
+<a href="README.html#updating-by-manually-downloading-the-official-packages">Updating by manually downloading the official packages</a>.</p>
+</blockquote>
+<h2 id='updating-from-gitlab-8-10-and-lower-to-8-11-or-newer'>Updating from GitLab 8.10 and lower to 8.11 or newer <a class='anchor' href='README.html#updating-from-gitlab-8-10-and-lower-to-8-11-or-newer' title='Permalink'></a></h2>
+<p>GitLab 8.11 introduces new key names for several secrets, to match the GitLab
+Rails app and clarify the use of the secrets. For most installations, this
+process should be transparent as the 8.11 and higher packages will try to
+migrate the existing secrets to the new key names.</p>
+<h3 id='migrating-legacy-secrets'>Migrating legacy secrets <a class='anchor' href='README.html#migrating-legacy-secrets' title='Permalink'></a></h3>
+<p>These keys have been migrated from old names:</p>
+
+<ul>
+<li><code>gitlab_rails[&#39;otp_key_base&#39;]</code> is used for encrypting the OTP secrets in the
+database. Changing this secret will stop two-factor auth from working for all
+users. Previously called <code>gitlab_rails[&#39;secret_token&#39;]</code></li>
+<li><code>gitlab_rails[&#39;db_key_base&#39;]</code> is used for encrypting import credentials and CI
+secret variables. Previously called <code>gitlab_ci[&#39;db_key_base&#39;]</code>; <strong>note</strong> that
+<code>gitlab_rails[&#39;db_key_base&#39;]</code> was not previously used for this - setting it
+would have no effect</li>
+<li><code>gitlab_rails[&#39;secret_key_base&#39;]</code> is used for password reset links, and other
+&#39;standard&#39; auth features. Previously called <code>gitlab_ci[&#39;db_key_base&#39;]</code>;
+<strong>note</strong> that <code>gitlab_rails[&#39;secret_token&#39;]</code> was not previously used for this,
+despite the name</li>
+</ul>
+
+<p>These keys were not used any more, and have simply been removed:</p>
+
+<ul>
+<li><code>gitlab_ci[&#39;secret_token&#39;]</code></li>
+<li><code>gitlab_ci[&#39;secret_key_base&#39;]</code></li>
+</ul>
+<h2 id='updating-from-gitlab-6-6-and-higher-to-7-10-or-newer'>Updating from GitLab 6.6 and higher to 7.10 or newer <a class='anchor' href='README.html#updating-from-gitlab-6-6-and-higher-to-7-10-or-newer' title='Permalink'></a></h2>
+<p>In the 7.10 package we have added the <code>gitlab-ctl upgrade</code> command, and we
+configured the packages to run this command automatically after the new package
+is installed. If you are installing GitLab 7.9 or earlier, please see the
+<a href="README.html#updating-from-gitlab-66-and-higher-to-the-latest-version">procedure below</a>.</p>
+
+<p>If you installed using the package server all you need to do is run <code>sudo apt-get update &amp;&amp; sudo apt-get install gitlab-ce</code> (for Debian/Ubuntu) or <code>sudo yum install gitlab-ce</code> (for CentOS/Enterprise Linux).</p>
+
+<p>If you are not using the package server, consider <a href="https://www.gitlab.cc/upgrade-to-package-repository">upgrading to the package repository</a>. Otherwise, download the latest <a href="https://packages.gitlab.com/gitlab/gitlab-ce">CE</a> or
+<a href="https://packages.gitlab.com/gitlab/gitlab-ee">EE (subscribers only)</a>
+package to your GitLab server then all you have to do is <code>dpkg -i gitlab-ce-XXX.deb</code> (for Debian/Ubuntu) or <code>rpm
+-Uvh gitlab-ce-XXX.rpm</code> (for CentOS/Enterprise Linux). After the package has
+been unpacked, GitLab will automatically:</p>
+
+<ul>
+<li>Stop all GitLab services;</li>
+<li>Create a backup using your current, old GitLab version. This is a &#39;light&#39;
+backup that <strong>only backs up the SQL database</strong>;</li>
+<li>Run <code>gitlab-ctl reconfigure</code>, which will perform any necessary database
+migrations (using the new GitLab version);</li>
+<li>Restart the services that were running when the upgrade script was invoked.</li>
+</ul>
+
+<p>If you do not want the DB-only backup, automatic start/stop and DB migrations
+to be performed automatically please run the following command before upgrading
+your GitLab instance:</p>
+<pre class="highlight plaintext"><code>sudo touch /etc/gitlab/skip-auto-migrations
+</code></pre>
+<p>Alternatively if you just want to prevent DB migrations add <code>gitlab_rails[&#39;auto_migrate&#39;] = false</code>
+to your <code>gitlab.rb</code> file.</p>
+<h2 id='updating-from-gitlab-6-6-and-higher-to-the-latest-version'>Updating from GitLab 6.6 and higher to the latest version <a class='anchor' href='README.html#updating-from-gitlab-6-6-and-higher-to-the-latest-version' title='Permalink'></a></h2>
+<p>The procedure can also be used to upgrade from a CE omnibus package to an EE omnibus package.</p>
+
+<p>First, download the latest <a href="https://packages.gitlab.com/gitlab/gitlab-ce">CE</a> or
+<a href="https://www.gitlab.cc/downloads-ee/">EE (license key required)</a>
+package to your GitLab server.</p>
+<h4 id='stop-services-but-leave-postgresql-running-for-the-database-migrations-and-create-a-backup'>Stop services but leave postgresql running for the database migrations and create a backup <a class='anchor' href='README.html#stop-services-but-leave-postgresql-running-for-the-database-migrations-and-create-a-backup' title='Permalink'></a></h4><pre class="highlight shell"><code>sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+sudo gitlab-ctl stop nginx
+sudo gitlab-rake gitlab:backup:create
+</code></pre><h4 id='install-the-latest-package'>Install the latest package <a class='anchor' href='README.html#install-the-latest-package' title='Permalink'></a></h4><pre class="highlight plaintext"><code># Debian/Ubuntu:
+sudo dpkg -i gitlab_x.x.x-omnibus.xxx.deb
+
+# CentOS:
+sudo rpm -Uvh gitlab-x.x.x_xxx.rpm
+</code></pre><h4 id='reconfigure-gitlab-includes-running-database-migrations-and-restart-all-services'>Reconfigure GitLab (includes running database migrations) and restart all services <a class='anchor' href='README.html#reconfigure-gitlab-includes-running-database-migrations-and-restart-all-services' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-ctl reconfigure
+sudo gitlab-ctl restart
+</code></pre>
+<p>Done!</p>
+<h2 id='updating-from-gitlab-6-6-0-pre1-to-6-6-4'>Updating from GitLab 6.6.0.pre1 to 6.6.4 <a class='anchor' href='README.html#updating-from-gitlab-6-6-0-pre1-to-6-6-4' title='Permalink'></a></h2>
+<p>First, download the latest package from <a href="https://www.gitlab.com/downloads/">https://www.gitlab.com/downloads/</a> to your GitLab server.</p>
+<h4 id='stop-unicorn-and-sidekiq-so-we-can-do-database-migrations'>Stop unicorn and sidekiq so we can do database migrations <a class='anchor' href='README.html#stop-unicorn-and-sidekiq-so-we-can-do-database-migrations' title='Permalink'></a></h4><pre class="highlight shell"><code>sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+</code></pre><h4 id='one-time-migration-because-we-changed-some-directories-since-6-6-0-pre1'>One-time migration because we changed some directories since 6.6.0.pre1 <a class='anchor' href='README.html#one-time-migration-because-we-changed-some-directories-since-6-6-0-pre1' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo mkdir -p /var/opt/gitlab/git-data
+sudo mv /var/opt/gitlab/{repositories,gitlab-satellites} /var/opt/gitlab/git-data/
+sudo mv /var/opt/gitlab/uploads /var/opt/gitlab/gitlab-rails/
+</code></pre><h4 id='install-the-latest-package'>Install the latest package <a class='anchor' href='README.html#install-the-latest-package' title='Permalink'></a></h4><pre class="highlight plaintext"><code># Ubuntu:
+sudo dpkg -i gitlab_6.6.4-omnibus.xxx.deb
+
+# CentOS:
+sudo rpm -Uvh gitlab-6.6.4_xxx.rpm
+</code></pre><h4 id='reconfigure-gitlab-includes-database-migrations'>Reconfigure GitLab (includes database migrations) <a class='anchor' href='README.html#reconfigure-gitlab-includes-database-migrations' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-ctl reconfigure
+</code></pre><h4 id='start-unicorn-and-sidekiq'>Start unicorn and sidekiq <a class='anchor' href='README.html#start-unicorn-and-sidekiq' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-ctl start
+</code></pre>
+<p>Done!</p>
+<h2 id='reverting-to-gitlab-6-6-x-or-later'>Reverting to GitLab 6.6.x or later <a class='anchor' href='README.html#reverting-to-gitlab-6-6-x-or-later' title='Permalink'></a></h2>
+<p>This section contains general information on how to revert to an earlier version of a package.</p>
+
+<p><em>NOTE</em> This guide assumes that you have a backup archive created under the version you are reverting to.</p>
+
+<p>These steps consist of:</p>
+
+<ul>
+<li>Download the package of a target version.(example below uses GitLab 6.x.x)</li>
+<li>Stop GitLab</li>
+<li>Install the old package</li>
+<li>Reconfigure GitLab</li>
+<li>Restoring the backup</li>
+<li>Starting GitLab</li>
+</ul>
+
+<p>See example below:</p>
+
+<p>First download a GitLab 6.x.x <a href="https://www.gitlab.com/downloads/archives/">CE</a> or
+<a href="https://gitlab.com/subscribers/gitlab-ee/blob/master/doc/install/packages.md">EE (subscribers only)</a>
+package.</p>
+<h4 id='stop-gitlab'>Stop GitLab <a class='anchor' href='README.html#stop-gitlab' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+</code></pre><h4 id='downgrade-gitlab-to-6-x'>Downgrade GitLab to 6.x <a class='anchor' href='README.html#downgrade-gitlab-to-6-x' title='Permalink'></a></h4><pre class="highlight plaintext"><code># Ubuntu
+sudo dpkg -r gitlab
+sudo dpkg -i gitlab-6.x.x-yyy.deb
+
+# CentOS:
+sudo rpm -e gitlab
+sudo rpm -ivh gitlab-6.x.x-yyy.rpm
+</code></pre><h4 id='prepare-gitlab-for-receiving-the-backup-restore'>Prepare GitLab for receiving the backup restore <a class='anchor' href='README.html#prepare-gitlab-for-receiving-the-backup-restore' title='Permalink'></a></h4>
+<p>Due to a backup restore bug in versions earlier than GitLab 6.8.0, it is needed to drop the database
+<em>before</em> running <code>gitlab-ctl reconfigure</code>, only if you are downgrading to 6.7.x or less.</p>
+<pre class="highlight plaintext"><code>sudo -u gitlab-psql /opt/gitlab/embedded/bin/dropdb gitlabhq_production
+</code></pre><h4 id='reconfigure-gitlab-includes-database-migrations'>Reconfigure GitLab (includes database migrations) <a class='anchor' href='README.html#reconfigure-gitlab-includes-database-migrations' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-ctl reconfigure
+</code></pre><h4 id='restore-your-backup'>Restore your backup <a class='anchor' href='README.html#restore-your-backup' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:backup:restore BACKUP=12345 # where 12345 is your backup timestamp
+</code></pre><h4 id='start-gitlab'>Start GitLab <a class='anchor' href='README.html#start-gitlab' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo gitlab-ctl start
+</code></pre><h2 id='upgrading-from-a-non-omnibus-installation-to-an-omnibus-installation'>Upgrading from a non-Omnibus installation to an Omnibus installation <a class='anchor' href='README.html#upgrading-from-a-non-omnibus-installation-to-an-omnibus-installation' title='Permalink'></a></h2>
+<p>Upgrading from non-Omnibus installations has not been tested by GitLab.com.</p>
+
+<p>Please be advised that you lose your settings in files such as gitlab.yml, unicorn.rb and smtp_settings.rb.
+You will have to <a href="https://doc.gitlab.cc/README.html#configuration">configure those settings in /etc/gitlab/gitlab.rb</a>.</p>
+<h3 id='upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-using-a-backup'>Upgrading from non-Omnibus PostgreSQL to an Omnibus installation using a backup <a class='anchor' href='README.html#upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-using-a-backup' title='Permalink'></a></h3>
+<p>Upgrade by <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md#create-a-backup-of-the-gitlab-system">creating a backup from the non-Omnibus install</a> and <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md#omnibus-installations">restoring this in the Omnibus installation</a>.
+Please ensure you are using exactly equal versions of GitLab (for example 6.7.3) when you do this.
+You might have to upgrade your non-Omnibus installation before creating the backup to achieve this.</p>
+
+<p>After upgrading make sure that you run the check task: <code>sudo gitlab-rake gitlab:check</code>.</p>
+
+<p>If you receive an error similar to <code>No such file or directory @ realpath_rec - /home/git</code> run this one liner to fix the git hooks path:</p>
+<pre class="highlight shell"><code>find . -lname /home/git/gitlab-shell/hooks -exec sh -c <span class="s1">'ln -snf /opt/gitlab/embedded/service/gitlab-shell/hooks $0'</span> <span class="o">{}</span> <span class="se">\;</span>
+</code></pre>
+<p>This assumes that <code>gitlab-shell</code> is located in <code>/home/git</code></p>
+<h3 id='upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-in-place'>Upgrading from non-Omnibus PostgreSQL to an Omnibus installation in-place <a class='anchor' href='README.html#upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-in-place' title='Permalink'></a></h3>
+<p>It is also possible to upgrade a source GitLab installation to omnibus-gitlab
+in-place.  Below we assume you are using PostgreSQL on Ubuntu, and that you
+have an omnibus-gitlab package matching your current GitLab version.  We also
+assume that your source installation of GitLab uses all the default paths and
+users.</p>
+
+<p>First, stop and disable GitLab, Redis and Nginx.</p>
+<pre class="highlight plaintext"><code># Ubuntu
+sudo service gitlab stop
+sudo update-rc.d gitlab disable
+
+sudo service nginx stop
+sudo update-rc.d nginx disable
+
+sudo service redis-server stop
+sudo update-rc.d redis-server disable
+</code></pre>
+<p>If you are using a configuration management system to manage GitLab on your
+server, remember to also disable GitLab and its related services there. Also
+note that in the following steps, the existing home directory of the git user
+(<code>/home/git</code>) will be changed to <code>/var/opt/gitlab</code>.</p>
+
+<p>Next, create a <code>gitlab.rb</code> file for your new setup.</p>
+<pre class="highlight plaintext"><code>sudo mkdir /etc/gitlab
+sudo tee -a /etc/gitlab/gitlab.rb &lt;&lt;'EOF'
+# Use your own GitLab URL here
+external_url 'http://gitlab.example.com'
+
+# We assume your repositories are in /home/git/repositories (default for source installs)
+git_data_dirs({ 'default' =&gt; '/home/git' })
+
+# Re-use the Postgres that is already running on your system
+postgresql['enable'] = false
+# This db_host setting is for Debian Postgres packages
+gitlab_rails['db_host'] = '/var/run/postgresql/'
+gitlab_rails['db_port'] = 5432
+# We assume you called the GitLab DB user 'git'
+gitlab_rails['db_username'] = 'git'
+EOF
+</code></pre>
+<p>Now install the omnibus-gitlab package and run <code>sudo gitlab-ctl reconfigure</code>.</p>
+
+<p>You are not done yet! The <code>gitlab-ctl reconfigure</code> run has changed the home
+directory of the git user, so OpenSSH can no longer find its authorized_keys
+file. Rebuild the keys file with the following command:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:shell:setup
+</code></pre>
+<p>You should now have HTTP and SSH access to your GitLab server with the
+repositories and users that were there before.</p>
+
+<p>If you can log into the GitLab web interface, the next step is to reboot your
+server to make sure none of the old services interferes with omnibus-gitlab.</p>
+
+<p>If you are using special features such as LDAP you will have to put your
+settings in gitlab.rb; see the <a href="https://doc.gitlab.cc/README.html#configuration">omnibus-gitlab
+README</a>.</p>
+<h3 id='upgrading-from-non-omnibus-mysql-to-an-omnibus-installation-version-6-8'>Upgrading from non-Omnibus MySQL to an Omnibus installation (version 6.8+) <a class='anchor' href='README.html#upgrading-from-non-omnibus-mysql-to-an-omnibus-installation-version-6-8' title='Permalink'></a></h3>
+<p>Unlike the previous chapter, the non-Omnibus installation is using MySQL while the Omnibus installation is using PostgreSQL.</p>
+
+<p>Option #1: Omnibus packages for EE can be configured to use an external <a href="https://doc.gitlab.cc/README.html#using-a-mysql-database-management-server-enterprise-edition-only">non-packaged MySQL database</a>.</p>
+
+<p>Option #2: Convert to PostgreSQL and use the built-in server as the instructions below.</p>
+
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md#create-a-backup-of-the-gitlab-system">Create a backup of the non-Omnibus MySQL installation</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/update/mysql_to_postgresql.md#converting-a-gitlab-backup-file-from-mysql-to-postgres">Export and convert the existing MySQL database in the GitLab backup file</a></li>
+<li><a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/98b1bfb0d70082953d63abbc329cd6f2c628d3bc/README.md#restoring-an-application-backup">Restore this in the Omnibus installation</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/update/mysql_to_postgresql.md#for-omnibus-gitlab-installations">Rebuild database indexes</a></li>
+<li>Enjoy!</li>
+</ul>
+<h2 id='rpm-39-package-is-already-installed-39-error'>RPM &#39;package is already installed&#39; error <a class='anchor' href='README.html#rpm-39-package-is-already-installed-39-error' title='Permalink'></a></h2>
+<p>If you are using RPM and you are upgrading from GitLab Community Edition to GitLab Enterprise Edition you may get an error like this:</p>
+<pre class="highlight plaintext"><code>package gitlab-7.5.2_omnibus.5.2.1.ci-1.el7.x86_64 (which is newer than gitlab-7.5.2_ee.omnibus.5.2.1.ci-1.el7.x86_64) is already installed
+</code></pre>
+<p>You can override this version check with the <code>--oldpackage</code> option:</p>
+<pre class="highlight plaintext"><code>rpm -Uvh --oldpackage gitlab-7.5.2_ee.omnibus.5.2.1.ci-1.el7.x86_64.rpm
+</code></pre><h2 id='updating-gitlab-ci-via-omnibus-gitlab'>Updating GitLab CI via omnibus-gitlab <a class='anchor' href='README.html#updating-gitlab-ci-via-omnibus-gitlab' title='Permalink'></a></h2><h3 id='updating-from-gitlab-ci-version-prior-to-5-4-0-to-version-7-14'>Updating from GitLab CI version prior to 5.4.0 to version 7.14 <a class='anchor' href='README.html#updating-from-gitlab-ci-version-prior-to-5-4-0-to-version-7-14' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Warning:</strong>
+Omnibus GitLab 7.14 was the last version where CI was bundled in the package.
+Starting from GitLab 8.0, CI was merged into GitLab, thus it&#39;s no longer a
+separate application included in the Omnibus package.</p>
+</blockquote>
+
+<p>In GitLab CI 5.4.0 we changed the way GitLab CI authorizes with GitLab.</p>
+
+<p>In order to use GitLab CI 5.4.x, GitLab 7.7.x is required.</p>
+
+<p>Make sure that GitLab 7.7.x is installed and running and then go to Admin section of GitLab.
+Under Applications create a new a application which will generate the <code>app_id</code> and <code>app_secret</code>.</p>
+
+<p>In <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight plaintext"><code>gitlab_ci['gitlab_server'] = { "url" =&gt; 'http://gitlab.example.com', "app_id" =&gt; '12345678', "app_secret" =&gt; 'QWERTY12345' }
+
+</code></pre>
+<p>where <code>url</code> is the url to the GitLab instance.</p>
+
+<p>Make sure to run <code>sudo gitlab-ctl reconfigure</code> after saving the configuration.</p>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='README.html#troubleshooting' title='Permalink'></a></h2>
+<p>Use the following commands to check the status of GitLab services and configuration files.</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ctl status
+sudo gitlab-rake gitlab:check SANITIZE=true
+</code></pre>
+<ul>
+<li>Information on using <code>gitlab-ctl</code> to perform maintenance tasks - <a href="../maintenance/README.html">maintenance/README.md.</a></li>
+<li>Information on using <code>gitlab-rake</code> to check the configuration - <a href="https://docs.gitlab.com/ee/administration/raketasks/maintenance.html#check-gitlab-configuration">Maintenance - Rake tasks</a>.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/update/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

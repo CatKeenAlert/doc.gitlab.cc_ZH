@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Migration Style Guide - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Migration Style Guide</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="migration_style_guide.html#migration-style-guide">Migration Style Guide</a>
+<ul>
+<li>
+<a href="migration_style_guide.html#downtime-tagging">Downtime Tagging</a>
+</li>
+<li>
+<a href="migration_style_guide.html#reversibility">Reversibility</a>
+</li>
+<li>
+<a href="migration_style_guide.html#removing-indices">Removing indices</a>
+</li>
+<li>
+<a href="migration_style_guide.html#adding-indices">Adding indices</a>
+</li>
+<li>
+<a href="migration_style_guide.html#adding-columns-with-default-values">Adding Columns With Default Values</a>
+</li>
+<li>
+<a href="migration_style_guide.html#integer-column-type">Integer column type</a>
+</li>
+<li>
+<a href="migration_style_guide.html#testing">Testing</a>
+</li>
+<li>
+<a href="migration_style_guide.html#data-migration">Data migration</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='migration-style-guide'>Migration Style Guide <a class='anchor' href='migration_style_guide.html#migration-style-guide' title='Permalink'></a></h1>
+<p>When writing migrations for GitLab, you have to take into account that
+these will be ran by hundreds of thousands of organizations of all sizes, some with
+many years of data in their database.</p>
+
+<p>In addition, having to take a server offline for a an upgrade small or big is
+a big burden for most organizations. For this reason it is important that your
+migrations are written carefully, can be applied online and adhere to the style guide below.</p>
+
+<p>Migrations should not require GitLab installations to be taken offline unless
+<em>absolutely</em> necessary - see the <a href="what_requires_downtime.html">&quot;What Requires Downtime?&quot;</a>
+page. If a migration requires downtime, this should be clearly mentioned during
+the review process, as well as being documented in the monthly release post. For
+more information, see the &quot;Downtime Tagging&quot; section below.</p>
+
+<p>When writing your migrations, also consider that databases might have stale data
+or inconsistencies and guard for that. Try to make as little assumptions as possible
+about the state of the database.</p>
+
+<p>Please don&#39;t depend on GitLab specific code since it can change in future versions.
+If needed copy-paste GitLab code into the migration to make it forward compatible.</p>
+<h2 id='downtime-tagging'>Downtime Tagging <a class='anchor' href='migration_style_guide.html#downtime-tagging' title='Permalink'></a></h2>
+<p>Every migration must specify if it requires downtime or not, and if it should
+require downtime it must also specify a reason for this. To do so, add the
+following two constants to the migration class&#39; body:</p>
+
+<ul>
+<li><code>DOWNTIME</code>: a boolean that when set to <code>true</code> indicates the migration requires
+downtime.</li>
+<li><code>DOWNTIME_REASON</code>: a String containing the reason for the migration requiring
+downtime. This constant <strong>must</strong> be set when <code>DOWNTIME</code> is set to <code>true</code>.</li>
+</ul>
+
+<p>For example:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyMigration</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="no">DOWNTIME</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="no">DOWNTIME_REASON</span> <span class="o">=</span> <span class="s1">'This migration requires downtime because ...'</span>
+
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="p">.</span><span class="nf">.</span><span class="p">.</span>
+  <span class="nf">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>It is an error (that is, CI will fail) if the <code>DOWNTIME</code> constant is missing
+from a migration class.</p>
+<h2 id='reversibility'>Reversibility <a class='anchor' href='migration_style_guide.html#reversibility' title='Permalink'></a></h2>
+<p>Your migration should be reversible. This is very important, as it should
+be possible to downgrade in case of a vulnerability or bugs.</p>
+
+<p>In your migration, add a comment describing how the reversibility of the
+migration was tested.</p>
+<h2 id='removing-indices'>Removing indices <a class='anchor' href='migration_style_guide.html#removing-indices' title='Permalink'></a></h2>
+<p>If you need to remove index, please add a condition like in following example:</p>
+<pre class="highlight ruby"><code><span class="n">remove_index</span> <span class="ss">:namespaces</span><span class="p">,</span> <span class="ss">column: :name</span> <span class="k">if</span> <span class="n">index_exists?</span><span class="p">(</span><span class="ss">:namespaces</span><span class="p">,</span> <span class="ss">:name</span><span class="p">)</span>
+</code></pre><h2 id='adding-indices'>Adding indices <a class='anchor' href='migration_style_guide.html#adding-indices' title='Permalink'></a></h2>
+<p>If you need to add an unique index please keep in mind there is possibility of existing duplicates. If it is possible write a separate migration for handling this situation. It can be just removing or removing with overwriting all references to these duplicates depend on situation.</p>
+
+<p>When adding an index make sure to use the method <code>add_concurrent_index</code> instead
+of the regular <code>add_index</code> method. The <code>add_concurrent_index</code> method
+automatically creates concurrent indexes when using PostgreSQL, removing the
+need for downtime. To use this method you must disable transactions by calling
+the method <code>disable_ddl_transaction!</code> in the body of your migration class like
+so:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyMigration</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="kp">include</span> <span class="no">Gitlab</span><span class="o">::</span><span class="no">Database</span><span class="o">::</span><span class="no">MigrationHelpers</span>
+  <span class="n">disable_ddl_transaction!</span>
+
+  <span class="k">def</span> <span class="nf">change</span>
+
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre><h2 id='adding-columns-with-default-values'>Adding Columns With Default Values <a class='anchor' href='migration_style_guide.html#adding-columns-with-default-values' title='Permalink'></a></h2>
+<p>When adding columns with default values you should use the method
+<code>add_column_with_default</code>. This method ensures the table is updated without
+requiring downtime. This method is not reversible so you must manually define
+the <code>up</code> and <code>down</code> methods in your migration class.</p>
+
+<p>For example, to add the column <code>foo</code> to the <code>projects</code> table with a default
+value of <code>10</code> you&#39;d write the following:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyMigration</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="kp">include</span> <span class="no">Gitlab</span><span class="o">::</span><span class="no">Database</span><span class="o">::</span><span class="no">MigrationHelpers</span>
+  <span class="n">disable_ddl_transaction!</span>
+
+  <span class="k">def</span> <span class="nf">up</span>
+    <span class="n">add_column_with_default</span><span class="p">(</span><span class="ss">:projects</span><span class="p">,</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">:integer</span><span class="p">,</span> <span class="ss">default: </span><span class="mi">10</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">down</span>
+    <span class="n">remove_column</span><span class="p">(</span><span class="ss">:projects</span><span class="p">,</span> <span class="ss">:foo</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre><h2 id='integer-column-type'>Integer column type <a class='anchor' href='migration_style_guide.html#integer-column-type' title='Permalink'></a></h2>
+<p>By default, an integer column can hold up to a 4-byte (32-bit) number. That is
+a max value of 2,147,483,647. Be aware of this when creating a column that will
+hold file sizes in byte units. If you are tracking file size in bytes this
+restricts the maximum file size to just over 2GB.</p>
+
+<p>To allow an integer column to hold up to an 8-byte (64-bit) number, explicitly
+set the limit to 8-bytes. This will allow the column to hold a value up to
+9,223,372,036,854,775,807.</p>
+
+<p>Rails migration example:</p>
+<pre class="highlight ruby"><code><span class="n">add_column_with_default</span><span class="p">(</span><span class="ss">:projects</span><span class="p">,</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">:integer</span><span class="p">,</span> <span class="ss">default: </span><span class="mi">10</span><span class="p">,</span> <span class="ss">limit: </span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># or</span>
+
+<span class="n">add_column</span><span class="p">(</span><span class="ss">:projects</span><span class="p">,</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">:integer</span><span class="p">,</span> <span class="ss">default: </span><span class="mi">10</span><span class="p">,</span> <span class="ss">limit: </span><span class="mi">8</span><span class="p">)</span>
+</code></pre><h2 id='testing'>Testing <a class='anchor' href='migration_style_guide.html#testing' title='Permalink'></a></h2>
+<p>Make sure that your migration works with MySQL and PostgreSQL with data. An empty database does not guarantee that your migration is correct.</p>
+
+<p>Make sure your migration can be reversed.</p>
+<h2 id='data-migration'>Data migration <a class='anchor' href='migration_style_guide.html#data-migration' title='Permalink'></a></h2>
+<p>Please prefer Arel and plain SQL over usual ActiveRecord syntax. In case of using plain SQL you need to quote all input manually with <code>quote_string</code> helper.</p>
+
+<p>Example with Arel:</p>
+<pre class="highlight ruby"><code><span class="n">users</span> <span class="o">=</span> <span class="no">Arel</span><span class="o">::</span><span class="no">Table</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span>
+<span class="n">users</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="n">users</span><span class="p">[</span><span class="ss">:user_id</span><span class="p">]).</span><span class="nf">having</span><span class="p">(</span><span class="n">users</span><span class="p">[</span><span class="ss">:id</span><span class="p">].</span><span class="nf">count</span><span class="p">.</span><span class="nf">gt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="c1">#update other tables with these results</span>
+</code></pre>
+<p>Example with plain SQL and <code>quote_string</code> helper:</p>
+<pre class="highlight ruby"><code><span class="n">select_all</span><span class="p">(</span><span class="s2">"SELECT name, COUNT(id) as cnt FROM tags GROUP BY name HAVING COUNT(id) &gt; 1"</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tag</span><span class="o">|</span>
+  <span class="n">tag_name</span> <span class="o">=</span> <span class="n">quote_string</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
+  <span class="n">duplicate_ids</span> <span class="o">=</span> <span class="n">select_all</span><span class="p">(</span><span class="s2">"SELECT id FROM tags WHERE name = '</span><span class="si">#{</span><span class="n">tag_name</span><span class="si">}</span><span class="s2">'"</span><span class="p">).</span><span class="nf">map</span><span class="p">{</span><span class="o">|</span><span class="n">tag</span><span class="o">|</span> <span class="n">tag</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]}</span>
+  <span class="n">origin_tag_id</span> <span class="o">=</span> <span class="n">duplicate_ids</span><span class="p">.</span><span class="nf">first</span>
+  <span class="n">duplicate_ids</span><span class="p">.</span><span class="nf">delete</span> <span class="n">origin_tag_id</span>
+
+  <span class="n">execute</span><span class="p">(</span><span class="s2">"UPDATE taggings SET tag_id = </span><span class="si">#{</span><span class="n">origin_tag_id</span><span class="si">}</span><span class="s2"> WHERE tag_id IN(</span><span class="si">#{</span><span class="n">duplicate_ids</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+  <span class="n">execute</span><span class="p">(</span><span class="s2">"DELETE FROM tags WHERE id IN(</span><span class="si">#{</span><span class="n">duplicate_ids</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/migration_style_guide.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

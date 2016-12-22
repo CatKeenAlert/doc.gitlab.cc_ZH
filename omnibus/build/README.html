@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Preparing a build environment - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+          
+          <li class="breadcrumb">Preparing a build environment</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#preparing-a-build-environment">Preparing a build environment</a>
+<ul>
+<li>
+<a href="README.html#usage">Usage</a>
+<ul>
+<li>
+<a href="README.html#build">Build</a>
+</li>
+<li>
+<a href="README.html#clean">Clean</a>
+</li>
+<li>
+<a href="README.html#help">Help</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#build-docker-image">Build Docker image</a>
+<ul>
+<li>
+<a href="README.html#publish-docker-image">Publish Docker image</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#building-a-package-from-a-custom-branch">Building a package from a custom branch</a>
+<ul>
+<li>
+<a href="README.html#note-for-gitlab-inc-developers">Note for GitLab Inc. developers</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='preparing-a-build-environment'>Preparing a build environment <a class='anchor' href='README.html#preparing-a-build-environment' title='Permalink'></a></h1>
+<p>See
+<a href="https://gitlab.com/gitlab-org/gitlab-omnibus-builder/blob/master/README.md#recipe-default">https://gitlab.com/gitlab-org/gitlab-omnibus-builder/blob/master/README.md#recipe-default</a>
+for instructions on how to prepare a build box using Chef. After running the
+cookbook you can perform builds as the <code>gitlab_ci_multi_runner</code> user.</p>
+<pre class="highlight shell"><code><span class="c"># Ubuntu/Debian only: ensure you have proper locale available</span>
+sudo locale-gen en_US.UTF-8
+
+<span class="c"># Login as build user</span>
+sudo su - gitlab_ci_multi_runner
+
+<span class="c"># Set git author</span>
+git config --global user.email <span class="s2">"email@example.com"</span>
+git config --global user.name <span class="s2">"Example name"</span>
+
+<span class="c"># Ensure you have proper locale in the environment</span>
+<span class="nb">export </span><span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+
+<span class="c"># Clone the omnibus repo</span>
+git clone https://gitlab.com/gitlab-org/omnibus-gitlab.git
+
+<span class="c"># Install gem dependencies for omnibus-ruby</span>
+<span class="nb">cd </span>omnibus-gitlab
+bundle install --path .bundle --binstubs
+
+<span class="c"># Do a build</span>
+bin/omnibus build gitlab
+</code></pre><h2 id='usage'>Usage <a class='anchor' href='README.html#usage' title='Permalink'></a></h2>
+<p><em>Important note</em> omnibus-gitlab project is used to build official GitLab
+packages. These packages are also used to deploy GitLab.com.</p>
+
+<p>The build tools are optimised for internal GitLab Inc infrastructure.
+For example, omnibus-gitlab project will pull GitLab and dependent projects
+code from internal dev.gitlab.org server. The internal server hosts the same
+copy of the source code available elsewhere. Alternative source location is
+necessary in case of an unforeseen circumstances.</p>
+
+<p>All repositories used for building the packages that are not publicly reachable,
+have their remotes listed in  <code>.custom_sources.yml</code> file in the root of this
+project.</p>
+
+<p>If you are using these tools to build your own packages, you will have to
+adjust them to your needs.</p>
+
+<p>At the time of writing, an example of a fully public config for <code>.custom_sources.yml</code>
+would look like this:</p>
+<pre class="highlight plaintext"><code>gitlab-rails:
+  remote: "https://gitlab.com/gitlab-org/gitlab-ce.git"
+gitlab-rails-ee:
+  remote: "https://gitlab.com/gitlab-org/gitlab-ee.git"
+gitlab-shell:
+  remote: "https://gitlab.com/gitlab-org/gitlab-shell.git"
+gitlab-workhorse:
+  remote: "https://gitlab.com/gitlab-org/gitlab-workhorse.git"
+gitlab-pages:
+  remote: "https://gitlab.com/gitlab-org/gitlab-pages"
+config_guess:
+  remote: "git://git.savannah.gnu.org/config.git"
+omnibus:
+  remote: "https://gitlab.com/gitlab-org/omnibus.git"
+</code></pre><h3 id='build'>Build <a class='anchor' href='README.html#build' title='Permalink'></a></h3>
+<p>You create a platform-specific package using the <code>build</code> command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>bin/omnibus build gitlab
+</code></pre>
+<p>The platform/architecture type of the package created will match the platform
+where the <code>build project</code> command is invoked. So running this command on say a
+MacBook Pro will generate a Mac OS X specific package. After the build
+completes packages will be available in <code>pkg/</code>.</p>
+<h3 id='clean'>Clean <a class='anchor' href='README.html#clean' title='Permalink'></a></h3>
+<p>You can clean up all temporary files generated during the build process with
+the <code>clean</code> command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>bin/omnibus clean
+</code></pre>
+<p>Adding the <code>--purge</code> purge option removes <strong>ALL</strong> files generated during the
+build including the project install directory (<code>/opt/gitlab</code>) and
+the package cache directory (<code>/var/cache/omnibus/pkg</code>):</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>bin/omnibus clean --purge
+</code></pre><h3 id='help'>Help <a class='anchor' href='README.html#help' title='Permalink'></a></h3>
+<p>Full help for the Omnibus command line interface can be accessed with the
+<code>help</code> command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>bin/omnibus <span class="nb">help</span>
+</code></pre><h2 id='build-docker-image'>Build Docker image <a class='anchor' href='README.html#build-docker-image' title='Permalink'></a></h2><pre class="highlight shell"><code><span class="c"># Build with stable packagecloud packages</span>
+<span class="c"># This will build gitlab-ee (8.0.2-ee.1) using STABLE repo and tag it as gitlab-ee:latest</span>
+make docker_build <span class="nv">RELEASE_VERSION</span><span class="o">=</span>8.0.2-ee.1 <span class="nv">PACKAGECLOUD_REPO</span><span class="o">=</span>gitlab-ee <span class="nv">RELEASE_PACKAGE</span><span class="o">=</span>gitlab-ee
+
+<span class="c"># Build with unstable packagecloud packages</span>
+<span class="c"># This will build gitlab-ce (8.0.2-ce.1) using UNSTABLE repo and tag it as gitlab-ce:latest</span>
+make docker_build <span class="nv">RELEASE_VERSION</span><span class="o">=</span>8.0.2-ce.1 <span class="nv">PACKAGECLOUD_REPO</span><span class="o">=</span>unstable <span class="nv">RELEASE_PACKAGE</span><span class="o">=</span>gitlab-ce
+</code></pre><h3 id='publish-docker-image'>Publish Docker image <a class='anchor' href='README.html#publish-docker-image' title='Permalink'></a></h3><pre class="highlight shell"><code><span class="c"># This will push gitlab-ee:latest as gitlab/gitlab-ee:8.0.2-ee.1</span>
+make docker_push <span class="nv">RELEASE_PACKAGE</span><span class="o">=</span>gitlab-ee <span class="nv">RELEASE_VERSION</span><span class="o">=</span>8.0.2-ee.1
+
+<span class="c"># This will push gitlab-ce:latest as gitlab/gitlab-ce:8.0.2-ce.1</span>
+make docker_push <span class="nv">RELEASE_PACKAGE</span><span class="o">=</span>gitlab-ce <span class="nv">RELEASE_VERSION</span><span class="o">=</span>8.0.2-ce.1
+
+<span class="c"># This will push gitlab-ce:latest as gitlab/gitlab-ce:latest</span>
+make docker_push_latest <span class="nv">RELEASE_PACKAGE</span><span class="o">=</span>gitlab-ce
+</code></pre><h2 id='building-a-package-from-a-custom-branch'>Building a package from a custom branch <a class='anchor' href='README.html#building-a-package-from-a-custom-branch' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note</strong> For a description on how the official omnibus-gitlab package is built,
+see the <a href="https://doc.gitlab.cc/omnibus/build/doc/release/README.html">release process</a> document.</p>
+</blockquote>
+
+<p>If you are working on implementing a feature in one of the GitLab components,
+you might need to build a package from your custom branch in order to test the
+feature using the omnibus-gitlab package.</p>
+
+<p>For example, you&#39;ve implemented something inside of GitLab Rails application and
+the code is located in the branch named <code>my-feature</code>.</p>
+
+<p>To use the custom branch for building an omnibus-gitlab package, you will need
+to prepend the branch name with <code>buildfrombranch:</code> and place it in the
+related <code>VERSION</code> file.</p>
+
+<p>For our previous example, to build a package that will use <code>my-feature</code> branch
+for GitLab Rails project, the <code>VERSION</code> file inside of the omnibus-gitlab
+repository should contain <code>buildfrombranch:my-feature</code>.</p>
+
+<p>Similarly, you can do the same for <code>GITLAB_WORKHORSE_VERSION</code> and so on.</p>
+<h3 id='note-for-gitlab-inc-developers'>Note for GitLab Inc. developers <a class='anchor' href='README.html#note-for-gitlab-inc-developers' title='Permalink'></a></h3>
+<p>If you are a member of the GitLab Inc. team, you will have access to the build
+infrastructure (or to the colleagues that have access to the infrastructure).</p>
+
+<p>You can easily build custom packages leveraging the build infrastructure to test
+your code.</p>
+
+<p>Before you start,
+<strong>you need push access to the omnibus-gitlab repository.</strong></p>
+
+<p>If you have (someone with) access, you need to:</p>
+
+<ol>
+<li>Make sure that your custom branch is synced to <code>dev.gitlab.org</code> project
+mirror. For example, if you are working on <code>gitlab-shell</code>, make sure that your
+custom branch is pushed to the <code>gitlab-shell</code> repository on <code>dev.gitlab.org</code></li>
+<li>Create a branch in the omnibus-gitlab repository</li>
+<li>In this branch, open the related version file of the component and specify
+the name of your branch prepended with the <code>buildfrombranch:</code> keyword.
+For example, if you are working on <code>gitlab-shell</code> open <code>GITLAB_SHELL_VERSION</code>
+and write <code>buildfrombranch:my-feature</code></li>
+<li>Commit and push the omnibus-gitlab branch to <code>dev.gitlab.org</code></li>
+</ol>
+
+<p>This will trigger a build of the custom package, and if the build is
+successful, you will see a link at the bottom of the build trace with which you
+will be able to download the custom package.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/build/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

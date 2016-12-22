@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Install GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Current page</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="osx.html#install-on-osx">Install on OSX</a>
+</li>
+<li>
+<a href="osx.html#update">Update</a>
+</li>
+<li>
+<a href="osx.html#limitations-on-osx">Limitations on OSX</a>
+</li>
+<li>
+<a href="osx.html#upgrade-the-service-file">Upgrade the service file</a>
+</li>
+</ul>
+<h3 id='install-on-osx'>Install on OSX <a class='anchor' href='osx.html#install-on-osx' title='Permalink'></a></h3>
+<p>(In the future there will be a brew package).</p>
+
+<p>Download the binary for your system:</p>
+<pre class="highlight shell"><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
+</code></pre>
+<p>Give it permissions to execute:</p>
+<pre class="highlight shell"><code>sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+<p><strong>The rest of commands execute as the user who will run the runner.</strong></p>
+
+<p>Register the runner (Look into <a href="http://doc.gitlab.com/ce/ci/runners/README.html">runners documentation</a> to learn how to obtain a token):</p>
+<pre class="highlight shell"><code>gitlab-ci-multi-runner register
+
+Please enter the gitlab-ci coordinator URL <span class="o">(</span>e.g. https://gitlab.com <span class="o">)</span>
+https://gitlab.com
+Please enter the gitlab-ci token <span class="k">for </span>this runner
+xxx
+Please enter the gitlab-ci description <span class="k">for </span>this runner
+my-runner
+INFO[0034] fcf5c619 Registering runner... succeeded
+Please enter the executor: shell, docker, docker-ssh, ssh?
+docker
+Please enter the Docker image <span class="o">(</span>eg. ruby:2.1<span class="o">)</span>:
+ruby:2.1
+INFO[0037] Runner registered successfully. Feel free to start it, but <span class="k">if </span>it<span class="s1">'s
+running already the config should be automatically reloaded!
+</span></code></pre>
+<p>Install runner as service and start it:</p>
+<pre class="highlight shell"><code><span class="nb">cd</span> ~
+gitlab-ci-multi-runner install
+gitlab-ci-multi-runner start
+</code></pre>
+<p>Voila! Runner is installed and will be run after system reboot.</p>
+<h3 id='update'>Update <a class='anchor' href='osx.html#update' title='Permalink'></a></h3>
+<p>Stop the service:</p>
+<pre class="highlight shell"><code>gitlab-ci-multi-runner stop
+</code></pre>
+<p>Download binary to replace runner&#39;s executable:</p>
+<pre class="highlight shell"><code>curl -o /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
+</code></pre>
+<p>Give it permissions to execute:</p>
+<pre class="highlight shell"><code>chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+<p>Start the service:</p>
+<pre class="highlight shell"><code>gitlab-ci-multi-runner start
+</code></pre>
+<p>Make sure that you read the <a href="../faq/README.html">FAQ</a> section which describes
+some of the most common problems with GitLab Runner.</p>
+<h3 id='limitations-on-osx'>Limitations on OSX <a class='anchor' href='osx.html#limitations-on-osx' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+The service needs to be installed from the Terminal by running its GUI
+interface as your current user. Only then will you be able to manage the service.</p>
+</blockquote>
+
+<p>Currently, the only proven to work mode for OSX is running service in user-mode.</p>
+
+<p>Since the service will be running only when the user is logged in, you should
+enable auto-logging on your OSX machine.</p>
+
+<p>The service will be launched as one of <code>LaunchAgents</code>. By using <code>LaunchAgents</code>,
+the builds will be able to do UI interactions, making it possible to run and
+test on the iOS simulator.</p>
+
+<p>It&#39;s worth noting that OSX also has <code>LaunchDaemons</code>, the services running
+completely in background. <code>LaunchDaemons</code> are run on system startup, but they
+don&#39;t have the same access to UI interactions as <code>LaunchAgents</code>. You can try to
+run the Runner&#39;s service as <code>LaunchDaemon</code>, but this mode of operation is not
+currently supported.</p>
+
+<p>You can verify that the Runner created the service configuration file after
+executing the <code>install</code> command, by checking the
+<code>~user/Library/LaunchAgents/gitlab-runner.plist</code> file.</p>
+<h3 id='upgrade-the-service-file'>Upgrade the service file <a class='anchor' href='osx.html#upgrade-the-service-file' title='Permalink'></a></h3>
+<p>In order to upgrade the <code>LaunchAgent</code> configuration, you need to uninstall and
+install the service:</p>
+<pre class="highlight shell"><code>gitlab-ci-multi-runner uninstall
+gitlab-ci-multi-runner install
+gitlab-ci-multi-runner start
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/osx.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

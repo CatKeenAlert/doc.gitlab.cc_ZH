@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>InfluxDB Configuration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">InfluxDB Configuration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="influxdb_configuration.html#influxdb-configuration">InfluxDB Configuration</a>
+<ul>
+<li>
+<a href="influxdb_configuration.html#requirements">Requirements</a>
+</li>
+<li>
+<a href="influxdb_configuration.html#installation">Installation</a>
+</li>
+<li>
+<a href="influxdb_configuration.html#influxdb-server-settings">InfluxDB Server Settings</a>
+<ul>
+<li>
+<a href="influxdb_configuration.html#storage-engine">Storage Engine</a>
+</li>
+<li>
+<a href="influxdb_configuration.html#admin-panel">Admin Panel</a>
+</li>
+<li>
+<a href="influxdb_configuration.html#http">HTTP</a>
+</li>
+<li>
+<a href="influxdb_configuration.html#udp">UDP</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="influxdb_configuration.html#create-a-new-admin-user">Create a new admin user</a>
+</li>
+<li>
+<a href="influxdb_configuration.html#create-the-gitlab-database">Create the <code>gitlab</code> database</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='influxdb-configuration'>InfluxDB Configuration <a class='anchor' href='influxdb_configuration.html#influxdb-configuration' title='Permalink'></a></h1>
+<p>The default settings provided by <a href="https://influxdata.com/time-series-platform/influxdb/">InfluxDB</a> are not sufficient for a high traffic
+GitLab environment. The settings discussed in this document are based on the
+settings GitLab uses for GitLab.com, depending on your own needs you may need to
+further adjust them.</p>
+
+<p>If you are intending to run InfluxDB on the same server as GitLab, make sure
+you have plenty of RAM since InfluxDB can use quite a bit depending on traffic.</p>
+
+<p>Unless you are going with a budget setup, it&#39;s advised to run it separately.</p>
+<h2 id='requirements'>Requirements <a class='anchor' href='influxdb_configuration.html#requirements' title='Permalink'></a></h2>
+<ul>
+<li>InfluxDB 0.9.5 or newer</li>
+<li>A fairly modern version of Linux</li>
+<li>At least 4GB of RAM</li>
+<li>At least 10GB of storage for InfluxDB data</li>
+</ul>
+
+<p>Note that the RAM and storage requirements can differ greatly depending on the
+amount of data received/stored. To limit the amount of stored data users can
+look into <a href="https://docs.influxdata.com/influxdb/v0.9/query_language/database_management/#retention-policy-management">InfluxDB Retention Policies</a>.</p>
+<h2 id='installation'>Installation <a class='anchor' href='influxdb_configuration.html#installation' title='Permalink'></a></h2>
+<p>Installing InfluxDB is out of the scope of this document. Please refer to the
+<a href="https://docs.influxdata.com/influxdb/v0.9/">InfluxDB documentation</a>.</p>
+<h2 id='influxdb-server-settings'>InfluxDB Server Settings <a class='anchor' href='influxdb_configuration.html#influxdb-server-settings' title='Permalink'></a></h2>
+<p>Since InfluxDB has many settings that users may wish to customize themselves
+(e.g. what port to run InfluxDB on), we&#39;ll only cover the essentials.</p>
+
+<p>The configuration file in question is usually located at
+<code>/etc/influxdb/influxdb.conf</code>. Whenever you make a change in this file,
+InfluxDB needs to be restarted.</p>
+<h3 id='storage-engine'>Storage Engine <a class='anchor' href='influxdb_configuration.html#storage-engine' title='Permalink'></a></h3>
+<p>InfluxDB comes with different storage engines and as of InfluxDB 0.9.5 a new
+storage engine is available, called <a href="https://influxdata.com/blog/new-storage-engine-time-structured-merge-tree/">TSM Tree</a>. All users <strong>must</strong> use the new
+<code>tsm1</code> storage engine as this <a href="https://github.com/influxdata/influxdb/commit/15d723dc77651bac83e09e2b1c94be480966cb0d">will be the default engine</a> in
+upcoming InfluxDB releases.</p>
+
+<p>Make sure you have the following in your configuration file:</p>
+<pre class="highlight plaintext"><code>[data]
+  dir = "/var/lib/influxdb/data"
+  engine = "tsm1"
+</code></pre><h3 id='admin-panel'>Admin Panel <a class='anchor' href='influxdb_configuration.html#admin-panel' title='Permalink'></a></h3>
+<p>Production environments should have the InfluxDB admin panel <strong>disabled</strong>. This
+feature can be disabled by adding the following to your InfluxDB configuration
+file:</p>
+<pre class="highlight plaintext"><code>[admin]
+  enabled = false
+</code></pre><h3 id='http'>HTTP <a class='anchor' href='influxdb_configuration.html#http' title='Permalink'></a></h3>
+<p>HTTP is required when using the <a href="https://docs.influxdata.com/influxdb/v0.9/tools/shell/">InfluxDB CLI</a> or other tools such as Grafana,
+thus it should be enabled. When enabling make sure to <em>also</em> enable
+authentication:</p>
+<pre class="highlight plaintext"><code>[http]
+  enabled = true
+  auth-enabled = true
+</code></pre>
+<p><em><strong>Note:</strong> Before you enable authentication, you might want to <a href="influxdb_configuration.html#create-a-new-admin-user">create an
+admin user</a>.</em></p>
+<h3 id='udp'>UDP <a class='anchor' href='influxdb_configuration.html#udp' title='Permalink'></a></h3>
+<p>GitLab writes data to InfluxDB via UDP and thus this must be enabled. Enabling
+UDP can be done using the following settings:</p>
+<pre class="highlight plaintext"><code>[[udp]]
+  enabled = true
+  bind-address = ":8089"
+  database = "gitlab"
+  batch-size = 1000
+  batch-pending = 5
+  batch-timeout = "1s"
+  read-buffer = 209715200
+</code></pre>
+<p>This does the following:</p>
+
+<ol>
+<li>Enable UDP and bind it to port 8089 for all addresses.</li>
+<li>Store any data received in the &quot;gitlab&quot; database.</li>
+<li>Define a batch of points to be 1000 points in size and allow a maximum of
+5 batches <em>or</em> flush them automatically after 1 second.</li>
+<li>Define a UDP read buffer size of 200 MB.</li>
+</ol>
+
+<p>One of the most important settings here is the UDP read buffer size as if this
+value is set too low, packets will be dropped. You must also make sure the OS
+buffer size is set to the same value, the default value is almost never enough.</p>
+
+<p>To set the OS buffer size to 200 MB, on Linux you can run the following command:</p>
+<pre class="highlight shell"><code>sysctl -w net.core.rmem_max<span class="o">=</span>209715200
+</code></pre>
+<p>To make this permanent, add the following to <code>/etc/sysctl.conf</code> and restart the
+server:</p>
+<pre class="highlight shell"><code>net.core.rmem_max<span class="o">=</span>209715200
+</code></pre>
+<p>It is <strong>very important</strong> to make sure the buffer sizes are large enough to
+handle all data sent to InfluxDB as otherwise you <em>will</em> lose data. The above
+buffer sizes are based on the traffic for GitLab.com. Depending on the amount of
+traffic, users may be able to use a smaller buffer size, but we highly recommend
+using <em>at least</em> 100 MB.</p>
+
+<p>When enabling UDP, users should take care to not expose the port to the public,
+as doing so will allow anybody to write data into your InfluxDB database (as
+<a href="https://docs.influxdata.com/influxdb/v0.9/write_protocols/udp/">InfluxDB&#39;s UDP protocol</a> doesn&#39;t support authentication). We recommend either
+whitelisting the allowed IP addresses/ranges, or setting up a VLAN and only
+allowing traffic from members of said VLAN.</p>
+<h2 id='create-a-new-admin-user'>Create a new admin user <a class='anchor' href='influxdb_configuration.html#create-a-new-admin-user' title='Permalink'></a></h2>
+<p>If you want to <a href="influxdb_configuration.html#http">enable authentication</a>, you might want to <a href="https://docs.influxdata.com/influxdb/v0.9/administration/authentication_and_authorization/#create-a-new-admin-user">create an
+admin user</a>:</p>
+<pre class="highlight plaintext"><code>influx -execute "CREATE USER jeff WITH PASSWORD '1234' WITH ALL PRIVILEGES"
+</code></pre><h2 id='create-the-gitlab-database'>Create the <code>gitlab</code> database <a class='anchor' href='influxdb_configuration.html#create-the-gitlab-database' title='Permalink'></a></h2>
+<p>Once you get InfluxDB up and running, you need to create a database for GitLab.
+Make sure you have changed the <a href="influxdb_configuration.html#storage-engine">storage engine</a> to <code>tsm1</code>
+before creating a database.</p>
+
+<p><em><strong>Note:</strong> If you <a href="influxdb_configuration.html#create-a-new-admin-user">created an admin user</a> and enabled
+<a href="influxdb_configuration.html#http">HTTP authentication</a>, remember to append the username (<code>-username &lt;username&gt;</code>)
+and password (<code>-password &lt;password&gt;</code>)  you set earlier to the commands below.</em></p>
+
+<p>Run the following command to create a database named <code>gitlab</code>:</p>
+<pre class="highlight shell"><code>influx -execute <span class="s1">'CREATE DATABASE gitlab'</span>
+</code></pre>
+<p>The name <strong>must</strong> be <code>gitlab</code>, do not use any other name.</p>
+
+<p>Next, make sure that the database was successfully created:</p>
+<pre class="highlight shell"><code>influx -execute <span class="s1">'SHOW DATABASES'</span>
+</code></pre>
+<p>The output should be similar to:</p>
+<pre class="highlight plaintext"><code>name: databases
+---------------
+name
+_internal
+gitlab
+</code></pre>
+<p>That&#39;s it! Now your GitLab instance should send data to InfluxDB.</p>
+
+<hr>
+
+<p>Read more on:</p>
+
+<ul>
+<li><a href="introduction.html">Introduction to GitLab Performance Monitoring</a></li>
+<li><a href="gitlab_configuration.html">GitLab Configuration</a></li>
+<li><a href="influxdb_schema.html">InfluxDB Schema</a></li>
+<li><a href="grafana_configuration.html">Grafana Install/Configuration</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/monitoring/performance/influxdb_configuration.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

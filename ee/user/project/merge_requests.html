@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Merge Requests - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Merge Requests</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="merge_requests.html#merge-requests">Merge Requests</a>
+<ul>
+<li>
+<a href="merge_requests.html#authorization-for-merge-requests">Authorization for merge requests</a>
+</li>
+<li>
+<a href="merge_requests.html#cherry-pick-changes">Cherry-pick changes</a>
+</li>
+<li>
+<a href="merge_requests.html#merge-when-build-succeeds">Merge when build succeeds</a>
+</li>
+<li>
+<a href="merge_requests.html#resolve-discussion-comments-in-merge-requests-reviews">Resolve discussion comments in merge requests reviews</a>
+</li>
+<li>
+<a href="merge_requests.html#resolve-conflicts">Resolve conflicts</a>
+</li>
+<li>
+<a href="merge_requests.html#revert-changes">Revert changes</a>
+</li>
+<li>
+<a href="merge_requests.html#merge-requests-versions">Merge requests versions</a>
+</li>
+<li>
+<a href="merge_requests.html#work-in-progress-merge-requests">Work In Progress merge requests</a>
+</li>
+<li>
+<a href="merge_requests.html#merge-request-approvals">Merge request approvals</a>
+</li>
+<li>
+<a href="merge_requests.html#ignore-whitespace-changes-in-merge-request-diff-view">Ignore whitespace changes in Merge Request diff view</a>
+</li>
+<li>
+<a href="merge_requests.html#tips">Tips</a>
+<ul>
+<li>
+<a href="merge_requests.html#checkout-merge-requests-locally">Checkout merge requests locally</a>
+<ul>
+<li>
+<a href="merge_requests.html#checkout-locally-by-adding-a-git-alias">Checkout locally by adding a git alias</a>
+</li>
+<li>
+<a href="merge_requests.html#checkout-locally-by-modifying-git-config-for-a-given-repository">Checkout locally by modifying <code>.git/config</code> for a given repository</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='merge-requests'>Merge Requests <a class='anchor' href='merge_requests.html#merge-requests' title='Permalink'></a></h1>
+<p>Merge requests allow you to exchange changes you made to source code and
+collaborate with other people on the same project.</p>
+<h2 id='authorization-for-merge-requests'>Authorization for merge requests <a class='anchor' href='merge_requests.html#authorization-for-merge-requests' title='Permalink'></a></h2>
+<p>There are two main ways to have a merge request flow with GitLab:</p>
+
+<ol>
+<li>Working with <a href="protected_branches.html">protected branches</a> in a single repository</li>
+<li>Working with forks of an authoritative project</li>
+</ol>
+
+<p><a href="merge_requests/authorization_for_merge_requests.html">Learn more about the authorization for merge requests.</a></p>
+<h2 id='cherry-pick-changes'>Cherry-pick changes <a class='anchor' href='merge_requests.html#cherry-pick-changes' title='Permalink'></a></h2>
+<p>Cherry-pick any commit in the UI by simply clicking the <strong>Cherry-pick</strong> button
+in a merged merge requests or a commit.</p>
+
+<p><a href="merge_requests/cherry_pick_changes.html">Learn more about cherry-picking changes.</a></p>
+<h2 id='merge-when-build-succeeds'>Merge when build succeeds <a class='anchor' href='merge_requests.html#merge-when-build-succeeds' title='Permalink'></a></h2>
+<p>When reviewing a merge request that looks ready to merge but still has one or
+more CI builds running, you can set it to be merged automatically when all
+builds succeed. This way, you don&#39;t have to wait for the builds to finish and
+remember to merge the request manually.</p>
+
+<p><a href="merge_requests/merge_when_build_succeeds.html">Learn more about merging when build succeeds.</a></p>
+<h2 id='resolve-discussion-comments-in-merge-requests-reviews'>Resolve discussion comments in merge requests reviews <a class='anchor' href='merge_requests.html#resolve-discussion-comments-in-merge-requests-reviews' title='Permalink'></a></h2>
+<p>Keep track of the progress during a code review with resolving comments.
+Resolving comments prevents you from forgetting to address feedback and lets
+you hide discussions that are no longer relevant.</p>
+
+<p><a href="merge_requests/merge_request_discussion_resolution.html">Read more about resolving discussion comments in merge requests reviews.</a></p>
+<h2 id='resolve-conflicts'>Resolve conflicts <a class='anchor' href='merge_requests.html#resolve-conflicts' title='Permalink'></a></h2>
+<p>When a merge request has conflicts, GitLab may provide the option to resolve
+those conflicts in the GitLab UI.</p>
+
+<p><a href="merge_requests/resolve_conflicts.html">Learn more about resolving merge conflicts in the UI.</a></p>
+<h2 id='revert-changes'>Revert changes <a class='anchor' href='merge_requests.html#revert-changes' title='Permalink'></a></h2>
+<p>GitLab implements Git&#39;s powerful feature to revert any commit with introducing
+a <strong>Revert</strong> button in merge requests and commit details.</p>
+
+<p><a href="merge_requests/revert_changes.html">Learn more about reverting changes in the UI</a></p>
+<h2 id='merge-requests-versions'>Merge requests versions <a class='anchor' href='merge_requests.html#merge-requests-versions' title='Permalink'></a></h2>
+<p>Every time you push to a branch that is tied to a merge request, a new version
+of merge request diff is created. When you visit a merge request that contains
+more than one pushes, you can select and compare the versions of those merge
+request diffs.</p>
+
+<p><a href="merge_requests/versions.html">Read more about the merge requests versions.</a></p>
+<h2 id='work-in-progress-merge-requests'>Work In Progress merge requests <a class='anchor' href='merge_requests.html#work-in-progress-merge-requests' title='Permalink'></a></h2>
+<p>To prevent merge requests from accidentally being accepted before they&#39;re
+completely ready, GitLab blocks the &quot;Accept&quot; button for merge requests that
+have been marked as a <strong>Work In Progress</strong>.</p>
+
+<p><a href="merge_requests/work_in_progress_merge_requests.html">Learn more about settings a merge request as &quot;Work In Progress&quot;.</a></p>
+<h2 id='merge-request-approvals'>Merge request approvals <a class='anchor' href='merge_requests.html#merge-request-approvals' title='Permalink'></a></h2>
+<p>If you want to make sure every merge request is approved by one or more people,
+you can enforce this workflow by using merge request approvals. Merge request
+approvals allow you to set the number of necessary approvals and predefine a
+list of approvers that will need to approve every merge request in a project.</p>
+
+<p><a href="merge_requests/merge_request_approvals.html">Read more about merge request approvals.</a></p>
+<h2 id='ignore-whitespace-changes-in-merge-request-diff-view'>Ignore whitespace changes in Merge Request diff view <a class='anchor' href='merge_requests.html#ignore-whitespace-changes-in-merge-request-diff-view' title='Permalink'></a></h2>
+<p>If you click the <strong>Hide whitespace changes</strong> button, you can see the diff
+without whitespace changes (if there are any). This is also working when on a
+specific commit page.</p>
+
+<p><a target="_blank" href="merge_requests/img/merge_request_diff.png"><img src="merge_requests/img/merge_request_diff.png" title="" alt="MR diff"/></a></p>
+
+<blockquote>
+<p><strong>Tip:</strong>
+You can append <code>?w=1</code> while on the diffs page of a merge request to ignore any
+whitespace changes.</p>
+</blockquote>
+<h2 id='tips'>Tips <a class='anchor' href='merge_requests.html#tips' title='Permalink'></a></h2>
+<p>Here are some tips that will help you be more efficient with merge requests in
+the command line.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+This section might move in its own document in the future.</p>
+</blockquote>
+<h3 id='checkout-merge-requests-locally'>Checkout merge requests locally <a class='anchor' href='merge_requests.html#checkout-merge-requests-locally' title='Permalink'></a></h3>
+<p>A merge request contains all the history from a repository, plus the additional
+commits added to the branch associated with the merge request. Here&#39;s a few
+tricks to checkout a merge request locally.</p>
+
+<p>Please note that you can checkout a merge request locally even if the source
+project is a fork (even a private fork) of the target project.</p>
+<h4 id='checkout-locally-by-adding-a-git-alias'>Checkout locally by adding a git alias <a class='anchor' href='merge_requests.html#checkout-locally-by-adding-a-git-alias' title='Permalink'></a></h4>
+<p>Add the following alias to your <code>~/.gitconfig</code>:</p>
+<pre class="highlight plaintext"><code>[alias]
+    mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 &amp;&amp; git checkout mr-$1-$2' -
+</code></pre>
+<p>Now you can check out a particular merge request from any repository and any
+remote. For example, to check out the merge request with ID 5 as shown in GitLab
+from the <code>upstream</code> remote, do:</p>
+<pre class="highlight plaintext"><code>git mr upstream 5
+</code></pre>
+<p>This will fetch the merge request into a local <code>mr-upstream-5</code> branch and check
+it out.</p>
+<h4 id='checkout-locally-by-modifying-git-config-for-a-given-repository'>Checkout locally by modifying <code>.git/config</code> for a given repository <a class='anchor' href='merge_requests.html#checkout-locally-by-modifying-git-config-for-a-given-repository' title='Permalink'></a></h4>
+<p>Locate the section for your GitLab remote in the <code>.git/config</code> file. It looks
+like this:</p>
+<pre class="highlight plaintext"><code>[remote "origin"]
+  url = https://gitlab.com/gitlab-org/gitlab-ce.git
+  fetch = +refs/heads/*:refs/remotes/origin/*
+</code></pre>
+<p>You can open the file with:</p>
+<pre class="highlight plaintext"><code>git config -e
+</code></pre>
+<p>Now add the following line to the above section:</p>
+<pre class="highlight plaintext"><code>fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
+</code></pre>
+<p>In the end, it should look like this:</p>
+<pre class="highlight plaintext"><code>[remote "origin"]
+  url = https://gitlab.com/gitlab-org/gitlab-ce.git
+  fetch = +refs/heads/*:refs/remotes/origin/*
+  fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
+</code></pre>
+<p>Now you can fetch all the merge requests:</p>
+<pre class="highlight plaintext"><code>git fetch origin
+
+...
+From https://gitlab.com/gitlab-org/gitlab-ce.git
+ * [new ref]         refs/merge-requests/1/head -&gt; origin/merge-requests/1
+ * [new ref]         refs/merge-requests/2/head -&gt; origin/merge-requests/2
+...
+</code></pre>
+<p>And to check out a particular merge request:</p>
+<pre class="highlight plaintext"><code>git checkout origin/merge-requests/1
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/merge_requests.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

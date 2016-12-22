@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Executors - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Executors</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#executors">Executors</a>
+<ul>
+<li>
+<a href="README.html#selecting-the-executor">Selecting the executor</a>
+<ul>
+<li>
+<a href="README.html#i-m-not-sure">I'm not sure</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#compatibility-chart">Compatibility chart</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='executors'>Executors <a class='anchor' href='README.html#executors' title='Permalink'></a></h1>
+<p>GitLab Runner implements a number of executors that can be used to run your
+builds in different scenarios. If you are not sure what to select, read the
+<a href="README.html#imnotsure">I&#39;m not sure</a> section.
+Visit the [compatibility chart][#compatibility-chart] to find
+out what features each executor supports and what not.</p>
+
+<p>To jump into the specific documentation of each executor, visit:</p>
+
+<ul>
+<li><a href="shell.html">Shell</a></li>
+<li><a href="docker.html">Docker</a></li>
+<li><a href="../install/autoscaling.html">Docker Machine and Docker Machine SSH (auto-scaling)</a></li>
+<li><a href="parallels.html">Parallels</a></li>
+<li><a href="virtualbox.html">VirtualBox</a></li>
+<li><a href="ssh.html">SSH</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+</ul>
+<h2 id='selecting-the-executor'>Selecting the executor <a class='anchor' href='README.html#selecting-the-executor' title='Permalink'></a></h2>
+<p>The executors support different platforms and methodologies for building a
+project. The table below shows the key facts for each executor which will help
+you decide.</p>
+
+<table><thead>
+<tr>
+<th>Executor</th>
+<th>Shell</th>
+<th>Docker</th>
+<th>Docker-SSH</th>
+<th>VirtualBox</th>
+<th>Parallels</th>
+<th>SSH</th>
+<th>Kubernetes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Clean build environment for every build</td>
+<td>no</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>no</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Migrate runner machine</td>
+<td>no</td>
+<td>✓</td>
+<td>✓</td>
+<td>partial</td>
+<td>partial</td>
+<td>no</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Zero-configuration support for concurrent builds</td>
+<td>no (1)</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>no</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Complicated build environments</td>
+<td>no (2)</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓ (3)</td>
+<td>✓ (3)</td>
+<td>no</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Debugging build problems</td>
+<td>easy</td>
+<td>medium</td>
+<td>medium</td>
+<td>hard</td>
+<td>hard</td>
+<td>easy</td>
+<td>medium</td>
+</tr>
+</tbody></table>
+
+<ol>
+<li>it&#39;s possible, but in most cases it is problematic if the build uses services
+installed on the build machine</li>
+<li>it requires to install all dependencies by hand</li>
+<li>for example using Vagrant</li>
+</ol>
+<h3 id='i-39-m-not-sure'>I&#39;m not sure <a class='anchor' href='README.html#i-39-m-not-sure' title='Permalink'></a></h3>
+<p><strong>Shell</strong> is the simplest executor to configure. All required dependencies for
+your builds need to be installed manually on the machine that the Runner is
+installed.</p>
+
+<hr>
+
+<p>A better way is to use <strong>Docker</strong> as it allows to have a clean build environment,
+with easy dependency management (all dependencies for building the project could
+be put in the Docker image). The Docker executor allows you to easily create
+a build environment with dependent <a href="https://docs.gitlab.com/ce/ci/services/README.html">services</a>, like MySQL.</p>
+
+<hr>
+
+<p>We usually don&#39;t advise to use <strong>Docker-SSH</strong> which is a special version of
+the <strong>Docker</strong> executor. This executor allows you to connect to a Docker
+container that runs the <strong>SSH</strong> daemon inside it. It can be useful if your
+Docker image tries to replicate a full working system: it uses some process
+management system (<code>init</code>), exposes the SSH daemon, and contains already
+installed services. These kind of images are fat images, and are not generally
+advised to be used by the Docker community.</p>
+
+<hr>
+
+<p>The <strong>Docker Machine</strong> and <strong>Docker Machine SSH</strong> are also a special versions
+of the <strong>Docker</strong> executor with support for auto-scaling. It works like the
+normal <strong>Docker</strong> executor but with build hosts created on demand by
+<em>Docker Machine</em>.</p>
+
+<hr>
+
+<p>The <strong>Kubernetes</strong>  executor allows you to use an existing Kubernetes cluster
+for your builds. The executor will call the Kubernetes cluster API
+and create a new Pod (with build container and services containers) for
+each GitLab CI job.</p>
+
+<hr>
+
+<p>We also offer two full system virtualization options: <strong>VirtualBox</strong> and
+<strong>Parallels</strong>. This type of executor allows you to use an already created
+virtual machine, which will be cloned and used to run your build. It can prove
+useful if you want to run your builds on different Operating Systems since it
+allows to create virtual machines with Windows, Linux, OSX or FreeBSD and make
+GitLab Runner to connect to the virtual machine and run the build on it. Its
+usage can also be useful to reduce the cost of infrastructure.</p>
+
+<hr>
+
+<p>The <strong>SSH</strong> executor is added for completeness. It&#39;s the least supported
+executor from all of the already mentioned ones. It makes GitLab Runner to
+connect to some external server and run the builds there. We have some success
+stories from organizations using that executor, but generally we advise to use
+any of the above.</p>
+<h2 id='compatibility-chart'>Compatibility chart <a class='anchor' href='README.html#compatibility-chart' title='Permalink'></a></h2>
+<p>Supported features by different executors:</p>
+
+<table><thead>
+<tr>
+<th>Executor</th>
+<th>Shell</th>
+<th>Docker</th>
+<th>Docker-SSH</th>
+<th>VirtualBox</th>
+<th>Parallels</th>
+<th>SSH</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Secure Variables</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>GitLab Runner Exec command</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>gitlab-ci.yml: image</td>
+<td>no</td>
+<td>✓</td>
+<td>✓</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>gitlab-ci.yml: services</td>
+<td>no</td>
+<td>✓</td>
+<td>✓</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>gitlab-ci.yml: cache</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>gitlab-ci.yml: artifacts</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Absolute paths: caching, artifacts</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Passing artifacts between stages</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+
+<p>Supported systems by different shells:</p>
+
+<table><thead>
+<tr>
+<th>Shells</th>
+<th>Bash</th>
+<th>Windows Batch</th>
+<th>PowerShell</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Windows</td>
+<td>✓</td>
+<td>✓ (default)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>✓ (default)</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>OSX</td>
+<td>✓ (default)</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>FreeBSD</td>
+<td>✓ (default)</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody></table>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/executors/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

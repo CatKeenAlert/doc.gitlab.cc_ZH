@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Using Git submodules with GitLab CI - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab CI 中文文档</a></li>
+            
+          
+          <li class="breadcrumb">Using Git submodules with GitLab CI</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="git_submodules.html#using-git-submodules-with-gitlab-ci">Using Git submodules with GitLab CI</a>
+<ul>
+<li>
+<a href="git_submodules.html#configuring-the-gitmodules-file">Configuring the <code>.gitmodules</code> file</a>
+</li>
+<li>
+<a href="git_submodules.html#using-git-submodules-in-your-ci-jobs">Using Git submodules in your CI jobs</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='using-git-submodules-with-gitlab-ci'>Using Git submodules with GitLab CI <a class='anchor' href='git_submodules.html#using-git-submodules-with-gitlab-ci' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>GitLab 8.12 introduced a new <a href="../user/project/new_ci_build_permissions_model.html">CI build permissions model</a> and you
+are encouraged to upgrade your GitLab instance if you haven&#39;t done already.
+If you are <strong>not</strong> using GitLab 8.12 or higher, you would need to work your way
+around submodules in order to access the sources of e.g., <code>gitlab.com/group/project</code>
+with the use of <a href="ssh_keys/README.html">SSH keys</a>.</li>
+<li>With GitLab 8.12 onward, your permissions are used to evaluate what a CI build
+can access. More information about how this system works can be found in the
+<a href="../user/permissions.html#builds-permissions">Build permissions model</a>.</li>
+<li>The HTTP(S) Git protocol <a href="../user/admin_area/settings/visibility_and_access_controls.html#enabled-git-access-protocols">must be enabled</a> in your GitLab instance.</li>
+</ul>
+</blockquote>
+<h2 id='configuring-the-gitmodules-file'>Configuring the <code>.gitmodules</code> file <a class='anchor' href='git_submodules.html#configuring-the-gitmodules-file' title='Permalink'></a></h2>
+<p>If dealing with <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules" title="Git submodules documentation">Git submodules</a>, your project will probably have a file
+named <code>.gitmodules</code>.</p>
+
+<p>Let&#39;s consider the following example:</p>
+
+<ol>
+<li>Your project is located at <code>https://gitlab.com/secret-group/my-project</code>.</li>
+<li>To checkout your sources you usually use an SSH address like
+<code>git@gitlab.com:secret-group/my-project.git</code>.</li>
+<li>Your project depends on <code>https://gitlab.com/group/project</code>, which you want
+to include as a submodule.</li>
+</ol>
+
+<p>If you are using GitLab 8.12+ and your submodule is on the same GitLab server,
+you must update your <code>.gitmodules</code> file to use <strong>relative URLs</strong>.
+Since Git allows the usage of relative URLs for your <code>.gitmodules</code> configuration,
+this easily allows you to use HTTP(S) for cloning all your CI builds and SSH
+for all your local checkouts. The <code>.gitmodules</code> would look like:</p>
+<pre class="highlight ini"><code><span class="nn">[submodule "project"]</span>
+  <span class="py">path</span> <span class="p">=</span> <span class="s">project</span>
+  <span class="py">url</span> <span class="p">=</span> <span class="s">../../group/project.git</span>
+</code></pre>
+<p>The above configuration will instruct Git to automatically deduce the URL that
+should be used when cloning sources. Whether you use HTTP(S) or SSH, Git will use
+that same channel and it will allow to make all your CI builds use HTTP(S)
+(because GitLab CI only uses HTTP(S) for cloning your sources), and all your local
+clones will continue using SSH.</p>
+
+<p>For all other submodules not located on the same GitLab server, use the full
+HTTP(S) protocol URL:</p>
+<pre class="highlight ini"><code><span class="nn">[submodule "project-x"]</span>
+  <span class="py">path</span> <span class="p">=</span> <span class="s">project-x</span>
+  <span class="py">url</span> <span class="p">=</span> <span class="s">https://gitserver.com/group/project-x.git</span>
+</code></pre>
+<p>Once <code>.gitmodules</code> is correctly configured, you can move on to
+<a href="git_submodules.html#using-git-submodules-in-your-ci-jobs">configuring your <code>.gitlab-ci.yml</code></a>.</p>
+<h2 id='using-git-submodules-in-your-ci-jobs'>Using Git submodules in your CI jobs <a class='anchor' href='git_submodules.html#using-git-submodules-in-your-ci-jobs' title='Permalink'></a></h2>
+<p>There are a few steps you need to take in order to make submodules work
+correctly with your CI builds:</p>
+
+<ol>
+<li>First, make sure you have used <a href="git_submodules.html#configuring-the-gitmodules-file">relative URLs</a>
+for the submodules located in the same GitLab server.</li>
+<li><p>Then, use <code>git submodule sync/update</code> in <code>before_script</code>:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">git submodule sync --recursive</span>
+  <span class="pi">-</span> <span class="s">git submodule update --init --recursive</span>
+</code></pre>
+<p><code>--recursive</code> should be used in either both or none (<code>sync/update</code>) depending on
+whether you have recursive submodules.</p></li>
+</ol>
+
+<p>The rationale to set the <code>sync</code> and <code>update</code> in <code>before_script</code> is because of
+the way Git submodules work. On a fresh Runner workspace, Git will set the
+submodule URL including the token in <code>.git/config</code>
+(or <code>.git/modules/&lt;submodule&gt;/config</code>) based on <code>.gitmodules</code> and the current
+remote URL. On subsequent builds on the same Runner, <code>.git/config</code> is cached
+and already contains a full URL for the submodule, corresponding to the previous
+build, and to <strong>a token from a previous build</strong>. <code>sync</code> allows to force updating
+the full URL.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/git_submodules.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

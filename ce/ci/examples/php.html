@@ -1,0 +1,415 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Testing PHP projects - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI 中文文档</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">CI Examples</a></li>
+            
+          
+          <li class="breadcrumb">Testing PHP projects</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="php.html#testing-php-projects">Testing PHP projects</a>
+<ul>
+<li>
+<a href="php.html#test-php-projects-using-the-docker-executor">Test PHP projects using the Docker executor</a>
+<ul>
+<li>
+<a href="php.html#test-against-different-php-versions-in-docker-builds">Test against different PHP versions in Docker builds</a>
+</li>
+<li>
+<a href="php.html#custom-php-configuration-in-docker-builds">Custom PHP configuration in Docker builds</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="php.html#test-php-projects-using-the-shell-executor">Test PHP projects using the Shell executor</a>
+<ul>
+<li>
+<a href="php.html#test-against-different-php-versions-in-shell-builds">Test against different PHP versions in Shell builds</a>
+</li>
+<li>
+<a href="php.html#install-custom-extensions">Install custom extensions</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="php.html#extend-your-tests">Extend your tests</a>
+<ul>
+<li>
+<a href="php.html#using-atoum">Using atoum</a>
+</li>
+<li>
+<a href="php.html#using-composer">Using Composer</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="php.html#access-private-packages-dependencies">Access private packages / dependencies</a>
+</li>
+<li>
+<a href="php.html#use-databases-or-other-services">Use databases or other services</a>
+</li>
+<li>
+<a href="php.html#testing-things-locally">Testing things locally</a>
+</li>
+<li>
+<a href="php.html#example-project">Example project</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='testing-php-projects'>Testing PHP projects <a class='anchor' href='php.html#testing-php-projects' title='Permalink'></a></h1>
+<p>This guide covers basic building instructions for PHP projects.</p>
+
+<p>There are covered two cases: testing using the Docker executor and testing
+using the Shell executor.</p>
+<h2 id='test-php-projects-using-the-docker-executor'>Test PHP projects using the Docker executor <a class='anchor' href='php.html#test-php-projects-using-the-docker-executor' title='Permalink'></a></h2>
+<p>While it is possible to test PHP apps on any system, this would require manual
+configuration from the developer. To overcome this we will be using the
+official <a href="https://hub.docker.com/r/_/php/">PHP docker image</a> that can be found in Docker Hub.</p>
+
+<p>This will allow us to test PHP projects against different versions of PHP.
+However, not everything is plug &#39;n&#39; play, you still need to configure some
+things manually.</p>
+
+<p>As with every build, you need to create a valid <code>.gitlab-ci.yml</code> describing the
+build environment.</p>
+
+<p>Let&#39;s first specify the PHP image that will be used for the build process
+(you can read more about what an image means in the Runner&#39;s lingo reading
+about <a href="../docker/using_docker_images.html#what-is-image">Using Docker images</a>).</p>
+
+<p>Start by adding the image to your <code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">php:5.6</span>
+</code></pre>
+<p>The official images are great, but they lack a few useful tools for testing.
+We need to first prepare the build environment. A way to overcome this is to
+create a script which installs all prerequisites prior the actual testing is
+done.</p>
+
+<p>Let&#39;s create a <code>ci/docker_install.sh</code> file in the root directory of our
+repository with the following content:</p>
+<pre class="highlight shell"><code><span class="c">#!/bin/bash</span>
+
+<span class="c"># We need to install dependencies only for Docker</span>
+<span class="o">[[</span> ! -e /.dockerenv <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="o">[[</span> ! -e /.dockerinit <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">exit </span>0
+
+<span class="nb">set</span> -xe
+
+<span class="c"># Install git (the php image doesn't have it) which is required by composer</span>
+apt-get update -yqq
+apt-get install git -yqq
+
+<span class="c"># Install phpunit, the tool that we will use for testing</span>
+curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit.phar
+chmod +x /usr/local/bin/phpunit
+
+<span class="c"># Install mysql driver</span>
+<span class="c"># Here you can install any other extension that you need</span>
+docker-php-ext-install pdo_mysql
+</code></pre>
+<p>You might wonder what <code>docker-php-ext-install</code> is. In short, it is a script
+provided by the official php docker image that you can use to easilly install
+extensions. For more information read the the documentation at
+<a href="https://hub.docker.com/r/_/php/">https://hub.docker.com/r/_/php/</a>.</p>
+
+<p>Now that we created the script that contains all prerequisites for our build
+environment, let&#39;s add it in <code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="nn">...</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">bash ci/docker_install.sh &gt; /dev/null</span>
+
+<span class="nn">...</span>
+</code></pre>
+<p>Last step, run the actual tests using <code>phpunit</code>:</p>
+<pre class="highlight yaml"><code><span class="nn">...</span>
+
+<span class="s">test:app</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">phpunit --configuration phpunit_myapp.xml</span>
+
+<span class="nn">...</span>
+</code></pre>
+<p>Finally, commit your files and push them to GitLab to see your build succeeding
+(or failing).</p>
+
+<p>The final <code>.gitlab-ci.yml</code> should look similar to this:</p>
+<pre class="highlight yaml"><code><span class="c1"># Select image from https://hub.docker.com/r/_/php/</span>
+<span class="na">image</span><span class="pi">:</span> <span class="s">php:5.6</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+<span class="c1"># Install dependencies</span>
+<span class="pi">-</span> <span class="s">bash ci/docker_install.sh &gt; /dev/null</span>
+
+<span class="s">test:app</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">phpunit --configuration phpunit_myapp.xml</span>
+</code></pre><h3 id='test-against-different-php-versions-in-docker-builds'>Test against different PHP versions in Docker builds <a class='anchor' href='php.html#test-against-different-php-versions-in-docker-builds' title='Permalink'></a></h3>
+<p>Testing against multiple versions of PHP is super easy. Just add another job
+with a different docker image version and the runner will do the rest:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+<span class="c1"># Install dependencies</span>
+<span class="pi">-</span> <span class="s">bash ci/docker_install.sh &gt; /dev/null</span>
+
+<span class="c1"># We test PHP5.6</span>
+<span class="s">test:5.6</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">php:5.6</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">phpunit --configuration phpunit_myapp.xml</span>
+
+<span class="c1"># We test PHP7.0 (good luck with that)</span>
+<span class="s">test:7.0</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">php:7.0</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">phpunit --configuration phpunit_myapp.xml</span>
+</code></pre><h3 id='custom-php-configuration-in-docker-builds'>Custom PHP configuration in Docker builds <a class='anchor' href='php.html#custom-php-configuration-in-docker-builds' title='Permalink'></a></h3>
+<p>There are times where you will need to customise your PHP environment by
+putting your <code>.ini</code> file into <code>/usr/local/etc/php/conf.d/</code>. For that purpose
+add a <code>before_script</code> action:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">cp my_php.ini /usr/local/etc/php/conf.d/test.ini</span>
+</code></pre>
+<p>Of course, <code>my_php.ini</code> must be present in the root directory of your repository.</p>
+<h2 id='test-php-projects-using-the-shell-executor'>Test PHP projects using the Shell executor <a class='anchor' href='php.html#test-php-projects-using-the-shell-executor' title='Permalink'></a></h2>
+<p>The shell executor runs your builds in a terminal session on your server.
+Thus, in order to test your projects you first need to make sure that all
+dependencies are installed.</p>
+
+<p>For example, in a VM running Debian 8 we first update the cache, then we
+install <code>phpunit</code> and <code>php5-mysql</code>:</p>
+<pre class="highlight shell"><code>sudo apt-get update -y
+sudo apt-get install -y phpunit php5-mysql
+</code></pre>
+<p>Next, add the following snippet to your <code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="s">test:app</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">phpunit --configuration phpunit_myapp.xml</span>
+</code></pre>
+<p>Finally, push to GitLab and let the tests begin!</p>
+<h3 id='test-against-different-php-versions-in-shell-builds'>Test against different PHP versions in Shell builds <a class='anchor' href='php.html#test-against-different-php-versions-in-shell-builds' title='Permalink'></a></h3>
+<p>The <a href="https://github.com/phpenv/phpenv">phpenv</a> project allows you to easily manage different versions of PHP
+each with its own config. This is specially usefull when testing PHP projects
+with the Shell executor.</p>
+
+<p>You will have to install it on your build machine under the <code>gitlab-runner</code>
+user following <a href="https://github.com/phpenv/phpenv#installation">the upstream installation guide</a>.</p>
+
+<p>Using phpenv also allows to easily configure the PHP environment with:</p>
+<pre class="highlight plaintext"><code>phpenv config-add my_config.ini
+</code></pre>
+<p><em><strong>Important note:</strong> It seems <code>phpenv/phpenv</code>
+ <a href="https://github.com/phpenv/phpenv/issues/57">is abandoned</a>. There is a fork
+ at <a href="https://github.com/madumlao/phpenv">madumlao/phpenv</a> that tries to bring
+ the project back to life. <a href="https://github.com/CHH/phpenv">CHH/phpenv</a> also
+ seems like a good alternative. Picking any of the mentioned tools will work
+ with the basic phpenv commands. Guiding you to choose the right phpenv is out
+ of the scope of this tutorial.</em></p>
+<h3 id='install-custom-extensions'>Install custom extensions <a class='anchor' href='php.html#install-custom-extensions' title='Permalink'></a></h3>
+<p>Since this is a pretty bare installation of the PHP environment, you may need
+some extensions that are not currently present on the build machine.</p>
+
+<p>To install additional extensions simply execute:</p>
+<pre class="highlight shell"><code>pecl install &lt;extension&gt;
+</code></pre>
+<p>It&#39;s not advised to add this to <code>.gitlab-ci.yml</code>. You should execute this
+command once, only to setup the build environment.</p>
+<h2 id='extend-your-tests'>Extend your tests <a class='anchor' href='php.html#extend-your-tests' title='Permalink'></a></h2><h3 id='using-atoum'>Using atoum <a class='anchor' href='php.html#using-atoum' title='Permalink'></a></h3>
+<p>Instead of PHPUnit, you can use any other tool to run unit tests. For example
+you can use <a href="https://github.com/atoum/atoum">atoum</a>:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">wget http://downloads.atoum.org/nightly/mageekguy.atoum.phar</span>
+
+<span class="s">test:atoum</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">php mageekguy.atoum.phar</span>
+</code></pre><h3 id='using-composer'>Using Composer <a class='anchor' href='php.html#using-composer' title='Permalink'></a></h3>
+<p>The majority of the PHP projects use Composer for managing their PHP packages.
+In order to execute Composer before running your tests, simply add the
+following in your <code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="nn">...</span>
+
+<span class="c1"># Composer stores all downloaded packages in the vendor/ directory.</span>
+<span class="c1"># Do not use the following if the vendor/ directory is commited to</span>
+<span class="c1"># your git repository.</span>
+<span class="na">cache</span><span class="pi">:</span>
+  <span class="na">paths</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">vendor/</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+<span class="c1"># Install composer dependencies</span>
+<span class="pi">-</span> <span class="s">curl --silent --show-error https://getcomposer.org/installer | php</span>
+<span class="pi">-</span> <span class="s">php composer.phar install</span>
+
+<span class="nn">...</span>
+</code></pre><h2 id='access-private-packages-dependencies'>Access private packages / dependencies <a class='anchor' href='php.html#access-private-packages-dependencies' title='Permalink'></a></h2>
+<p>If your test suite needs to access a private repository, you need to configure
+<a href="../ssh_keys/README.html">the SSH keys</a> in order to be able to clone it.</p>
+<h2 id='use-databases-or-other-services'>Use databases or other services <a class='anchor' href='php.html#use-databases-or-other-services' title='Permalink'></a></h2>
+<p>Most of the time you will need a running database in order for your tests to
+run. If you are using the Docker executor you can leverage Docker&#39;s ability to
+link to other containers. In GitLab Runner lingo, this can be achieved by
+defining a <code>service</code>.</p>
+
+<p>This functionality is covered in <a href="../services/README.html">the CI services</a>
+documentation.</p>
+<h2 id='testing-things-locally'>Testing things locally <a class='anchor' href='php.html#testing-things-locally' title='Permalink'></a></h2>
+<p>With GitLab Runner 1.0 you can also test any changes locally. From your
+terminal execute:</p>
+<pre class="highlight shell"><code><span class="c"># Check using docker executor</span>
+gitlab-ci-multi-runner <span class="nb">exec </span>docker <span class="nb">test</span>:app
+
+<span class="c"># Check using shell executor</span>
+gitlab-ci-multi-runner <span class="nb">exec </span>shell <span class="nb">test</span>:app
+</code></pre><h2 id='example-project'>Example project <a class='anchor' href='php.html#example-project' title='Permalink'></a></h2>
+<p>We have set up an <a href="https://gitlab.com/gitlab-examples/php">Example PHP Project</a> for your convenience
+that runs on <a href="https://gitlab.com">GitLab.com</a> using our publicly available
+<a href="../runners/README.html">shared runners</a>.</p>
+
+<p>Want to hack on it? Simply fork it, commit and push  your changes. Within a few
+moments the changes will be picked by a public runner and the build will begin.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/examples/php.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

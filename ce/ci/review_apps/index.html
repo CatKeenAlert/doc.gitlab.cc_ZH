@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Getting started with Review Apps - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI 中文文档</a></li>
+            
+          
+          <li class="breadcrumb">Getting started with Review Apps</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="index.html#getting-started-with-review-apps">Getting started with Review Apps</a>
+<ul>
+<li>
+<a href="index.html#overview">Overview</a>
+</li>
+<li>
+<a href="index.html#prerequisites">Prerequisites</a>
+</li>
+<li>
+<a href="index.html#configuration">Configuration</a>
+</li>
+<li>
+<a href="index.html#creating-and-destroying-review-apps">Creating and destroying Review Apps</a>
+</li>
+<li>
+<a href="index.html#a-simple-workflow">A simple workflow</a>
+</li>
+<li>
+<a href="index.html#limitations">Limitations</a>
+</li>
+<li>
+<a href="index.html#examples">Examples</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='getting-started-with-review-apps'>Getting started with Review Apps <a class='anchor' href='index.html#getting-started-with-review-apps' title='Permalink'></a></h1>
+<blockquote>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/21971">Introduced</a> in GitLab 8.12. Further additions were made in GitLab
+8.13 and 8.14.</li>
+<li>Inspired by <a href="https://devcenter.heroku.com/articles/github-integration-review-apps">Heroku&#39;s Review Apps</a> which itself was inspired by
+<a href="https://github.com/rainforestapp/fourchette">Fourchette</a>.</li>
+</ul>
+</blockquote>
+
+<p>The basis of Review Apps is the <a href="../environments.html#dynamic-environments">dynamic environments</a> which allow you to create
+a new environment (dynamically) for each one of your branches.</p>
+
+<p>A Review App can then be visible as a link when you visit the <a href="../../user/project/merge_requests.html">merge request</a>
+relevant to the branch. That way, you are able to see live all changes introduced
+by the merge request changes. Reviewing anything, from performance to interface
+changes, becomes much easier with a live environment and as such, Review Apps
+can make a huge impact on your development flow.</p>
+
+<p>They mostly make sense to be used with web applications, but you can use them
+any way you&#39;d like.</p>
+<h2 id='overview'>Overview <a class='anchor' href='index.html#overview' title='Permalink'></a></h2>
+<p>Simply put, a Review App is a mapping of a branch with an environment as there
+is a 1:1 relation between them.</p>
+
+<p>Here&#39;s an example of what it looks like when viewing a merge request with a
+dynamically set environment.</p>
+
+<p><a target="_blank" href="img/review_apps_preview_in_mr.png"><img src="img/review_apps_preview_in_mr.png" title="" alt="Review App in merge request"/></a></p>
+
+<p>In the image above you can see that the <code>add-new-line</code> branch was successfully
+built and deployed under a dynamic environment and can be previewed with an
+also dynamically URL.</p>
+
+<p>The details of the Review Apps implementation depend widely on your real
+technology stack and on your deployment process. The simplest case it to
+deploy a simple static HTML website, but it will not be that straightforward
+when your app is using a database for example. To make a branch be deployed
+on a temporary instance and booting up this instance with all required software
+and services automatically on the fly is not a trivial task. However, it is
+doable, especially if you use Docker, or at least a configuration management
+tool like Chef, Puppet, Ansible or Salt.</p>
+<h2 id='prerequisites'>Prerequisites <a class='anchor' href='index.html#prerequisites' title='Permalink'></a></h2>
+<p>To get a better understanding of Review Apps, you must first learn how
+environments and deployments work. The following docs will help you grasp that
+knowledge:</p>
+
+<ol>
+<li>First, learn about <a href="../environments.html">environments</a> and their role in the development workflow.</li>
+<li>Then make a small stop to learn about <a href="../variables/README.html">CI variables</a> and how they
+can be used in your CI jobs.</li>
+<li>Next, explore the <a href="../yaml/README.html#environment"><code>environment</code> syntax</a> as defined in <code>.gitlab-ci.yml</code>.
+This will be your primary reference when you are finally comfortable with
+how environments work.</li>
+<li>Additionally, find out about <a href="../environments.html#manual-actions">manual actions</a> and how you can use them to
+deploy to critical environments like production with the push of a button.</li>
+<li>And as a last step, follow the <a href="index.html#examples">example tutorials</a> which will
+guide you step by step to set up the infrastructure and make use of
+Review Apps.</li>
+</ol>
+<h2 id='configuration'>Configuration <a class='anchor' href='index.html#configuration' title='Permalink'></a></h2>
+<p>The configuration of Review apps depends on your technology stack and your
+infrastructure. Read the <a href="../environments.html#dynamic-environments">dynamic environments</a> documentation to understand
+how to define and create them.</p>
+<h2 id='creating-and-destroying-review-apps'>Creating and destroying Review Apps <a class='anchor' href='index.html#creating-and-destroying-review-apps' title='Permalink'></a></h2>
+<p>The creation and destruction of a Review App is defined in <code>.gitlab-ci.yml</code>
+at a job level under the <code>environment</code> keyword.</p>
+
+<p>Check the <a href="../environments.html">environments</a> documentation how to do so.</p>
+<h2 id='a-simple-workflow'>A simple workflow <a class='anchor' href='index.html#a-simple-workflow' title='Permalink'></a></h2>
+<p>The process of adding Review Apps in your workflow would look like:</p>
+
+<ol>
+<li>Set up the infrastructure to host and deploy the Review Apps.</li>
+<li><a href="https://docs.gitlab.com/runner/install/">Install</a> and <a href="https://docs.gitlab.com/runner/commands/">configure</a> a Runner that does
+the deployment.</li>
+<li>Set up a job in <code>.gitlab-ci.yml</code> that uses the predefined
+<a href="../variables/README.html">predefined CI environment variable</a> <code>${CI_BUILD_REF_NAME}</code> to
+create dynamic environments and restrict it to run only on branches.</li>
+<li>Optionally set a job that <a href="../environments.html#stopping-an-environment">manually stops</a> the Review Apps.</li>
+</ol>
+
+<p>From there on, you would follow the branched Git flow:</p>
+
+<ol>
+<li>Push a branch and let the Runner deploy the Review App based on the <code>script</code>
+definition of the dynamic environment job.</li>
+<li>Wait for the Runner to build and/or deploy your web app.</li>
+<li>Click on the link that&#39;s present in the MR related to the branch and see the
+changes live.</li>
+</ol>
+<h2 id='limitations'>Limitations <a class='anchor' href='index.html#limitations' title='Permalink'></a></h2>
+<p>Check the <a href="../environments.html#limitations">environments limitations</a>.</p>
+<h2 id='examples'>Examples <a class='anchor' href='index.html#examples' title='Permalink'></a></h2>
+<p>A list of examples used with Review Apps can be found below:</p>
+
+<ul>
+<li><a href="https://gitlab.com/gitlab-examples/review-apps-nginx">Use with NGINX</a> - Use NGINX and the shell executor of GitLab Runner
+to deploy a simple HTML website.</li>
+</ul>
+
+<p>And below is a soon to be added examples list:</p>
+
+<ul>
+<li>Use with Amazon S3</li>
+<li>Use on Heroku with dpl</li>
+<li>Use with OpenShift/kubernetes</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/review_apps/index.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

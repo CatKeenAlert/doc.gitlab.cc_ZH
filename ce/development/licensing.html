@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Licensing and Compatibility - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Licensing and Compatibility</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="licensing.html#gitlab-licensing-and-compatibility">GitLab Licensing and Compatibility</a>
+<ul>
+<li>
+<a href="licensing.html#automated-testing">Automated Testing</a>
+<ul>
+<li>
+<a href="licensing.html#license-finder-commands">License Finder commands</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="licensing.html#acceptable-licenses">Acceptable Licenses</a>
+</li>
+<li>
+<a href="licensing.html#unacceptable-licenses">Unacceptable Licenses</a>
+</li>
+<li>
+<a href="licensing.html#notes">Notes</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-licensing-and-compatibility'>GitLab Licensing and Compatibility <a class='anchor' href='licensing.html#gitlab-licensing-and-compatibility' title='Permalink'></a></h1>
+<p>GitLab CE is licensed under the terms of the MIT License. GitLab EE is licensed under &quot;The GitLab Enterprise Edition (EE) license&quot; wherein there are more restrictions. See their respective LICENSE files (<a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/LICENSE">CE</a>, <a href="https://gitlab.com/gitlab-org/gitlab-ee/blob/master/LICENSE">EE</a>) for more information.</p>
+<h2 id='automated-testing'>Automated Testing <a class='anchor' href='licensing.html#automated-testing' title='Permalink'></a></h2>
+<p>In order to comply with the terms the libraries we use are licensed under, we have to make sure to check new gems for compatible licenses whenever they&#39;re added. To automate this process, we use the <a href="https://github.com/pivotal/LicenseFinder">license_finder</a> gem by Pivotal. It runs every time a new commit is pushed and verifies that all gems in the bundle use a license that doesn&#39;t conflict with the licensing of either GitLab Community Edition or GitLab Enterprise Edition.</p>
+
+<p>There are some limitations with the automated testing, however. CSS and JavaScript libraries, as well as any Ruby libraries not included by way of Bundler, must be verified manually and independently. Take care whenever one such library is used, as automated tests won&#39;t catch problematic licenses from them.</p>
+
+<p>Some gems may not include their license information in their <code>gemspec</code> file. These won&#39;t be detected by License Finder, and will have to be verified manually.</p>
+<h3 id='license-finder-commands'>License Finder commands <a class='anchor' href='licensing.html#license-finder-commands' title='Permalink'></a></h3>
+<p>There are a few basic commands License Finder provides that you&#39;ll need in order to manage license detection.</p>
+
+<p>To verify that the checks are passing, and/or to see what dependencies are causing the checks to fail:</p>
+<pre class="highlight plaintext"><code>bundle exec license_finder
+</code></pre>
+<p>To whitelist a new license:</p>
+<pre class="highlight plaintext"><code>license_finder whitelist add MIT
+</code></pre>
+<p>To blacklist a new license:</p>
+<pre class="highlight plaintext"><code>license_finder blacklist add GPLv2
+</code></pre>
+<p>To tell License Finder about a dependency&#39;s license if it isn&#39;t auto-detected:</p>
+<pre class="highlight plaintext"><code>license_finder licenses add my_unknown_dependency MIT
+</code></pre>
+<p>For all of the above, please include <code>--why &quot;Reason&quot;</code> and <code>--who &quot;My Name&quot;</code> so the <code>decisions.yml</code> file can keep track of when, why, and who approved of a dependency.</p>
+
+<p>More detailed information on how the gem and its commands work is available in the <a href="https://github.com/pivotal/LicenseFinder">License Finder README</a>.</p>
+<h2 id='acceptable-licenses'>Acceptable Licenses <a class='anchor' href='licensing.html#acceptable-licenses' title='Permalink'></a></h2>
+<p>Libraries with the following licenses are acceptable for use:</p>
+
+<ul>
+<li><a href="http://choosealicense.com/licenses/mit/">The MIT License</a> (the MIT Expat License specifically): The MIT License requires that the license itself is included with all copies of the source. It is a permissive (non-copyleft) license as defined by the Open Source Initiative.</li>
+<li><a href="http://choosealicense.com/licenses/lgpl-3.0/">LGPL</a> (version 2, version 3): GPL constraints regarding modification and redistribution under the same license are not required of projects using an LGPL library, only upon modification of the LGPL-licensed library itself.</li>
+<li><a href="http://choosealicense.com/licenses/apache-2.0/">Apache 2.0 License</a>: A permissive license that also provides an express grant of patent rights from contributors to users.</li>
+<li><a href="https://github.com/ruby/ruby/blob/ruby_1_8_6/COPYING">Ruby 1.8 License</a>: Dual-licensed under either itself or the GPLv2, defer to the Ruby License itself. Acceptable because of point 3b: &quot;You may distribute the software in object code or binary form, provided that you do at least ONE of the following: b) accompany the distribution with the machine-readable source of the software.&quot;</li>
+<li><a href="https://www.ruby-lang.org/en/about/license.txt">Ruby 1.9 License</a>: Dual-licensed under either itself or the BSD 2-Clause License, defer to BSD 2-Clause.</li>
+<li><a href="https://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause License</a>: A permissive (non-copyleft) license as defined by the Open Source Initiative.</li>
+<li><a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a> (also known as New BSD or Modified BSD): A permissive (non-copyleft) license as defined by the Open Source Initiative</li>
+<li><a href="https://opensource.org/licenses/ISC">ISC License</a> (also known as the OpenBSD License): A permissive (non-copyleft) license as defined by the Open Source Initiative.</li>
+<li><a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero (CC0)</a>: A public domain dedication, recommended as a way to disclaim copyright on your work to the maximum extent possible.</li>
+</ul>
+<h2 id='unacceptable-licenses'>Unacceptable Licenses <a class='anchor' href='licensing.html#unacceptable-licenses' title='Permalink'></a></h2>
+<p>Libraries with the following licenses are unacceptable for use:</p>
+
+<ul>
+<li><a href="http://choosealicense.com/licenses/gpl-3.0/">GNU GPL</a> (version 1, <a href="http://www.gnu.org/licenses/gpl-2.0.txt">version 2</a>, <a href="http://www.gnu.org/licenses/gpl-3.0.txt">version 3</a>, or any future versions): GPL-licensed libraries cannot be linked to from non-GPL projects.</li>
+<li><a href="http://choosealicense.com/licenses/agpl-3.0/">GNU AGPLv3</a>: AGPL-licensed libraries cannot be linked to from non-GPL projects.</li>
+<li><a href="https://opensource.org/licenses/OSL-3.0">Open Software License (OSL)</a>: is a copyleft license. In addition, the FSF <a href="https://www.gnu.org/licenses/license-list.en.html#OSL">recommend against its use</a>.</li>
+</ul>
+<h2 id='notes'>Notes <a class='anchor' href='licensing.html#notes' title='Permalink'></a></h2>
+<p>Decisions regarding the GNU GPL licenses are based on information provided by <a href="http://www.gnu.org/licenses/gpl-faq.html#IfLibraryIsGPL">The GNU Project</a>, as well as <a href="https://opensource.org/faq#linking-proprietary-code">the Open Source Initiative</a>, which both state that linking GPL libraries makes the program itself GPL.</p>
+
+<p>If a gem uses a license which is not listed above, open an issue and ask. If a license is not included in the &quot;acceptable&quot; list, operate under the assumption that it is not acceptable.</p>
+
+<p>Keep in mind that each license has its own restrictions (typically defined in their body text). Please make sure to comply with those restrictions at all times whenever an external library is used.</p>
+
+<p>Gems which are included only in the &quot;development&quot; or &quot;test&quot; groups by Bundler are exempt from license requirements, as they&#39;re not distributed for use in production.</p>
+
+<p><strong>NOTE:</strong> This document is <strong>not</strong> legal advice, nor is it comprehensive. It should not be taken as such.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/licensing.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Omnibus GitLab 参数配置 - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Configuring omnibus settings</a></li>
+            
+          
+          <li class="breadcrumb">Omnibus GitLab 参数配置</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="configuration.html#omnibus-gitlab">Omnibus GitLab 参数配置</a>
+<ul>
+<li>
+<a href="configuration.html#configuring-the-external-url-for-gitlab">Configuring the external URL for GitLab 配置域名</a>
+</li>
+<li>
+<a href="configuration.html#configuring-a-relative-url-for-gitlab">Configuring a relative URL for Gitlab  配置子路径访问(实验性)</a>
+<ul>
+<li>
+<a href="configuration.html#relative-url-requirements">Relative URL requirements 配置子路径访问的条件</a>
+</li>
+<li>
+<a href="configuration.html#enable-relative-url-in-gitlab">Enable relative URL in GitLab 启用子路径访问</a>
+</li>
+<li>
+<a href="configuration.html#disable-relative-url-in-gitlab">Disable relative URL in GitLab 禁用子路径访问</a>
+</li>
+<li>
+<a href="configuration.html#relative-url-troubleshooting">Relative URL troubleshooting 使用子路径的故障排查</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="configuration.html#loading-external-configuration-file-from-non-root-user">Loading external configuration file from non-root user 载入非超级用户的扩展配置</a>
+</li>
+<li>
+<a href="configuration.html#storing-git-data-in-an-alternative-directory">Storing Git data in an alternative directory  设置存储仓库数据的备用目录</a>
+</li>
+<li>
+<a href="configuration.html#changing-the-name-of-the-git-user-group">Changing the name of the Git user / group 修改默认的运行用户和组</a>
+</li>
+<li>
+<a href="configuration.html#specify-numeric-user-and-group-identifiers">Specify numeric user and group identifiers 设置使用数字表示的用户和组</a>
+</li>
+<li>
+<a href="configuration.html#disable-user-and-group-account-management">Disable user and group account management 禁用管理用户和组账户的功能</a>
+</li>
+<li>
+<a href="configuration.html#disable-storage-directories-management">Disable storage directories management 禁用管理存储目录的功能</a>
+</li>
+<li>
+<a href="configuration.html#only-start-omnibus-gitlab-services-after-a-given-filesystem-is-mounted">Only start Omnibus-GitLab services after a given filesystem is mounted 设置延迟启动</a>
+</li>
+<li>
+<a href="configuration.html#configuring-rack-attack">Configuring Rack Attack 配置基础防护</a>
+<ul>
+<li>
+<a href="configuration.html#enabling-disabling-rack-attack-and-setting-up-basic-auth-throttling">Enabling/Disabling Rack Attack and setting up basic auth throttling 启用禁用账户验证防护</a>
+</li>
+<li>
+<a href="configuration.html#setting-up-paths-to-be-protected-by-rack-attack">Setting up paths to be protected by Rack Attack 设置访问路径防护</a>
+</li>
+<li>
+<a href="configuration.html#setting-up-throttling-for-paths-to-be-protected">Setting up throttling for 'paths to be protected' 设置路径防护的频率</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="configuration.html#setting-up-ldap-sign-in-ldap">Setting up LDAP sign-in 配置使用LDAP登录</a>
+</li>
+<li>
+<a href="configuration.html#enable-https-https">Enable HTTPS 启用HTTPS</a>
+<ul>
+<li>
+<a href="configuration.html#redirect-http-requests-to-https-http-https">Redirect <code>HTTP</code> requests to <code>HTTPS</code>. 强制 <code>HTTP</code> 跳转为 <code>HTTPS</code></a>
+</li>
+<li>
+<a href="configuration.html#change-the-default-port-and-the-ssl-certificate-locations-ssl">Change the default port and the ssl certificate locations. 修改默认端口和SSL证书路径</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="configuration.html#use-non-packaged-web-server-web-server">Use non-packaged web-server 使用外部 web-server</a>
+</li>
+<li>
+<a href="configuration.html#using-a-non-packaged-postgresql-database-management-server-postgresql">Using a non-packaged PostgreSQL database management server 使用外部的PostgreSQL数据库服务器</a>
+</li>
+<li>
+<a href="configuration.html#using-a-non-packaged-redis-instance-redis">Using a non-packaged Redis instance 使用外部　Redis 实例</a>
+</li>
+<li>
+<a href="configuration.html#adding-env-vars-to-the-gitlab-runtime-environment-gitlab">Adding ENV Vars to the GitLab Runtime Environment 添加系统变量到GitLab运行环境</a>
+</li>
+<li>
+<a href="configuration.html#changing-gitlab-yml-settings-gitlab-yml">Changing GitLab.yml settings 自定义GitLab.yml设置</a>
+</li>
+<li>
+<a href="configuration.html#sending-application-email-via-smtp-smtp">Sending application email via SMTP 使用SMTP发送邮件</a>
+</li>
+<li>
+<a href="configuration.html#omniauth-google-twitter-github-login">Omniauth (Google, Twitter, GitHub login)</a>
+</li>
+<li>
+<a href="configuration.html#adjusting-unicorn-settings-unicorn">Adjusting Unicorn settings 调整 Unicorn 配置</a>
+</li>
+<li>
+<a href="configuration.html#setting-the-nginx-listen-address-or-addresses-nginx">Setting the NGINX listen address or addresses 配置 NGINX 监听地址</a>
+</li>
+<li>
+<a href="configuration.html#inserting-custom-nginx-settings-into-the-gitlab-server-block-nginx-server">Inserting custom NGINX settings into the GitLab server block 在内置NGINX中插入自定义server块</a>
+</li>
+<li>
+<a href="configuration.html#inserting-custom-settings-into-the-nginx-config-nginx">Inserting custom settings into the NGINX config 在内置NGINX中插入自定义设置</a>
+</li>
+<li>
+<a href="configuration.html#enable-nginx_status-nginx-nginx_status">Enable nginx_status 启用内置NGINX的nginx_status模块</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='omnibus-gitlab'>Omnibus GitLab 参数配置 <a class='anchor' href='configuration.html#omnibus-gitlab' title='Permalink'></a></h1>
+<p>GitLab 和 GitLab CI 的相关参数配置都存在
+<code>/etc/gitlab/gitlab.rb</code>文件里。查看所有可用的参数
+<a href="http://git.oschina.net/qiai365/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template">gitlab.rb.template</a>.
+自GitLab 7.6开始的新安装包, 已经默认将所有的参数写入到
+<code>/etc/gitlab/gitlab.rb</code> 文件中.</p>
+<h2 id='configuring-the-external-url-for-gitlab'>Configuring the external URL for GitLab 配置域名 <a class='anchor' href='configuration.html#configuring-the-external-url-for-gitlab' title='Permalink'></a></h2>
+<p>为使用户可以正确的获取到GitLab上显示的当前仓库的clone地址，
+GitLab需要你设置好哪个url才是用户可以访问到GitLab, 比如
+<code>http://gitlab.example.com</code>。你需要编辑下面这个文件
+<code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">external_url</span> <span class="s2">"http://gitlab.example.com"</span> <span class="c1">#替换为你自己的地址</span>
+</code></pre>
+<p>运行 <code>sudo gitlab-ctl reconfigure</code> 使修改生效。</p>
+<h2 id='configuring-a-relative-url-for-gitlab'>Configuring a relative URL for Gitlab  配置子路径访问(实验性) <a class='anchor' href='configuration.html#configuring-a-relative-url-for-gitlab' title='Permalink'></a></h2>
+<p><em><strong>注意:</strong> Relative URL(子路径)是在8.5版本被<a href="https://gitlab.com/gitlab-org/omnibus-gitlab/merge_requests/590" title="Merge request - omnibus引入relative url功能">引入</a> Omnibus GitLab的,
+该功能还处于<code>测试阶段</code>。 如果你使用源码安装的，这里有一篇独立介绍
+<a href="../../ce/install/relative_url.html">源码安装如何使用子路径</a>的文档.</em></p>
+
+<hr>
+
+<p>虽然我们建议GitLab使用二级域名访问, 但有时由于各种各样的原因，
+我们想用子路径的方式访问GitLab。 出于这种需求，Gitlab
+也可以安装到子路径, 如 <code>https://example.com/gitlab</code>.</p>
+
+<p>需要注意的是，修改了这个URL后, 所有远程仓库地址要也做相应的修改,
+所以你需要手动修改本地仓库中的<code>remote url</code>以使可以正常连接GitLab服务器。</p>
+<h3 id='relative-url-requirements'>Relative URL requirements 配置子路径访问的条件 <a class='anchor' href='configuration.html#relative-url-requirements' title='Permalink'></a></h3>
+<p>Omnibus GitLab 一键包附带了预编译的资源(如CSS， JavaScript，
+fonts, 等等)。 如果你配置了GitLab使用relative URL，
+这些资源文件就需要重新生成，而生成资源的过程需要消耗一部分CPU和内存资源。
+为防止内存不足, 需要保证服务器至少有2GB的可用内存，
+我们建议的服务器配置为4GB内存，4核或者8核CPU。</p>
+<h3 id='enable-relative-url-in-gitlab'>Enable relative URL in GitLab 启用子路径访问 <a class='anchor' href='configuration.html#enable-relative-url-in-gitlab' title='Permalink'></a></h3>
+<p>请按照下面的步骤为GitLab启用relative URL:</p>
+
+<ol>
+<li><p>(可选) 如果当前服务器可用资源不用，可用下面的命令暂时关闭
+Unicorn 和 Sidekiq 释放一部分内存:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+</code></pre></li>
+<li><p>修改 <code>external_url</code> ，编辑 <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">external_url</span> <span class="s2">"https://example.com/gitlab"</span>
+</code></pre>
+<p>上面的例子将使GitLab的访问路径变成域名后面加
+<code>/gitlab</code>，请将此处修改为你自己的地址。</p></li>
+<li><p>Reconfigure GitLab 使修改生效:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl reconfigure
+</code></pre></li>
+<li><p>如果你刚才停止了Unicorn 和 Sidekiq 服务，现在就需要重启下GitLab:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl restart
+</code></pre></li>
+</ol>
+
+<p>如上面的操作出现错误，请查阅<a href="configuration.html#relative-url-troubleshooting">故障排查</a>章节。</p>
+<h3 id='disable-relative-url-in-gitlab'>Disable relative URL in GitLab 禁用子路径访问 <a class='anchor' href='configuration.html#disable-relative-url-in-gitlab' title='Permalink'></a></h3>
+<p>禁用relative URL， 同样的也要修改
+<code>external_url</code> ，改成不包含子路径的地址。
+然后重启下Unicorn服务即可:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl restart unicorn
+</code></pre>
+<p>如上面的操作出现错误，请查阅<a href="configuration.html#relative-url-troubleshooting">故障排查</a>章节。</p>
+<h3 id='relative-url-troubleshooting'>Relative URL troubleshooting 使用子路径的故障排查 <a class='anchor' href='configuration.html#relative-url-troubleshooting' title='Permalink'></a></h3>
+<p>如果由于一些原因导致资源生成失败(比如服务器内存不足)，
+你可以在解决这些问题后手动执行生成资源的任务(比如增加swap):</p>
+<pre class="highlight shell"><code>sudo <span class="nv">NO_PRIVILEGE_DROP</span><span class="o">=</span><span class="nb">true </span><span class="nv">USE_DB</span><span class="o">=</span><span class="nb">false </span>gitlab-rake assets:clean assets:precompile
+sudo chown -R git:git /var/opt/gitlab/gitlab-rails/tmp/cache
+</code></pre>
+<p>上面的命令中的用户和组如果和你在<code>gitlab.rb</code>中设置的
+<code>user[&#39;username&#39;]</code>， <code>user[&#39;group&#39;]</code> ， <code>gitlab_rails[&#39;dir&#39;]</code> 不一样，
+执行该命令的时候注意修改<code>chown</code>
+命令后面的<code>git:git</code>为配置文件里面的用户和组。</p>
+<h2 id='loading-external-configuration-file-from-non-root-user'>Loading external configuration file from non-root user 载入非超级用户的扩展配置 <a class='anchor' href='configuration.html#loading-external-configuration-file-from-non-root-user' title='Permalink'></a></h2>
+<p>Omnibus-gitlab会加载 <code>/etc/gitlab/gitlab.rb</code> 文件中的所有配置项。
+这个文件的属主为root，并且有严格的权限控制，这样做的原因是
+执行 <code>gitlab-ctl reconfigure</code>的过程中要以<code>root</code>身份运行Ruby解析<code>/etc/gitlab/gitlab.rb</code>。
+这就意味着拥有 <code>/etc/gitlab/gitlab.rb</code>写入权限的用户可以编辑配置项然后以<code>root</code>用户身份来执行解析。</p>
+
+<p>在某些团队，可能会允许非root用户来修改gitlab的配置，
+你可以在 <code>/etc/gitlab/gitlab.rb</code> 文件中引入外部扩展配置文件实现这个需求:</p>
+<pre class="highlight ruby"><code><span class="n">from_file</span> <span class="s2">"/home/admin/external_gitlab.rb"</span>
+
+</code></pre>
+<p>使用<code>from_file</code>引入到 <code>/etc/gitlab/gitlab.rb</code> 的代码在<code>sudo gitlab-ctl reconfigure</code>的时候都会以 <code>root</code> 权限运行。
+<code>/etc/gitlab/gitlab.rb</code>和<code>from_file</code>中重复的配置项，<code>/etc/gitlab/gitlab.rb</code>的优先级更高。</p>
+<h2 id='storing-git-data-in-an-alternative-directory'>Storing Git data in an alternative directory  设置存储仓库数据的备用目录 <a class='anchor' href='configuration.html#storing-git-data-in-an-alternative-directory' title='Permalink'></a></h2>
+<p>默认情况下omnibus-gitlab 将仓库数据存储在
+<code>/var/opt/gitlab/git-data</code>目录下，仓库存放在子目录
+<code>repositories</code>里面。 以可以通过修改<code>/etc/gitlab/gitlab.rb</code>
+的这一行来自定义 <code>git-data</code>
+的父目录。</p>
+<pre class="highlight ruby"><code><span class="n">git_data_dirs</span><span class="p">({</span><span class="s2">"default"</span> <span class="o">=&gt;</span> <span class="s2">"/mnt/nas/git-data"</span><span class="p">})</span>
+</code></pre>
+<p>自GitLab 8.10开始,可以通过在<code>/etc/gitlab/gitlab.rb</code>文件中添加下面的几行配置,
+来增加多个git数据目录.</p>
+<pre class="highlight ruby"><code><span class="n">git_data_dirs</span><span class="p">({</span>
+  <span class="s2">"default"</span> <span class="o">=&gt;</span> <span class="s2">"/var/opt/gitlab/git-data"</span><span class="p">,</span>
+  <span class="s2">"alternative"</span> <span class="o">=&gt;</span> <span class="s2">"/mnt/nas/git-data"</span>
+<span class="p">})</span>
+</code></pre>
+<p><strong>注意</strong> 目标路径和其子路径必须<code>不能为软链接</code>。</p>
+
+<p>运行 <code>sudo gitlab-ctl reconfigure</code> 使修改生效。</p>
+
+<p>如果 <code>/var/opt/gitlab/git-data</code> 目录已经存在Git仓库数据，
+你可以用下面的命令把数据迁移到新的位置:</p>
+<pre class="highlight shell"><code><span class="c"># 准备迁移之前要停止GitLab服务，防止用户写入数据。</span>
+sudo gitlab-ctl stop
+
+<span class="c"># 注意 'repositories'后面不带斜杠，而</span>
+<span class="c"># 'git-data'后面是有斜杠的。</span>
+sudo rsync -av /var/opt/gitlab/git-data/repositories /mnt/nas/git-data/
+
+<span class="c"># 如果需要修复权限设置，</span>
+<span class="c"># 可运行下面的命令进行修复。</span>
+sudo gitlab-ctl reconfigure
+
+<span class="c"># 再次检查下 /mnt/nas/git-data的目录. 正常情况应该有下面这个子目录:</span>
+<span class="c"># repositories</span>
+
+sudo ls /mnt/nas/git-data/
+
+<span class="c"># 完工! 启动GitLab，验证下是否能</span>
+<span class="c"># 通过web访问Git仓库。</span>
+sudo gitlab-ctl start
+</code></pre><h2 id='changing-the-name-of-the-git-user-group'>Changing the name of the Git user / group 修改默认的运行用户和组 <a class='anchor' href='configuration.html#changing-the-name-of-the-git-user-group' title='Permalink'></a></h2>
+<p>默认情况下omnibus-gitLab使用<code>git</code>用户登陆Git gitlab-shell,
+Git data是属主也是<code>git</code>，网页上生成的SSH URL也是<code>git</code>用户。
+同样的, <code>git</code>用户组也是Git data的属组。</p>
+
+<p>我们不建议在已经安装好的gitlab上修改默认的user/group，因为这会产生无法预知的副作用。
+如果你固执的想要修改默认的user/group，你可以在
+<code>/etc/gitlab/gitlab.rb</code>文件中添加下面加行配置:</p>
+<pre class="highlight ruby"><code><span class="n">user</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gitlab"</span>
+<span class="n">user</span><span class="p">[</span><span class="s1">'group'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gitlab"</span>
+</code></pre>
+<p>运行 <code>sudo gitlab-ctl reconfigure</code> 使修改生效。</p>
+
+<p>注意：如果你在已经安装好的GitLab中修改了user/group，reconfigure不会修改子目录的属主和属组，你需要手动修改，
+并确认新用户可以读写 <code>repositories</code> 和 <code>uploads</code> 目录。</p>
+<h2 id='specify-numeric-user-and-group-identifiers'>Specify numeric user and group identifiers 设置使用数字表示的用户和组 <a class='anchor' href='configuration.html#specify-numeric-user-and-group-identifiers' title='Permalink'></a></h2>
+<p>omnibus-gitlab 为GitLab, PostgreSQL, Redis 和 NGINX创建了运行用户。
+你可以在 <code>/etc/gitlab/gitlab.rb</code>
+文件中指定这些用户的uid和gid。</p>
+<pre class="highlight ruby"><code><span class="n">user</span><span class="p">[</span><span class="s1">'uid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1234</span>
+<span class="n">user</span><span class="p">[</span><span class="s1">'gid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1234</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'uid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1235</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'gid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1235</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'uid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1236</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'gid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1236</span>
+<span class="n">web_server</span><span class="p">[</span><span class="s1">'uid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1237</span>
+<span class="n">web_server</span><span class="p">[</span><span class="s1">'gid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1237</span>
+</code></pre>
+<p>运行 <code>sudo gitlab-ctl reconfigure</code> 使修改生效。</p>
+<h2 id='disable-user-and-group-account-management'>Disable user and group account management 禁用管理用户和组账户的功能 <a class='anchor' href='configuration.html#disable-user-and-group-account-management' title='Permalink'></a></h2>
+<p>默认情况下，omnibus-gitlab 负责创建用户和组账户，以及更新账户信息。该做法对大多数用户是有意义的，
+但在某些环境和需求中，我们需要用其他的软件来管理用户和组账号，比如LDAP环境。</p>
+
+<p>为了禁用omnibus-gitlab管理用户和组账户，我们需要在<code>/etc/gitlab/gitlab.rb</code>中做如下设置：</p>
+<pre class="highlight ruby"><code><span class="n">manage_accounts</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p><em>警告</em> Omnibus-gitlab 建议在系统上保留omnibus-gitlab安装包创建的默认用户。</p>
+
+<p>omnibus-gitlab 创建的默认用户如下：</p>
+<pre class="highlight shell"><code><span class="c"># GitLab user (必需)</span>
+git
+
+<span class="c"># Web server user (必需)</span>
+gitlab-www
+
+<span class="c"># Redis user for GitLab (如使用内置的redis，该账号必需)</span>
+gitlab-redis
+
+<span class="c"># Postgresql user (如使用内置的Postgresql，该账号必需)</span>
+gitlab-psql
+
+<span class="c"># GitLab Mattermost user (如使用内置的Mattermost，该账号必需)</span>
+mattermost
+</code></pre>
+<p>omnibus-gitlab 创建的默认组如下：</p>
+<pre class="highlight shell"><code><span class="c"># GitLab group (必需)</span>
+git
+
+<span class="c"># Web server group (必需)</span>
+gitlab-www
+
+<span class="c"># Redis group for GitLab (如使用内置的Redis，该用户组必需)</span>
+gitlab-redis
+
+<span class="c"># Postgresql group (如使用内置的Postgres，该用户组必需)</span>
+gitlab-psql
+
+<span class="c"># GitLab Mattermost group (如使用内置的Mattermost，该用户组必需)</span>
+mattermost
+</code></pre>
+<p>你也可以自定义user/group ，但需要在<code>/etc/gitlab/gitlab.rb</code>配置文件中配置详细的user/group，如：</p>
+<pre class="highlight ruby"><code><span class="c1"># 禁用管理user/group的功能</span>
+<span class="n">manage_accounts</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># GitLab</span>
+<span class="n">user</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"custom-gitlab"</span>
+<span class="n">user</span><span class="p">[</span><span class="s1">'group'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"custom-gitlab"</span>
+<span class="n">user</span><span class="p">[</span><span class="s1">'shell'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/bin/sh"</span>
+<span class="n">user</span><span class="p">[</span><span class="s1">'home'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/var/opt/custom-gitlab"</span>
+
+<span class="c1"># Web server</span>
+<span class="n">web_server</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'webserver-gitlab'</span>
+<span class="n">web_server</span><span class="p">[</span><span class="s1">'group'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'webserver-gitlab'</span>
+<span class="n">web_server</span><span class="p">[</span><span class="s1">'shell'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/bin/false'</span>
+<span class="n">web_server</span><span class="p">[</span><span class="s1">'home'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/var/opt/gitlab/webserver'</span>
+
+<span class="c1"># Postgresql (如使用外部Postgresql，可忽略该配置)</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"postgres-gitlab"</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'shell'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/bin/sh"</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'home'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/var/opt/postgres-gitlab"</span>
+
+<span class="c1"># Redis (如使用外部Redis，可忽略该配置)</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"redis-gitlab"</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'shell'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/bin/false"</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'home'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/var/opt/redis-gitlab"</span>
+
+<span class="c1"># 以此类推，GitLab CI 和 GitLab Mattermost 也需要指定详细的user/group</span>
+</code></pre><h2 id='disable-storage-directories-management'>Disable storage directories management 禁用管理存储目录的功能 <a class='anchor' href='configuration.html#disable-storage-directories-management' title='Permalink'></a></h2>
+<p>默认情况下，omnibus-gitlab负责创建所有必需的文件夹并赋予目录正确的所有权和权限，
+并根据配置文件保持更新。</p>
+
+<p>在某些大型组织架构中，随着项目代码和数量的增加，一些目录会存储大量的数据，
+为扩展存储能力这些目录可能就需要挂载到NFS(或者其他共享存储)上。</p>
+
+<p>挂载某些文件系统会拒绝root用户自动创建目录，
+比如 NFS 需要启用 <code>root_squash</code> 。
+要解决这个问题，omnibus-gitlab
+会尝试使用该目录的属主用户来自动创建子目录。</p>
+
+<p>如果你挂载了 <code>/etc/gitlab</code> 目录，你可以禁用omnibus-gitlab
+对该目录的管理功能。</p>
+
+<p>修改 <code>/etc/gitlab/gitlab.rb</code> :</p>
+<pre class="highlight ruby"><code><span class="n">manage_storage_directories</span><span class="p">[</span><span class="s1">'manage_etc'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p>如果计划重新挂载GitLab所有存储目录到每个独立的挂载点上，
+应该完全禁用omnibus-gitlab对各个存储目录的管理功能。</p>
+
+<p>为禁止对所有存储目录的管理功能，
+修改 <code>/etc/gitlab/gitlab.rb</code> :</p>
+<pre class="highlight ruby"><code><span class="n">manage_storage_directories</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p><strong>Warning</strong> omnibus-gitlab 建议保留默认的目录。
+如该选项已设置，
+将有管理员创建目录并设置正确的权限。</p>
+
+<p>启用此设置会阻止omnibus-gitlab创建如下目录：</p>
+
+<table><thead>
+<tr>
+<th>Default location</th>
+<th>Permissions</th>
+<th>Ownership</th>
+<th>Purpose</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>/var/opt/gitlab/git-data</code></td>
+<td>0700</td>
+<td>git:root</td>
+<td>Holds repositories directory</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/git-data/repositories</code></td>
+<td>2770</td>
+<td>git:git</td>
+<td>Holds git repositories</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/shared</code></td>
+<td>0751</td>
+<td>git:gitlab-www</td>
+<td>Holds large object directories</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/shared/artifacts</code></td>
+<td>0700</td>
+<td>git:root</td>
+<td>Holds CI artifacts</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/shared/lfs-objects</code></td>
+<td>0700</td>
+<td>git:root</td>
+<td>Holds LFS objects</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/uploads</code></td>
+<td>0700</td>
+<td>git:root</td>
+<td>Holds user attachments</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/shared/pages</code></td>
+<td>0750</td>
+<td>git:gitlab-www</td>
+<td>Holds user pages</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-ci/builds</code></td>
+<td>0700</td>
+<td>git:root</td>
+<td>Holds CI build logs</td>
+</tr>
+</tbody></table>
+<h2 id='only-start-omnibus-gitlab-services-after-a-given-filesystem-is-mounted'>Only start Omnibus-GitLab services after a given filesystem is mounted 设置延迟启动 <a class='anchor' href='configuration.html#only-start-omnibus-gitlab-services-after-a-given-filesystem-is-mounted' title='Permalink'></a></h2>
+<p>为保证服务质量，我们可以设置让omnibus-gitlab的服务(Nginx, Redis, Unicorn等)
+在指定的文件系统挂载成功后再启动，在<code>/etc/gitlab/gitlab.rb</code>
+文件中添加如下内容：</p>
+<pre class="highlight ruby"><code><span class="c1"># wait for /var/opt/gitlab to be mounted</span>
+<span class="n">high_availability</span><span class="p">[</span><span class="s1">'mountpoint'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/var/opt/gitlab'</span>
+</code></pre>
+<p>运行<code>sudo gitlab-ctl reconfigure</code> 使修改生效。</p>
+<h2 id='configuring-rack-attack'>Configuring Rack Attack 配置基础防护 <a class='anchor' href='configuration.html#configuring-rack-attack' title='Permalink'></a></h2>
+<p>为组织恶意使用客户端破坏GitLab，我们使用了rack-attack gem包。
+查阅 <a href="../../ce/security/rack_attack.html">rack_attack</a>
+获取更多内容。</p>
+
+<p>源码中的<a href="https://github.com/gitlabhq/gitlabhq/blob/master/config/initializers/rack_attack.rb.example">config/initializers/rack_attack.rb</a>文件在omnibus-gitlab
+中由<code>/etc/gitlab/gitlab.rb</code>管理。</p>
+<h3 id='enabling-disabling-rack-attack-and-setting-up-basic-auth-throttling'>Enabling/Disabling Rack Attack and setting up basic auth throttling 启用禁用账户验证防护 <a class='anchor' href='configuration.html#enabling-disabling-rack-attack-and-setting-up-basic-auth-throttling' title='Permalink'></a></h3>
+<p>修改下面的配置项控制Rack Attack:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'rack_attack_git_basic_auth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'enabled'</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span> <span class="c1"># 启用/禁用 Rack Attack</span>
+  <span class="s1">'ip_whitelist'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"127.0.0.1"</span><span class="p">],</span> <span class="c1"># 白名单地址，多个IP用","隔开</span>
+  <span class="s1">'maxretry'</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">,</span> <span class="c1"># 限制每个IP尝试登陆的次数为10次。</span>
+  <span class="s1">'findtime'</span> <span class="o">=&gt;</span> <span class="mi">60</span><span class="p">,</span> <span class="c1"># 60秒后重置每IP的授权计数器</span>
+  <span class="s1">'bantime'</span> <span class="o">=&gt;</span> <span class="mi">3600</span> <span class="c1"># 对多次错误登陆的IP封禁1小时(3600秒)</span>
+<span class="p">}</span>
+</code></pre><h3 id='setting-up-paths-to-be-protected-by-rack-attack'>Setting up paths to be protected by Rack Attack 设置访问路径防护 <a class='anchor' href='configuration.html#setting-up-paths-to-be-protected-by-rack-attack' title='Permalink'></a></h3>
+<p>要修改默认的防护路径，
+需在配置文件中设置<code>gitlab_rails[&#39;rack_attack_protected_paths&#39;]</code>区段。</p>
+
+<p><strong>Warning</strong> 此操作会覆盖
+omnibus-gitlab 默认列表：</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'rack_attack_protected_paths'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'/users/password'</span><span class="p">,</span>
+  <span class="s1">'/users/sign_in'</span><span class="p">,</span>
+  <span class="s1">'/api/#{API::API.version}/session.json'</span><span class="p">,</span>
+  <span class="s1">'/api/#{API::API.version}/session'</span><span class="p">,</span>
+  <span class="s1">'/users'</span><span class="p">,</span>
+  <span class="s1">'/users/confirmation'</span><span class="p">,</span>
+  <span class="s1">'/unsubscribes/'</span><span class="p">,</span>
+  <span class="s1">'/import/github/personal_access_token'</span>
+<span class="p">]</span>
+</code></pre>
+<p><em><strong>Note:</strong> 所有路径必须是 gitlab 的相对路径.</em>
+如启用了<a href="configuration.html#configuring-a-relative-url-for-gitlab">relative URL</a>，上面的路径要做相应修改。</p>
+
+<p><strong>Warning</strong> 若要在路径中插入rails的变量，
+如(<code>#{API::API.version}</code>),应避免用大括号和单引号字符串。
+示例：<code>&quot;/api/#\{API::API.version\}/session.json&quot;</code>
+或者 <code>&#39;/api/#{API::API.version}/session.json&#39;</code></p>
+<h3 id='setting-up-throttling-for-39-paths-to-be-protected-39'>Setting up throttling for &#39;paths to be protected&#39; 设置路径防护的频率 <a class='anchor' href='configuration.html#setting-up-throttling-for-39-paths-to-be-protected-39' title='Permalink'></a></h3>
+<p>用如下配置来控制频率和周期：</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'rate_limit_requests_per_period'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1">#限制每周期请求次数</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'rate_limit_period'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">60</span> <span class="c1">#每周期的时长，60s</span>
+</code></pre>
+<p>运行<code>sudo gitlab-ctl reconfigure</code> 使修改生效。</p>
+<h2 id='setting-up-ldap-sign-in-ldap'>Setting up LDAP sign-in 配置使用LDAP登录 <a class='anchor' href='configuration.html#setting-up-ldap-sign-in-ldap' title='Permalink'></a></h2>
+<p>See <a href="ldap.html">doc/settings/ldap.md</a>.</p>
+<h2 id='enable-https-https'>Enable HTTPS 启用HTTPS <a class='anchor' href='configuration.html#enable-https-https' title='Permalink'></a></h2>
+<p>See <a href="nginx.html#enable-https">doc/settings/nginx.md</a>.</p>
+<h3 id='redirect-http-requests-to-https-http-https'>Redirect <code>HTTP</code> requests to <code>HTTPS</code>. 强制 <code>HTTP</code> 跳转为 <code>HTTPS</code> <a class='anchor' href='configuration.html#redirect-http-requests-to-https-http-https' title='Permalink'></a></h3>
+<p>See <a href="nginx.html#redirect-http-requests-to-https">doc/settings/nginx.md</a>.</p>
+<h3 id='change-the-default-port-and-the-ssl-certificate-locations-ssl'>Change the default port and the ssl certificate locations. 修改默认端口和SSL证书路径 <a class='anchor' href='configuration.html#change-the-default-port-and-the-ssl-certificate-locations-ssl' title='Permalink'></a></h3>
+<p>See
+<a href="nginx.html#change-the-default-port-and-the-ssl-certificate-locations">doc/settings/nginx.md</a>.</p>
+<h2 id='use-non-packaged-web-server-web-server'>Use non-packaged web-server 使用外部 web-server <a class='anchor' href='configuration.html#use-non-packaged-web-server-web-server' title='Permalink'></a></h2>
+<p>使用系统上已安装的Nginx, Passenger, or Apache webserver 请查阅 <a href="nginx.html#using-a-non-bundled-web-server">doc/settings/nginx.md</a>.</p>
+<h2 id='using-a-non-packaged-postgresql-database-management-server-postgresql'>Using a non-packaged PostgreSQL database management server 使用外部的PostgreSQL数据库服务器 <a class='anchor' href='configuration.html#using-a-non-packaged-postgresql-database-management-server-postgresql' title='Permalink'></a></h2>
+<p>连接外部PostgreSQL or MySQL DBMS 请查阅 <a href="database.html">doc/settings/database.md</a> (Omnibus安装包只有Enterprise(企业版)支持Mysql).</p>
+<h2 id='using-a-non-packaged-redis-instance-redis'>Using a non-packaged Redis instance 使用外部　Redis 实例 <a class='anchor' href='configuration.html#using-a-non-packaged-redis-instance-redis' title='Permalink'></a></h2>
+<p>See <a href="redis.html">doc/settings/redis.md</a>.</p>
+<h2 id='adding-env-vars-to-the-gitlab-runtime-environment-gitlab'>Adding ENV Vars to the GitLab Runtime Environment 添加系统变量到GitLab运行环境 <a class='anchor' href='configuration.html#adding-env-vars-to-the-gitlab-runtime-environment-gitlab' title='Permalink'></a></h2>
+<p>See
+<a href="environment-variables.html">doc/settings/environment-variables.md</a>.</p>
+<h2 id='changing-gitlab-yml-settings-gitlab-yml'>Changing GitLab.yml settings 自定义GitLab.yml设置 <a class='anchor' href='configuration.html#changing-gitlab-yml-settings-gitlab-yml' title='Permalink'></a></h2>
+<p>See <a href="gitlab.yml.html">doc/settings/gitlab.yml.md</a>.</p>
+<h2 id='sending-application-email-via-smtp-smtp'>Sending application email via SMTP 使用SMTP发送邮件 <a class='anchor' href='configuration.html#sending-application-email-via-smtp-smtp' title='Permalink'></a></h2>
+<p>See <a href="smtp.html">doc/settings/smtp.md</a>.</p>
+<h2 id='omniauth-google-twitter-github-login'>Omniauth (Google, Twitter, GitHub login) <a class='anchor' href='configuration.html#omniauth-google-twitter-github-login' title='Permalink'></a></h2>
+<p>Omniauth configuration is documented in
+<a href="https://docs.gitlab.com/ce/integration/omniauth.html">docs.gitlab.com</a>.</p>
+<h2 id='adjusting-unicorn-settings-unicorn'>Adjusting Unicorn settings 调整 Unicorn 配置 <a class='anchor' href='configuration.html#adjusting-unicorn-settings-unicorn' title='Permalink'></a></h2>
+<p>See <a href="unicorn.html">doc/settings/unicorn.md</a>.</p>
+<h2 id='setting-the-nginx-listen-address-or-addresses-nginx'>Setting the NGINX listen address or addresses 配置 NGINX 监听地址 <a class='anchor' href='configuration.html#setting-the-nginx-listen-address-or-addresses-nginx' title='Permalink'></a></h2>
+<p>See <a href="nginx.html">doc/settings/nginx.md</a>.</p>
+<h2 id='inserting-custom-nginx-settings-into-the-gitlab-server-block-nginx-server'>Inserting custom NGINX settings into the GitLab server block 在内置NGINX中插入自定义server块 <a class='anchor' href='configuration.html#inserting-custom-nginx-settings-into-the-gitlab-server-block-nginx-server' title='Permalink'></a></h2>
+<p>See <a href="nginx.html">doc/settings/nginx.md</a>.</p>
+<h2 id='inserting-custom-settings-into-the-nginx-config-nginx'>Inserting custom settings into the NGINX config 在内置NGINX中插入自定义设置 <a class='anchor' href='configuration.html#inserting-custom-settings-into-the-nginx-config-nginx' title='Permalink'></a></h2>
+<p>See <a href="nginx.html">doc/settings/nginx.md</a>.</p>
+<h2 id='enable-nginx_status-nginx-nginx_status'>Enable nginx_status 启用内置NGINX的nginx_status模块 <a class='anchor' href='configuration.html#enable-nginx_status-nginx-nginx_status' title='Permalink'></a></h2>
+<p>See <a href="nginx.html">doc/settings/nginx.md</a>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/configuration.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

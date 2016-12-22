@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Builds API - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab API</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab CI API</a></li>
+            
+          
+          <li class="breadcrumb">Builds API</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="builds.html#builds-api">Builds API</a>
+<ul>
+<li>
+<a href="builds.html#authentication">Authentication</a>
+</li>
+<li>
+<a href="builds.html#builds">Builds</a>
+<ul>
+<li>
+<a href="builds.html#runs-oldest-pending-build-by-runner">Runs oldest pending build by runner</a>
+</li>
+<li>
+<a href="builds.html#update-details-of-an-existing-build">Update details of an existing build</a>
+</li>
+<li>
+<a href="builds.html#incremental-build-trace-update">Incremental build trace update</a>
+</li>
+<li>
+<a href="builds.html#upload-artifacts-to-build">Upload artifacts to build</a>
+</li>
+<li>
+<a href="builds.html#download-the-artifacts-file-from-build">Download the artifacts file from build</a>
+</li>
+<li>
+<a href="builds.html#remove-the-artifacts-file-from-build">Remove the artifacts file from build</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='builds-api'>Builds API <a class='anchor' href='builds.html#builds-api' title='Permalink'></a></h1>
+<p>API used by runners to receive and update builds.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+This API is intended to be used only by Runners as their own
+communication channel. For the consumer API see the
+<a href="../builds.html">Builds API</a>.</p>
+</blockquote>
+<h2 id='authentication'>Authentication <a class='anchor' href='builds.html#authentication' title='Permalink'></a></h2>
+<p>This API uses two types of authentication:</p>
+
+<ol>
+<li><p>Unique Runner&#39;s token which is the token assigned to the Runner after it
+has been registered.</p></li>
+<li><p>Using the build authorization token.
+This is project&#39;s CI token that can be found under the <strong>Builds</strong> section of
+a project&#39;s settings. The build authorization token can be passed as a
+parameter or a value of <code>BUILD-TOKEN</code> header.</p></li>
+</ol>
+
+<p>These two methods of authentication are interchangeable.</p>
+<h2 id='builds'>Builds <a class='anchor' href='builds.html#builds' title='Permalink'></a></h2><h3 id='runs-oldest-pending-build-by-runner'>Runs oldest pending build by runner <a class='anchor' href='builds.html#runs-oldest-pending-build-by-runner' title='Permalink'></a></h3><pre class="highlight plaintext"><code>POST /ci/api/v1/builds/register
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Unique runner token</td>
+</tr>
+</tbody></table>
+<pre class="highlight plaintext"><code>curl --request POST "https://gitlab.example.com/ci/api/v1/builds/register" --form "token=t0k3n"
+</code></pre>
+<p><strong>Responses:</strong></p>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Data</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>201</code></td>
+<td>yes</td>
+<td>When a build is scheduled for a runner</td>
+</tr>
+<tr>
+<td><code>204</code></td>
+<td>no</td>
+<td>When no builds are scheduled for a runner (for GitLab Runner &gt;= <code>v1.3.0</code>)</td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td>no</td>
+<td>When invalid token is used or no token is sent</td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td>no</td>
+<td>When no builds are scheduled for a runner (for GitLab Runner &lt; <code>v1.3.0</code>) <strong>or</strong> when the runner is set to <code>paused</code> in GitLab runner&#39;s configuration page</td>
+</tr>
+</tbody></table>
+<h3 id='update-details-of-an-existing-build'>Update details of an existing build <a class='anchor' href='builds.html#update-details-of-an-existing-build' title='Permalink'></a></h3><pre class="highlight plaintext"><code>PUT /ci/api/v1/builds/:id
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a project</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Unique runner token</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>string</td>
+<td>no</td>
+<td>The state of a build</td>
+</tr>
+<tr>
+<td><code>trace</code></td>
+<td>string</td>
+<td>no</td>
+<td>The trace of a build</td>
+</tr>
+</tbody></table>
+<pre class="highlight plaintext"><code>curl --request PUT "https://gitlab.example.com/ci/api/v1/builds/1234" --form "token=t0k3n" --form "state=running" --form "trace=Running git clone...\n"
+</code></pre><h3 id='incremental-build-trace-update'>Incremental build trace update <a class='anchor' href='builds.html#incremental-build-trace-update' title='Permalink'></a></h3>
+<p>Using this method you need to send trace content as a request body. You also need to provide the <code>Content-Range</code> header
+with a range of sent trace part. Note that you need to send parts in the proper order, so the begining of the part
+must start just after the end of the previous part. If you provide the wrong part, then GitLab CI API will return <code>416
+Range Not Satisfiable</code> response with a header <code>Range: 0-X</code>, where <code>X</code> is the current trace length.</p>
+
+<p>For example, if you receive <code>Range: 0-11</code> in the response, then your next part must contain a <code>Content-Range: 11-...</code>
+header and a trace part covered by this range.</p>
+
+<p>For a valid update API will return <code>202</code> response with:</p>
+
+<ul>
+<li><code>Build-Status: {status}</code> header containing current status of the build,</li>
+<li><code>Range: 0-{length}</code> header with the current trace length.</li>
+</ul>
+<pre class="highlight plaintext"><code>PATCH /ci/api/v1/builds/:id/trace.txt
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a build</td>
+</tr>
+</tbody></table>
+
+<p>Headers:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>BUILD-TOKEN</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The build authorization token</td>
+</tr>
+<tr>
+<td><code>Content-Range</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Bytes range of trace that is sent</td>
+</tr>
+</tbody></table>
+<pre class="highlight plaintext"><code>curl --request PATCH "https://gitlab.example.com/ci/api/v1/builds/1234/trace.txt" --header "BUILD-TOKEN=build_t0k3n" --header "Content-Range=0-21" --data "Running git clone...\n"
+</code></pre><h3 id='upload-artifacts-to-build'>Upload artifacts to build <a class='anchor' href='builds.html#upload-artifacts-to-build' title='Permalink'></a></h3><pre class="highlight plaintext"><code>POST /ci/api/v1/builds/:id/artifacts
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a build</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The build authorization token</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>mixed</td>
+<td>yes</td>
+<td>Artifacts file</td>
+</tr>
+</tbody></table>
+<pre class="highlight plaintext"><code>curl --request POST "https://gitlab.example.com/ci/api/v1/builds/1234/artifacts" --form "token=build_t0k3n" --form "file=@/path/to/file"
+</code></pre><h3 id='download-the-artifacts-file-from-build'>Download the artifacts file from build <a class='anchor' href='builds.html#download-the-artifacts-file-from-build' title='Permalink'></a></h3><pre class="highlight plaintext"><code>GET /ci/api/v1/builds/:id/artifacts
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a build</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The build authorization token</td>
+</tr>
+</tbody></table>
+<pre class="highlight plaintext"><code>curl "https://gitlab.example.com/ci/api/v1/builds/1234/artifacts" --form "token=build_t0k3n"
+</code></pre><h3 id='remove-the-artifacts-file-from-build'>Remove the artifacts file from build <a class='anchor' href='builds.html#remove-the-artifacts-file-from-build' title='Permalink'></a></h3><pre class="highlight plaintext"><code>DELETE /ci/api/v1/builds/:id/artifacts
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a build</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The build authorization token</td>
+</tr>
+</tbody></table>
+<pre class="highlight plaintext"><code>curl --request DELETE "https://gitlab.example.com/ci/api/v1/builds/1234/artifacts" --form "token=build_t0k3n"
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/api/ci/builds.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

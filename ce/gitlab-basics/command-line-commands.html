@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Command Line basic commands - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab basics</a></li>
+            
+          
+          <li class="breadcrumb">Command Line basic commands</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="command-line-commands.html#command-line-basic-commands">Command Line basic commands</a>
+<ul>
+<li>
+<a href="command-line-commands.html#start-working-on-your-project">Start working on your project</a>
+</li>
+<li>
+<a href="command-line-commands.html#on-the-command-line">On the command line</a>
+<ul>
+<li>
+<a href="command-line-commands.html#clone-your-project">Clone your project</a>
+</li>
+<li>
+<a href="command-line-commands.html#go-into-a-project-directory-or-file-to-work-in-it">Go into a project, directory or file to work in it</a>
+</li>
+<li>
+<a href="command-line-commands.html#go-back-one-directory-or-file">Go back one directory or file</a>
+</li>
+<li>
+<a href="command-line-commands.html#view-what-s-in-the-directory-that-you-are-in">View what’s in the directory that you are in</a>
+</li>
+<li>
+<a href="command-line-commands.html#create-a-directory">Create a directory</a>
+</li>
+<li>
+<a href="command-line-commands.html#create-a-readme-md-or-file-in-directory">Create a README.md or file in directory</a>
+</li>
+<li>
+<a href="command-line-commands.html#remove-a-file">Remove a file</a>
+</li>
+<li>
+<a href="command-line-commands.html#remove-a-directory-and-all-of-its-contents">Remove a directory and all of its contents</a>
+</li>
+<li>
+<a href="command-line-commands.html#view-history-in-the-command-line">View history in the command line</a>
+</li>
+<li>
+<a href="command-line-commands.html#carry-out-commands-for-which-the-account-you-are-using-lacks-authority">Carry out commands for which the account you are using lacks authority</a>
+</li>
+<li>
+<a href="command-line-commands.html#tell-where-you-are">Tell where you are</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='command-line-basic-commands'>Command Line basic commands <a class='anchor' href='command-line-commands.html#command-line-basic-commands' title='Permalink'></a></h1><h2 id='start-working-on-your-project'>Start working on your project <a class='anchor' href='command-line-commands.html#start-working-on-your-project' title='Permalink'></a></h2>
+<p>In Git, when you copy a project you say you &quot;clone&quot; it. To work on a git project locally (from your own computer), you will need to clone it. To do this, sign in to GitLab.</p>
+
+<p>When you are on your Dashboard, click on the project that you&#39;d like to clone.
+To work in the project, you can copy a link to the Git repository through a SSH
+or a HTTPS protocol. SSH is easier to use after it&#39;s been
+<a href="create-your-ssh-keys.html">setup</a>. While you are at the <strong>Project</strong> tab, select
+HTTPS or SSH from the dropdown menu and copy the link using the &#39;Copy to clipboard&#39;
+button (you&#39;ll have to paste it on your shell in the next step).</p>
+
+<p><a target="_blank" href="img/project_clone_url.png"><img src="img/project_clone_url.png" title="" alt="Copy the HTTPS or SSH"/></a></p>
+<h2 id='on-the-command-line'>On the command line <a class='anchor' href='command-line-commands.html#on-the-command-line' title='Permalink'></a></h2><h3 id='clone-your-project'>Clone your project <a class='anchor' href='command-line-commands.html#clone-your-project' title='Permalink'></a></h3>
+<p>Go to your computer&#39;s shell and type the following command:</p>
+<pre class="highlight plaintext"><code>git clone PASTE HTTPS OR SSH HERE
+</code></pre>
+<p>A clone of the project will be created in your computer.</p>
+<h3 id='go-into-a-project-directory-or-file-to-work-in-it'>Go into a project, directory or file to work in it <a class='anchor' href='command-line-commands.html#go-into-a-project-directory-or-file-to-work-in-it' title='Permalink'></a></h3><pre class="highlight plaintext"><code>cd NAME-OF-PROJECT-OR-FILE
+</code></pre><h3 id='go-back-one-directory-or-file'>Go back one directory or file <a class='anchor' href='command-line-commands.html#go-back-one-directory-or-file' title='Permalink'></a></h3><pre class="highlight plaintext"><code>cd ../
+</code></pre><h3 id='view-what-s-in-the-directory-that-you-are-in'>View what’s in the directory that you are in <a class='anchor' href='command-line-commands.html#view-what-s-in-the-directory-that-you-are-in' title='Permalink'></a></h3><pre class="highlight plaintext"><code>ls
+</code></pre><h3 id='create-a-directory'>Create a directory <a class='anchor' href='command-line-commands.html#create-a-directory' title='Permalink'></a></h3><pre class="highlight plaintext"><code>mkdir NAME-OF-YOUR-DIRECTORY
+</code></pre><h3 id='create-a-readme-md-or-file-in-directory'>Create a README.md or file in directory <a class='anchor' href='command-line-commands.html#create-a-readme-md-or-file-in-directory' title='Permalink'></a></h3><pre class="highlight plaintext"><code>touch README.md
+nano README.md
+#### ADD YOUR INFORMATION
+#### Press: control + X
+#### Type: Y
+#### Press: enter
+</code></pre><h3 id='remove-a-file'>Remove a file <a class='anchor' href='command-line-commands.html#remove-a-file' title='Permalink'></a></h3><pre class="highlight plaintext"><code>rm NAME-OF-FILE
+</code></pre><h3 id='remove-a-directory-and-all-of-its-contents'>Remove a directory and all of its contents <a class='anchor' href='command-line-commands.html#remove-a-directory-and-all-of-its-contents' title='Permalink'></a></h3><pre class="highlight plaintext"><code>rm -rf NAME-OF-DIRECTORY
+</code></pre><h3 id='view-history-in-the-command-line'>View history in the command line <a class='anchor' href='command-line-commands.html#view-history-in-the-command-line' title='Permalink'></a></h3><pre class="highlight plaintext"><code>history
+</code></pre><h3 id='carry-out-commands-for-which-the-account-you-are-using-lacks-authority'>Carry out commands for which the account you are using lacks authority <a class='anchor' href='command-line-commands.html#carry-out-commands-for-which-the-account-you-are-using-lacks-authority' title='Permalink'></a></h3>
+<p>You will be asked for an administrator’s password.</p>
+<pre class="highlight plaintext"><code>sudo
+</code></pre><h3 id='tell-where-you-are'>Tell where you are <a class='anchor' href='command-line-commands.html#tell-where-you-are' title='Permalink'></a></h3><pre class="highlight plaintext"><code>pwd
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/gitlab-basics/command-line-commands.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

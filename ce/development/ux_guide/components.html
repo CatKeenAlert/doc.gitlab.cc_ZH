@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Components - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">Development</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">GitLab UX Guide</a></li>
+            
+          
+          <li class="breadcrumb">Components</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="components.html#components">Components</a>
+<ul>
+<li>
+<a href="components.html#contents">Contents</a>
+</li>
+<li>
+<a href="components.html#tooltips">Tooltips</a>
+<ul>
+<li>
+<a href="components.html#usage">Usage</a>
+</li>
+<li>
+<a href="components.html#placement">Placement</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#anchor-links">Anchor links</a>
+<ul>
+<li>
+<a href="components.html#states">States</a>
+<ul>
+<li>
+<a href="components.html#rest">Rest</a>
+</li>
+<li>
+<a href="components.html#hover">Hover</a>
+</li>
+<li>
+<a href="components.html#focus">Focus</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#buttons">Buttons</a>
+<ul>
+<li>
+<a href="components.html#types">Types</a>
+<ul>
+<li>
+<a href="components.html#primary">Primary</a>
+</li>
+<li>
+<a href="components.html#secondary">Secondary</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#icon-and-text-treatment">Icon and text treatment</a>
+</li>
+<li>
+<a href="components.html#colors">Colors</a>
+</li>
+<li>
+<a href="components.html#secondary-states">Secondary states</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#dropdowns">Dropdowns</a>
+<ul>
+<li>
+<a href="components.html#max-size">Max size</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#counts">Counts</a>
+</li>
+<li>
+<a href="components.html#lists">Lists</a>
+<ul>
+<li>
+<a href="components.html#types">Types</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#tables">Tables</a>
+</li>
+<li>
+<a href="components.html#blocks">Blocks</a>
+<ul>
+<li>
+<a href="components.html#types">Types</a>
+<ul>
+<li>
+<a href="components.html#content-blocks">Content blocks</a>
+</li>
+<li>
+<a href="components.html#row-content-blocks">Row content blocks</a>
+</li>
+<li>
+<a href="components.html#cover-blocks">Cover blocks</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#panels">Panels</a>
+</li>
+<li>
+<a href="components.html#alerts">Alerts</a>
+</li>
+<li>
+<a href="components.html#forms">Forms</a>
+<ul>
+<li>
+<a href="components.html#types">Types</a>
+<ul>
+<li>
+<a href="components.html#labels-stack-vertically">Labels stack vertically</a>
+</li>
+<li>
+<a href="components.html#labels-side-by-side">Labels side-by-side</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#file-holders">File holders</a>
+</li>
+<li>
+<a href="components.html#data-formats">Data formats</a>
+<ul>
+<li>
+<a href="components.html#dates">Dates</a>
+<ul>
+<li>
+<a href="components.html#exact">Exact</a>
+</li>
+<li>
+<a href="components.html#relative">Relative</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="components.html#references">References</a>
+<ul>
+<li>
+<a href="components.html#milestones"><code>%</code> Milestones</a>
+</li>
+<li>
+<a href="components.html#issues"><code>#</code> Issues</a>
+</li>
+<li>
+<a href="components.html#merge-requests"><code>!</code> Merge Requests</a>
+</li>
+<li>
+<a href="components.html#labels"><code>~</code> Labels</a>
+</li>
+<li>
+<a href="components.html#people"><code>@</code> People</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='components'>Components <a class='anchor' href='components.html#components' title='Permalink'></a></h1><h2 id='contents'>Contents <a class='anchor' href='components.html#contents' title='Permalink'></a></h2>
+<ul>
+<li><a href="components.html#tooltips">Tooltips</a></li>
+<li><a href="components.html#anchor-links">Anchor links</a></li>
+<li><a href="components.html#buttons">Buttons</a></li>
+<li><a href="components.html#dropdowns">Dropdowns</a></li>
+<li><a href="components.html#counts">Counts</a></li>
+<li><a href="components.html#lists">Lists</a></li>
+<li><a href="components.html#tables">Tables</a></li>
+<li><a href="components.html#blocks">Blocks</a></li>
+<li><a href="components.html#panels">Panels</a></li>
+<li><a href="components.html#alerts">Alerts</a></li>
+<li><a href="components.html#forms">Forms</a></li>
+<li><a href="components.html#file-holders">File holders</a></li>
+<li><a href="components.html#data-formats">Data formats</a></li>
+</ul>
+
+<hr>
+<h2 id='tooltips'>Tooltips <a class='anchor' href='components.html#tooltips' title='Permalink'></a></h2><h3 id='usage'>Usage <a class='anchor' href='components.html#usage' title='Permalink'></a></h3>
+<p>A tooltip should only be added if additional information is required.</p>
+
+<p><a target="_blank" href="img/tooltip-usage.png"><img src="img/tooltip-usage.png" title="" alt="Tooltip usage"/></a></p>
+<h3 id='placement'>Placement <a class='anchor' href='components.html#placement' title='Permalink'></a></h3>
+<p>By default, tooltips should be placed below the element that they refer to. However, if there is not enough space in the viewpoint, the tooltip should be moved to the side as needed.</p>
+
+<p><a target="_blank" href="img/tooltip-placement.png"><img src="img/tooltip-placement.png" title="" alt="Tooltip placement location"/></a></p>
+
+<hr>
+<h2 id='anchor-links'>Anchor links <a class='anchor' href='components.html#anchor-links' title='Permalink'></a></h2>
+<p>Anchor links are used for navigational actions and lone, secondary commands (such as &#39;Reset filters&#39; on the Issues List) when deemed appropriate by the UX team.</p>
+<h3 id='states'>States <a class='anchor' href='components.html#states' title='Permalink'></a></h3><h4 id='rest'>Rest <a class='anchor' href='components.html#rest' title='Permalink'></a></h4>
+<p>Primary links are blue in their rest state. Secondary links (such as the time stamp on comments) are a neutral gray color in rest. Details on the main GitLab navigation links can be found on the <a href="features.html#navigation">features</a> page.</p>
+<h4 id='hover'>Hover <a class='anchor' href='components.html#hover' title='Permalink'></a></h4>
+<p>On hover, an underline should be added and the color should change. Both the primary and secondary link should become the darker blue color on hover.</p>
+<h4 id='focus'>Focus <a class='anchor' href='components.html#focus' title='Permalink'></a></h4>
+<p>The focus state should match the hover state.</p>
+
+<p><a target="_blank" href="img/components-anchorlinks.png"><img src="img/components-anchorlinks.png" title="" alt="Anchor link states "/></a></p>
+
+<hr>
+<h2 id='buttons'>Buttons <a class='anchor' href='components.html#buttons' title='Permalink'></a></h2>
+<p>Buttons communicate the command that will occur when the user clicks on them.</p>
+<h3 id='types'>Types <a class='anchor' href='components.html#types' title='Permalink'></a></h3><h4 id='primary'>Primary <a class='anchor' href='components.html#primary' title='Permalink'></a></h4>
+<p>Primary buttons communicate the main call to action. There should only be one call to action in any given experience. Visually, primary buttons are conveyed with a full background fill</p>
+
+<p><a target="_blank" href="img/button-primary.png"><img src="img/button-primary.png" title="" alt="Primary button example"/></a></p>
+<h4 id='secondary'>Secondary <a class='anchor' href='components.html#secondary' title='Permalink'></a></h4>
+<p>Secondary buttons are for alternative commands. They should be conveyed by a button with an stroke, and no background fill.</p>
+
+<p><a target="_blank" href="img/button-secondary.png"><img src="img/button-secondary.png" title="" alt="Secondary button example"/></a></p>
+<h3 id='icon-and-text-treatment'>Icon and text treatment <a class='anchor' href='components.html#icon-and-text-treatment' title='Permalink'></a></h3>
+<p>Text should be in sentence case, where only the first word is capitalized. &quot;Create issue&quot; is correct, not &quot;Create Issue&quot;. Buttons should only contain an icon or a text, not both.</p>
+
+<blockquote>
+<p>TODO: Rationalize this. Ensure that we still believe this.</p>
+</blockquote>
+<h3 id='colors'>Colors <a class='anchor' href='components.html#colors' title='Permalink'></a></h3>
+<p>The default color treatment is the white/grey button. Follow the guidance on the <a href="basics.html#color">basics</a> page to add meaningful color to a button.</p>
+<h3 id='secondary-states'>Secondary states <a class='anchor' href='components.html#secondary-states' title='Permalink'></a></h3>
+<p>Primary buttons darken the color of their background and border for hover, focus and active states. An inner shadow is added to the active state to denote the button being pressed.</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Values</th>
+<th style="text-align: center">Info</th>
+<th style="text-align: center">Success</th>
+<th style="text-align: center">Warning</th>
+<th style="text-align: center">Danger</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Background: <code>$color-light</code> <br> Border: <code>$border-color-light</code></td>
+<td style="text-align: center"><a target="_blank" href="img/button-info--resting.png"><img src="img/button-info--resting.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-success--resting.png"><img src="img/button-success--resting.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-warning--resting.png"><img src="img/button-warning--resting.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-danger--resting.png"><img src="img/button-danger--resting.png" title="" alt=""/></a></td>
+</tr>
+<tr>
+<td style="text-align: left">Background: <code>$color-normal</code> <br> Border: <code>$border-color-normal</code></td>
+<td style="text-align: center"><a target="_blank" href="img/button-info--hover.png"><img src="img/button-info--hover.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-success--hover.png"><img src="img/button-success--hover.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-warning--hover.png"><img src="img/button-warning--hover.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-danger--hover.png"><img src="img/button-danger--hover.png" title="" alt=""/></a></td>
+</tr>
+<tr>
+<td style="text-align: left">Background: <code>$color-dark</code> <br> Border: <code>$border-color-dark</code></td>
+<td style="text-align: center"><a target="_blank" href="img/button-info--active.png"><img src="img/button-info--active.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-success--active.png"><img src="img/button-success--active.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-warning--active.png"><img src="img/button-warning--active.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-danger--active.png"><img src="img/button-danger--active.png" title="" alt=""/></a></td>
+</tr>
+</tbody></table>
+
+<p>Since secondary buttons only have a border on their resting state, their hover and focus states add a background color, which gets darkened on active.</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Values</th>
+<th style="text-align: center">Success Secondary</th>
+<th style="text-align: center">Close</th>
+<th style="text-align: center">Spam</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Font: <code>$border-color-light</code> <br> Border: <code>$border-color-light</code></td>
+<td style="text-align: center"><a target="_blank" href="img/button-success-secondary--resting.png"><img src="img/button-success-secondary--resting.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-close--resting.png"><img src="img/button-close--resting.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-spam--resting.png"><img src="img/button-spam--resting.png" title="" alt=""/></a></td>
+</tr>
+<tr>
+<td style="text-align: left">Background: <code>$color-light</code> <br> Border: <code>$border-color-light</code></td>
+<td style="text-align: center"><a target="_blank" href="img/button-success-secondary--hover.png"><img src="img/button-success-secondary--hover.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-close--hover.png"><img src="img/button-close--hover.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-spam--hover.png"><img src="img/button-spam--hover.png" title="" alt=""/></a></td>
+</tr>
+<tr>
+<td style="text-align: left">Background: <code>$color-normal</code> <br> Border: <code>$border-color-normal</code></td>
+<td style="text-align: center"><a target="_blank" href="img/button-success-secondary--active.png"><img src="img/button-success-secondary--active.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-close--active.png"><img src="img/button-close--active.png" title="" alt=""/></a></td>
+<td style="text-align: center"><a target="_blank" href="img/button-spam--active.png"><img src="img/button-spam--active.png" title="" alt=""/></a></td>
+</tr>
+</tbody></table>
+
+<hr>
+<h2 id='dropdowns'>Dropdowns <a class='anchor' href='components.html#dropdowns' title='Permalink'></a></h2>
+<p>Dropdowns are used to allow users to choose one (or many) options from a list of options. If this list of options is more 20, there should generally be a way to search through and filter the options (see the complex filter dropdowns below.)</p>
+
+<blockquote>
+<p>TODO: Will update this section when the new filters UI is implemented.</p>
+</blockquote>
+
+<p><a target="_blank" href="img/components-dropdown.png"><img src="img/components-dropdown.png" title="" alt="Dropdown states"/></a></p>
+<h3 id='max-size'>Max size <a class='anchor' href='components.html#max-size' title='Permalink'></a></h3>
+<p>The max height for dropdowns should target <strong>10-15 items</strong>. If the height of the dropdown is too large, the list becomes very hard to parse and it is easy to visually lose track of the item you are looking for. Usability also suffers as more mouse movement is required, and you have a larger area in which you hijack the scroll away from the page level. While it may initially seem counterintuitive to not show as many items as you can, it is actually quicker and easier to process the information when it is cropped at a reasonable height.</p>
+
+<hr>
+<h2 id='counts'>Counts <a class='anchor' href='components.html#counts' title='Permalink'></a></h2>
+<p>A count element is used in navigation contexts where it is helpful to indicate the count, or number of items, in a list. Always use the <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/NumberHelper.html#method-i-number_with_delimiter"><code>number_with_delimiter</code></a> helper to display counts in the UI.</p>
+
+<p><a target="_blank" href="img/components-counts.png"><img src="img/components-counts.png" title="" alt="Counts example"/></a></p>
+
+<hr>
+<h2 id='lists'>Lists <a class='anchor' href='components.html#lists' title='Permalink'></a></h2>
+<p>Lists are used where ever there is a single column of information to display. Ths <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues">issues list</a> is an example of a important list in the GitLab UI.</p>
+<h3 id='types'>Types <a class='anchor' href='components.html#types' title='Permalink'></a></h3>
+<p>Simple list using .content-list</p>
+
+<p><a target="_blank" href="img/components-simplelist.png"><img src="img/components-simplelist.png" title="" alt="Simple list"/></a></p>
+
+<p>List with avatar, title and description using .content-list</p>
+
+<p><a target="_blank" href="img/components-listwithavatar.png"><img src="img/components-listwithavatar.png" title="" alt="List with avatar"/></a></p>
+
+<p>List with hover effect .well-list</p>
+
+<p><a target="_blank" href="img/components-listwithhover.png"><img src="img/components-listwithhover.png" title="" alt="List with hover effect"/></a></p>
+
+<p>List inside panel</p>
+
+<p><a target="_blank" href="img/components-listinsidepanel.png"><img src="img/components-listinsidepanel.png" title="" alt="List inside panel"/></a></p>
+
+<hr>
+<h2 id='tables'>Tables <a class='anchor' href='components.html#tables' title='Permalink'></a></h2>
+<p>When the information is too complex for a list, with multiple columns of information, a table can be used. For example, the <a href="https://gitlab.com/gitlab-org/gitlab-ce/pipelines">pipelines page</a> uses a table.</p>
+
+<p><a target="_blank" href="img/components-table.png"><img src="img/components-table.png" title="" alt="Table"/></a></p>
+
+<hr>
+<h2 id='blocks'>Blocks <a class='anchor' href='components.html#blocks' title='Permalink'></a></h2>
+<p>Blocks are a way to group related information.</p>
+<h3 id='types'>Types <a class='anchor' href='components.html#types' title='Permalink'></a></h3><h4 id='content-blocks'>Content blocks <a class='anchor' href='components.html#content-blocks' title='Permalink'></a></h4>
+<p>Content blocks (<code>.content-block</code>) are the basic grouping of content. They are commonly used in <a href="components.html#lists">lists</a>, and are separated by a botton border.</p>
+
+<p><a target="_blank" href="img/components-contentblock.png"><img src="img/components-contentblock.png" title="" alt="Content block"/></a></p>
+<h4 id='row-content-blocks'>Row content blocks <a class='anchor' href='components.html#row-content-blocks' title='Permalink'></a></h4>
+<p>A background color can be added to this blocks. For example, items in the <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues">issue list</a> have a green background if they were created recently. Below is an example of a gray content block with side padding using <code>.row-content-block</code>.</p>
+
+<p><a target="_blank" href="img/components-rowcontentblock.png"><img src="img/components-rowcontentblock.png" title="" alt="Row content block"/></a></p>
+<h4 id='cover-blocks'>Cover blocks <a class='anchor' href='components.html#cover-blocks' title='Permalink'></a></h4>
+<p>Cover blocks are generally used to create a heading element for a page, such as a new project, or a user profile page. Below is a cover block (<code>.cover-block</code>) for the profile page with an avatar, name and description.</p>
+
+<p><a target="_blank" href="img/components-coverblock.png"><img src="img/components-coverblock.png" title="" alt="Cover block"/></a></p>
+
+<hr>
+<h2 id='panels'>Panels <a class='anchor' href='components.html#panels' title='Permalink'></a></h2>
+<blockquote>
+<p>TODO: Catalog how we are currently using panels and rationalize how they relate to alerts</p>
+</blockquote>
+
+<p><a target="_blank" href="img/components-panels.png"><img src="img/components-panels.png" title="" alt="Panels"/></a></p>
+
+<hr>
+<h2 id='alerts'>Alerts <a class='anchor' href='components.html#alerts' title='Permalink'></a></h2>
+<blockquote>
+<p>TODO: Catalog how we are currently using alerts</p>
+</blockquote>
+
+<p><a target="_blank" href="img/components-alerts.png"><img src="img/components-alerts.png" title="" alt="Alerts"/></a></p>
+
+<hr>
+<h2 id='forms'>Forms <a class='anchor' href='components.html#forms' title='Permalink'></a></h2>
+<p>There are two options shown below regarding the positioning of labels in forms. Both are options to consider based on context and available size. However, it is important to have a consistent treatment of labels in the same form.</p>
+<h3 id='types'>Types <a class='anchor' href='components.html#types' title='Permalink'></a></h3><h4 id='labels-stack-vertically'>Labels stack vertically <a class='anchor' href='components.html#labels-stack-vertically' title='Permalink'></a></h4>
+<p>Form (<code>form</code>) with label rendered above input.</p>
+
+<p><a target="_blank" href="img/components-verticalform.png"><img src="img/components-verticalform.png" title="" alt="Vertical form"/></a></p>
+<h4 id='labels-side-by-side'>Labels side-by-side <a class='anchor' href='components.html#labels-side-by-side' title='Permalink'></a></h4>
+<p>Horizontal form (<code>form.horizontal-form</code>) with label rendered inline with input.</p>
+
+<p><a target="_blank" href="img/components-horizontalform.png"><img src="img/components-horizontalform.png" title="" alt="Horizontal form"/></a></p>
+
+<hr>
+<h2 id='file-holders'>File holders <a class='anchor' href='components.html#file-holders' title='Permalink'></a></h2>
+<p>A file holder (<code>.file-holder</code>) is used to show the contents of a file inline on a page of GitLab.</p>
+
+<p><a target="_blank" href="img/components-fileholder.png"><img src="img/components-fileholder.png" title="" alt="File Holder component"/></a></p>
+
+<hr>
+<h2 id='data-formats'>Data formats <a class='anchor' href='components.html#data-formats' title='Permalink'></a></h2><h3 id='dates'>Dates <a class='anchor' href='components.html#dates' title='Permalink'></a></h3><h4 id='exact'>Exact <a class='anchor' href='components.html#exact' title='Permalink'></a></h4>
+<p>Format for exacts dates should be ‘Mon DD, YYYY’, such as the examples below.</p>
+
+<p><a target="_blank" href="img/components-dateexact.png"><img src="img/components-dateexact.png" title="" alt="Exact date"/></a></p>
+<h4 id='relative'>Relative <a class='anchor' href='components.html#relative' title='Permalink'></a></h4>
+<p>This format relates how long since an action has occurred. The exact date can be shown as a tooltip on hover.</p>
+
+<p><a target="_blank" href="img/components-daterelative.png"><img src="img/components-daterelative.png" title="" alt="Relative date"/></a></p>
+<h3 id='references'>References <a class='anchor' href='components.html#references' title='Permalink'></a></h3>
+<p>Referencing GitLab items depends on a symbol for each type of item. Typing that symbol will invoke a dropdown that allows you to search for and autocomplete the item you were looking for. References are shown as <a href="components.html#links">links</a> in context, and hovering on them shows the full title or name of the item.</p>
+
+<p><a target="_blank" href="img/components-referencehover.png"><img src="img/components-referencehover.png" title="" alt="Hovering on a reference"/></a></p>
+<h4 id='milestones'><code>%</code> Milestones <a class='anchor' href='components.html#milestones' title='Permalink'></a></h4>
+<p><a target="_blank" href="img/components-referencemilestone.png"><img src="img/components-referencemilestone.png" title="" alt="Milestone reference"/></a></p>
+<h4 id='issues'><code>#</code> Issues <a class='anchor' href='components.html#issues' title='Permalink'></a></h4>
+<p><a target="_blank" href="img/components-referenceissues.png"><img src="img/components-referenceissues.png" title="" alt="Issue reference"/></a></p>
+<h4 id='merge-requests'><code>!</code> Merge Requests <a class='anchor' href='components.html#merge-requests' title='Permalink'></a></h4>
+<p><a target="_blank" href="img/components-referencemrs.png"><img src="img/components-referencemrs.png" title="" alt="Merge request reference"/></a></p>
+<h4 id='labels'><code>~</code> Labels <a class='anchor' href='components.html#labels' title='Permalink'></a></h4>
+<p><a target="_blank" href="img/components-referencelabels.png"><img src="img/components-referencelabels.png" title="" alt="Labels reference"/></a></p>
+<h4 id='people'><code>@</code> People <a class='anchor' href='components.html#people' title='Permalink'></a></h4>
+<p><a target="_blank" href="img/components-referencepeople.png"><img src="img/components-referencepeople.png" title="" alt="People reference"/></a></p>
+
+<blockquote>
+<p>TODO: Open issue: Some commit references use monospace fonts, but others don&#39;t. Need to standardize this.</p>
+</blockquote>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/ux_guide/components.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

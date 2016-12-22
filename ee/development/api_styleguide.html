@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>API styleguide - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">API styleguide</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="api_styleguide.html#api-styleguide">API styleguide</a>
+<ul>
+<li>
+<a href="api_styleguide.html#instance-variables">Instance variables</a>
+</li>
+<li>
+<a href="api_styleguide.html#entities">Entities</a>
+</li>
+<li>
+<a href="api_styleguide.html#methods-and-parameters-description">Methods and parameters description</a>
+</li>
+<li>
+<a href="api_styleguide.html#declared-params">Declared params</a>
+<ul>
+<li>
+<a href="api_styleguide.html#exclude-params-from-parent-namespaces">Exclude params from parent namespaces!</a>
+</li>
+<li>
+<a href="api_styleguide.html#when-to-use-declared-params">When to use <code>declared(params)</code>?</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='api-styleguide'>API styleguide <a class='anchor' href='api_styleguide.html#api-styleguide' title='Permalink'></a></h1>
+<p>This styleguide recommends best practices for API development.</p>
+<h2 id='instance-variables'>Instance variables <a class='anchor' href='api_styleguide.html#instance-variables' title='Permalink'></a></h2>
+<p>Please do not use instance variables, there is no need for them (we don&#39;t need
+to access them as we do in Rails views), local variables are fine.</p>
+<h2 id='entities'>Entities <a class='anchor' href='api_styleguide.html#entities' title='Permalink'></a></h2>
+<p>Always use an <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/api/entities.rb">Entity</a> to present the endpoint&#39;s payload.</p>
+<h2 id='methods-and-parameters-description'>Methods and parameters description <a class='anchor' href='api_styleguide.html#methods-and-parameters-description' title='Permalink'></a></h2>
+<p>Every method must be described using the <a href="https://github.com/ruby-grape/grape#describing-methods">Grape DSL</a>
+(see <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/api/environments.rb">https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/api/environments.rb</a>
+for a good example):</p>
+
+<ul>
+<li><p><code>desc</code> for the method summary. You should pass it a block for additional
+details such as:</p>
+
+<ul>
+<li>The GitLab version when the endpoint was added</li>
+<li>If the endpoint is deprecated, and if so, when will it be removed</li>
+</ul></li>
+<li><p><code>params</code> for the method params. This acts as description,
+<a href="https://github.com/ruby-grape/grape#parameter-validation-and-coercion">validation, and coercion of the parameters</a></p></li>
+</ul>
+
+<p>A good example is as follows:</p>
+<pre class="highlight ruby"><code><span class="n">desc</span> <span class="s1">'Get all broadcast messages'</span> <span class="k">do</span>
+  <span class="n">detail</span> <span class="s1">'This feature was introduced in GitLab 8.12.'</span>
+  <span class="n">success</span> <span class="no">Entities</span><span class="o">::</span><span class="no">BroadcastMessage</span>
+<span class="k">end</span>
+<span class="n">params</span> <span class="k">do</span>
+  <span class="n">optional</span> <span class="ss">:page</span><span class="p">,</span>     <span class="ss">type: </span><span class="no">Integer</span><span class="p">,</span> <span class="ss">desc: </span><span class="s1">'Current page number'</span>
+  <span class="n">optional</span> <span class="ss">:per_page</span><span class="p">,</span> <span class="ss">type: </span><span class="no">Integer</span><span class="p">,</span> <span class="ss">desc: </span><span class="s1">'Number of messages per page'</span>
+<span class="k">end</span>
+<span class="n">get</span> <span class="k">do</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="no">BroadcastMessage</span><span class="p">.</span><span class="nf">all</span>
+
+  <span class="n">present</span> <span class="n">paginate</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="ss">with: </span><span class="no">Entities</span><span class="o">::</span><span class="no">BroadcastMessage</span>
+<span class="k">end</span>
+</code></pre><h2 id='declared-params'>Declared params <a class='anchor' href='api_styleguide.html#declared-params' title='Permalink'></a></h2>
+<blockquote>
+<p>Grape allows you to access only the parameters that have been declared by your
+<code>params</code> block. It filters out the params that have been passed, but are not
+allowed.</p>
+</blockquote>
+
+<p>– <a href="https://github.com/ruby-grape/grape#declared">https://github.com/ruby-grape/grape#declared</a></p>
+<h3 id='exclude-params-from-parent-namespaces'>Exclude params from parent namespaces! <a class='anchor' href='api_styleguide.html#exclude-params-from-parent-namespaces' title='Permalink'></a></h3>
+<blockquote>
+<p>By default <code>declared(params)</code>includes parameters that were defined in all
+parent namespaces.</p>
+</blockquote>
+
+<p>– <a href="https://github.com/ruby-grape/grape#include-parent-namespaces">https://github.com/ruby-grape/grape#include-parent-namespaces</a></p>
+
+<p>In most cases you will want to exclude params from the parent namespaces:</p>
+<pre class="highlight ruby"><code><span class="n">declared</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="ss">include_parent_namespaces: </span><span class="kp">false</span><span class="p">)</span>
+</code></pre><h3 id='when-to-use-declared-params'>When to use <code>declared(params)</code>? <a class='anchor' href='api_styleguide.html#when-to-use-declared-params' title='Permalink'></a></h3>
+<p>You should always use <code>declared(params)</code> when you pass the params hash as
+arguments to a method call.</p>
+
+<p>For instance:</p>
+<pre class="highlight ruby"><code><span class="c1"># bad</span>
+<span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="c1"># imagine the user submitted `admin=1`... :)</span>
+
+<span class="c1"># good</span>
+<span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">declared</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="ss">include_parent_namespaces: </span><span class="kp">false</span><span class="p">).</span><span class="nf">to_h</span><span class="p">)</span>
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong>
+<code>declared(params)</code> return a <code>Hashie::Mash</code> object, on which you will have to
+call <code>.to_h</code>.</p>
+</blockquote>
+
+<p>But we can use <code>params[key]</code> directly when we access single elements.</p>
+
+<p>For instance:</p>
+<pre class="highlight ruby"><code><span class="c1"># good</span>
+<span class="no">Model</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">foo: </span><span class="n">params</span><span class="p">[</span><span class="ss">:foo</span><span class="p">])</span>
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/development/api_styleguide.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

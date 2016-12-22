@@ -1,0 +1,357 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Install and configure GitLab Runner for auto-scaling - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Install GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Install and configure GitLab Runner for auto-scaling</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="autoscaling.html#install-and-configure-gitlab-runner-for-auto-scaling">Install and configure GitLab Runner for auto-scaling</a>
+<ul>
+<li>
+<a href="autoscaling.html#prepare-the-environment">Prepare the environment</a>
+</li>
+<li>
+<a href="autoscaling.html#prepare-the-docker-registry-and-cache-server">Prepare the Docker Registry and Cache Server</a>
+<ul>
+<li>
+<a href="autoscaling.html#install-docker-registry">Install Docker Registry</a>
+</li>
+<li>
+<a href="autoscaling.html#install-the-cache-server">Install the cache server</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="autoscaling.html#configure-gitlab-runner">Configure GitLab Runner</a>
+</li>
+<li>
+<a href="autoscaling.html#upgrading-the-runner">Upgrading the Runner</a>
+</li>
+<li>
+<a href="autoscaling.html#manage-the-docker-machines">Manage the Docker Machines</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='install-and-configure-gitlab-runner-for-auto-scaling'>Install and configure GitLab Runner for auto-scaling <a class='anchor' href='autoscaling.html#install-and-configure-gitlab-runner-for-auto-scaling' title='Permalink'></a></h1>
+<blockquote>
+<p>The auto scale feature was introduced in GitLab Runner 1.1.0.</p>
+</blockquote>
+
+<p>For an overview of the auto-scale architecture, take a look at the
+<a href="../configuration/autoscale.html">comprehensive documentation on auto-scaling</a>.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="autoscaling.html#prepare-the-environment">Prepare the environment</a></li>
+<li><a href="autoscaling.html#prepare-the-docker-registry-and-cache-server">Prepare the Docker Registry and Cache Server</a>
+
+<ul>
+<li><a href="autoscaling.html#install-docker-registry">Install Docker Registry</a></li>
+<li><a href="autoscaling.html#install-the-cache-server">Install the cache server</a></li>
+</ul></li>
+<li><a href="autoscaling.html#configure-gitlab-runner">Configure GitLab Runner</a></li>
+<li><a href="autoscaling.html#upgrading-the-runner">Upgrading the Runner</a></li>
+<li><a href="autoscaling.html#manage-the-docker-machines">Manage the Docker Machines</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='prepare-the-environment'>Prepare the environment <a class='anchor' href='autoscaling.html#prepare-the-environment' title='Permalink'></a></h2>
+<p>In order to use the auto-scale feature, Docker and GitLab Runner must be
+installed in the same machine:</p>
+
+<ol>
+<li>Login to a new Linux-based machine that will serve as a bastion server and
+where Docker will spawn new machines from</li>
+<li>Install GitLab Runner following the
+<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner#installation">GitLab Runner installation documentation</a></li>
+<li>Install Docker Machine following the
+<a href="https://docs.docker.com/machine/install-machine/">Docker Machine installation documentation</a></li>
+</ol>
+<h2 id='prepare-the-docker-registry-and-cache-server'>Prepare the Docker Registry and Cache Server <a class='anchor' href='autoscaling.html#prepare-the-docker-registry-and-cache-server' title='Permalink'></a></h2>
+<p>To speedup the builds we advise to setup a personal Docker registry server
+working in proxy mode. A cache server is also recommended.</p>
+<h3 id='install-docker-registry'>Install Docker Registry <a class='anchor' href='autoscaling.html#install-docker-registry' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+Read more in <a href="../configuration/autoscale.html#distributed-docker-registry-mirroring">Distributed registry mirroring</a>.</p>
+</blockquote>
+
+<ol>
+<li>Login to a dedicated machine where Docker registry proxy will be running</li>
+<li>Make sure that Docker Engine is installed on this machine</li>
+<li><p>Create a new Docker registry:</p>
+<pre class="highlight shell"><code>docker run -d -p 6000:5000 <span class="se">\</span>
+    -e <span class="nv">REGISTRY_PROXY_REMOTEURL</span><span class="o">=</span>https://registry-1.docker.io <span class="se">\</span>
+    --restart always <span class="se">\</span>
+    --name registry registry:2
+</code></pre>
+<p>You can modify the port number (<code>6000</code>) to expose Docker registry on a
+different port.</p></li>
+<li><p>Check the IP address of the server:</p>
+<pre class="highlight shell"><code>hostname --ip-address
+</code></pre>
+<p>You should preferably choose the private networking IP address. The private
+networking is usually the fastest solution for internal communication
+between machines of a single provider (DigitalOcean, AWS, Azure, etc,)
+Usually the private networking is also not accounted to your monthly
+bandwidth limit.</p></li>
+<li><p>Docker registry will be accessible under <code>MY_REGISTRY_IP:6000</code>.</p></li>
+</ol>
+<h3 id='install-the-cache-server'>Install the cache server <a class='anchor' href='autoscaling.html#install-the-cache-server' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+You can use any other S3-compatible server, including <a href="https://aws.amazon.com/s3/">Amazon S3</a>. Read
+more in <a href="../configuration/autoscale.html#distributed-runners-caching">Distributed runners caching</a>.</p>
+</blockquote>
+
+<ol>
+<li>Login to a dedicated machine where the cache server will be running</li>
+<li>Make sure that Docker Engine is installed on that machine</li>
+<li><p>Start <a href="https://www.minio.io/">minio</a>, a simple S3-compatible server written in Go:</p>
+<pre class="highlight shell"><code>docker run -it --restart always -p 9005:9000 <span class="se">\</span>
+        -v /.minio:/root/.minio -v /export:/export <span class="se">\</span>
+        --name minio <span class="se">\</span>
+        minio/minio:latest server /export
+</code></pre>
+<p>You can modify the port <code>9005</code> to expose the cache server on different port.</p></li>
+<li><p>Check the IP address of the server:</p>
+<pre class="highlight shell"><code>hostname --ip-address
+</code></pre></li>
+<li><p>Your cache server will be available at <code>MY_CACHE_IP:9005</code></p></li>
+<li><p>Read the Access and Secret Key of minio with: <code>sudo cat /.minio/config.json</code></p></li>
+<li><p>Create a bucket that will be used by the Runner: <code>sudo mkdir /export/runner</code>.
+<code>runner</code> is the name of the bucket in that case. If you choose a different
+bucket then it will be different</p></li>
+<li><p>All caches will be stored in the <code>/export</code> directory</p></li>
+</ol>
+<h2 id='configure-gitlab-runner'>Configure GitLab Runner <a class='anchor' href='autoscaling.html#configure-gitlab-runner' title='Permalink'></a></h2>
+<ol>
+<li><p>Register a GitLab Runner, selecting the <code>docker+machine</code> executor (Look into <a href="http://doc.gitlab.com/ce/ci/runners/README.html">runners documentation</a> to learn how to obtain a token):</p>
+<pre class="highlight shell"><code>sudo gitlab-ci-multi-runner register
+</code></pre>
+<p>Example output:</p>
+<pre class="highlight shell"><code>Please enter the gitlab-ci coordinator URL <span class="o">(</span>e.g. https://gitlab.com <span class="o">)</span>
+https://gitlab.com
+Please enter the gitlab-ci token <span class="k">for </span>this runner
+xxx
+Please enter the gitlab-ci description <span class="k">for </span>this runner
+my-autoscale-runner
+INFO[0034] fcf5c619 Registering runner... succeeded
+Please enter the executor: shell, docker, docker-ssh, docker+machine, docker-ssh+machine, ssh?
+docker+machine
+Please enter the Docker image <span class="o">(</span>eg. ruby:2.1<span class="o">)</span>:
+ruby:2.1
+INFO[0037] Runner registered successfully. Feel free to start it, but <span class="k">if </span>it<span class="s1">'s
+running already the config should be automatically reloaded!
+</span></code></pre></li>
+<li><p>Edit <a href="../commands/README.html#configuration-file"><code>config.toml</code></a>. You need to fill in the options for
+<code>[runners.machine]</code> and <code>[runners.cache]</code> and configure the <code>MachineDriver</code>
+selecting your provider. Also configure <code>MachineOptions</code>, <code>limit</code> and
+<code>IdleCount</code>.</p>
+
+<p>For more information visit the dedicated page covering detailed information
+about <a href="../configuration/autoscale.html">GitLab Runner Autoscaling</a>.</p>
+
+<p>Example configuration using DigitalOcean:</p>
+<pre class="highlight toml"><code><span class="py">concurrent</span> <span class="p">=</span> <span class="mi">20</span>
+
+<span class="nn">[[runners]]</span>
+<span class="py">executor</span> <span class="p">=</span> <span class="s">"docker+machine"</span>
+<span class="py">limit</span> <span class="p">=</span> <span class="mi">20</span>
+<span class="nn">[runners.machine]</span>
+  <span class="py">IdleCount</span> <span class="p">=</span> <span class="mi">5</span>
+  <span class="py">MachineDriver</span> <span class="p">=</span> <span class="s">"digitalocean"</span>
+  <span class="py">MachineName</span> <span class="p">=</span> <span class="s">"auto-scale-runners-%s.my.domain.com"</span>
+  <span class="py">MachineOptions</span> <span class="p">=</span> <span class="p">[</span>
+      <span class="s">"digitalocean-image=coreos-beta"</span><span class="p">,</span>
+      <span class="s">"digitalocean-ssh-user=core"</span><span class="p">,</span>
+      <span class="s">"digitalocean-access-token=MY_DIGITAL_OCEAN_TOKEN"</span><span class="p">,</span>
+      <span class="s">"digitalocean-region=nyc2"</span><span class="p">,</span>
+      <span class="s">"digitalocean-private-networking"</span><span class="p">,</span>
+      <span class="s">"engine-registry-mirror=http://MY_REGISTRY_IP:6000"</span>
+    <span class="p">]</span>
+<span class="nn">[runners.cache]</span>
+  <span class="py">Type</span> <span class="p">=</span> <span class="s">"s3"</span>
+  <span class="py">ServerAddress</span> <span class="p">=</span> <span class="s">"MY_CACHE_IP:9005"</span>
+  <span class="py">AccessKey</span> <span class="p">=</span> <span class="s">"ACCESS_KEY"</span>
+  <span class="py">SecretKey</span> <span class="p">=</span> <span class="s">"SECRET_KEY"</span>
+  <span class="py">BucketName</span> <span class="p">=</span> <span class="s">"runner"</span>
+  <span class="py">Insecure</span> <span class="p">=</span> <span class="kc">true</span> <span class="c"># Use Insecure only when using with Minio, without the TLS certificate enabled</span>
+</code></pre></li>
+<li><p>Try to build your project. In a few seconds, if you run <code>docker-machine ls</code>
+you should see a new machine being created.</p></li>
+</ol>
+<h2 id='upgrading-the-runner'>Upgrading the Runner <a class='anchor' href='autoscaling.html#upgrading-the-runner' title='Permalink'></a></h2>
+<ol>
+<li><p>Stop the runner:</p>
+<pre class="highlight shell"><code>killall -SIGQUIT gitlab-runner
+</code></pre>
+<p>Sending the <a href="../commands/README.html#signals"><code>SIGQUIT</code> signal</a> will make the Runner to stop
+gracefully. It will stop accepting new jobs, and will exit as soon as the
+current builds are finished.</p></li>
+<li><p>Wait until the Runner exits. You can check its status with: <code>gitlab-runner status</code></p></li>
+<li><p>You can now safely upgrade the Runner without interrupting any builds</p></li>
+</ol>
+<h2 id='manage-the-docker-machines'>Manage the Docker Machines <a class='anchor' href='autoscaling.html#manage-the-docker-machines' title='Permalink'></a></h2>
+<ol>
+<li><p>Stop the Runner:</p>
+<pre class="highlight shell"><code>killall -SIGQUIT gitlab-runner
+</code></pre></li>
+<li><p>Wait until the Runner exits. You can check its status with: <code>gitlab-runner status</code></p></li>
+<li><p>You can now manage (upgrade or remove) any Docker Machines with the
+<a href="https://docs.docker.com/machine/reference/"><code>docker-machine</code> command</a></p></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/autoscaling.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

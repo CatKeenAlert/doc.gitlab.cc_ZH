@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Time Tracking - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Workflow</a></li>
+            
+          
+          <li class="breadcrumb">Time Tracking</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="time_tracking.html#time-tracking">Time Tracking</a>
+<ul>
+<li>
+<a href="time_tracking.html#overview">Overview</a>
+</li>
+<li>
+<a href="time_tracking.html#how-to-enter-data">How to enter data</a>
+<ul>
+<li>
+<a href="time_tracking.html#estimates">Estimates</a>
+</li>
+<li>
+<a href="time_tracking.html#time-spent">Time spent</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="time_tracking.html#configuration">Configuration</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='time-tracking'>Time Tracking <a class='anchor' href='time_tracking.html#time-tracking' title='Permalink'></a></h1>
+<blockquote>
+<p>Introduced in GitLab 8.14 in beta.</p>
+</blockquote>
+
+<p>Time Tracking allows you to track estimates and time spent on issues and merge
+requests within GitLab. This functionality is in beta and is available for free
+to all Enterprise Edition customers. As we expand on this feature, we will remove
+it from Beta and a new License key will need to be issued to use it.</p>
+<h2 id='overview'>Overview <a class='anchor' href='time_tracking.html#overview' title='Permalink'></a></h2>
+<p>Time Tracking lets you:</p>
+
+<ul>
+<li>record the time spent working on an issue or a merge request,</li>
+<li>add an estimate of the amount of time needed to complete an issue or a merge
+request.</li>
+</ul>
+
+<p>You don&#39;t have to indicate an estimate to enter the time spent, and vice versa.</p>
+
+<p>Data about time tracking is shown on the issue/merge request sidebar, as shown
+below.</p>
+
+<p><a target="_blank" href="time-tracking/time-tracking-sidebar.png"><img src="time-tracking/time-tracking-sidebar.png" title="" alt="Time tracking in the sidebar"/></a></p>
+<h2 id='how-to-enter-data'>How to enter data <a class='anchor' href='time_tracking.html#how-to-enter-data' title='Permalink'></a></h2>
+<p>Time Tracking uses two slash <a href="../user/project/slash_commands.html">commands</a> that are available with this new
+feature: <code>/spend</code> and <code>/estimate</code>.</p>
+
+<p>Slash commands can be used in the body of an issue or a merge request, but also
+in a comment in both an issue or a merge request.</p>
+
+<p>Below is an example of how you can use those new slash commands inside a comment.</p>
+
+<p><a target="_blank" href="time-tracking/time-tracking-example.png"><img src="time-tracking/time-tracking-example.png" title="" alt="Time tracking example in a comment"/></a></p>
+
+<p>Adding time entries (time spent or estimates) is limited to project members.</p>
+<h3 id='estimates'>Estimates <a class='anchor' href='time_tracking.html#estimates' title='Permalink'></a></h3>
+<p>To enter an estimate, write <code>/estimate</code>, followed by the time. For example, if
+you need to enter an estimate of 3 days, 5 hours and 10 minutes, you would write
+<code>/estimate 3d 5h 10m</code>. Time units that we support are listed at the bottom of
+this help page.</p>
+
+<p>Every time you enter a new time estimate, any previous time estimates will be
+overridden by this new value. There should only be one valid estimate in an
+issue or a merge request.</p>
+
+<p>To remove an estimation entirely, use <code>/remove_estimation</code>.</p>
+<h3 id='time-spent'>Time spent <a class='anchor' href='time_tracking.html#time-spent' title='Permalink'></a></h3>
+<p>To enter a time spent, use <code>/spend 3d 5h 10m</code>.</p>
+
+<p>Every new time spent entry will be added to the current total time spent for the
+issue or the merge request.</p>
+
+<p>You can remove time by entering a negative amount: <code>/spend -3d</code> will remove 3
+days from the total time spent. You can&#39;t go below 0 minutes of time spent,
+so GitLab will automatically reset the time spent if you remove a larger amount
+of time compared to the time that was entered already.</p>
+
+<p>To remove all the time spent at once, use <code>/remove_time_spent</code>.</p>
+<h2 id='configuration'>Configuration <a class='anchor' href='time_tracking.html#configuration' title='Permalink'></a></h2>
+<p>The following time units are available:</p>
+
+<ul>
+<li>weeks (w)</li>
+<li>days (d)</li>
+<li>hours (h)</li>
+<li>minutes (m)</li>
+</ul>
+
+<p>Default conversion rates are</p>
+
+<ul>
+<li>1 week = 5 days,</li>
+<li>1 day = 8 hours.</li>
+</ul>
+
+<p>Other interesting links:</p>
+
+<ul>
+<li><a href="https://about.gitlab.com/features/time-tracking">Time Tracking landing page on about.gitlab.com</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/time_tracking.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

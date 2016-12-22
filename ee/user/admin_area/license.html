@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Activate all GitLab Enterprise Edition functionality with a license - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Activate all GitLab Enterprise Edition functionality with a license</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="license.html#activate-all-gitlab-enterprise-edition-functionality-with-a-license">Activate all GitLab Enterprise Edition functionality with a license</a>
+<ul>
+<li>
+<a href="license.html#uploading-your-license">Uploading your license</a>
+</li>
+<li>
+<a href="license.html#license-history">License history</a>
+</li>
+<li>
+<a href="license.html#notification-before-the-license-expires">Notification before the license expires</a>
+</li>
+<li>
+<a href="license.html#what-happens-when-your-license-expires">What happens when your license expires</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='activate-all-gitlab-enterprise-edition-functionality-with-a-license'>Activate all GitLab Enterprise Edition functionality with a license <a class='anchor' href='license.html#activate-all-gitlab-enterprise-edition-functionality-with-a-license' title='Permalink'></a></h1>
+<p>To activate all GitLab Enterprise Edition (EE) functionality, you need to upload
+a license. Once you&#39;ve received your license from GitLab Inc., you can upload it
+by <strong>signing into your GitLab instance as an admin</strong>.</p>
+
+<p>The license has the form of a base64 encoded ASCII text with a <code>.gitlab-license</code>
+extension and can be obtained when you <a href="https://about.gitlab.com/pricing/">purchase one</a> or when you sign
+up for a <a href="https://about.gitlab.com/free-trial/">free trial</a>.</p>
+<h2 id='uploading-your-license'>Uploading your license <a class='anchor' href='license.html#uploading-your-license' title='Permalink'></a></h2>
+<p>The very first time you visit your GitLab EE installation, you should see a
+notice urging you to upload a license with a link that takes you straight to the
+License admin area.</p>
+
+<p>Otherwise, you can:</p>
+
+<ol>
+<li><p>Navigate manually to the <strong>Admin Area</strong> by clicking the wrench icon in the
+upper right corner.</p>
+
+<p><a target="_blank" href="img/admin_wrench.png"><img src="img/admin_wrench.png" title="" alt="Admin area icon"/></a></p></li>
+<li><p>And then going to the <strong>License</strong> tab.</p>
+
+<p><a target="_blank" href="img/license_admin_area.png"><img src="img/license_admin_area.png" title="" alt="License admin area"/></a></p></li>
+</ol>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you don&#39;t see the banner mentioned above, that means that either you are not
+logged in as admin or a license is already uploaded.</p>
+</blockquote>
+
+<hr>
+
+<p>If you&#39;ve received a <code>.gitlab-license</code> file, you should have already downloaded
+it in your local machine. You can then upload it directly by choosing the
+license file and clicking the <strong>Upload license</strong> button. In the image below,
+you can see that the selected license file is named <code>GitLab.gitlab-license</code>.</p>
+
+<p><a target="_blank" href="img/license_upload.png"><img src="img/license_upload.png" title="" alt="Upload license"/></a></p>
+
+<hr>
+
+<p>If you&#39;ve received your license as plain text, you need to select the
+&quot;Enter license key&quot; option, copy the license, paste it into the &quot;License key&quot;
+field and click <strong>Upload license</strong>.</p>
+
+<p><a target="_blank" href="img/license_enter.png"><img src="img/license_enter.png" title="" alt="Enter license"/></a></p>
+
+<p>Once you&#39;ve uploaded your license, all GitLab Enterprise Edition functionality
+will be active until the end of the license period.
+You can review the license details at any time in the License section of the
+Admin Area.</p>
+
+<p><a target="_blank" href="img/license_details.png"><img src="img/license_details.png" title="" alt="License details"/></a></p>
+<h2 id='license-history'>License history <a class='anchor' href='license.html#license-history' title='Permalink'></a></h2>
+<p>It&#39;s possible to upload more than one license, but only the last one will be
+taken into account.</p>
+
+<p>You can see your previous licenses&#39; history at the bottom of the License page.</p>
+
+<p><a target="_blank" href="img/license_history.png"><img src="img/license_history.png" title="" alt="License history"/></a></p>
+<h2 id='notification-before-the-license-expires'>Notification before the license expires <a class='anchor' href='license.html#notification-before-the-license-expires' title='Permalink'></a></h2>
+<p>One month before the license expires, a message informing when the expiration
+is due to will be shown to GitLab admins. Make sure that you update your license
+beforehand otherwise you will miss important features if it expires.</p>
+
+<p><a target="_blank" href="img/license_expire_message.png"><img src="img/license_expire_message.png" title="" alt="License expiration"/></a></p>
+<h2 id='what-happens-when-your-license-expires'>What happens when your license expires <a class='anchor' href='license.html#what-happens-when-your-license-expires' title='Permalink'></a></h2>
+<p>In case your license expires, you will not be able to push any commits to
+GitLab and creation of new issues and merge requests will be disabled.</p>
+
+<p>A message to inform of the locked state of GitLab will be presented to all
+users and admins will be able to see a link to upload a license.</p>
+
+<p><a target="_blank" href="img/license_no_license_message.png"><img src="img/license_no_license_message.png" title="" alt="No license message"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/admin_area/license.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

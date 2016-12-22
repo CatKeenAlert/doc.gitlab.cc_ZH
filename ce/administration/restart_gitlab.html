@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>How to restart GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">How to restart GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="restart_gitlab.html#how-to-restart-gitlab">How to restart GitLab</a>
+<ul>
+<li>
+<a href="restart_gitlab.html#omnibus-installations">Omnibus installations</a>
+<ul>
+<li>
+<a href="restart_gitlab.html#omnibus-gitlab-restart">Omnibus GitLab restart</a>
+</li>
+<li>
+<a href="restart_gitlab.html#omnibus-gitlab-reconfigure">Omnibus GitLab reconfigure</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="restart_gitlab.html#installations-from-source">Installations from source</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='how-to-restart-gitlab'>How to restart GitLab <a class='anchor' href='restart_gitlab.html#how-to-restart-gitlab' title='Permalink'></a></h1>
+<p>Depending on how you installed GitLab, there are different methods to restart
+its service(s).</p>
+
+<p>If you want the TL;DR versions, jump to:</p>
+
+<ul>
+<li><a href="restart_gitlab.html#omnibus-gitlab-restart">Omnibus GitLab restart</a></li>
+<li><a href="restart_gitlab.html#omnibus-gitlab-reconfigure">Omnibus GitLab reconfigure</a></li>
+<li><a href="restart_gitlab.html#installations-from-source">Source installation restart</a></li>
+</ul>
+<h2 id='omnibus-installations'>Omnibus installations <a class='anchor' href='restart_gitlab.html#omnibus-installations' title='Permalink'></a></h2>
+<p>If you have used the <a href="https://about.gitlab.com/downloads/" title="Download the Omnibus packages">Omnibus packages</a> to install GitLab, then
+you should already have <code>gitlab-ctl</code> in your <code>PATH</code>.</p>
+
+<p><code>gitlab-ctl</code> interacts with the Omnibus packages and can be used to restart the
+GitLab Rails application (Unicorn) as well as the other components, like:</p>
+
+<ul>
+<li>GitLab Workhorse</li>
+<li>Sidekiq</li>
+<li>PostgreSQL (if you are using the bundled one)</li>
+<li>NGINX (if you are using the bundled one)</li>
+<li>Redis (if you are using the bundled one)</li>
+<li><a href="reply_by_email.html" title="Used for replying by email in GitLab issues and merge requests">Mailroom</a></li>
+<li>Logrotate</li>
+</ul>
+<h3 id='omnibus-gitlab-restart'>Omnibus GitLab restart <a class='anchor' href='restart_gitlab.html#omnibus-gitlab-restart' title='Permalink'></a></h3>
+<p>There may be times in the documentation where you will be asked to <em>restart</em>
+GitLab. In that case, you need to run the following command:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl restart
+</code></pre>
+<p>The output should be similar to this:</p>
+<pre class="highlight plaintext"><code>ok: run: gitlab-workhorse: (pid 11291) 1s
+ok: run: logrotate: (pid 11299) 0s
+ok: run: mailroom: (pid 11306) 0s
+ok: run: nginx: (pid 11309) 0s
+ok: run: postgresql: (pid 11316) 1s
+ok: run: redis: (pid 11325) 0s
+ok: run: sidekiq: (pid 11331) 1s
+ok: run: unicorn: (pid 11338) 0s
+</code></pre>
+<p>To restart a component separately, you can append its service name to the
+<code>restart</code> command. For example, to restart <strong>only</strong> NGINX you would run:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl restart nginx
+</code></pre>
+<p>To check the status of GitLab services, run:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl status
+</code></pre>
+<p>Notice that all services say <code>ok: run</code>.</p>
+
+<p>Sometimes, components time out during the restart and sometimes they get stuck.
+In that case, you can use <code>gitlab-ctl kill &lt;service&gt;</code> to send the <code>SIGKILL</code>
+signal to the service, for example <code>sidekiq</code>. After that, a restart should
+perform fine.</p>
+
+<p>As a last resort, you can try to
+<a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> instead.</p>
+<h3 id='omnibus-gitlab-reconfigure'>Omnibus GitLab reconfigure <a class='anchor' href='restart_gitlab.html#omnibus-gitlab-reconfigure' title='Permalink'></a></h3>
+<p>There may be times in the documentation where you will be asked to <em>reconfigure</em>
+GitLab. Remember that this method applies only for the Omnibus packages.</p>
+
+<p>Reconfigure Omnibus GitLab with:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl reconfigure
+</code></pre>
+<p>Reconfiguring GitLab should occur in the event that something in its
+configuration (<code>/etc/gitlab/gitlab.rb</code>) has changed.</p>
+
+<p>When you run this command, <a href="https://www.chef.io/chef/" title="Chef official website">Chef</a>, the underlying configuration management
+application that powers Omnibus GitLab, will make sure that all directories,
+permissions, services, etc., are in place and in the same shape that they were
+initially shipped.</p>
+
+<p>It will also restart GitLab components where needed, if any of their
+configuration files have changed.</p>
+
+<p>If you manually edit any files in <code>/var/opt/gitlab</code> that are managed by Chef,
+running reconfigure will revert the changes AND restart the services that
+depend on those files.</p>
+<h2 id='installations-from-source'>Installations from source <a class='anchor' href='restart_gitlab.html#installations-from-source' title='Permalink'></a></h2>
+<p>If you have followed the official installation guide to <a href="../install/installation.html" title="Documentation to install GitLab from source">install GitLab from
+source</a>, run the following command to restart GitLab:</p>
+<pre class="highlight plaintext"><code>sudo service gitlab restart
+</code></pre>
+<p>The output should be similar to this:</p>
+<pre class="highlight plaintext"><code>Shutting down GitLab Unicorn
+Shutting down GitLab Sidekiq
+Shutting down GitLab Workhorse
+Shutting down GitLab MailRoom
+...
+GitLab is not running.
+Starting GitLab Unicorn
+Starting GitLab Sidekiq
+Starting GitLab Workhorse
+Starting GitLab MailRoom
+...
+The GitLab Unicorn web server with pid 28059 is running.
+The GitLab Sidekiq job dispatcher with pid 28176 is running.
+The GitLab Workhorse with pid 28122 is running.
+The GitLab MailRoom email processor with pid 28114 is running.
+GitLab and all its components are up and running.
+</code></pre>
+<p>This should restart Unicorn, Sidekiq, GitLab Workhorse and <a href="reply_by_email.html" title="Used for replying by email in GitLab issues and merge requests">Mailroom</a>
+(if enabled). The init service file that does all the magic can be found on
+your server in <code>/etc/init.d/gitlab</code>.</p>
+
+<hr>
+
+<p>If you are using other init systems, like systemd, you can check the
+<a href="https://gitlab.com/gitlab-org/gitlab-recipes/tree/master/init" title="GitLab Recipes repository">GitLab Recipes</a> repository for some unofficial services. These are
+<strong>not</strong> officially supported so use them at your own risk.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/restart_gitlab.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

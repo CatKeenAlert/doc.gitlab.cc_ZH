@@ -1,0 +1,500 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Current page</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#variables">Variables</a>
+<ul>
+<li>
+<a href="README.html#predefined-variables-environment-variables">Predefined variables (Environment Variables)</a>
+</li>
+<li>
+<a href="README.html#yaml-defined-variables">YAML-defined variables</a>
+<ul>
+<li>
+<a href="README.html#debug-tracing">Debug tracing</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#user-defined-variables-secure-variables">User-defined variables (Secure Variables)</a>
+</li>
+<li>
+<a href="README.html#use-variables">Use variables</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='variables'>Variables <a class='anchor' href='README.html#variables' title='Permalink'></a></h2>
+<p>When receiving a build from GitLab CI, the runner prepares the build environment.
+It starts by setting a list of <strong>predefined variables</strong> (Environment Variables) and a list of <strong>user-defined variables</strong></p>
+
+<p>The variables can be overwritten. They take precedence over each other in this order:</p>
+
+<ol>
+<li>Trigger variables</li>
+<li>Secure variables</li>
+<li>YAML-defined job-level variables</li>
+<li>YAML-defined global variables</li>
+<li>Predefined variables</li>
+</ol>
+
+<p>For example, if you define:</p>
+
+<ol>
+<li><code>API_TOKEN=SECURE</code> as Secure Variable</li>
+<li><code>API_TOKEN=YAML</code> as YAML-defined variable</li>
+</ol>
+
+<p>The <code>API_TOKEN</code> will take the Secure Variable value: <code>SECURE</code>.</p>
+<h3 id='predefined-variables-environment-variables'>Predefined variables (Environment Variables) <a class='anchor' href='README.html#predefined-variables-environment-variables' title='Permalink'></a></h3>
+<table><thead>
+<tr>
+<th>Variable</th>
+<th>GitLab</th>
+<th>Runner</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>CI</strong></td>
+<td>all</td>
+<td>0.4</td>
+<td>Mark that build is executed in CI environment</td>
+</tr>
+<tr>
+<td><strong>GITLAB_CI</strong></td>
+<td>all</td>
+<td>all</td>
+<td>Mark that build is executed in GitLab CI environment</td>
+</tr>
+<tr>
+<td><strong>CI_SERVER</strong></td>
+<td>all</td>
+<td>all</td>
+<td>Mark that build is executed in CI environment</td>
+</tr>
+<tr>
+<td><strong>CI_SERVER_NAME</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The name of CI server that is used to coordinate builds</td>
+</tr>
+<tr>
+<td><strong>CI_SERVER_VERSION</strong></td>
+<td>all</td>
+<td>all</td>
+<td>GitLab version that is used to schedule builds</td>
+</tr>
+<tr>
+<td><strong>CI_SERVER_REVISION</strong></td>
+<td>all</td>
+<td>all</td>
+<td>GitLab revision that is used to schedule builds</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_ID</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The unique id of the current build that GitLab CI uses internally</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_REF</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The commit revision for which project is built</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_TAG</strong></td>
+<td>all</td>
+<td>0.5</td>
+<td>The commit tag name. Present only when building tags.</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_NAME</strong></td>
+<td>all</td>
+<td>0.5</td>
+<td>The name of the build as defined in <code>.gitlab-ci.yml</code></td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_STAGE</strong></td>
+<td>all</td>
+<td>0.5</td>
+<td>The name of the stage as defined in <code>.gitlab-ci.yml</code></td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_REF_NAME</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The branch or tag name for which project is built</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_REPO</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The URL to clone the Git repository</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_TRIGGERED</strong></td>
+<td>all</td>
+<td>0.5</td>
+<td>The flag to indicate that build was <a href="../triggers/README.html">triggered</a></td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_MANUAL</strong></td>
+<td>8.12</td>
+<td>all</td>
+<td>The flag to indicate that build was manually started</td>
+</tr>
+<tr>
+<td><strong>CI_BUILD_TOKEN</strong></td>
+<td>all</td>
+<td>1.2</td>
+<td>Token used for authenticating with the GitLab Container Registry</td>
+</tr>
+<tr>
+<td><strong>CI_PIPELINE_ID</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The unique id of the current pipeline that GitLab CI uses internally</td>
+</tr>
+<tr>
+<td><strong>CI_PROJECT_ID</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The unique id of the current project that GitLab CI uses internally</td>
+</tr>
+<tr>
+<td><strong>CI_PROJECT_NAME</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The project name that is currently being built</td>
+</tr>
+<tr>
+<td><strong>CI_PROJECT_NAMESPACE</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The project namespace (username or groupname) that is currently being built</td>
+</tr>
+<tr>
+<td><strong>CI_PROJECT_PATH</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The namespace with project name</td>
+</tr>
+<tr>
+<td><strong>CI_PROJECT_URL</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The HTTP address to access project</td>
+</tr>
+<tr>
+<td><strong>CI_PROJECT_DIR</strong></td>
+<td>all</td>
+<td>all</td>
+<td>The full path where the repository is cloned and where the build is run</td>
+</tr>
+<tr>
+<td><strong>CI_REGISTRY</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>If the Container Registry is enabled it returns the address of GitLab&#39;s Container Registry</td>
+</tr>
+<tr>
+<td><strong>CI_REGISTRY_IMAGE</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>If the Container Registry is enabled for the project it returns the address of the registry tied to the specific project</td>
+</tr>
+<tr>
+<td><strong>CI_RUNNER_ID</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The unique id of runner being used</td>
+</tr>
+<tr>
+<td><strong>CI_RUNNER_DESCRIPTION</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The description of the runner as saved in GitLab</td>
+</tr>
+<tr>
+<td><strong>CI_RUNNER_TAGS</strong></td>
+<td>8.10</td>
+<td>0.5</td>
+<td>The defined runner tags</td>
+</tr>
+<tr>
+<td><strong>CI_DEBUG_TRACE</strong></td>
+<td>all</td>
+<td>1.7</td>
+<td>Whether <a href="README.html#debug-tracing">debug tracing</a> is enabled</td>
+</tr>
+<tr>
+<td><strong>GITLAB_USER_ID</strong></td>
+<td>8.12</td>
+<td>all</td>
+<td>The id of the user who started the build</td>
+</tr>
+<tr>
+<td><strong>GITLAB_USER_EMAIL</strong></td>
+<td>8.12</td>
+<td>all</td>
+<td>The email of the user who started the build</td>
+</tr>
+</tbody></table>
+
+<p><strong>Some of the variables are only available when using runner with at least defined version.</strong></p>
+
+<p>Example values:</p>
+<pre class="highlight shell"><code><span class="nb">export </span><span class="nv">CI_BUILD_ID</span><span class="o">=</span><span class="s2">"50"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_REF</span><span class="o">=</span><span class="s2">"1ecfd275763eff1d6b4844ea3168962458c9f27a"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_REF_NAME</span><span class="o">=</span><span class="s2">"master"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_REPO</span><span class="o">=</span><span class="s2">"https://gitab-ci-token:abcde-1234ABCD5678ef@gitlab.com/gitlab-org/gitlab-ce.git"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_TAG</span><span class="o">=</span><span class="s2">"1.0.0"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_NAME</span><span class="o">=</span><span class="s2">"spec:other"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_STAGE</span><span class="o">=</span><span class="s2">"test"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_MANUAL</span><span class="o">=</span><span class="s2">"true"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_TRIGGERED</span><span class="o">=</span><span class="s2">"true"</span>
+<span class="nb">export </span><span class="nv">CI_BUILD_TOKEN</span><span class="o">=</span><span class="s2">"abcde-1234ABCD5678ef"</span>
+<span class="nb">export </span><span class="nv">CI_PIPELINE_ID</span><span class="o">=</span><span class="s2">"1000"</span>
+<span class="nb">export </span><span class="nv">CI_PROJECT_ID</span><span class="o">=</span><span class="s2">"34"</span>
+<span class="nb">export </span><span class="nv">CI_PROJECT_DIR</span><span class="o">=</span><span class="s2">"/builds/gitlab-org/gitlab-ce"</span>
+<span class="nb">export </span><span class="nv">CI_PROJECT_NAME</span><span class="o">=</span><span class="s2">"gitlab-ce"</span>
+<span class="nb">export </span><span class="nv">CI_PROJECT_NAMESPACE</span><span class="o">=</span><span class="s2">"gitlab-org"</span>
+<span class="nb">export </span><span class="nv">CI_PROJECT_PATH</span><span class="o">=</span><span class="s2">"gitlab-org/gitlab-ce"</span>
+<span class="nb">export </span><span class="nv">CI_PROJECT_URL</span><span class="o">=</span><span class="s2">"https://gitlab.com/gitlab-org/gitlab-ce"</span>
+<span class="nb">export </span><span class="nv">CI_REGISTRY</span><span class="o">=</span><span class="s2">"registry.gitlab.com"</span>
+<span class="nb">export </span><span class="nv">CI_REGISTRY_IMAGE</span><span class="o">=</span><span class="s2">"registry.gitlab.com/gitlab-org/gitlab-ce"</span>
+<span class="nb">export </span><span class="nv">CI_RUNNER_ID</span><span class="o">=</span><span class="s2">"10"</span>
+<span class="nb">export </span><span class="nv">CI_RUNNER_DESCRIPTION</span><span class="o">=</span><span class="s2">"my runner"</span>
+<span class="nb">export </span><span class="nv">CI_RUNNER_TAGS</span><span class="o">=</span><span class="s2">"docker, linux"</span>
+<span class="nb">export </span><span class="nv">CI_SERVER</span><span class="o">=</span><span class="s2">"yes"</span>
+<span class="nb">export </span><span class="nv">CI_SERVER_NAME</span><span class="o">=</span><span class="s2">"GitLab"</span>
+<span class="nb">export </span><span class="nv">CI_SERVER_REVISION</span><span class="o">=</span><span class="s2">"70606bf"</span>
+<span class="nb">export </span><span class="nv">CI_SERVER_VERSION</span><span class="o">=</span><span class="s2">"8.9.0"</span>
+<span class="nb">export </span><span class="nv">GITLAB_USER_ID</span><span class="o">=</span><span class="s2">"42"</span>
+<span class="nb">export </span><span class="nv">GITLAB_USER_EMAIL</span><span class="o">=</span><span class="s2">"alexzander@sporer.com"</span>
+</code></pre><h3 id='yaml-defined-variables'>YAML-defined variables <a class='anchor' href='README.html#yaml-defined-variables' title='Permalink'></a></h3>
+<p>*<em>This feature requires GitLab Runner 0.5.0 or higher and GitLab CI 7.14 or higher *</em></p>
+
+<p>GitLab CI allows you to add to <code>.gitlab-ci.yml</code> variables that are set in build environment.
+The variables are stored in repository and are meant to store non-sensitive project configuration, ie. RAILS_ENV or DATABASE_URL.</p>
+<pre class="highlight yaml"><code><span class="na">variables</span><span class="pi">:</span>
+  <span class="na">DATABASE_URL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">postgres://postgres@postgres/my_database"</span>
+</code></pre>
+<p>These variables can be later used in all executed commands and scripts.</p>
+
+<p>The YAML-defined variables are also set to all created service containers, thus allowing to fine tune them.</p>
+
+<p>Variables can be defined at a global level, but also at a job level.</p>
+
+<p>More information about Docker integration can be found in <a href="../docker/using_docker_images.html">Using Docker Images</a>.</p>
+<h4 id='debug-tracing'>Debug tracing <a class='anchor' href='README.html#debug-tracing' title='Permalink'></a></h4>
+<blockquote>
+<p><strong>WARNING:</strong> Enabling debug tracing can have severe security implications. The
+  output <strong>will</strong> contain the content of all your secure variables and any other
+  secrets! The output <strong>will</strong> be uploaded to the GitLab server and made visible
+  in build traces!</p>
+</blockquote>
+
+<p>By default, GitLab Runner hides most of the details of what it is doing when
+processing a job. This behaviour keeps build traces short, and prevents secrets
+from being leaked into the trace unless your script writes them to the screen.</p>
+
+<p>If a job isn&#39;t working as expected, this can make the problem difficult to
+investigate; in these cases, you can enable debug tracing in <code>.gitlab-ci.yml</code>.
+Available on GitLab Runner v1.7+, this feature enables the shell&#39;s execution
+trace, resulting in a verbose build trace listing all commands that were run,
+variables that were set, etc.</p>
+
+<p>Before enabling this, you should ensure builds are visible to
+<a href="https://doc.gitlab.cc/user/permissions.html#project-features">team members only</a>. You should
+also <a href="../pipelines.html#seeing-build-traces">erase</a> all generated build traces
+before making them visible again.</p>
+
+<p>To enable debug traces, set the <code>CI_DEBUG_TRACE</code> variable to <code>true</code>:</p>
+<pre class="highlight yaml"><code><span class="na">job1</span><span class="pi">:</span>
+  <span class="na">variables</span><span class="pi">:</span>
+    <span class="na">CI_DEBUG_TRACE</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+</code></pre>
+<p>The <a href="https://gitlab.com/gitlab-examples/ci-debug-trace">example project</a>
+demonstrates a working configuration, including build trace examples.</p>
+<h3 id='user-defined-variables-secure-variables'>User-defined variables (Secure Variables) <a class='anchor' href='README.html#user-defined-variables-secure-variables' title='Permalink'></a></h3>
+<p><strong>This feature requires GitLab Runner 0.4.0 or higher</strong></p>
+
+<p>GitLab CI allows you to define per-project <strong>Secure Variables</strong> that are set in
+the build environment.
+The secure variables are stored out of the repository (the <code>.gitlab-ci.yml</code>).
+The variables are securely passed to GitLab Runner and are available in the
+build environment.
+It&#39;s desired method to use them for storing passwords, secret keys or whatever
+you want.</p>
+
+<p><strong>The value of the variable can be shown in build log if explicitly asked to do so.</strong>
+If your project is public or internal you can make the builds private.</p>
+
+<p>Secure Variables can added by going to <code>Project &gt; Variables &gt; Add Variable</code>.</p>
+
+<p>They will be available for all subsequent builds.</p>
+<h3 id='use-variables'>Use variables <a class='anchor' href='README.html#use-variables' title='Permalink'></a></h3>
+<p>The variables are set as environment variables in build environment and are accessible with normal methods that are used to access such variables.
+In most cases the <strong>bash</strong> is used to execute build script.
+To access variables (predefined and user-defined) in bash environment, prefix the variable name with <code>$</code>:</p>
+<pre class="highlight plaintext"><code>job_name:
+  script:
+    - echo $CI_BUILD_ID
+</code></pre>
+<p>You can also list all environment variables with <code>export</code> command,
+but be aware that this will also expose value of all <strong>Secure Variables</strong> in build log:</p>
+<pre class="highlight plaintext"><code>job_name:
+  script:
+    - export
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/variables/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

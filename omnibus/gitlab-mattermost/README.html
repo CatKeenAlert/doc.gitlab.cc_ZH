@@ -1,0 +1,493 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Mattermost - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Mattermost</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-mattermost">GitLab Mattermost</a>
+<ul>
+<li>
+<a href="README.html#documentation-version">Documentation version</a>
+</li>
+<li>
+<a href="README.html#pre-requisite">Pre-requisite</a>
+</li>
+<li>
+<a href="README.html#getting-started">Getting started</a>
+</li>
+<li>
+<a href="README.html#running-gitlab-mattermost-on-its-own-server">Running GitLab Mattermost on its own server</a>
+</li>
+<li>
+<a href="README.html#manually-re-authorising-gitlab-mattermost-with-gitlab">Manually (re)authorising GitLab Mattermost with GitLab</a>
+<ul>
+<li>
+<a href="README.html#authorise-gitlab-mattermost">Authorise GitLab Mattermost</a>
+</li>
+<li>
+<a href="README.html#reauthorise-gitlab-mattermost">Reauthorise GitLab Mattermost</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#running-gitlab-mattermost-with-https">Running GitLab Mattermost with HTTPS</a>
+</li>
+<li>
+<a href="README.html#setting-up-smtp-for-gitlab-mattermost">Setting up SMTP for GitLab Mattermost</a>
+</li>
+<li>
+<a href="README.html#community-support-resources">Community Support Resources</a>
+</li>
+<li>
+<a href="README.html#upgrading-gitlab-mattermost">Upgrading GitLab Mattermost</a>
+</li>
+<li>
+<a href="README.html#upgrading-gitlab-mattermost-from-versions-prior-to-8-9">Upgrading GitLab Mattermost from versions prior to 8.9</a>
+<ul>
+<li>
+<a href="README.html#migrating-mattermost-outside-of-gitlab">Migrating Mattermost outside of GitLab</a>
+</li>
+<li>
+<a href="README.html#upgrading-gitlab-mattermost-outside-of-gitlab">Upgrading GitLab Mattermost outside of GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#administering-gitlab-mattermost">Administering GitLab Mattermost</a>
+<ul>
+<li>
+<a href="README.html#gitlab-notifications-in-mattermost">GitLab notifications in Mattermost</a>
+<ul>
+<li>
+<a href="README.html#setting-up-mattermost-as-a-slack-project-service-integration">Setting up Mattermost as a Slack project service integration:</a>
+</li>
+<li>
+<a href="README.html#setting-up-gitlab-integration-service-for-mattermost">Setting up GitLab integration service for Mattermost</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#specify-numeric-user-and-group-identifiers">Specify numeric user and group identifiers</a>
+</li>
+<li>
+<a href="README.html#oauth2-sequence-diagram">OAuth2 Sequence Diagram</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-mattermost'>GitLab Mattermost <a class='anchor' href='README.html#gitlab-mattermost' title='Permalink'></a></h1>
+<p>You can run a <a href="http://www.mattermost.org/">GitLab Mattermost</a>
+service on your GitLab server.</p>
+<h2 id='documentation-version'>Documentation version <a class='anchor' href='README.html#documentation-version' title='Permalink'></a></h2>
+<p>Make sure you view this guide from the tag (version) of GitLab you would like to install. In most cases this should be the highest numbered production tag (without rc in it). You can select the tag in the version dropdown in the top left corner of GitLab (below the menu bar).</p>
+
+<p>If the highest number stable branch is unclear please check the <a href="https://www.gitlab.cc/blog/">GitLab Blog</a> for installation guide links by version.</p>
+<h2 id='pre-requisite'>Pre-requisite <a class='anchor' href='README.html#pre-requisite' title='Permalink'></a></h2>
+<p>GitLab Mattermost is compiled and manually tested each release on an AMD 64 chipset for Linux. ARM chipsets and operating systems, like Raspberry PI, are not supported. </p>
+<h2 id='getting-started'>Getting started <a class='anchor' href='README.html#getting-started' title='Permalink'></a></h2>
+<p>GitLab Mattermost expects to run on its own virtual host. In your DNS you would then
+have two entries pointing to the same machine, e.g. <code>gitlab.example.com</code> and
+<code>mattermost.example.com</code>.</p>
+
+<p>GitLab Mattermost is disabled by default, to enable it just tell omnibus-gitlab what
+the external URL for Mattermost server is:</p>
+<pre class="highlight ruby"><code><span class="c1"># in /etc/gitlab/gitlab.rb</span>
+<span class="n">mattermost_external_url</span> <span class="s1">'http://mattermost.example.com'</span>
+</code></pre>
+<p>After you run <code>sudo gitlab-ctl reconfigure</code>, your GitLab Mattermost should
+now be reachable at <code>http://mattermost.example.com</code> and authorized to connect to GitLab. Authorising Mattermost with GitLab will allow users to use GitLab as SSO provider.</p>
+
+<p>Omnibus-gitlab package will attempt to automatically authorise GitLab Mattermost with GitLab if applications are running on the same server.
+This is because automatic authorisation requires access to GitLab database.
+If GitLab database is not available you will need to manually authorise GitLab Mattermost for access to GitLab.</p>
+<h2 id='running-gitlab-mattermost-on-its-own-server'>Running GitLab Mattermost on its own server <a class='anchor' href='README.html#running-gitlab-mattermost-on-its-own-server' title='Permalink'></a></h2>
+<p>If you want to run GitLab and GitLab Mattermost on two separate servers you
+can use the following settings on the GitLab Mattermost server to effectively disable
+the GitLab service bundled into the Omnibus package. The GitLab services will
+still be set up on your GitLab Mattermost server, but they will not accept user requests or
+consume system resources.</p>
+<pre class="highlight ruby"><code><span class="n">mattermost_external_url</span> <span class="s1">'http://mattermost.example.com'</span>
+
+<span class="c1"># Tell GitLab Mattermost to integrate with gitlab.example.com</span>
+
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_id'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"12345656"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"123456789"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_scope'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">""</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_auth_endpoint'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"http://gitlab.example.com/oauth/authorize"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_token_endpoint'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"http://gitlab.example.com/oauth/token"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gitlab_user_api_endpoint'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"http://gitlab.example.com/api/v3/user"</span>
+
+<span class="c1"># Shut down GitLab services on the Mattermost server</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p>where <code>Secret</code> and <code>Id</code> are <code>application secret</code> and <code>application id</code> received when creating new <code>Application</code> authorization in GitLab admin section.</p>
+
+<p>Optionally, you can set <code>mattermost[&#39;email_enable_sign_up_with_email&#39;] = false</code> to force all users to sign-up with GitLab only. See Mattermost <a href="https://docs.mattermost.com/deployment/sso-gitlab.html">documentation on GitLab SSO</a>.</p>
+<h2 id='manually-re-authorising-gitlab-mattermost-with-gitlab'>Manually (re)authorising GitLab Mattermost with GitLab <a class='anchor' href='README.html#manually-re-authorising-gitlab-mattermost-with-gitlab' title='Permalink'></a></h2><h3 id='authorise-gitlab-mattermost'>Authorise GitLab Mattermost <a class='anchor' href='README.html#authorise-gitlab-mattermost' title='Permalink'></a></h3>
+<p>To do this, using browser navigate to the <code>admin area</code> of GitLab, <code>Application</code> section. Create a new application and for the callback URL use: <code>http://mattermost.example.com/signup/gitlab/complete</code> and <code>http://mattermost.example.com/login/gitlab/complete</code> (replace http with https if you use https).</p>
+
+<p>Once the application is created you will receive an <code>Application ID</code> and <code>Secret</code>. One other information needed is the URL of GitLab instance.</p>
+
+<p>Now, go to the GitLab server and edit the <code>/etc/gitlab/gitlab.rb</code> configuration file.</p>
+
+<p>In <code>gitlab.rb</code> use the values you&#39;ve received above:</p>
+<pre class="highlight plaintext"><code>mattermost['gitlab_enable'] = true
+mattermost['gitlab_id'] = "12345656"
+mattermost['gitlab_secret'] = "123456789"
+mattermost['gitlab_scope'] = ""
+mattermost['gitlab_auth_endpoint'] = "http://gitlab.example.com/oauth/authorize"
+mattermost['gitlab_token_endpoint'] = "http://gitlab.example.com/oauth/token"
+mattermost['gitlab_user_api_endpoint'] = "http://gitlab.example.com/api/v3/user"
+</code></pre>
+<p>Save the changes and then run <code>sudo gitlab-ctl reconfigure</code>.</p>
+
+<p>If there are no errors your GitLab and GitLab Mattermost should be configured correctly.</p>
+<h3 id='reauthorise-gitlab-mattermost'>Reauthorise GitLab Mattermost <a class='anchor' href='README.html#reauthorise-gitlab-mattermost' title='Permalink'></a></h3>
+<p>To reauthorise GitLab Mattermost you will first need to revoke access of the existing authorisation. This can be done in the Admin area of GitLab under <code>Applications</code>. Once that is done follow the steps in the <code>Authorise GitLab Mattermost</code> section.</p>
+<h2 id='running-gitlab-mattermost-with-https'>Running GitLab Mattermost with HTTPS <a class='anchor' href='README.html#running-gitlab-mattermost-with-https' title='Permalink'></a></h2>
+<p>Place the ssl certificate and ssl certificate key inside of <code>/etc/gitlab/ssl</code> directory. If directory doesn&#39;t exist, create one.</p>
+
+<p>In <code>/etc/gitlab/gitlab.rb</code> specify the following configuration:</p>
+<pre class="highlight ruby"><code><span class="n">mattermost_external_url</span> <span class="s1">'https://mattermost.gitlab.example'</span>
+
+<span class="n">mattermost_nginx</span><span class="p">[</span><span class="s1">'redirect_http_to_https'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">mattermost_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/mattermost-nginx.crt"</span>
+<span class="n">mattermost_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate_key'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/mattermost-nginx.key"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'service_use_ssl'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre>
+<p>where <code>mattermost-nginx.crt</code> and <code>mattermost-nginx.key</code> are ssl cert and key, respectively.
+Once the configuration is set, run <code>sudo gitlab-ctl reconfigure</code> for the changes to take effect.</p>
+<h2 id='setting-up-smtp-for-gitlab-mattermost'>Setting up SMTP for GitLab Mattermost <a class='anchor' href='README.html#setting-up-smtp-for-gitlab-mattermost' title='Permalink'></a></h2>
+<p>By default, <code>mattermost[&#39;email_enable_sign_up_with_email&#39;] = true</code> which allows team creation and account signup using email and password. This should be <code>false</code> if you&#39;re using only an external authentication source such as GitLab.</p>
+
+<p>SMTP configuration depends on SMTP provider used.  Note that the configuration keys used are not the same as the ones that the main GitLab application uses, for example the SMTP user in Mattermost is <code>email_smtp_username</code> and not <code>smtp_user_name</code>.</p>
+
+<p>If you are using SMTP without TLS minimal configuration in <code>/etc/gitlab/gitlab.rb</code> contains:</p>
+<pre class="highlight ruby"><code><span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_enable_sign_in_with_email'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_enable_sign_up_with_email'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_send_email_notifications'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_username'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_server'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.example.com"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"465"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_connection_security'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_feedback_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"GitLab Mattermost"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_feedback_email'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"email@example.com"</span>
+</code></pre>
+<p>If you are using TLS, configuration can look something like this:</p>
+<pre class="highlight ruby"><code><span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_enable_sign_up_with_email'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_username'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_server'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.example.com"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"587"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_connection_security'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'TLS'</span> <span class="c1"># Or 'STARTTLS'</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_feedback_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"GitLab Mattermost"</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'email_feedback_email'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"email@example.com"</span>
+</code></pre>
+<p><code>email_connection_security</code> depends on your SMTP provider so you need to verify which of <code>TLS</code> or <code>STARTTLS</code> is valid for your provider.</p>
+
+<p>Once the configuration is set, run <code>sudo gitlab-ctl reconfigure</code> for the changes to take effect.</p>
+<h2 id='community-support-resources'>Community Support Resources <a class='anchor' href='README.html#community-support-resources' title='Permalink'></a></h2>
+<p>For help and support around your GitLab Mattermost deployment please see:</p>
+
+<ul>
+<li><a href="https://forum.mattermost.org/t/about-the-trouble-shooting-category/150/1">Troubleshooting Forum</a> for configuration questions and issues</li>
+<li><a href="http://docs.mattermost.com/install/troubleshooting.html">Troubleshooting FAQ</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-mattermost/issues">GitLab Mattermost issue tracker</a> for verified bugs with repro steps</li>
+</ul>
+<h2 id='upgrading-gitlab-mattermost'>Upgrading GitLab Mattermost <a class='anchor' href='README.html#upgrading-gitlab-mattermost' title='Permalink'></a></h2>
+<p>Note: These upgrade instructions are for GitLab Version 8.9 (Mattermost v3.1.0) and above. For upgrading versions prior to GitLab 8.9, <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc//gitlab-mattermost/README.md#upgrading-gitlab-mattermost-from-versions-prior-to-89">additional steps are required</a>.  </p>
+
+<table><thead>
+<tr>
+<th>GitLab Version</th>
+<th>Mattermost Version</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>8.9</td>
+<td>v3.1.0</td>
+</tr>
+<tr>
+<td>8.10</td>
+<td>v3.2.0</td>
+</tr>
+<tr>
+<td>8.11</td>
+<td>v3.3.0</td>
+</tr>
+<tr>
+<td>8.12</td>
+<td>v3.4.0</td>
+</tr>
+</tbody></table>
+
+<p>It is possible to skip upgrade versions starting from Mattermost v3.1. For example, Mattermost v3.1.0 in GitLab 8.9 can upgrade directly to Mattermost v3.4.0 in GitLab 8.12. </p>
+
+<p>GitLab Mattermost can be upgraded through the regular GitLab omnibus update process provided Mattermost configuration settings have not been changed outside of GitLab. This means no changes to Mattermost&#39;s <code>config.json</code> file have been made, either directly or via the Mattermost <strong>System Console</strong> which saves back changes to <code>config.json</code>.</p>
+
+<p>If this is the case, upgrading GitLab using omnibus and running <code>gitlab-ctl reconfigure</code> should upgrade GitLab Mattermost to the next version.</p>
+
+<p>If this is not the case, there are two options:</p>
+
+<ol>
+<li>Update <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template#L706"><code>gitlab.rb</code></a> with the changes done to <code>config.json</code>
+This might require adding some parameters as not all settings in <code>config.json</code> are available in <code>gitlab.rb</code>. Once complete, GitLab omnibus should be able to upgrade GitLab Mattermost from one version to the next.</li>
+<li>Migrate Mattermost outside of the directory controlled by GitLab omnibus so it can be administered and upgraded independently (see below).</li>
+</ol>
+
+<p><strong>Special Considerations</strong></p>
+
+<p>Consider these notes when upgrading GitLab Mattermost:</p>
+
+<ol>
+<li>If public links are enabled, upgrading to Mattermost v3.4 will invalidate existing public links due to a security upgrade allowing admins to invalidate links by resetting a public link salt from the System Console.</li>
+<li>Upgrading from v3.2 to v3.4 will be incomplete due to a migration code not being run properly. You can either:
+
+<ul>
+<li>Upgrade from v3.2 to v3.3 and then from v3.3 to v3.4, or</li>
+<li>Upgrade from v3.2 to v3.4, then run the following SQL query to make Mattermost rerun upgrade steps that were not properly completed: <code>UPDATE Systems SET Value = &#39;3.1.0&#39; WHERE Name = &#39;Version&#39;;</code></li>
+</ul></li>
+</ol>
+<h2 id='upgrading-gitlab-mattermost-from-versions-prior-to-8-9'>Upgrading GitLab Mattermost from versions prior to 8.9 <a class='anchor' href='README.html#upgrading-gitlab-mattermost-from-versions-prior-to-8-9' title='Permalink'></a></h2>
+<p>After upgrading to GitLab 8.9 additional steps are require before restarting the Mattermost server to enable multi-account support in Mattermost 3.1.</p>
+
+<ol>
+<li>Confirm you are starting with version GitLab 8.8.</li>
+<li>Backup your Mattermost database.
+
+<ul>
+<li>This is especially important in the 8.9 upgrade since the database upgrade cannot be reversed and is incompatible with previous versions.</li>
+<li>If you use a default omnibus install you can use this command: <code>sudo -u gitlab-psql -- /opt/gitlab/embedded/bin/pg_dump -h /var/opt/gitlab/postgresql mattermost_production | gzip &gt; mattermost_dbdump_$(date --rfc-3339=date).sql.gz</code></li>
+</ul></li>
+<li>Configure two settings.
+
+<ul>
+<li>In <code>/etc/gitlab/gitlab.rb</code> set <code>mattermost[&#39;db2_backup_created&#39;] = true</code> to verify your database backup is complete.</li>
+<li>In <code>/etc/gitlab/gitlab.rb</code> set <code>mattermost[&#39;db2_team_name&#39;] = &quot;TEAMNAME&quot;</code> where TEAMNAME is the name of your primary team in Mattermost.
+
+<ul>
+<li>If you use only one team in Mattermost, this should be the name of the team.</li>
+<li>If you use multiple teams, this should be the name of the team most commonly used.
+
+<ul>
+<li>When Mattermost 3.1 upgrades the database with multi-team account support user accounts on the primary team are preserved, and accounts with duplciate emails or usernames in other teams are renamed.</li>
+<li>Users with renamed accounts receive instructions by email on how to switch from using multiple accounts into one multi-team account.</li>
+<li>For more information, please review the <a href="http://www.mattermost.org/upgrade-to-3-0/">Mattermost 3.0 upgrade documentation.</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Run your GitLab 8.9 upgrade as normal.
+
+<ul>
+<li>This installs the Mattermost 3.1 binary and will attempt to auto-upgrade the database.</li>
+<li>Your Mattermost database will be upgraded to version 3.1 and the server should start.</li>
+<li>You&#39;ll see an &quot;Automatic database upgrade failed&quot; error on the command line and Mattermost will not start if something goes wrong.</li>
+</ul></li>
+</ol>
+
+<p>If you experience issues you can run an interactive upgrade using:</p>
+<pre class="highlight plaintext"><code>sudo -u mattermost -i bash
+cd /opt/gitlab/embedded/service/mattermost
+/opt/gitlab/embedded/bin/mattermost -config='/var/opt/gitlab/mattermost/config.json' -upgrade_db_30
+</code></pre>
+<p>Log in as root or user with super user access and re-run <code>sudo gitlab-ctl reconfigure</code>.</p>
+
+<p>For any questions, please <a href="https://forum.mattermost.org/t/upgrading-to-gitlab-mattermost-in-gitlab-8-9/1735">visit the GitLab Mattermost troubleshooting forum</a> and share any relevant portions of <code>mattermost.log</code> along with the step at which you encountered issues.</p>
+<h3 id='migrating-mattermost-outside-of-gitlab'>Migrating Mattermost outside of GitLab <a class='anchor' href='README.html#migrating-mattermost-outside-of-gitlab' title='Permalink'></a></h3>
+<p>Follow the <a href="http://docs.mattermost.com/administration/migrating.html">Mattermost Migration Guide</a> to move your Mattermost configuration settings and data to another directory or server independent from GitLab omnibus.</p>
+<h3 id='upgrading-gitlab-mattermost-outside-of-gitlab'>Upgrading GitLab Mattermost outside of GitLab <a class='anchor' href='README.html#upgrading-gitlab-mattermost-outside-of-gitlab' title='Permalink'></a></h3>
+<p>If you choose to upgrade Mattermost outside of GitLab&#39;s omnibus automation, please <a href="http://docs.mattermost.com/administration/upgrade-guide.html">follow this guide</a>.</p>
+<h2 id='administering-gitlab-mattermost'>Administering GitLab Mattermost <a class='anchor' href='README.html#administering-gitlab-mattermost' title='Permalink'></a></h2><h3 id='gitlab-notifications-in-mattermost'>GitLab notifications in Mattermost <a class='anchor' href='README.html#gitlab-notifications-in-mattermost' title='Permalink'></a></h3>
+<p>There are multiple ways to send notifications depending on how much control you&#39;d like over the messages.</p>
+
+<p>If you are using the Omnibus edition, enable incoming webhooks from the gitlab.rb file not the System Console or your settings will be lost the next time you upgrade GitLab Omnibus.</p>
+<pre class="highlight ruby"><code><span class="n">mattermost</span><span class="p">[</span><span class="s1">'service_enable_incoming_webhooks'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h4 id='setting-up-mattermost-as-a-slack-project-service-integration'>Setting up Mattermost as a Slack project service integration: <a class='anchor' href='README.html#setting-up-mattermost-as-a-slack-project-service-integration' title='Permalink'></a></h4>
+<p>Mattermost is &quot;Slack-compatible, not Slack-limited&quot; so if you like Slack&#39;s default formatting you can use their project service option to set up Mattermost integration:</p>
+
+<ol>
+<li>In Mattermost, go to <strong>System Console</strong> → <strong>Service Settings</strong> and turn on <strong>Enable Incoming Webhooks</strong></li>
+<li>Go to <strong>Account Settings</strong> → <strong>Integrations</strong> → <strong>Incoming Webhooks</strong></li>
+<li>Select a channel and click *<em>Add</em> and copy the <code>Webhook URL</code></li>
+<li>In GitLab, paste the <code>Webhook URL</code> into <strong>Webhook</strong> under your project’s <strong>Settings</strong> → <strong>Services</strong> → <strong>Slack</strong></li>
+<li>Enter <strong>Username</strong> for how you would like to name the account that posts the notifications</li>
+<li>Select <strong>Triggers</strong> for GitLab events on which you&#39;d like to receive notifications</li>
+<li>Click <strong>Save changes</strong> then <strong>Test settings</strong> to make sure everything is working</li>
+</ol>
+
+<p>Any issues, please see the <a href="https://forum.mattermost.org/t/how-to-use-the-troubleshooting-forum/150">Mattermost Troubleshooting Forum</a>.</p>
+<h4 id='setting-up-gitlab-integration-service-for-mattermost'>Setting up GitLab integration service for Mattermost <a class='anchor' href='README.html#setting-up-gitlab-integration-service-for-mattermost' title='Permalink'></a></h4>
+<p>You can also set up the <a href="https://github.com/NotSqrt/mattermost-integration-gitlab">open source integration service</a> to let you configure notifications on GitLab issues, pushes, build events, merge requests and comments to be delivered to selected Mattermost channels.</p>
+
+<p>This integration lets you completely control how notifications are formatted and, unlike Slack, offers full markdown support.</p>
+
+<p>The source code can be modified to support not only GitLab, but any in-house applications you may have that support webhooks. Also see:</p>
+
+<ul>
+<li><a href="http://docs.mattermost.com/developer/webhooks-incoming.html">Mattermost incoming webhook documentation</a></li>
+<li><a href="https://docs.gitlab.com/ce/web_hooks/web_hooks.html">GitLab webhook documentation</a></li>
+</ul>
+
+<p><a target="_blank" href="https://gitlab.com/gitlab-org/omnibus-gitlab/uploads/677b0aa055693c4dcabad0ee580c61b8/730_gitlab_feature_request.png"><img src="https://gitlab.com/gitlab-org/omnibus-gitlab/uploads/677b0aa055693c4dcabad0ee580c61b8/730_gitlab_feature_request.png" title="" alt="webhooks"/></a></p>
+<h3 id='specify-numeric-user-and-group-identifiers'>Specify numeric user and group identifiers <a class='anchor' href='README.html#specify-numeric-user-and-group-identifiers' title='Permalink'></a></h3>
+<p>omnibus-gitlab creates a user and group mattermost. You can specify the
+numeric identifiers for these users in <code>/etc/gitlab/gitlab.rb</code> as follows.</p>
+<pre class="highlight ruby"><code><span class="n">mattermost</span><span class="p">[</span><span class="s1">'uid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1234</span>
+<span class="n">mattermost</span><span class="p">[</span><span class="s1">'gid'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1234</span>
+</code></pre>
+<p>Run <code>sudo gitlab-ctl reconfigure</code> for the changes to take effect.</p>
+<h3 id='oauth2-sequence-diagram'>OAuth2 Sequence Diagram <a class='anchor' href='README.html#oauth2-sequence-diagram' title='Permalink'></a></h3>
+<p>The following image is a sequence diagram for how GitLab works as an OAuth2
+provider for Mattermost. It may be useful to use this to troubleshoot errors
+in getting the integration to work:</p>
+
+<p><a target="_blank" href="img/gitlab-mattermost.png"><img src="img/gitlab-mattermost.png" title="" alt="sequence diagram"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/gitlab-mattermost/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

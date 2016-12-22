@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Protected Branches - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Protected Branches</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="protected_branches.html#protected-branches">Protected Branches</a>
+<ul>
+<li>
+<a href="protected_branches.html#overview">Overview</a>
+</li>
+<li>
+<a href="protected_branches.html#configuring-protected-branches">Configuring protected branches</a>
+</li>
+<li>
+<a href="protected_branches.html#using-the-allowed-to-merge-and-allowed-to-push-settings">Using the Allowed to merge and Allowed to push settings</a>
+</li>
+<li>
+<a href="protected_branches.html#restricting-push-and-merge-access-to-certain-users">Restricting push and merge access to certain users</a>
+</li>
+<li>
+<a href="protected_branches.html#wildcard-protected-branches">Wildcard protected branches</a>
+</li>
+<li>
+<a href="protected_branches.html#changelog">Changelog</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='protected-branches'>Protected Branches <a class='anchor' href='protected_branches.html#protected-branches' title='Permalink'></a></h1>
+<p><a href="../permissions.html">Permissions</a> in GitLab are fundamentally defined around the
+idea of having read or write permission to the repository and branches. To
+prevent people from messing with history or pushing code without review, we&#39;ve
+created protected branches.</p>
+<h2 id='overview'>Overview <a class='anchor' href='protected_branches.html#overview' title='Permalink'></a></h2>
+<p>By default, a protected branch does four simple things:</p>
+
+<ul>
+<li>it prevents its creation, if not already created, from everybody except users
+with Master permission</li>
+<li>it prevents pushes from everybody except users with Master permission</li>
+<li>it prevents <strong>anyone</strong> from force pushing to the branch</li>
+<li>it prevents <strong>anyone</strong> from deleting the branch</li>
+</ul>
+
+<p>See the <a href="protected_branches.html#changelog">Changelog</a> section for changes over time.</p>
+
+<blockquote>
+<p>Additional functionality for GitLab Enterprise Edition:</p>
+
+<ul>
+<li>Restrict push and merge access to <a href="http://docs.gitlab.com/ee/user/project/protected_branches.html#restricting-push-and-merge-access-to-certain-users">certain users</a></li>
+</ul>
+</blockquote>
+<h2 id='configuring-protected-branches'>Configuring protected branches <a class='anchor' href='protected_branches.html#configuring-protected-branches' title='Permalink'></a></h2>
+<p>To protect a branch, you need to have at least Master permission level. Note
+that the <code>master</code> branch is protected by default.</p>
+
+<ol>
+<li>Navigate to the main page of the project.</li>
+<li><p>In the upper right corner, click the settings wheel and select <strong>Protected branches</strong>.</p>
+
+<p><a target="_blank" href="img/project_settings_list.png"><img src="img/project_settings_list.png" title="" alt="Project settings list"/></a></p></li>
+<li><p>From the <strong>Branch</strong> dropdown menu, select the branch you want to protect and
+click <strong>Protect</strong>. In the screenshot below, we chose the <code>develop</code> branch.</p>
+
+<p><a target="_blank" href="img/protected_branches_page.png"><img src="img/protected_branches_page.png" title="" alt="Protected branches page"/></a></p></li>
+<li><p>Once done, the protected branch will appear in the &quot;Protected branches&quot; list.</p>
+
+<p><a target="_blank" href="img/protected_branches_list.png"><img src="img/protected_branches_list.png" title="" alt="Protected branches list"/></a></p></li>
+</ol>
+<h2 id='using-the-allowed-to-merge-and-allowed-to-push-settings'>Using the Allowed to merge and Allowed to push settings <a class='anchor' href='protected_branches.html#using-the-allowed-to-merge-and-allowed-to-push-settings' title='Permalink'></a></h2>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5081" title="Allow creating protected branches that can&#39;t be pushed to">Introduced</a> in GitLab 8.11.</p>
+</blockquote>
+
+<p>Since GitLab 8.11, we added another layer of branch protection which provides
+more granular management of protected branches. The &quot;Developers can push&quot;
+option was replaced by an &quot;Allowed to push&quot; setting which can be set to
+allow/prohibit Masters and/or Developers to push to a protected branch.</p>
+
+<p>Using the &quot;Allowed to push&quot; and &quot;Allowed to merge&quot; settings, you can control
+the actions that different roles can perform with the protected branch.
+For example, you could set &quot;Allowed to push&quot; to &quot;No one&quot;, and &quot;Allowed to merge&quot;
+to &quot;Developers + Masters&quot;, to require <em>everyone</em> to submit a merge request for
+changes going into the protected branch. This is compatible with workflows like
+the <a href="../../workflow/gitlab_flow.html">GitLab workflow</a>.</p>
+
+<p>However, there are workflows where that is not needed, and only protecting from
+force pushes and branch removal is useful. For those workflows, you can allow
+everyone with write access to push to a protected branch by setting
+&quot;Allowed to push&quot; to &quot;Developers + Masters&quot;.</p>
+
+<p>You can set the &quot;Allowed to push&quot; and &quot;Allowed to merge&quot; options while creating
+a protected branch or afterwards by selecting the option you want from the
+dropdown list in the &quot;Already protected&quot; area.</p>
+
+<p><a target="_blank" href="img/protected_branches_devs_can_push.png"><img src="img/protected_branches_devs_can_push.png" title="" alt="Developers can push"/></a></p>
+
+<p>If you don&#39;t choose any of those options while creating a protected branch,
+they are set to &quot;Masters&quot; by default.</p>
+<h2 id='restricting-push-and-merge-access-to-certain-users'>Restricting push and merge access to certain users <a class='anchor' href='protected_branches.html#restricting-push-and-merge-access-to-certain-users' title='Permalink'></a></h2>
+<blockquote>
+<p>This feature was <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5081" title="Allow creating protected branches that can&#39;t be pushed to">introduced</a> in GitLab Enterprise Edition 8.11.</p>
+</blockquote>
+
+<p>With GitLab Enterprise Edition you can restrict access to protected branches
+by choosing a role (Masters, Developers) as well as certain users. From the
+dropdown menu select the role and/or the users you want to have merge or push
+access.</p>
+
+<p><a target="_blank" href="img/protected_branches_select_roles_and_users.png"><img src="img/protected_branches_select_roles_and_users.png" title="" alt="Select roles and users"/></a></p>
+
+<p>Click <strong>Protect</strong> and the branch will appear in the &quot;Protected branch&quot; list.</p>
+
+<p><a target="_blank" href="img/protected_branches_select_roles_and_users_list.png"><img src="img/protected_branches_select_roles_and_users_list.png" title="" alt="Roles and users list"/></a></p>
+<h2 id='wildcard-protected-branches'>Wildcard protected branches <a class='anchor' href='protected_branches.html#wildcard-protected-branches' title='Permalink'></a></h2>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/4665" title="Allow specifying protected branches using wildcards">Introduced</a> in GitLab 8.10.</p>
+</blockquote>
+
+<p>You can specify a wildcard protected branch, which will protect all branches
+matching the wildcard. For example:</p>
+
+<table><thead>
+<tr>
+<th>Wildcard Protected Branch</th>
+<th>Matching Branches</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>*-stable</code></td>
+<td><code>production-stable</code>, <code>staging-stable</code></td>
+</tr>
+<tr>
+<td><code>production/*</code></td>
+<td><code>production/app-server</code>, <code>production/load-balancer</code></td>
+</tr>
+<tr>
+<td><code>*gitlab*</code></td>
+<td><code>gitlab</code>, <code>gitlab/staging</code>, <code>master/gitlab/production</code></td>
+</tr>
+</tbody></table>
+
+<p>Protected branch settings (like &quot;Developers can push&quot;) apply to all matching
+branches.</p>
+
+<p>Two different wildcards can potentially match the same branch. For example,
+<code>*-stable</code> and <code>production-*</code> would both match a <code>production-stable</code> branch.
+In that case, if <em>any</em> of these protected branches have a setting like
+&quot;Allowed to push&quot;, then <code>production-stable</code> will also inherit this setting.</p>
+
+<p>If you click on a protected branch&#39;s name, you will be presented with a list of
+all matching branches:</p>
+
+<p><a target="_blank" href="img/protected_branches_matches.png"><img src="img/protected_branches_matches.png" title="" alt="Protected branch matches"/></a></p>
+<h2 id='changelog'>Changelog <a class='anchor' href='protected_branches.html#changelog' title='Permalink'></a></h2>
+<p><strong>8.11</strong></p>
+
+<ul>
+<li>Allow creating protected branches that can&#39;t be pushed to <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5081" title="Allow creating protected branches that can&#39;t be pushed to">gitlab-org/gitlab-ce!5081</a></li>
+</ul>
+
+<p><strong>8.10</strong></p>
+
+<ul>
+<li>Allow developers to merge into a protected branch without having push access <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/4892" title="Allow developers to merge into a protected branch without having push access">gitlab-org/gitlab-ce!4892</a></li>
+<li>Allow specifying protected branches using wildcards <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/4665" title="Allow specifying protected branches using wildcards">gitlab-org/gitlab-ce!4665</a></li>
+</ul>
+
+<hr>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/protected_branches.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Database settings - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Configuring omnibus settings</a></li>
+            
+          
+          <li class="breadcrumb">Database settings</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="database.html#database-settings">Database settings</a>
+<ul>
+<li>
+<a href="database.html#using-a-non-packaged-postgresql-database-management-server">Using a non-packaged PostgreSQL database management server</a>
+<ul>
+<li>
+<a href="database.html#backup-and-restore-a-non-packaged-postgresql-database">Backup and restore a non-packaged PostgreSQL database</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="database.html#omnibus-mysql-special-notes">Omnibus MySQL special notes</a>
+</li>
+<li>
+<a href="database.html#using-a-mysql-database-management-server-enterprise-edition-only">Using a MySQL database management server (Enterprise Edition only)</a>
+</li>
+<li>
+<a href="database.html#seed-the-database-fresh-installs-only">Seed the database (fresh installs only)</a>
+</li>
+<li>
+<a href="database.html#disabling-automatic-database-migration">Disabling automatic database migration</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="database.html#upgrade-packaged-postgresql-server">Upgrade packaged PostgreSQL server</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="database.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="database.html#set-mysql-collation-to-utf-8">Set MySQL collation to UTF-8</a>
+</li>
+<li>
+<a href="database.html#connecting-to-the-bundled-postgresql-database">Connecting to the bundled PostgreSQL database</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='database-settings'>Database settings <a class='anchor' href='database.html#database-settings' title='Permalink'></a></h1>
+<p><em><strong>Note:</strong>
+Omnibus GitLab has a bundled PostgreSQL server and PostgreSQL is the preferred
+database for GitLab.</em></p>
+
+<hr>
+
+<p>GitLab supports the following database management systems:</p>
+
+<ul>
+<li>PostgreSQL</li>
+<li>MySQL</li>
+</ul>
+
+<p>Thus you have three options for database servers to use with Omnibus GitLab:</p>
+
+<ul>
+<li>Use the packaged PostgreSQL server included with GitLab Omnibus (no configuration required, recommended)</li>
+<li>Use an <a href="database.html#using-a-non-packaged-postgresql-database-management-server">external PostgreSQL server</a></li>
+<li>Use an <a href="database.html#using-a-mysql-database-management-server-enterprise-edition-only">external MySQL server with EE package</a></li>
+</ul>
+
+<p>If you are planning to use MySQL/MariaDB, make sure to read the <a href="database.html#omnibus-mysql-special-notes">MySQL special notes</a> before proceeding.</p>
+<h2 id='using-a-non-packaged-postgresql-database-management-server'>Using a non-packaged PostgreSQL database management server <a class='anchor' href='database.html#using-a-non-packaged-postgresql-database-management-server' title='Permalink'></a></h2>
+<p>By default, GitLab is configured to use the PostgreSQL server that is included
+in Omnibus GitLab. You can also reconfigure it to use an external instance of
+PostgreSQL.</p>
+
+<p><strong>WARNING</strong> If you are using non-packaged PostgreSQL server, you need to make
+sure that PostgreSQL is set up according to the <a href="https://docs.gitlab.com/ce/install/requirements.html#database">database requirements document</a>.</p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="c1"># Disable the built-in Postgres</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># Fill in the connection details for database.yml</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_adapter'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'postgresql'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_encoding'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'utf8'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'127.0.0.1'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_port'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'5432'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_username'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'USERNAME'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'PASSWORD'</span>
+</code></pre>
+<p>Don&#39;t forget to remove the <code>#</code> comment characters at the beginning of these
+lines.</p>
+
+<p><strong>Note:</strong></p>
+
+<ul>
+<li><code>/etc/gitlab/gitlab.rb</code> should have file permissions <code>0600</code> because it contains
+plain-text passwords.</li>
+<li><p>Postgresql allows to listen on multiple adresses. See <a href="https://www.postgresql.org/docs/9.5/static/runtime-config-connection.html#listen_addresses">Postgresql Connection Config#listen_addresses</a></p>
+
+<p>If you use multiple addresses in <code>gitlab_rails[&#39;db_host&#39;]</code>, comma-separated, the first address in the list will be used for connection.</p></li>
+</ul></li>
+<li><p><a href="https://docs.gitlab.com/ce/administration/restart_gitlab.html#omnibus-gitlab-reconfigure" title="Reconfigure GitLab">Reconfigure GitLab</a> for the changes to take effect.</p></li>
+<li><p><a href="database.html#seed-the-database-fresh-installs-only">Seed the database</a>.</p></li>
+</ol>
+<h3 id='backup-and-restore-a-non-packaged-postgresql-database'>Backup and restore a non-packaged PostgreSQL database <a class='anchor' href='database.html#backup-and-restore-a-non-packaged-postgresql-database' title='Permalink'></a></h3>
+<p>When using the <a href="https://docs.gitlab.com/ce/raketasks/backup_restore.html#create-a-backup-of-the-gitlab-system" title="Backup raketask documentation">rake backup create and restore task</a>, GitLab will
+attempt to use the packaged <code>pg_dump</code> command to create a database backup file
+and the packaged <code>psql</code> command to restore a backup. This will only work if
+they are the correct versions. Check the versions of the packaged <code>pg_dump</code> and
+<code>psql</code>:</p>
+<pre class="highlight shell"><code>/opt/gitlab/bin/pg_dump --version
+/opt/gitlab/bin/psql -- version
+</code></pre>
+<p>If these versions are different from your non-packaged external PostgreSQL
+(most likely they are different), move them aside and replace them with
+symbolic links to your non-packaged PostgreSQL:</p>
+
+<ol>
+<li><p>Check the location of the non-packaged executables:</p>
+<pre class="highlight shell"><code>which pg_dump psql
+</code></pre>
+<p>This will output something like:</p>
+<pre class="highlight plaintext"><code>/usr/bin/pg_dump
+/usr/bin/psql
+</code></pre></li>
+<li><p>Move aside the existing executables and replace them with symbolic links to
+the non-packaged versions:</p>
+<pre class="highlight shell"><code><span class="nb">cd</span> /opt/gitlab/embedded/bin
+mv psql psql_moved
+mv pg_dump pg_dump_moved
+ln -s /usr/bin/pg_dump /usr/bin/psql /opt/gitlab/embedded/bin/
+</code></pre></li>
+<li><p>Re-check the versions:</p>
+<pre class="highlight plaintext"><code>/opt/gitlab/embedded/bin/pg_dump --version
+/opt/gitlab/embedded/bin/psql --version
+</code></pre>
+<p>They should now be the same as your non-packaged external PostgreSQL.</p></li>
+</ol>
+
+<p>After this is done, ensure that the backup and restore tasks are using the
+correct executables by running both the <a href="https://docs.gitlab.com/ce/raketasks/backup_restore.html#create-a-backup-of-the-gitlab-system" title="Backup raketask documentation">backup</a> and
+<a href="https://docs.gitlab.com/ce/raketasks/backup_restore.html#restore-a-previously-created-backup" title="Restore raketask documentation">restore</a> tasks.</p>
+<h2 id='omnibus-mysql-special-notes'>Omnibus MySQL special notes <a class='anchor' href='database.html#omnibus-mysql-special-notes' title='Permalink'></a></h2>
+<p>MySQL in Omnibus is only supported in GitLab Enterprise Edition.
+The MySQL server itself is <em>not</em> shipped with Omnibus, you will have to install
+it on your own or use an existing one. Omnibus ships only the MySQL client.</p>
+
+<p>Make sure that GitLab&#39;s MySQL database collation is UTF-8, otherwise you could
+hit <a href="https://gitlab.com/gitlab-org/gitlab-ee/issues/245" title="MySQL collation issue">collation issues</a>. See <a href="database.html#set-mysql-collation-to-utf-8">&#39;Set MySQL collation to UTF-8&#39;</a> to fix any relevant errors.</p>
+<h2 id='using-a-mysql-database-management-server-enterprise-edition-only'>Using a MySQL database management server (Enterprise Edition only) <a class='anchor' href='database.html#using-a-mysql-database-management-server-enterprise-edition-only' title='Permalink'></a></h2>
+<p><em><strong>Important note:</strong>
+If you are connecting Omnibus GitLab to an existing GitLab database you should
+<a href="https://docs.gitlab.com/ce/raketasks/backup_restore.html#create-a-backup-of-the-gitlab-system" title="Backup raketask documentation">create a backup</a> before attempting this procedure.</em></p>
+
+<hr>
+
+<p>The following guide assumes that you want to use MySQL or MariaDB and are using
+the <strong>GitLab Enterprise Edition packages</strong>.</p>
+
+<ol>
+<li><p>First, set up your database server according to the <a href="https://docs.gitlab.com/ce/install/database_mysql.html" title="MySQL documentation">upstream GitLab
+instructions</a>.</p>
+
+<p>If you want to keep using an existing GitLab database you can skip this step.</p></li>
+<li><p>Next, add the following settings to <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="c1"># Disable the built-in Postgres</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># Fill in the values for database.yml</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_adapter'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mysql2'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_encoding'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'utf8'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'127.0.0.1'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_port'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'3306'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_username'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'USERNAME'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'db_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'PASSWORD'</span>
+</code></pre>
+<p><code>db_adapter</code> and <code>db_encoding</code> should be like the example above. Change
+all other settings according to your MySQL setup.</p></li>
+<li><p><a href="https://docs.gitlab.com/ce/administration/restart_gitlab.html#omnibus-gitlab-reconfigure" title="Reconfigure GitLab">Reconfigure GitLab</a> for the changes to take effect.</p></li>
+<li><p><a href="database.html#seed-the-database-fresh-installs-only">Seed the database</a>.</p></li>
+</ol>
+
+<p><strong>Note:</strong>
+<code>/etc/gitlab/gitlab.rb</code> should have file permissions <code>0600</code> because it contains
+plain-text passwords.</p>
+<h2 id='seed-the-database-fresh-installs-only'>Seed the database (fresh installs only) <a class='anchor' href='database.html#seed-the-database-fresh-installs-only' title='Permalink'></a></h2>
+<p><strong>This is a destructive command; do not run it on an existing database!</strong></p>
+
+<hr>
+
+<p>Omnibus GitLab will not automatically seed your external database. Run the
+following command to import the schema and create the first admin user:</p>
+<pre class="highlight shell"><code><span class="c"># Remove 'sudo' if you are the 'git' user</span>
+sudo gitlab-rake gitlab:setup
+</code></pre>
+<p>If you want to specify a password for the default <code>root</code> user, specify the
+<code>initial_root_password</code> setting in <code>/etc/gitlab/gitlab.rb</code> before running the
+<code>gitlab:setup</code> command above:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'initial_root_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'nonstandardpassword'</span>
+</code></pre><h2 id='disabling-automatic-database-migration'>Disabling automatic database migration <a class='anchor' href='database.html#disabling-automatic-database-migration' title='Permalink'></a></h2>
+<p>If you have multiple GitLab servers sharing a database, you will want to limit the
+number of nodes that are performing the migration steps during reconfiguration.</p>
+
+<p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="c1"># Enable or disable automatic database migrations</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'auto_migrate'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p>Don&#39;t forget to remove the <code>#</code> comment characters at the beginning of this
+line.</p>
+
+<p><strong>Note:</strong>
+<code>/etc/gitlab/gitlab.rb</code> should have file permissions <code>0600</code> because it contains
+plain-text passwords.</p>
+
+<p>The next time a reconfigure is triggered, the migration steps will not be performed.</p>
+<h4 id='upgrade-packaged-postgresql-server'>Upgrade packaged PostgreSQL server <a class='anchor' href='database.html#upgrade-packaged-postgresql-server' title='Permalink'></a></h4>
+<p>Currently Omnibus GitLab package runs PostgreSQL 9.2.18 by default.
+Version 9.6.1 is included as an option for users to manually upgrade.
+The next major release will ship with a newer PostgreSQL by default, at which
+point reconfigure will not be run until the database is upgraded so please
+plan ahead.</p>
+
+<p>_<strong>Note:</strong></p>
+
+<ul>
+<li>Please fully read this section before running any commands.</li>
+<li>Please plan ahead as upgrade involves downtime.</li>
+<li>If you encounter any problems during upgrade, please raise an issue
+with a full description at <a href="https://gitlab.com/gitlab-org/omnibus-gitlab">omnibus-gitlab issue tracker</a>.</li>
+<li>Docker image database upgrade is not supported at the moment._</li>
+</ul>
+
+<p>Before upgrading, please check the following:</p>
+
+<ul>
+<li>You&#39;re currently running the latest version of GitLab and it is working.</li>
+<li>If you recently upgraded, make sure that <code>sudo gitlab-ctl reconfigure</code> ran successfully before you proceed.</li>
+<li>You&#39;re using the bundled version of PostgreSQL. Look for <code>postgresql[&#39;enable&#39;]</code> to be <code>true</code>, commented out, or absent from <code>/etc/gitlab/gitlab.rb</code>.</li>
+<li>You haven&#39;t already upgraded. Running <code>sudo gitlab-psql --version</code> should print <code>psql (PostgreSQL) 9.2.18</code>.</li>
+<li>You will need to have sufficient disk space for two copies of your database. <strong>Do not attempt to upgrade unless you have enough free space available.</strong> If the partition where the database resides does not have enough space (default location is <code>/var/opt/gitlab/postgresql/data</code>), you can pass the argument <code>--tmp-dir $DIR</code> to the command.</li>
+</ul>
+
+<p>Please note:</p>
+
+<p><strong>This upgrade requires downtime as the database must be down while the upgrade is being performed.
+The length of time entirely depends on the size of your database.</strong></p>
+
+<p>Once you have confirmed that the the above checklist is satisfied,
+you can proceed.
+To perform the upgrade, run the command:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ctl pg-upgrade
+</code></pre>
+<p>This command performs the following steps:</p>
+
+<ol>
+<li>Checks to ensure the database is in a known good state</li>
+<li>Shuts down the existing database</li>
+<li>Changes the symlinks in <code>/opt/gitlab/embedded/bin/</code> for PostgreSQL to point to the newer version of the database</li>
+<li>Creates a new directory containing a new, empty database with a locale matching the existing database</li>
+<li>Uses the <code>pg_upgrade</code> tool to copy the data from the old database to the new database</li>
+<li>Moves the old database out of the way</li>
+<li>Moves the new database to the expected location</li>
+<li>Calls <code>sudo gitlab-ctl reconfigure</code> to do the required configuration changes, and start the new database server.</li>
+<li>If any errors are detected during this process, it should immediately revert to the old version of the database.</li>
+</ol>
+
+<p>Once this step is complete, verify everything is working as expected.</p>
+
+<p>If you run into an issue, and wish to downgrade the version of PostgreSQL, run:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ctl revert-pg-upgrade
+</code></pre>
+<p>Please note:
+This will revert your database and data to what was there before you upgraded
+the database. Any changes you might have made since the upgrade will be lost.</p>
+
+<p><strong>Once you have verified that your GitLab instance is running correctly</strong>,
+you can remove the old database with:</p>
+<pre class="highlight plaintext"><code>sudo rm -rf /var/opt/gitlab/postgresql/data.9.2.18
+</code></pre><h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='database.html#troubleshooting' title='Permalink'></a></h2><h3 id='set-mysql-collation-to-utf-8'>Set MySQL collation to UTF-8 <a class='anchor' href='database.html#set-mysql-collation-to-utf-8' title='Permalink'></a></h3>
+<p>If you are hit by an error similar as described in <a href="https://gitlab.com/gitlab-org/gitlab-ee/issues/245" title="MySQL collation issue">this issue</a>
+(<em>Mysql2::Error: Incorrect string value (`st_diffs` field)</em>), you
+can change the collation of the faulty table with:</p>
+<pre class="highlight shell"><code>ALTER TABLE merge_request_diffs default character <span class="nb">set</span> <span class="o">=</span> utf8 collate <span class="o">=</span> utf8_unicode_ci;
+ALTER TABLE merge_request_diffs convert to character <span class="nb">set </span>utf8 collate utf8_unicode_ci;
+</code></pre>
+<p>In the above example the affected table is called <code>merge_request_diffs</code>.</p>
+<h3 id='connecting-to-the-bundled-postgresql-database'>Connecting to the bundled PostgreSQL database <a class='anchor' href='database.html#connecting-to-the-bundled-postgresql-database' title='Permalink'></a></h3>
+<p>If you need to connect to the bundled PostgreSQL database and are
+using the default Omnibus GitLab database configuration, you can
+connect as the application user:</p>
+<pre class="highlight shell"><code>sudo gitlab-rails dbconsole
+</code></pre>
+<p>or as a Postgres superuser:</p>
+<pre class="highlight shell"><code>sudo gitlab-psql -d gitlabhq_production
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/database.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

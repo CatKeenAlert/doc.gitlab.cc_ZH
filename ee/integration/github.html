@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Integrate your server with GitHub - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Integrate your server with GitHub</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="github.html#integrate-your-server-with-github">Integrate your server with GitHub</a>
+</li>
+</ul>
+<h1 id='integrate-your-server-with-github'>Integrate your server with GitHub <a class='anchor' href='github.html#integrate-your-server-with-github' title='Permalink'></a></h1>
+<p>Import projects from GitHub and login to your GitLab instance with your GitHub account.</p>
+
+<p>To enable the GitHub OmniAuth provider you must register your application with GitHub. 
+GitHub will generate an application ID and secret key for you to use.</p>
+
+<ol>
+<li><p>Sign in to GitHub.</p></li>
+<li><p>Navigate to your individual user settings or an organization&#39;s settings, depending on how you want the application registered. It does not matter if the application is registered as an individual or an organization - that is entirely up to you.</p></li>
+<li><p>Select &quot;OAuth applications&quot; in the left menu.</p></li>
+<li><p>If you already have applications listed, switch to the &quot;Developer applications&quot; tab.</p></li>
+<li><p>Select &quot;Register new application&quot;.</p></li>
+<li><p>Provide the required details.</p>
+
+<ul>
+<li>Application name: This can be anything. Consider something like <code>&lt;Organization&gt;&#39;s GitLab</code> or <code>&lt;Your Name&gt;&#39;s GitLab</code> or something else descriptive.</li>
+<li>Homepage URL: The URL to your GitLab installation. &#39;<a href="https://gitlab.company.com">https://gitlab.company.com</a>&#39;</li>
+<li>Application description: Fill this in if you wish.</li>
+<li>Authorization callback URL is &#39;http(s)://${YOUR_DOMAIN}&#39;</li>
+</ul></li>
+<li><p>Select &quot;Register application&quot;.</p></li>
+<li><p>You should now see a Client ID and Client Secret near the top right of the page (see screenshot). 
+Keep this page open as you continue configuration.
+<a target="_blank" href="img/github_app.png"><img src="img/github_app.png" title="" alt="GitHub app"/></a></p></li>
+<li><p>On your GitLab server, open the configuration file.</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight shell"><code>  sudo editor /etc/gitlab/gitlab.rb
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight shell"><code>  <span class="nb">cd</span> /home/git/gitlab
+
+  sudo -u git -H editor config/gitlab.yml
+</code></pre></li>
+<li><p>See <a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth Configuration</a> for initial settings.</p></li>
+<li><p>Add the provider configuration:</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight ruby"><code>  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_providers'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">"name"</span> <span class="o">=&gt;</span> <span class="s2">"github"</span><span class="p">,</span>
+      <span class="s2">"app_id"</span> <span class="o">=&gt;</span> <span class="s2">"YOUR_APP_ID"</span><span class="p">,</span>
+      <span class="s2">"app_secret"</span> <span class="o">=&gt;</span> <span class="s2">"YOUR_APP_SECRET"</span><span class="p">,</span>
+      <span class="s2">"url"</span> <span class="o">=&gt;</span> <span class="s2">"https://github.com/"</span><span class="p">,</span>
+      <span class="s2">"args"</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="s2">"scope"</span> <span class="o">=&gt;</span> <span class="s2">"user:email"</span> <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+</code></pre>
+<p>For installation from source:</p>
+
+<p>For GitHub.com:</p>
+<pre class="highlight plaintext"><code>  - { name: 'github', app_id: 'YOUR_APP_ID',
+    app_secret: 'YOUR_APP_SECRET',
+    args: { scope: 'user:email' } }
+</code></pre>
+<p>For GitHub Enterprise:</p>
+<pre class="highlight plaintext"><code>  - { name: 'github', app_id: 'YOUR_APP_ID',
+    app_secret: 'YOUR_APP_SECRET',
+    url: "https://github.example.com/",
+    args: { scope: 'user:email' } }
+</code></pre>
+<p><strong>Replace <code>https://github.example.com/</code> with your GitHub URL.</strong></p></li>
+<li><p>Change &#39;YOUR_APP_ID&#39; to the client ID from the GitHub application page from step 7.</p></li>
+<li><p>Change &#39;YOUR_APP_SECRET&#39; to the client secret from the GitHub application page  from step 7.</p></li>
+<li><p>Save the configuration file.</p></li>
+<li><p>Restart GitLab for the changes to take effect.</p></li>
+</ol>
+
+<p>On the sign in page there should now be a GitHub icon below the regular sign in form. 
+Click the icon to begin the authentication process. GitHub will ask the user to sign in and authorize the GitLab application. 
+If everything goes well the user will be returned to GitLab and will be signed in.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/integration/github.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>SMTP settings - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Configuring omnibus settings</a></li>
+            
+          
+          <li class="breadcrumb">SMTP settings</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="smtp.html#smtp-settings">SMTP settings</a>
+<ul>
+<li>
+<a href="smtp.html#example-configuration">Example configuration 配置示例</a>
+<ul>
+<li>
+<a href="smtp.html#smtp-on-localhost">SMTP on localhost</a>
+</li>
+<li>
+<a href="smtp.html#qq-exmail">QQ exmail (腾讯企业邮箱)</a>
+</li>
+<li>
+<a href="smtp.html#gmail">Gmail</a>
+</li>
+<li>
+<a href="smtp.html#mailgun">Mailgun</a>
+</li>
+<li>
+<a href="smtp.html#amazon-ses">Amazon SES</a>
+</li>
+<li>
+<a href="smtp.html#mandrill">Mandrill</a>
+</li>
+<li>
+<a href="smtp.html#sparkpost">SparkPost</a>
+</li>
+<li>
+<a href="smtp.html#gandi">Gandi</a>
+</li>
+<li>
+<a href="smtp.html#zoho-mail">Zoho Mail</a>
+</li>
+<li>
+<a href="smtp.html#ovh">OVH</a>
+</li>
+<li>
+<a href="smtp.html#outlook">Outlook</a>
+</li>
+<li>
+<a href="smtp.html#online-net">Online.net</a>
+</li>
+<li>
+<a href="smtp.html#amen-fr-securemail-pro">Amen.fr / Securemail.pro</a>
+</li>
+<li>
+<a href="smtp.html#1-1">1&1</a>
+</li>
+<li>
+<a href="smtp.html#yahoo">yahoo</a>
+</li>
+<li>
+<a href="smtp.html#sendgrid">Sendgrid</a>
+</li>
+<li>
+<a href="smtp.html#yandex">Yandex</a>
+</li>
+<li>
+<a href="smtp.html#ud-media">UD Media</a>
+</li>
+<li>
+<a href="smtp.html#microsoft-exchange-no-authentication">Microsoft Exchange (No authentication)</a>
+</li>
+<li>
+<a href="smtp.html#rackspace">Rackspace</a>
+</li>
+<li>
+<a href="smtp.html#more-examples-are-welcome">More examples are welcome 贡献更多示例</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="smtp.html#testing-the-smtp-configuration">Testing the SMTP configuration 测试配置是否成功</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='smtp-settings'>SMTP settings <a class='anchor' href='smtp.html#smtp-settings' title='Permalink'></a></h1>
+<p>如想用 SMTP 代替 Sendmail 发送email,添加如下相应邮箱服务商的配置到<code>/etc/gitlab/gitlab.rb</code>,
+然后运行<code>gitlab-ctl reconfigure</code>使修改生效。
+omnibus-gitlab还提供了<a href="smtp.html#testing-the-smtp-configuration">测试发送邮件功能</a>。</p>
+
+<blockquote>
+<p>:warning: &#39;smtp_password&#39;字段不应包含任何
+Ruby或者YAML语法中的分隔符
+(如<code>&#39;</code>),以避免处理配置文件的过程中发生不必要的意外。</p>
+</blockquote>
+
+<p>本文后面有一些常用的 <a href="smtp.html#example-configuration">SMTP配置示例</a>，可以参考下。前往<a href="smtp.html#qq-exmail">QQ企业邮箱配置</a></p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.server"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp user"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"example.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span>
+
+<span class="c1"># 如果你使用的SMTP服务是默认的 'From:gitlab@localhost'</span>
+<span class="c1"># 你可以修改这里的 'From' 的值。</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_from'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'gitlab@example.com'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_reply_to'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'noreply@example.com'</span>
+</code></pre><h2 id='example-configuration'>Example configuration 配置示例 <a class='anchor' href='smtp.html#example-configuration' title='Permalink'></a></h2><h3 id='smtp-on-localhost'>SMTP on localhost <a class='anchor' href='smtp.html#smtp-on-localhost' title='Permalink'></a></h3>
+<p>下面的配置仅仅是启用smtp，值为&#39;false&#39;则使用默认的设置(sendmail)，启用smtp可用于不提供<code>sendmail</code>接口或者与gitlab不兼容的<code>sendmail</code>
+接口的运行MTA的本地服务器，如&quot;Exim&quot;。</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='qq-exmail'>QQ exmail (腾讯企业邮箱) <a class='anchor' href='smtp.html#qq-exmail' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.exmail.qq.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"xxxx@xx.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_from'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'xxxx@xx.com'</span>
+</code></pre><h3 id='gmail'>Gmail <a class='anchor' href='smtp.html#gmail' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.gmail.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"my.email@gmail.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"my-gmail-password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.gmail.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span> <span class="c1"># Can be: 'none', 'peer', 'client_once', 'fail_if_no_peer_cert', see http://api.rubyonrails.org/classes/ActionMailer/Base.html</span>
+</code></pre>
+<p><em>Don&#39;t forget to change <a href="mailto:my.email@gmail.com">my.email@gmail.com</a> to your email address and my-gmail-password to your own password.</em></p>
+<h3 id='mailgun'>Mailgun <a class='anchor' href='smtp.html#mailgun' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.mailgun.org"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"plain"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"postmaster@mg.gitlab.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"8b6ffrmle180"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mg.gitlab.com"</span>
+</code></pre><h3 id='amazon-ses'>Amazon SES <a class='anchor' href='smtp.html#amazon-ses' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"email-smtp.region-1.amazonaws.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"IAMmailerKey"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"IAMmailerSecret"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yourdomain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='mandrill'>Mandrill <a class='anchor' href='smtp.html#mandrill' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.mandrillapp.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"MandrillUsername"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"MandrillApiKey"</span> <span class="c1"># https://mandrillapp.com/settings</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='sparkpost'>SparkPost <a class='anchor' href='smtp.html#sparkpost' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.sparkpostmail.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"SMTP_Injection"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"SparkPost_API_KEY"</span> <span class="c1"># https://app.sparkpost.com/account/credentials</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='gandi'>Gandi <a class='anchor' href='smtp.html#gandi' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mail.gandi.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"plain"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"your.email@domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"your.password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"domain.com"</span>
+</code></pre><h3 id='zoho-mail'>Zoho Mail <a class='anchor' href='smtp.html#zoho-mail' title='Permalink'></a></h3>
+<p>This configuration was tested on Zoho Mail with a custom domain.</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.zoho.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"plain"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gitlab@mydomain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mypassword"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.zoho.com"</span>
+</code></pre><h3 id='ovh'>OVH <a class='anchor' href='smtp.html#ovh' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"ssl0.ovh.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username@domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"ssl0.ovh.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'none'</span>
+</code></pre><h3 id='outlook'>Outlook <a class='anchor' href='smtp.html#outlook' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp-mail.outlook.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username@outlook.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp-mail.outlook.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span>
+</code></pre><h3 id='online-net'>Online.net <a class='anchor' href='smtp.html#online-net' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtpauth.online.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username@domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"online.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'none'</span>
+</code></pre><h3 id='amen-fr-securemail-pro'>Amen.fr / Securemail.pro <a class='anchor' href='smtp.html#amen-fr-securemail-pro' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp-fr.securemail.pro"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username@domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='1-amp-1'>1&amp;1 <a class='anchor' href='smtp.html#1-amp-1' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.1and1.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"my.email@domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"1and1-email-password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='yahoo'>yahoo <a class='anchor' href='smtp.html#yahoo' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_from'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'user@yahoo.com'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_from'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'user@yahoo.com'</span>
+
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.mail.yahoo.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"user@yahoo.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span>
+</code></pre><h3 id='sendgrid'>Sendgrid <a class='anchor' href='smtp.html#sendgrid' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.sendgrid.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"a_sendgrid_crendential"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"a_sendgrid_password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.sendgrid.net"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre><h3 id='yandex'>Yandex <a class='anchor' href='smtp.html#yandex' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"smtp.yandex.ru"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yourdomain_or_yandex.ru"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span>
+</code></pre><h3 id='ud-media'>UD Media <a class='anchor' href='smtp.html#ud-media' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mail.udXX.udmedia.de"</span> <span class="c1"># Replace XX, see smtp server information: https://www.udmedia.de/login/mail/</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span>
+</code></pre><h3 id='microsoft-exchange-no-authentication'>Microsoft Exchange (No authentication) <a class='anchor' href='smtp.html#microsoft-exchange-no-authentication' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"example.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"example.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre><h3 id='rackspace'>Rackspace <a class='anchor' href='smtp.html#rackspace' title='Permalink'></a></h3><pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"secure.emailsrvr.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">465</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_user_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"username@domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"password"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_domain'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"domain.com"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_authentication'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"login"</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_enable_starttls_auto'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'smtp_openssl_verify_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'peer'</span>
+
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_from'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'username@domain.com'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_email_reply_to'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'username@domain.com'</span>
+</code></pre><h3 id='more-examples-are-welcome'>More examples are welcome 贡献更多示例 <a class='anchor' href='smtp.html#more-examples-are-welcome' title='Permalink'></a></h3>
+<p>如果你想贡献其他SMTP服务器的配置示例，请发送合并请求到master分支，
+以便节约其他人都时间。</p>
+<h2 id='testing-the-smtp-configuration'>Testing the SMTP configuration 测试配置是否成功 <a class='anchor' href='smtp.html#testing-the-smtp-configuration' title='Permalink'></a></h2>
+<p>配置完成后可以用Rails控制台验证邮件是否能发送成功。
+在GitLab服务器上，执行 <code>gitlab-rails console</code>进入控制台。
+然后在控制台提示符后输入下面的命令
+发送一封测试邮件：</p>
+<pre class="highlight plaintext"><code>irb(main):003:0&gt; Notify.test_email('destination_email@address.com', 'Message Subject', 'Message Body').deliver_now
+# 示例
+Notify.test_email('收件人邮箱', '邮件标题', '邮件正文').deliver_now
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/smtp.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

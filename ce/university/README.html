@@ -1,0 +1,463 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab University - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab University</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-university">GitLab University</a>
+<ul>
+<li>
+<a href="README.html#gitlab-university-curriculum">Gitlab University Curriculum</a>
+<ul>
+<li>
+<a href="README.html#1-gitlab-beginner">1. GitLab Beginner</a>
+<ul>
+<li>
+<a href="README.html#1-1-version-control-and-git">1.1. Version Control and Git</a>
+</li>
+<li>
+<a href="README.html#1-2-gitlab-basics">1.2. GitLab Basics</a>
+</li>
+<li>
+<a href="README.html#1-3-your-gitlab-account">1.3. Your GitLab Account</a>
+</li>
+<li>
+<a href="README.html#1-4-gitlab-projects">1.4. GitLab Projects</a>
+</li>
+<li>
+<a href="README.html#1-5-migrating-from-other-source-control">1.5. Migrating from other Source Control</a>
+</li>
+<li>
+<a href="README.html#1-6-gitlab-inc">1.6. GitLab Inc.</a>
+</li>
+<li>
+<a href="README.html#1-7-community-and-support">1.7 Community and Support</a>
+</li>
+<li>
+<a href="README.html#1-8-gitlab-training-material">1.8 GitLab Training Material</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#2-gitlab-intermediate">2. GitLab Intermediate</a>
+<ul>
+<li>
+<a href="README.html#2-1-gitlab-pages">2.1 GitLab Pages</a>
+</li>
+<li>
+<a href="README.html#2-2-gitlab-issues">2.2. GitLab Issues</a>
+</li>
+<li>
+<a href="README.html#2-3-continuous-integration">2.3. Continuous Integration</a>
+</li>
+<li>
+<a href="README.html#2-4-workflow">2.4. Workflow</a>
+</li>
+<li>
+<a href="README.html#2-5-gitlab-comparisons">2.5. GitLab Comparisons</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#3-gitlab-advanced">3. GitLab Advanced</a>
+<ul>
+<li>
+<a href="README.html#3-1-dev-ops">3.1. Dev Ops</a>
+</li>
+<li>
+<a href="README.html#3-2-installing-gitlab-with-omnibus">3.2. Installing GitLab with Omnibus</a>
+</li>
+<li>
+<a href="README.html#3-3-permissions">3.3. Permissions</a>
+</li>
+<li>
+<a href="README.html#3-4-large-files">3.4. Large Files</a>
+</li>
+<li>
+<a href="README.html#3-5-ldap-and-active-directory">3.5. LDAP and Active Directory</a>
+</li>
+<li>
+<a href="README.html#3-6-custom-languages">3.6 Custom Languages</a>
+</li>
+<li>
+<a href="README.html#3-7-scalability-and-high-availability">3.7. Scalability and High Availability</a>
+</li>
+<li>
+<a href="README.html#3-8-cycle-analytics">3.8 Cycle Analytics</a>
+</li>
+<li>
+<a href="README.html#3-9-integrations">3.9. Integrations</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#4-external-articles">4. External Articles</a>
+</li>
+<li>
+<a href="README.html#5-resources-for-gitlab-team-members">5. Resources for GitLab Team Members</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-university'>GitLab University <a class='anchor' href='README.html#gitlab-university' title='Permalink'></a></h1>
+<p>GitLab University is the best place to learn about <strong>Version Control with Git and GitLab</strong>.</p>
+
+<p>It doesn&#39;t replace, but accompanies our great <a href="https://docs.gitlab.com">Documentation</a>
+and <a href="https://about.gitlab.com/blog/">Blog Articles</a>.</p>
+
+<p>Would you like to contribute to GitLab University? Then please take a look at our contribution <a href="https://doc.gitlab.cc/process">process</a> for more information.</p>
+<h2 id='gitlab-university-curriculum'>Gitlab University Curriculum <a class='anchor' href='README.html#gitlab-university-curriculum' title='Permalink'></a></h2>
+<p>The curriculum is composed of GitLab videos, screencasts, presentations, projects and external GitLab content hosted on other services and has been organized into the following sections.</p>
+
+<ol>
+<li><a href="README.html#beginner">GitLab Beginner</a></li>
+<li><a href="README.html#intermediate">GitLab Intermediate</a></li>
+<li><a href="README.html#advanced">GitLab Advanced</a></li>
+<li><a href="README.html#external">External Articles</a></li>
+<li><a href="README.html#team">Resources for GitLab Team Members</a></li>
+</ol>
+
+<hr>
+<h3 id='1-gitlab-beginner'>1. GitLab Beginner <a class='anchor' href='README.html#1-gitlab-beginner' title='Permalink'></a></h3><h4 id='1-1-version-control-and-git'>1.1. Version Control and Git <a class='anchor' href='README.html#1-1-version-control-and-git' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://docs.google.com/presentation/d/16sX7hUrCZyOFbpvnrAFrg6tVO5_yT98IgdAqOmXwBho/edit#slide=id.g72f2e4906_2_29">Version Control Systems</a></li>
+<li><a href="https://drive.google.com/a/gitlab.com/file/d/0B41DBToSSIG_OVYxVFJDOGI3Vzg/view?usp=sharing">Operating Systems and How Git Works</a></li>
+<li><a href="https://www.codeschool.com/account/courses/try-git">Code School: An Introduction to Git</a></li>
+</ol>
+<h4 id='1-2-gitlab-basics'>1.2. GitLab Basics <a class='anchor' href='README.html#1-2-gitlab-basics' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=WaiL5DGEMR4">An Overview of GitLab.com - Video</a></li>
+<li><a href="https://docs.google.com/a/gitlab.com/presentation/d/1RcZhFmn5VPvoFu6UMxhMOy7lAsToeBZRjLRn0LIdaNc/edit?usp=drive_web">Why Use Git and GitLab - Slides</a></li>
+<li><a href="../gitlab-basics/README.html">GitLab Basics - Article</a></li>
+<li><a href="https://www.youtube.com/watch?v=03wb9FvO4Ak&amp;index=5&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e">Git and GitLab Basics - Video</a></li>
+<li><a href="https://courses.platzi.com/classes/git-gitlab/concepto/part-1/part-23370/material/">Git and GitLab Basics - Online Course</a></li>
+<li><a href="https://about.gitlab.com/features/#compare">Comparison of GitLab Versions</a></li>
+</ol>
+<h4 id='1-3-your-gitlab-account'>1.3. Your GitLab Account <a class='anchor' href='README.html#1-3-your-gitlab-account' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://courses.platzi.com/classes/git-gitlab/concepto/first-steps/create-an-account-on-gitlab/material/">Create a GitLab Account - Online Course</a></li>
+<li><a href="https://www.youtube.com/watch?v=54mxyLo3Mqk">Create and Add your SSH key to GitLab - Video</a></li>
+</ol>
+<h4 id='1-4-gitlab-projects'>1.4. GitLab Projects <a class='anchor' href='README.html#1-4-gitlab-projects' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=4TWfh1aKHHw&amp;index=1&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e">Repositories, Projects and Groups - Video</a></li>
+<li><a href="https://www.youtube.com/watch?v=7p0hrpNaJ14">Creating a Project in GitLab - Video</a></li>
+<li><a href="https://about.gitlab.com/2016/02/10/feature-highlight-create-files-and-directories-from-files-page/">How to Create Files and Directories</a></li>
+<li><a href="https://about.gitlab.com/2016/03/02/gitlab-todos-feature-highlight/">GitLab Todos</a></li>
+<li><a href="https://about.gitlab.com/2016/01/08/feature-highlight-wip/">GitLab&#39;s Work in Progress (WIP) Flag</a></li>
+</ol>
+<h4 id='1-5-migrating-from-other-source-control'>1.5. Migrating from other Source Control <a class='anchor' href='README.html#1-5-migrating-from-other-source-control' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://docs.gitlab.com/ee/workflow/importing/import_projects_from_bitbucket.html">Migrating from BitBucket/Stash</a></li>
+<li><a href="https://docs.gitlab.com/ee/workflow/importing/import_projects_from_github.html">Migrating from GitHub</a></li>
+<li><a href="https://docs.gitlab.com/ee/workflow/importing/migrating_from_svn.html">Migrating from SVN</a></li>
+<li><a href="https://docs.gitlab.com/ee/workflow/importing/import_projects_from_fogbugz.html">Migrating from Fogbugz</a></li>
+</ol>
+<h4 id='1-6-gitlab-inc'>1.6. GitLab Inc. <a class='anchor' href='README.html#1-6-gitlab-inc' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://about.gitlab.com/about/">About GitLab</a></li>
+<li><a href="https://about.gitlab.com/direction/">GitLab Direction</a></li>
+<li><a href="https://about.gitlab.com/2016/09/13/gitlab-master-plan/">GitLab Master Plan</a></li>
+<li><a href="https://www.youtube.com/watch?v=GGC40y4vMx0">Making GitLab Great for Everyone - Video</a> - Response to &quot;Dear GitHub&quot; letter</li>
+<li><a href="https://about.gitlab.com/2014/09/05/innersourcing-using-the-open-source-workflow-to-improve-collaboration-within-an-organization/">Using Innersourcing to Improve Collaboration</a></li>
+<li><a href="https://www.youtube.com/watch?v=sXlhgPK1NTY&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e&amp;index=6">The Software Development Market and GitLab - Video</a> - <a href="https://docs.google.com/presentation/d/1vCU-NbZWz8NTNK8Vu3y4zGMAHb5DpC8PE5mHtw1PWfI/edit">Slides</a></li>
+<li><a href="bookclub/index.html">The GitLab Book Club</a></li>
+</ol>
+<h4 id='1-7-community-and-support'>1.7 Community and Support <a class='anchor' href='README.html#1-7-community-and-support' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://about.gitlab.com/getting-help/">Getting Help</a>
+
+<ul>
+<li>Proposing Features and Reporting and Tracking bugs for GitLab</li>
+<li>The GitLab IRC channel, Gitter Chat Room, Community Forum and Mailing List</li>
+<li>Getting Technical Support</li>
+<li>Being part of our Great Community and Contributing to GitLab</li>
+</ul></li>
+<li><a href="https://about.gitlab.com/2016/06/08/getting-started-with-gitlab-development-kit/">Getting Started with the GitLab Development Kit (GDK)</a></li>
+<li><a href="https://about.gitlab.com/2016/01/26/call-for-writers/">Contributing Technical Articles to the GitLab Blog</a></li>
+<li><a href="https://about.gitlab.com/training">GitLab Training Workshops</a></li>
+</ol>
+<h4 id='1-8-gitlab-training-material'>1.8 GitLab Training Material <a class='anchor' href='README.html#1-8-gitlab-training-material' title='Permalink'></a></h4>
+<ol>
+<li><a href="glossary/README.html">Git and GitLab Terminology</a></li>
+<li><a href="https://docs.google.com/presentation/d/1JzTYD8ij9slejV2-TO-NzjCvlvj6mVn9BORePXNJoMI/edit?usp=drive_web">Git and GitLab Workshop - Slides</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/doc/university/training/end-user">Git and GitLab Revision</a></li>
+</ol>
+
+<hr>
+<h3 id='2-gitlab-intermediate'>2. GitLab Intermediate <a class='anchor' href='README.html#2-gitlab-intermediate' title='Permalink'></a></h3><h4 id='2-1-gitlab-pages'>2.1 GitLab Pages <a class='anchor' href='README.html#2-1-gitlab-pages' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://about.gitlab.com/2016/06/17/ssg-overview-gitlab-pages-part-3-examples-ci/">Using any Static Site Generator with GitLab Pages</a></li>
+<li><a href="https://about.gitlab.com/2016/06/24/secure-gitlab-pages-with-startssl/">Securing GitLab Pages with SSL</a></li>
+<li><a href="https://docs.gitlab.com/ee/pages/README.html">GitLab Pages Documentation</a></li>
+</ol>
+<h4 id='2-2-gitlab-issues'>2.2. GitLab Issues <a class='anchor' href='README.html#2-2-gitlab-issues' title='Permalink'></a></h4>
+<ol>
+<li><a href="../user/markdown.html">Markdown in GitLab</a></li>
+<li><a href="https://www.youtube.com/watch?v=raXvuwet78M">Issues and Merge Requests - Video</a></li>
+<li><a href="https://about.gitlab.com/2016/08/05/feature-highlight-set-dates-for-issues/">Due Dates and Milestones fro GitLab Issues</a></li>
+<li><a href="https://about.gitlab.com/2016/08/17/using-gitlab-labels/">How to Use GitLab Labels</a></li>
+<li><a href="https://about.gitlab.com/2016/08/19/applying-gitlab-labels-automatically/">Applying GitLab Labels Automatically</a></li>
+<li><a href="https://about.gitlab.com/solutions/issueboard/">GitLab Issue Board - Product Page</a></li>
+<li><a href="https://about.gitlab.com/2016/08/22/announcing-the-gitlab-issue-board/">An Overview of GitLab Issue Board</a></li>
+<li><a href="https://about.gitlab.com/2016/08/31/designing-issue-boards/">Designing GitLab Issue Board</a></li>
+<li><a href="https://www.youtube.com/watch?v=25pHyknRgEo&amp;index=14&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e">From Idea to Production with GitLab - Video</a></li>
+</ol>
+<h4 id='2-3-continuous-integration'>2.3. Continuous Integration <a class='anchor' href='README.html#2-3-continuous-integration' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=V61kL6IC-zY&amp;index=8&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e">Operating Systems, Servers, VMs, Containers and Unix - Video</a></li>
+<li><a href="https://about.gitlab.com/gitlab-ci/">GitLab CI - Product Page</a></li>
+<li><a href="https://about.gitlab.com/2015/12/14/getting-started-with-gitlab-and-gitlab-ci/">Getting started with GitLab and GitLab CI</a></li>
+<li><a href="https://about.gitlab.com/2016/05/23/gitlab-container-registry/">GitLab Container Registry</a></li>
+<li><a href="https://www.youtube.com/watch?v=ugOrCcbdHko&amp;index=12&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e">GitLab and Docker - Video</a></li>
+<li><a href="https://about.gitlab.com/2016/06/21/how-we-scale-gitlab-by-having-docker-built-in/">How we scale GitLab with built in Docker</a></li>
+<li><a href="https://about.gitlab.com/2016/08/05/continuous-integration-delivery-and-deployment-with-gitlab/">Continuous Integration, Delivery, and Deployment with GitLab</a></li>
+<li><a href="https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/">Deployments and Environments</a></li>
+<li><a href="https://about.gitlab.com/2016/07/29/the-basics-of-gitlab-ci/">Sequential, Parallel or Custom Pipelines</a></li>
+<li><a href="https://about.gitlab.com/2016/03/01/gitlab-runner-with-docker/">Setting up GitLab Runner For Continuous Integration</a></li>
+<li><a href="https://about.gitlab.com/2016/04/19/how-to-set-up-gitlab-runner-on-digitalocean/">Setting up GitLab Runner on DigitalOcean</a></li>
+<li><a href="https://about.gitlab.com/2016/03/10/setting-up-gitlab-ci-for-ios-projects/">Setting up GitLab CI for iOS projects</a></li>
+<li><a href="https://www.youtube.com/watch?v=igwFj8PPSnw">IBM: Continuous Delivery vs Continuous Deployment - Video</a></li>
+<li><a href="https://www.youtube.com/watch?v=esEFaY0FDKc">Amazon: Transition to Continuous Delivery - Video</a></li>
+<li>See <strong><a href="README.html#integrations">Integrations</a></strong> for integrations with other CI services.</li>
+</ol>
+<h4 id='2-4-workflow'>2.4. Workflow <a class='anchor' href='README.html#2-4-workflow' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://youtu.be/enMumwvLAug?list=PLFGfElNsQthZnwMUFi6rqkyUZkI00OxIV">GitLab Flow - Video</a></li>
+<li><a href="https://www.youtube.com/watch?v=UGotqAUACZA">GitLab Flow vs Forking in GitLab - Video</a></li>
+<li><a href="https://about.gitlab.com/2014/09/29/gitlab-flow/">GitLab Flow Overview</a></li>
+<li><a href="https://about.gitlab.com/2016/03/03/start-with-an-issue/">Always Start with an Issue</a></li>
+<li><a href="https://docs.gitlab.com/ee/workflow/gitlab_flow.html">GitLab Flow Documentation</a></li>
+</ol>
+<h4 id='2-5-gitlab-comparisons'>2.5. GitLab Comparisons <a class='anchor' href='README.html#2-5-gitlab-comparisons' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://about.gitlab.com/comparison/">GitLab Compared to Other Tools</a></li>
+<li><a href="https://about.gitlab.com/2016/01/27/comparing-terms-gitlab-github-bitbucket/">Comparing GitLab Terminology</a></li>
+<li><a href="https://youtu.be/Nbzp1t45ERo">GitLab Compared to Atlassian (Recording 2016-03-03) </a></li>
+<li><a href="https://about.gitlab.com/handbook/positioning-faq">GitLab Position FAQ</a></li>
+<li><a href="https://www.enovate.co.uk/web-design-blog/2015/11/25/gitlab-review/">Customer review of GitLab with points on why they prefer GitLab</a></li>
+</ol>
+
+<hr>
+<h3 id='3-gitlab-advanced'>3. GitLab Advanced <a class='anchor' href='README.html#3-gitlab-advanced' title='Permalink'></a></h3><h4 id='3-1-dev-ops'>3.1. Dev Ops <a class='anchor' href='README.html#3-1-dev-ops' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://xebialabs.com/glossary/">Xebia Labs: Dev Ops Terminology</a></li>
+<li><a href="https://xebialabs.com/periodic-table-of-devops-tools/">Xebia Labs: Periodic Table of DevOps Tools</a></li>
+<li><a href="https://puppetlabs.com/sites/default/files/2015-state-of-devops-report.pdf">Puppet Labs: State of Dev Ops 2015 - Book</a></li>
+</ol>
+<h4 id='3-2-installing-gitlab-with-omnibus'>3.2. Installing GitLab with Omnibus <a class='anchor' href='README.html#3-2-installing-gitlab-with-omnibus' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=XTmpKudd-Oo">What is Omnibus - Video</a></li>
+<li><a href="https://www.youtube.com/watch?v=Q69YaOjqNhg">How to Install GitLab with Omnibus - Video</a></li>
+<li><a href="https://courses.platzi.com/classes/git-gitlab/concepto/part-1/part-3/material/">Installing GitLab - Online Course</a></li>
+<li><a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#using-a-non-packaged-postgresql-database-management-server">Using a Non-Packaged PostgreSQL Database</a></li>
+<li><a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#using-a-mysql-database-management-server-enterprise-edition-only">Using a MySQL Database</a></li>
+<li><a href="https://about.gitlab.com/2016/07/13/how-to-setup-a-gitlab-instance-on-microsoft-azure/">Installing GitLab on Microsoft Azure</a></li>
+<li><a href="https://about.gitlab.com/2016/04/27/getting-started-with-gitlab-and-digitalocean/">Installing GitLab on Digital Ocean</a></li>
+</ol>
+<h4 id='3-3-permissions'>3.3. Permissions <a class='anchor' href='README.html#3-3-permissions' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=DjUoIrkiNuM">How to Manage Permissions in GitLab EE - Video</a></li>
+</ol>
+<h4 id='3-4-large-files'>3.4. Large Files <a class='anchor' href='README.html#3-4-large-files' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=DawznUxYDe4">Big files in Git (Git LFS, Annex) - Video</a></li>
+</ol>
+<h4 id='3-5-ldap-and-active-directory'>3.5. LDAP and Active Directory <a class='anchor' href='README.html#3-5-ldap-and-active-directory' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=HPMjM-14qa8">How to Manage LDAP, Active Directory in GitLab - Video</a></li>
+</ol>
+<h4 id='3-6-custom-languages'>3.6 Custom Languages <a class='anchor' href='README.html#3-6-custom-languages' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://doc.gitlab.cc/ce/university/how%20to%20add%20support%20for%20your%20favorite%20language%20to%20GitLab">How to add Syntax Highlighting Support for Custom Langauges to GitLab - Video</a></li>
+</ol>
+<h4 id='3-7-scalability-and-high-availability'>3.7. Scalability and High Availability <a class='anchor' href='README.html#3-7-scalability-and-high-availability' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=cXRMJJb6sp4&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e&amp;index=2">Scalability and High Availability - Video</a></li>
+<li><a href="https://www.youtube.com/watch?v=36KS808u6bE&amp;index=15&amp;list=PLFGfElNsQthbQu_IWlNOxul0TbS_2JH-e">High Availability - Video</a></li>
+<li><a href="https://about.gitlab.com/high-availability/">High Availability Documentation</a></li>
+</ol>
+<h4 id='3-8-cycle-analytics'>3.8 Cycle Analytics <a class='anchor' href='README.html#3-8-cycle-analytics' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://about.gitlab.com/2016/09/21/cycle-analytics-feature-highlight/">GitLab Cycle Analytics Overview</a></li>
+<li><a href="https://about.gitlab.com/solutions/cycle-analytics/">GitLab Cycle Analytics - Product Page</a></li>
+</ol>
+<h4 id='3-9-integrations'>3.9. Integrations <a class='anchor' href='README.html#3-9-integrations' title='Permalink'></a></h4>
+<ol>
+<li><a href="https://gitlabmeetings.webex.com/gitlabmeetings/ldr.php?RCID=44b548147a67ab4d8a62274047146415">How to Integrate JIRA and Jenkins with GitLab - Video</a></li>
+<li><a href="https://docs.gitlab.com/ee/integration/jira.html">How to Integrate Jira with GitLab</a></li>
+<li><a href="https://docs.gitlab.com/ee/integration/jenkins.html">How to Integrate Jenkins with GitLab</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/project_services/bamboo.md">How to Integrate Bamboo with GitLab</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/integration/slack.md">How to Integrate Slack with GitLab</a></li>
+<li><a href="https://about.gitlab.com/2016/06/09/continuous-delivery-with-gitlab-and-convox/">How to Integrate Convox with GitLab</a></li>
+<li><a href="https://about.gitlab.com/2016/05/05/getting-started-gitlab-and-shippable/">Getting Started with GitLab and Shippable CI</a></li>
+</ol>
+
+<hr>
+<h2 id='4-external-articles'>4. External Articles <a class='anchor' href='README.html#4-external-articles' title='Permalink'></a></h2>
+<ol>
+<li><a href="http://www.wsj.com/articles/SB10001424053111903480904576512250915629460">2011 WSJ article by Marc Andreessen - Software is Eating the World</a></li>
+<li><a href="http://cdixon.org/2014/04/13/software-eats-software-development/">2014 Blog post by Chris Dixon - Software eats software development</a></li>
+<li><a href="http://venturebeat.com/2015/12/06/its-actually-open-source-software-thats-eating-the-world/">2015 Venture Beat article - Actually, Open Source is Eating the World</a></li>
+</ol>
+
+<hr>
+<h2 id='5-resources-for-gitlab-team-members'>5. Resources for GitLab Team Members <a class='anchor' href='README.html#5-resources-for-gitlab-team-members' title='Permalink'></a></h2>
+<p><em>Some content can only be accessed by GitLab team members</em></p>
+
+<ol>
+<li><a href="support/README.html">Support Path</a></li>
+<li><a href="https://about.gitlab.com/handbook/sales-onboarding/">Sales Path (redirect to sales handbook)</a></li>
+<li><a href="training/user_training.html">User Training</a></li>
+<li><a href="training/gitlab_flow.html">GitLab Flow Training</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/doc/university/training/topics/">Training Topics</a></li>
+<li><a href="https://dev.gitlab.org/gitlab/gitlabhq/blob/master/doc/development/architecture.md">GitLab architecture for noobs</a></li>
+<li><a href="https://docs.google.com/a/gitlab.com/spreadsheets/d/18cRF9Y5I6I7Z_ab6qhBEW55YpEMyU4PitZYjomVHM-M/edit?usp=sharing">Client Assessment of GitLab versus GitHub</a></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/university/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

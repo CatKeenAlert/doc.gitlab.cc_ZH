@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Using Docker Images - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Docker integration</a></li>
+            
+          
+          <li class="breadcrumb">Using Docker Images</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="using_docker_images.html#using-docker-images">Using Docker Images</a>
+<ul>
+<li>
+<a href="using_docker_images.html#register-docker-runner">Register docker runner</a>
+</li>
+<li>
+<a href="using_docker_images.html#what-is-an-image">What is an image</a>
+</li>
+<li>
+<a href="using_docker_images.html#what-is-a-service">What is a service</a>
+<ul>
+<li>
+<a href="using_docker_images.html#how-services-are-linked-to-the-build">How services are linked to the build</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="using_docker_images.html#overwrite-image-and-services">Overwrite image and services</a>
+</li>
+<li>
+<a href="using_docker_images.html#how-to-use-other-images-as-services">How to use other images as services</a>
+</li>
+<li>
+<a href="using_docker_images.html#define-image-and-services-from-gitlab-ci-yml">Define image and services from <code>.gitlab-ci.yml</code></a>
+</li>
+<li>
+<a href="using_docker_images.html#define-image-and-services-in-config-toml">Define image and services in <code>config.toml</code></a>
+</li>
+<li>
+<a href="using_docker_images.html#define-an-image-from-a-private-docker-registry">Define an image from a private Docker registry</a>
+</li>
+<li>
+<a href="using_docker_images.html#accessing-the-services">Accessing the services</a>
+</li>
+<li>
+<a href="using_docker_images.html#configuring-services">Configuring services</a>
+<ul>
+<li>
+<a href="using_docker_images.html#postgresql-service-example">PostgreSQL service example</a>
+</li>
+<li>
+<a href="using_docker_images.html#mysql-service-example">MySQL service example</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="using_docker_images.html#how-docker-integration-works">How Docker integration works</a>
+</li>
+<li>
+<a href="using_docker_images.html#how-to-debug-a-build-locally">How to debug a build locally</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='using-docker-images'>Using Docker Images <a class='anchor' href='using_docker_images.html#using-docker-images' title='Permalink'></a></h1>
+<p>GitLab CI in conjunction with <a href="../runners/README.html">GitLab Runner</a> can use
+<a href="https://www.docker.com/">Docker Engine</a> to test and build any application.</p>
+
+<p>Docker is an open-source project that allows you to use predefined images to
+run applications in independent &quot;containers&quot; that are run within a single Linux
+instance. <a href="https://hub.docker.com/">Docker Hub</a> has a rich database of pre-built images that can be
+used to test and build your applications.</p>
+
+<p>Docker, when used with GitLab CI, runs each build in a separate and isolated
+container using the predefined image that is set up in
+<a href="../yaml/README.html"><code>.gitlab-ci.yml</code></a>.</p>
+
+<p>This makes it easier to have a simple and reproducible build environment that
+can also run on your workstation. The added benefit is that you can test all
+the commands that we will explore later from your shell, rather than having to
+test them on a dedicated CI server.</p>
+<h2 id='register-docker-runner'>Register docker runner <a class='anchor' href='using_docker_images.html#register-docker-runner' title='Permalink'></a></h2>
+<p>To use GitLab Runner with docker you need to register a new runner to use the
+<code>docker</code> executor:</p>
+<pre class="highlight shell"><code>gitlab-ci-multi-runner register <span class="se">\</span>
+  --url <span class="s2">"https://gitlab.com/"</span> <span class="se">\</span>
+  --registration-token <span class="s2">"PROJECT_REGISTRATION_TOKEN"</span> <span class="se">\</span>
+  --description <span class="s2">"docker-ruby-2.1"</span> <span class="se">\</span>
+  --executor <span class="s2">"docker"</span> <span class="se">\</span>
+  --docker-image ruby:2.1 <span class="se">\</span>
+  --docker-postgres latest <span class="se">\</span>
+  --docker-mysql latest
+</code></pre>
+<p>The registered runner will use the <code>ruby:2.1</code> docker image and will run two
+services, <code>postgres:latest</code> and <code>mysql:latest</code>, both of which will be
+accessible during the build process.</p>
+<h2 id='what-is-an-image'>What is an image <a class='anchor' href='using_docker_images.html#what-is-an-image' title='Permalink'></a></h2>
+<p>The <code>image</code> keyword is the name of the docker image that is present in the
+local Docker Engine (list all images with <code>docker images</code>) or any image that
+can be found at <a href="https://hub.docker.com/">Docker Hub</a>. For more information about images and Docker
+Hub please read the <a href="https://docs.docker.com/engine/understanding-docker/">Docker Fundamentals</a> documentation.</p>
+
+<p>In short, with <code>image</code> we refer to the docker image, which will be used to
+create a container on which your build will run.</p>
+<h2 id='what-is-a-service'>What is a service <a class='anchor' href='using_docker_images.html#what-is-a-service' title='Permalink'></a></h2>
+<p>The <code>services</code> keyword defines just another docker image that is run during
+your build and is linked to the docker image that the <code>image</code> keyword defines.
+This allows you to access the service image during build time.</p>
+
+<p>The service image can run any application, but the most common use case is to
+run a database container, eg. <code>mysql</code>. It&#39;s easier and faster to use an
+existing image and run it as an additional container than install <code>mysql</code> every
+time the project is built.</p>
+
+<p>You can see some widely used services examples in the relevant documentation of
+<a href="../services/README.html">CI services examples</a>.</p>
+<h3 id='how-services-are-linked-to-the-build'>How services are linked to the build <a class='anchor' href='using_docker_images.html#how-services-are-linked-to-the-build' title='Permalink'></a></h3>
+<p>To better understand how the container linking works, read
+<a href="https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/">Linking containers together</a>.</p>
+
+<p>To summarize, if you add <code>mysql</code> as service to your application, the image will
+then be used to create a container that is linked to the build container.</p>
+
+<p>The service container for MySQL will be accessible under the hostname <code>mysql</code>.
+So, in order to access your database service you have to connect to the host
+named <code>mysql</code> instead of a socket or <code>localhost</code>.</p>
+<h2 id='overwrite-image-and-services'>Overwrite image and services <a class='anchor' href='using_docker_images.html#overwrite-image-and-services' title='Permalink'></a></h2>
+<p>See <a href="using_docker_images.html#how-to-use-other-images-as-services">How to use other images as services</a>.</p>
+<h2 id='how-to-use-other-images-as-services'>How to use other images as services <a class='anchor' href='using_docker_images.html#how-to-use-other-images-as-services' title='Permalink'></a></h2>
+<p>You are not limited to have only database services. You can add as many
+services you need to <code>.gitlab-ci.yml</code> or manually modify <code>config.toml</code>.
+Any image found at <a href="https://hub.docker.com/">Docker Hub</a> can be used as a service.</p>
+<h2 id='define-image-and-services-from-gitlab-ci-yml'>Define image and services from <code>.gitlab-ci.yml</code> <a class='anchor' href='using_docker_images.html#define-image-and-services-from-gitlab-ci-yml' title='Permalink'></a></h2>
+<p>You can simply define an image that will be used for all jobs and a list of
+services that you want to use during build time.</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.2</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres:9.3</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle install</span>
+
+<span class="na">test</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake spec</span>
+</code></pre>
+<p>It is also possible to define different images and services per job:</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle install</span>
+
+<span class="s">test:2.1</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>
+  <span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres:9.3</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake spec</span>
+
+<span class="s">test:2.2</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.2</span>
+  <span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">postgres:9.4</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake spec</span>
+</code></pre><h2 id='define-image-and-services-in-config-toml'>Define image and services in <code>config.toml</code> <a class='anchor' href='using_docker_images.html#define-image-and-services-in-config-toml' title='Permalink'></a></h2>
+<p>Look for the <code>[runners.docker]</code> section:</p>
+<pre class="highlight plaintext"><code>[runners.docker]
+  image = "ruby:2.1"
+  services = ["mysql:latest", "postgres:latest"]
+</code></pre>
+<p>The image and services defined this way will be added to all builds run by
+that runner.</p>
+<h2 id='define-an-image-from-a-private-docker-registry'>Define an image from a private Docker registry <a class='anchor' href='using_docker_images.html#define-an-image-from-a-private-docker-registry' title='Permalink'></a></h2>
+<p>Starting with GitLab Runner 0.6.0, you are able to define images located to
+private registries that could also require authentication.</p>
+
+<p>All you have to do is be explicit on the image definition in <code>.gitlab-ci.yml</code>.</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">my.registry.tld:5000/namepace/image:tag</span>
+</code></pre>
+<p>In the example above, GitLab Runner will look at <code>my.registry.tld:5000</code> for the
+image <code>namespace/image:tag</code>.</p>
+
+<p>If the repository is private you need to authenticate your GitLab Runner in the
+registry. Learn how to do that on
+<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/configuration/advanced-configuration.md#using-a-private-docker-registry">GitLab Runner&#39;s documentation</a>.</p>
+<h2 id='accessing-the-services'>Accessing the services <a class='anchor' href='using_docker_images.html#accessing-the-services' title='Permalink'></a></h2>
+<p>Let&#39;s say that you need a Wordpress instance to test some API integration with
+your application.</p>
+
+<p>You can then use for example the <a href="https://hub.docker.com/r/tutum/wordpress/">tutum/wordpress</a> image in your
+<code>.gitlab-ci.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">services</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">tutum/wordpress:latest</span>
+</code></pre>
+<p>When the build is run, <code>tutum/wordpress</code> will be started and you will have
+access to it from your build container under the hostname <code>tutum__wordpress</code>.</p>
+
+<p>The alias hostname for the service is made from the image name following these
+rules:</p>
+
+<ol>
+<li>Everything after <code>:</code> is stripped</li>
+<li>Slash (<code>/</code>) is replaced with double underscores (<code>__</code>)</li>
+</ol>
+<h2 id='configuring-services'>Configuring services <a class='anchor' href='using_docker_images.html#configuring-services' title='Permalink'></a></h2>
+<p>Many services accept environment variables which allow you to easily change
+database names or set account names depending on the environment.</p>
+
+<p>GitLab Runner 0.5.0 and up passes all YAML-defined variables to the created
+service containers.</p>
+
+<p>For all possible configuration variables check the documentation of each image
+provided in their corresponding Docker hub page.</p>
+
+<p><em>Note: All variables will be passed to all services containers. It&#39;s not
+designed to distinguish which variable should go where.</em></p>
+<h3 id='postgresql-service-example'>PostgreSQL service example <a class='anchor' href='using_docker_images.html#postgresql-service-example' title='Permalink'></a></h3>
+<p>See the specific documentation for
+<a href="../services/postgres.html">using PostgreSQL as a service</a>.</p>
+<h3 id='mysql-service-example'>MySQL service example <a class='anchor' href='using_docker_images.html#mysql-service-example' title='Permalink'></a></h3>
+<p>See the specific documentation for
+<a href="../services/mysql.html">using MySQL as a service</a>.</p>
+<h2 id='how-docker-integration-works'>How Docker integration works <a class='anchor' href='using_docker_images.html#how-docker-integration-works' title='Permalink'></a></h2>
+<p>Below is a high level overview of the steps performed by docker during build
+time.</p>
+
+<ol>
+<li>Create any service container: <code>mysql</code>, <code>postgresql</code>, <code>mongodb</code>, <code>redis</code>.</li>
+<li>Create cache container to store all volumes as defined in <code>config.toml</code> and
+<code>Dockerfile</code> of build image (<code>ruby:2.1</code> as in above example).</li>
+<li>Create build container and link any service container to build container.</li>
+<li>Start build container and send build script to the container.</li>
+<li>Run build script.</li>
+<li>Checkout code in: <code>/builds/group-name/project-name/</code>.</li>
+<li>Run any step defined in <code>.gitlab-ci.yml</code>.</li>
+<li>Check exit status of build script.</li>
+<li>Remove build container and all created service containers.</li>
+</ol>
+<h2 id='how-to-debug-a-build-locally'>How to debug a build locally <a class='anchor' href='using_docker_images.html#how-to-debug-a-build-locally' title='Permalink'></a></h2>
+<p><em>Note: The following commands are run without root privileges. You should be
+able to run docker with your regular user account.</em></p>
+
+<p>First start with creating a file named <code>build_script</code>:</p>
+<pre class="highlight shell"><code>cat <span class="sh">&lt;&lt;EOF &gt; build_script
+git clone https://gitlab.com/gitlab-org/gitlab-ci-multi-runner.git /builds/gitlab-org/gitlab-ci-multi-runner
+cd /builds/gitlab-org/gitlab-ci-multi-runner
+make
+EOF
+</span></code></pre>
+<p>Here we use as an example the GitLab Runner repository which contains a
+Makefile, so running <code>make</code> will execute the commands defined in the Makefile.
+Your mileage may vary, so instead of <code>make</code> you could run the command which
+is specific to your project.</p>
+
+<p>Then create some service containers:</p>
+<pre class="highlight plaintext"><code>docker run -d --name service-mysql mysql:latest
+docker run -d --name service-postgres postgres:latest
+</code></pre>
+<p>This will create two service containers, named <code>service-mysql</code> and
+<code>service-postgres</code> which use the latest MySQL and PostgreSQL images
+respectively. They will both run in the background (<code>-d</code>).</p>
+
+<p>Finally, create a build container by executing the <code>build_script</code> file we
+created earlier:</p>
+<pre class="highlight plaintext"><code>docker run --name build -i --link=service-mysql:mysql --link=service-postgres:postgres ruby:2.1 /bin/bash &lt; build_script
+</code></pre>
+<p>The above command will create a container named <code>build</code> that is spawned from
+the <code>ruby:2.1</code> image and has two services linked to it. The <code>build_script</code> is
+piped using STDIN to the bash interpreter which in turn executes the
+<code>build_script</code> in the <code>build</code> container.</p>
+
+<p>When you finish testing and no longer need the containers, you can remove them
+with:</p>
+<pre class="highlight plaintext"><code>docker rm -f -v build service-mysql service-postgres
+</code></pre>
+<p>This will forcefully (<code>-f</code>) remove the <code>build</code> container, the two service
+containers as well as all volumes (<code>-v</code>) that were created with the container
+creation.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/docker/using_docker_images.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab JIRA integration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab JIRA integration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="jira.html#gitlab-jira-integration">GitLab JIRA integration</a>
+<ul>
+<li>
+<a href="jira.html#configuration">Configuration</a>
+<ul>
+<li>
+<a href="jira.html#configuring-jira">Configuring JIRA</a>
+</li>
+<li>
+<a href="jira.html#configuring-gitlab">Configuring GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="jira.html#jira-issues">JIRA issues</a>
+<ul>
+<li>
+<a href="jira.html#referencing-jira-issues">Referencing JIRA Issues</a>
+</li>
+<li>
+<a href="jira.html#closing-jira-issues">Closing JIRA issues</a>
+</li>
+<li>
+<a href="jira.html#jira-issue-closing-example">JIRA issue closing example</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="jira.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="jira.html#gitlab-is-unable-to-comment-on-a-ticket">GitLab is unable to comment on a ticket</a>
+</li>
+<li>
+<a href="jira.html#gitlab-is-unable-to-close-a-ticket">GitLab is unable to close a ticket</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-jira-integration'>GitLab JIRA integration <a class='anchor' href='jira.html#gitlab-jira-integration' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong>
+Full JIRA integration was previously exclusive to GitLab Enterprise Edition.
+With <a href="https://about.gitlab.com/2015/12/22/gitlab-8-3-released/" title="GitLab 8.3 release post">GitLab 8.3 forward</a>, this feature in now <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/2146" title="MR - Backport JIRA service">backported</a>
+to GitLab Community Edition as well.</p>
+</blockquote>
+
+<hr>
+
+<p>GitLab can be configured to interact with <a href="https://www.atlassian.com/software/jira/core" title="The JIRA Core website">JIRA Core</a> either using an
+on-premises instance or the SaaS solution that Atlassian offers. Configuration
+happens via username and password on a per-project basis. Connecting to a JIRA
+server via CAS is not possible.</p>
+
+<p>Each project can be configured to connect to a different JIRA instance or, in
+case you have a single JIRA instance, you can pre-fill the JIRA service
+settings page in GitLab with a default template. To configure the JIRA template,
+see the <a href="services_templates.html" title="Services templates documentation">Services Templates documentation</a>.</p>
+
+<p>Once the GitLab project is connected to JIRA, you can reference and close the
+issues in JIRA directly from GitLab&#39;s merge requests.</p>
+<h2 id='configuration'>Configuration <a class='anchor' href='jira.html#configuration' title='Permalink'></a></h2>
+<p>The configuration consists of two parts:</p>
+
+<ul>
+<li><a href="jira.html#configuring-jira">JIRA configuration</a></li>
+<li><a href="jira.html#configuring-gitlab">GitLab configuration</a></li>
+</ul>
+<h3 id='configuring-jira'>Configuring JIRA <a class='anchor' href='jira.html#configuring-jira' title='Permalink'></a></h3>
+<p>First things first, we need to create a user in JIRA which will have access to
+all projects that need to integrate with GitLab.</p>
+
+<p>We have split this stage in steps so it is easier to follow.</p>
+
+<hr>
+
+<ol>
+<li><p>Login to your JIRA instance as an administrator and under <strong>Administration</strong>
+go to <strong>User Management</strong> to create a new user.</p>
+
+<p><a target="_blank" href="img/jira_user_management_link.png"><img src="img/jira_user_management_link.png" title="" alt="JIRA user management link"/></a></p>
+
+<hr></li>
+<li><p>The next step is to create a new user (e.g., <code>gitlab</code>) who has write access
+to projects in JIRA. Enter the user&#39;s name and a <em>valid</em> e-mail address
+since JIRA sends a verification e-mail to set-up the password.
+<em><strong>Note:</strong> JIRA creates the username automatically by using the e-mail
+prefix. You can change it later if you want.</em></p>
+
+<p><a target="_blank" href="img/jira_create_new_user.png"><img src="img/jira_create_new_user.png" title="" alt="JIRA create new user"/></a></p>
+
+<hr></li>
+<li><p>Now, let&#39;s create a <code>gitlab-developers</code> group which will have write access
+to projects in JIRA. Go to the <strong>Groups</strong> tab and select <strong>Create group</strong>.</p>
+
+<p><a target="_blank" href="img/jira_create_new_group.png"><img src="img/jira_create_new_group.png" title="" alt="JIRA create new user"/></a></p>
+
+<hr>
+
+<p>Give it an optional description and hit <strong>Create group</strong>.</p>
+
+<p><a target="_blank" href="img/jira_create_new_group_name.png"><img src="img/jira_create_new_group_name.png" title="" alt="JIRA create new group"/></a></p>
+
+<hr></li>
+<li><p>Give the newly-created group write access by going to
+<strong>Application access &gt; View configuration</strong> and adding the <code>gitlab-developers</code>
+group to JIRA Core.</p>
+
+<p><a target="_blank" href="img/jira_group_access.png"><img src="img/jira_group_access.png" title="" alt="JIRA group access"/></a></p>
+
+<hr></li>
+<li><p>Add the <code>gitlab</code> user to the <code>gitlab-developers</code> group by going to
+<strong>Users &gt; GitLab user &gt; Add group</strong> and selecting the <code>gitlab-developers</code>
+group from the dropdown menu. Notice that the group says <em>Access</em> which is
+what we aim for.</p>
+
+<p><a target="_blank" href="img/jira_add_user_to_group.png"><img src="img/jira_add_user_to_group.png" title="" alt="JIRA add user to group"/></a></p></li>
+</ol>
+
+<hr>
+
+<p>The JIRA configuration is over. Write down the new JIRA username and its
+password as they will be needed when configuring GitLab in the next section.</p>
+<h3 id='configuring-gitlab'>Configuring GitLab <a class='anchor' href='jira.html#configuring-gitlab' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+The currently supported JIRA versions are v6.x and v7.x. and GitLab
+7.8 or higher is required.</p>
+</blockquote>
+
+<hr>
+
+<p>Assuming you <a href="jira.html#configuring-jira">have already configured JIRA</a>, now it&#39;s time
+to configure GitLab.</p>
+
+<p>JIRA configuration in GitLab is done via a project&#39;s
+<a href="project_services.html"><strong>Services</strong></a>.</p>
+
+<p>To enable JIRA integration in a project, navigate to the project&#39;s
+<strong>Settings &gt; Services &gt; JIRA</strong>.</p>
+
+<p>Fill in the required details on the page, as described in the table below.</p>
+
+<table><thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>Description</code></td>
+<td>A name for the issue tracker (to differentiate between instances, for example).</td>
+</tr>
+<tr>
+<td><code>Project url</code></td>
+<td>The URL to the JIRA project which is being linked to this GitLab project. It is of the form: <code>https://&lt;jira_host_url&gt;/issues/?jql=project=&lt;jira_project&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Issues url</code></td>
+<td>The URL to the JIRA project issues overview for the project that is linked to this GitLab project. It is of the form: <code>https://&lt;jira_host_url&gt;/browse/:id</code>. Leave <code>:id</code> as-is, it gets replaced by GitLab at runtime.</td>
+</tr>
+<tr>
+<td><code>New issue url</code></td>
+<td>This is the URL to create a new issue in JIRA for the project linked to this GitLab project, and it is of the form: <code>https://&lt;jira_host_url&gt;/secure/CreateIssue.jspa</code></td>
+</tr>
+<tr>
+<td><code>Api url</code></td>
+<td>The base URL of the JIRA API. It may be omitted, in which case GitLab will automatically use API version <code>2</code> based on the <code>project url</code>. It is of the form: <code>https://&lt;jira_host_url&gt;/rest/api/2</code>.</td>
+</tr>
+<tr>
+<td><code>Username</code></td>
+<td>The username of the user created in <a href="jira.html#configuring-jira">configuring JIRA step</a>.</td>
+</tr>
+<tr>
+<td><code>Password</code></td>
+<td>The password of the user created in <a href="jira.html#configuring-jira">configuring JIRA step</a>.</td>
+</tr>
+<tr>
+<td><code>JIRA issue transition</code></td>
+<td>This setting is very important to set up correctly. It is the ID of a transition that moves issues to a closed state. You can find this number under the JIRA workflow administration (<strong>Administration &gt; Issues &gt; Workflows</strong>) by selecting <strong>View</strong> under <strong>Operations</strong> of the desired workflow of your project. The ID of each state can be found inside the parenthesis of each transition name under the <strong>Transitions (id)</strong> column (<a href="img/jira_issues_workflow.png">see screenshot</a>). By default, this ID is set to <code>2</code>.</td>
+</tr>
+</tbody></table>
+
+<p>After saving the configuration, your GitLab project will be able to interact
+with the linked JIRA project.</p>
+
+<p>For example, given the settings below:</p>
+
+<ul>
+<li>the JIRA URL is <code>https://jira.example.com</code></li>
+<li>the project is named <code>GITLAB</code></li>
+<li>the user is named <code>gitlab</code></li>
+<li>the JIRA issue transition is 151 (based on the <a href="img/jira_issues_workflow.png">JIRA issue transition</a>)</li>
+</ul>
+
+<p>the following screenshot shows how the JIRA service settings should look like.</p>
+
+<p><a target="_blank" href="img/jira_service_page.png"><img src="img/jira_service_page.png" title="" alt="JIRA service page"/></a></p>
+
+<hr>
+<h2 id='jira-issues'>JIRA issues <a class='anchor' href='jira.html#jira-issues' title='Permalink'></a></h2>
+<p>By now you should have <a href="jira.html#configuring-jira">configured JIRA</a> and enabled the
+<a href="jira.html#configuring-gitlab">JIRA service in GitLab</a>. If everything is set up correctly
+you should be able to reference and close JIRA issues by just mentioning their
+ID in GitLab commits and merge requests.</p>
+<h3 id='referencing-jira-issues'>Referencing JIRA Issues <a class='anchor' href='jira.html#referencing-jira-issues' title='Permalink'></a></h3>
+<p>If you reference a JIRA issue, e.g., <code>GITLAB-1</code>, in a commit comment, a link
+which points back to JIRA is created.</p>
+
+<p>The same works for comments in merge requests as well.</p>
+
+<p><a target="_blank" href="img/jira_add_gitlab_commit_message.png"><img src="img/jira_add_gitlab_commit_message.png" title="" alt="JIRA add GitLab commit message"/></a></p>
+
+<hr>
+
+<p>The mentioning action is two-fold, so a comment with a JIRA issue in GitLab
+will automatically add a comment in that particular JIRA issue with the link
+back to GitLab.</p>
+
+<p><a target="_blank" href="img/jira_reference_commit_message_in_jira_issue.png"><img src="img/jira_reference_commit_message_in_jira_issue.png" title="" alt="JIRA reference commit message"/></a></p>
+
+<hr>
+
+<p>The comment on the JIRA issue is of the form:</p>
+
+<blockquote>
+<p>USER mentioned this issue in LINK_TO_THE_MENTION</p>
+</blockquote>
+
+<p>Where:</p>
+
+<table><thead>
+<tr>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>USER</code></td>
+<td>A user that mentioned the issue. This is the link to the user profile in GitLab.</td>
+</tr>
+<tr>
+<td><code>LINK_TO_THE_MENTION</code></td>
+<td>Link to the origin of mention with a name of the entity where JIRA issue was mentioned. Can be commit or merge request.</td>
+</tr>
+</tbody></table>
+<h3 id='closing-jira-issues'>Closing JIRA issues <a class='anchor' href='jira.html#closing-jira-issues' title='Permalink'></a></h3>
+<p>JIRA issues can be closed directly from GitLab by using trigger words in
+commits and merge requests. When a commit which contains the trigger word
+followed by the JIRA issue ID in the commit message is pushed, GitLab will
+add a comment in the mentioned JIRA issue and immediately close it (provided
+the transition ID was set up correctly).</p>
+
+<p>There are currently three trigger words, and you can use either one to achieve
+the same goal:</p>
+
+<ul>
+<li><code>Resolves GITLAB-1</code></li>
+<li><code>Closes GITLAB-1</code></li>
+<li><code>Fixes GITLAB-1</code></li>
+</ul>
+
+<p>where <code>GITLAB-1</code> the issue ID of the JIRA project.</p>
+<h3 id='jira-issue-closing-example'>JIRA issue closing example <a class='anchor' href='jira.html#jira-issue-closing-example' title='Permalink'></a></h3>
+<p>Let&#39;s say for example that we submitted a bug fix and created a merge request
+in GitLab. The workflow would be something like this:</p>
+
+<ol>
+<li>Create a new branch</li>
+<li>Fix the bug</li>
+<li>Commit the changes and push branch to GitLab</li>
+<li>Open a new merge request and reference the JIRA issue including one of the
+trigger words, e.g.: <code>Fixes GITLAB-1</code>, in the description</li>
+<li>Submit the merge request</li>
+<li>Ask someone to review</li>
+<li>Merge the merge request</li>
+<li>The JIRA issue is automatically closed</li>
+</ol>
+
+<hr>
+
+<p>In the following screenshot you can see what the link references to the JIRA
+issue look like.</p>
+
+<p><a target="_blank" href="img/jira_submit_gitlab_merge_request.png"><img src="img/jira_submit_gitlab_merge_request.png" title="" alt="JIRA - submit a GitLab merge request"/></a></p>
+
+<hr>
+
+<p>Once this merge request is merged, the JIRA issue will be automatically closed
+with a link to the commit that resolved the issue.</p>
+
+<p><a target="_blank" href="img/jira_issue_closed.png"><img src="img/jira_issue_closed.png" title="" alt="The GitLab integration user leaves a comment on JIRA"/></a></p>
+
+<hr>
+
+<p>You can see from the above image that there are four references to GitLab:</p>
+
+<ul>
+<li>The first is from a comment in a specific commit</li>
+<li>The second is from the JIRA issue reference in the merge request description</li>
+<li>The third is from the actual commit that solved the issue</li>
+<li>And the fourth is from the commit that the merge request created</li>
+</ul>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='jira.html#troubleshooting' title='Permalink'></a></h2><h3 id='gitlab-is-unable-to-comment-on-a-ticket'>GitLab is unable to comment on a ticket <a class='anchor' href='jira.html#gitlab-is-unable-to-comment-on-a-ticket' title='Permalink'></a></h3>
+<p>Make sure that the user you set up for GitLab to communicate with JIRA has the
+correct access permission to post comments on a ticket and to also transition the
+ticket, if you&#39;d like GitLab to also take care of closing them.</p>
+<h3 id='gitlab-is-unable-to-close-a-ticket'>GitLab is unable to close a ticket <a class='anchor' href='jira.html#gitlab-is-unable-to-close-a-ticket' title='Permalink'></a></h3>
+<p>Make sure the the <code>Transition ID</code> you set within the JIRA settings matches the
+one your project needs to close a ticket.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/project_services/jira.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

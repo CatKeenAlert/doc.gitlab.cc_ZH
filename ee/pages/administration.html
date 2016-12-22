@@ -1,0 +1,681 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Pages Administration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Pages</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Pages Administration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="administration.html#gitlab-pages-administration">GitLab Pages Administration</a>
+<ul>
+<li>
+<a href="administration.html#the-gitlab-pages-daemon">The GitLab Pages daemon</a>
+<ul>
+<li>
+<a href="administration.html#the-gitlab-pages-daemon-and-the-case-of-custom-domains">The GitLab Pages daemon and the case of custom domains</a>
+</li>
+<li>
+<a href="administration.html#install-the-pages-daemon">Install the Pages daemon</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="administration.html#configuration">Configuration</a>
+<ul>
+<li>
+<a href="administration.html#configuration-prerequisites">Configuration prerequisites</a>
+</li>
+<li>
+<a href="administration.html#configuration-scenarios">Configuration scenarios</a>
+</li>
+<li>
+<a href="administration.html#dns-configuration">DNS configuration</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="administration.html#setting-up-gitlab-pages">Setting up GitLab Pages</a>
+<ul>
+<li>
+<a href="administration.html#custom-domains-with-https-support">Custom domains with HTTPS support</a>
+</li>
+<li>
+<a href="administration.html#custom-domains-without-https-support">Custom domains without HTTPS support</a>
+</li>
+<li>
+<a href="administration.html#wildcard-http-domain-without-custom-domains">Wildcard HTTP domain without custom domains</a>
+</li>
+<li>
+<a href="administration.html#wildcard-https-domain-without-custom-domains">Wildcard HTTPS domain without custom domains</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="administration.html#nginx-configuration">NGINX configuration</a>
+<ul>
+<li>
+<a href="administration.html#nginx-configuration-files">NGINX configuration files</a>
+</li>
+<li>
+<a href="administration.html#nginx-configuration-for-custom-domains">NGINX configuration for custom domains</a>
+</li>
+<li>
+<a href="administration.html#nginx-caveats">NGINX caveats</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="administration.html#set-maximum-pages-size">Set maximum pages size</a>
+</li>
+<li>
+<a href="administration.html#change-storage-path">Change storage path</a>
+</li>
+<li>
+<a href="administration.html#backup">Backup</a>
+</li>
+<li>
+<a href="administration.html#security">Security</a>
+</li>
+<li>
+<a href="administration.html#changelog">Changelog</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-pages-administration'>GitLab Pages Administration <a class='anchor' href='administration.html#gitlab-pages-administration' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong>
+This feature was first <a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/80">introduced</a> in GitLab EE 8.3.
+Custom CNAMEs with TLS support were <a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/173">introduced</a> in GitLab EE 8.5.</p>
+</blockquote>
+
+<hr>
+
+<p>This document describes how to set up the <em>latest</em> GitLab Pages feature. Make
+sure to read the <a href="administration.html#changelog">changelog</a> if you are upgrading to a new GitLab
+version as it may include new features and changes needed to be made in your
+configuration.</p>
+
+<p>If you are looking for ways to upload your static content in GitLab Pages, you
+probably want to read the <a href="README.html">user documentation</a>.</p>
+<h2 id='the-gitlab-pages-daemon'>The GitLab Pages daemon <a class='anchor' href='administration.html#the-gitlab-pages-daemon' title='Permalink'></a></h2>
+<p>Starting from GitLab EE 8.5, GitLab Pages make use of the <a href="https://gitlab.com/gitlab-org/gitlab-pages">GitLab Pages daemon</a>,
+a simple HTTP server written in Go that can listen on an external IP address
+and provide support for custom domains and custom certificates. The GitLab
+Pages Daemon supports dynamic certificates through SNI and exposes pages using
+HTTP2 by default.</p>
+
+<p>Here is a brief list with what it is supported when using the pages daemon:</p>
+
+<ul>
+<li>Multiple domains per-project</li>
+<li>One TLS certificate per-domain
+
+<ul>
+<li>Validation of certificate</li>
+<li>Validation of certificate chain</li>
+<li>Validation of private key against certificate</li>
+</ul></li>
+</ul>
+
+<p>You are encouraged to read its <a href="https://gitlab.com/gitlab-org/gitlab-pages/blob/master/README.md">README</a> to fully understand how
+it works.</p>
+<h3 id='the-gitlab-pages-daemon-and-the-case-of-custom-domains'>The GitLab Pages daemon and the case of custom domains <a class='anchor' href='administration.html#the-gitlab-pages-daemon-and-the-case-of-custom-domains' title='Permalink'></a></h3>
+<p>In the case of custom domains, the Pages daemon needs to listen on ports <code>80</code>
+and/or <code>443</code>. For that reason, there is some flexibility in the way which you
+can set it up, so you basically have three choices:</p>
+
+<ol>
+<li>Run the pages daemon in the same server as GitLab, listening on a secondary IP</li>
+<li>Run the pages daemon in a separate server. In that case, the
+<a href="administration.html#change-storage-path">Pages path</a> must also be present in the server that
+the pages daemon is installed, so you will have to share it via network.</li>
+<li>Run the pages daemon in the same server as GitLab, listening on the same IP
+but on different ports. In that case, you will have to proxy the traffic with
+a loadbalancer. If you choose that route note that you should use TCP load
+balancing for HTTPS. If you use TLS-termination (HTTPS-load balancing) the
+pages will not be able to be served with user provided certificates. For
+HTTP it&#39;s OK to use HTTP or TCP load balancing.</li>
+</ol>
+
+<p>In this document, we will proceed assuming the first option. Let&#39;s begin by
+installing the pages daemon.</p>
+<h3 id='install-the-pages-daemon'>Install the Pages daemon <a class='anchor' href='administration.html#install-the-pages-daemon' title='Permalink'></a></h3>
+<p><strong>Source installations</strong></p>
+<pre class="highlight plaintext"><code>cd /home/git
+sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-pages.git
+cd gitlab-pages
+sudo -u git -H git checkout v0.2.1
+sudo -u git -H make
+</code></pre>
+<p><strong>Omnibus installations</strong></p>
+
+<p>The <code>gitlab-pages</code> daemon is included in the Omnibus package.</p>
+<h2 id='configuration'>Configuration <a class='anchor' href='administration.html#configuration' title='Permalink'></a></h2>
+<p>There are multiple ways to set up GitLab Pages according to what URL scheme you
+are willing to support.</p>
+<h3 id='configuration-prerequisites'>Configuration prerequisites <a class='anchor' href='administration.html#configuration-prerequisites' title='Permalink'></a></h3>
+<p>In the next section you will find all possible scenarios to choose from.</p>
+
+<p>In either scenario, you will need:</p>
+
+<ol>
+<li>To use the <a href="administration.html#the-gitlab-pages-daemon">GitLab Pages daemon</a></li>
+<li>A separate domain</li>
+<li>A separate Nginx configuration file which needs to be explicitly added in
+the server under which GitLab EE runs (Omnibus does that automatically)</li>
+<li>(Optional) A wildcard certificate for that domain if you decide to serve
+pages under HTTPS</li>
+<li>(Optional but recommended) <a href="../ci/runners/README.html">Shared runners</a> so that
+your users don&#39;t have to bring their own</li>
+</ol>
+<h3 id='configuration-scenarios'>Configuration scenarios <a class='anchor' href='administration.html#configuration-scenarios' title='Permalink'></a></h3>
+<p>Before proceeding with setting up GitLab Pages, you have to decide which route
+you want to take.</p>
+
+<p>The possible scenarios are depicted in the table below.</p>
+
+<table><thead>
+<tr>
+<th>URL scheme</th>
+<th style="text-align: center">Option</th>
+<th style="text-align: center">Wildcard certificate</th>
+<th style="text-align: center">Custom domain with HTTP support</th>
+<th style="text-align: center">Custom domain with HTTPS support</th>
+<th style="text-align: center">Secondary IP</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>http://page.example.io</code></td>
+<td style="text-align: center">1</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">no</td>
+</tr>
+<tr>
+<td><code>https://page.example.io</code></td>
+<td style="text-align: center">1</td>
+<td style="text-align: center">yes</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">no</td>
+</tr>
+<tr>
+<td><code>http://page.example.io</code> and <code>http://page.com</code></td>
+<td style="text-align: center">2</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">yes</td>
+<td style="text-align: center">no</td>
+<td style="text-align: center">yes</td>
+</tr>
+<tr>
+<td><code>https://page.example.io</code> and <code>https://page.com</code></td>
+<td style="text-align: center">2</td>
+<td style="text-align: center">yes</td>
+<td style="text-align: center">redirects to HTTPS</td>
+<td style="text-align: center">yes</td>
+<td style="text-align: center">yes</td>
+</tr>
+</tbody></table>
+
+<p>As you see from the table above, each URL scheme comes with an option:</p>
+
+<ol>
+<li>Pages enabled, daemon is enabled and NGINX will proxy all requests to the
+daemon. Pages daemon doesn&#39;t listen to the outside world.</li>
+<li>Pages enabled, daemon is enabled AND pages has external IP support enabled.
+In that case, the pages daemon is running, NGINX still proxies requests to
+the daemon but the daemon is also able to receive requests from the outside
+world. Custom domains and TLS are supported.</li>
+</ol>
+<h3 id='dns-configuration'>DNS configuration <a class='anchor' href='administration.html#dns-configuration' title='Permalink'></a></h3>
+<p>GitLab Pages expect to run on their own virtual host. In your DNS server/provider
+you need to add a <a href="https://en.wikipedia.org/wiki/Wildcard_DNS_record">wildcard DNS A record</a> pointing to the
+host that GitLab runs. For example, an entry would look like this:</p>
+<pre class="highlight plaintext"><code>*.example.io. 1800 IN A 1.2.3.4
+</code></pre>
+<p>where <code>example.io</code> is the domain under which GitLab Pages will be served
+and <code>1.2.3.4</code> is the IP address of your GitLab instance.</p>
+
+<p>You should not use the GitLab domain to serve user pages. For more information
+see the <a href="administration.html#security">security section</a>.</p>
+<h2 id='setting-up-gitlab-pages'>Setting up GitLab Pages <a class='anchor' href='administration.html#setting-up-gitlab-pages' title='Permalink'></a></h2>
+<p>Below are the four scenarios that are described in
+<a href="administration.html#configuration-scenarios">#configuration-scenarios</a>.</p>
+<h3 id='custom-domains-with-https-support'>Custom domains with HTTPS support <a class='anchor' href='administration.html#custom-domains-with-https-support' title='Permalink'></a></h3>
+<p><strong>Source installations:</strong></p>
+
+<ol>
+<li><a href="administration.html#install-the-pages-daemon">Install the pages daemon</a></li>
+<li><p>Edit <code>gitlab.yml</code> to look like the example below. You need to change the
+<code>host</code> to the FQDN under which GitLab Pages will be served. Set
+<code>external_http</code> and <code>external_https</code> to the secondary IP on which the pages
+daemon will listen for connections:</p>
+<pre class="highlight yaml"><code> <span class="c1">## GitLab Pages</span>
+ <span class="na">pages</span><span class="pi">:</span>
+   <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+   <span class="c1"># The location where pages are stored (default: shared/pages).</span>
+   <span class="c1"># path: shared/pages</span>
+
+   <span class="na">host</span><span class="pi">:</span> <span class="s">example.io</span>
+   <span class="na">port</span><span class="pi">:</span> <span class="s">443</span>
+   <span class="na">https</span><span class="pi">:</span> <span class="s">true</span>
+
+   <span class="na">external_http</span><span class="pi">:</span> <span class="s">1.1.1.1:80</span>
+   <span class="na">external_https</span><span class="pi">:</span> <span class="s">1.1.1.1:443</span>
+</code></pre></li>
+<li><p>Edit <code>/etc/default/gitlab</code> and set <code>gitlab_pages_enabled</code> to <code>true</code> in
+order to enable the pages daemon. In <code>gitlab_pages_options</code> the
+<code>-pages-domain</code>, <code>-listen-http</code> and <code>-listen-https</code> must match the <code>host</code>,
+<code>external_http</code> and <code>external_https</code> settings that you set above respectively.
+The <code>-root-cert</code> and <code>-root-key</code> settings are the wildcard TLS certificates
+of the <code>example.io</code> domain:</p>
+<pre class="highlight plaintext"><code>gitlab_pages_enabled=true
+gitlab_pages_options="-pages-domain example.io -pages-root $app_root/shared/pages -listen-proxy 127.0.0.1:8090 -listen-http 1.1.1.1:80 -listen-https 1.1.1.1:443 -root-cert /path/to/example.io.crt -root-key /path/to/example.io.key
+</code></pre></li>
+<li><p>Make sure to <a href="administration.html#nginx-configuration">configure NGINX</a> properly.</p></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#installations-from-source">Restart GitLab</a></p></li>
+</ol>
+
+<hr>
+
+<p><strong>Omnibus installations:</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">pages_external_url</span> <span class="s2">"https://example.io"</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'listen_addresses'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'1.1.1.1'</span><span class="p">]</span>
+<span class="n">pages_nginx</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_pages</span><span class="p">[</span><span class="s1">'cert'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/example.io.crt"</span>
+<span class="n">gitlab_pages</span><span class="p">[</span><span class="s1">'cert_key'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/example.io.key"</span>
+<span class="n">gitlab_pages</span><span class="p">[</span><span class="s1">'external_http'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'1.1.1.2:80'</span>
+<span class="n">gitlab_pages</span><span class="p">[</span><span class="s1">'external_https'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'1.1.1.2:443'</span>
+</code></pre>
+<p>where <code>1.1.1.1</code> is the primary IP address that GitLab is listening to and
+<code>1.1.1.2</code> the secondary IP where the GitLab Pages daemon listens to.
+Read more at the
+<a href="administration.html#nginx-configuration-for-custom-domains">NGINX configuration for custom domains</a>
+section.</p></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a></p></li>
+</ol>
+<h3 id='custom-domains-without-https-support'>Custom domains without HTTPS support <a class='anchor' href='administration.html#custom-domains-without-https-support' title='Permalink'></a></h3>
+<p><strong>Source installations:</strong></p>
+
+<ol>
+<li><a href="administration.html#install-the-pages-daemon">Install the pages daemon</a></li>
+<li><p>Edit <code>gitlab.yml</code> to look like the example below. You need to change the
+<code>host</code> to the FQDN under which GitLab Pages will be served. Set
+<code>external_http</code> to the secondary IP on which the pages daemon will listen
+for connections:</p>
+<pre class="highlight yaml"><code> <span class="na">pages</span><span class="pi">:</span>
+   <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+   <span class="c1"># The location where pages are stored (default: shared/pages).</span>
+   <span class="c1"># path: shared/pages</span>
+
+   <span class="na">host</span><span class="pi">:</span> <span class="s">example.io</span>
+   <span class="na">port</span><span class="pi">:</span> <span class="s">80</span>
+   <span class="na">https</span><span class="pi">:</span> <span class="s">false</span>
+
+   <span class="na">external_http</span><span class="pi">:</span> <span class="s">1.1.1.1:80</span>
+</code></pre></li>
+<li><p>Edit <code>/etc/default/gitlab</code> and set <code>gitlab_pages_enabled</code> to <code>true</code> in
+order to enable the pages daemon. In <code>gitlab_pages_options</code> the
+<code>-pages-domain</code> and <code>-listen-http</code> must match the <code>host</code> and <code>external_http</code>
+settings that you set above respectively:</p>
+<pre class="highlight plaintext"><code>gitlab_pages_enabled=true
+gitlab_pages_options="-pages-domain example.io -pages-root $app_root/shared/pages -listen-proxy 127.0.0.1:8090 -listen-http 1.1.1.1:80"
+</code></pre></li>
+<li><p>Make sure to <a href="administration.html#nginx-configuration">configure NGINX</a> properly.</p></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#installations-from-source">Restart GitLab</a></p></li>
+</ol>
+
+<hr>
+
+<p><strong>Omnibus installations:</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">pages_external_url</span> <span class="s2">"https://example.io"</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'listen_addresses'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'1.1.1.1'</span><span class="p">]</span>
+<span class="n">pages_nginx</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_pages</span><span class="p">[</span><span class="s1">'external_http'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'1.1.1.2:80'</span>
+</code></pre>
+<p>where <code>1.1.1.1</code> is the primary IP address that GitLab is listening to and
+<code>1.1.1.2</code> the secondary IP where the GitLab Pages daemon listens to.
+Read more at the
+<a href="administration.html#nginx-configuration-for-custom-domains">NGINX configuration for custom domains</a>
+section.</p></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a></p></li>
+</ol>
+<h3 id='wildcard-http-domain-without-custom-domains'>Wildcard HTTP domain without custom domains <a class='anchor' href='administration.html#wildcard-http-domain-without-custom-domains' title='Permalink'></a></h3>
+<p><strong>Source installations:</strong></p>
+
+<ol>
+<li><a href="administration.html#install-the-pages-daemon">Install the pages daemon</a></li>
+<li><p>Go to the GitLab installation directory:</p>
+<pre class="highlight shell"><code> <span class="nb">cd</span> /home/git/gitlab
+</code></pre></li>
+<li><p>Edit <code>gitlab.yml</code> and under the <code>pages</code> setting, set <code>enabled</code> to <code>true</code> and
+the <code>host</code> to the FQDN under which GitLab Pages will be served:</p>
+<pre class="highlight yaml"><code> <span class="c1">## GitLab Pages</span>
+ <span class="na">pages</span><span class="pi">:</span>
+   <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+   <span class="c1"># The location where pages are stored (default: shared/pages).</span>
+   <span class="c1"># path: shared/pages</span>
+
+   <span class="na">host</span><span class="pi">:</span> <span class="s">example.io</span>
+   <span class="na">port</span><span class="pi">:</span> <span class="s">80</span>
+   <span class="na">https</span><span class="pi">:</span> <span class="s">false</span>
+</code></pre></li>
+<li><p>Make sure to <a href="administration.html#nginx-configuration">configure NGINX</a> properly.</p></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#installations-from-source">Restart GitLab</a></p></li>
+</ol>
+
+<hr>
+
+<p><strong>Omnibus installations:</strong></p>
+
+<ol>
+<li><p>Set the external URL for GitLab Pages in <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">pages_external_url</span> <span class="s1">'http://example.io'</span>
+</code></pre></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a></p></li>
+</ol>
+<h3 id='wildcard-https-domain-without-custom-domains'>Wildcard HTTPS domain without custom domains <a class='anchor' href='administration.html#wildcard-https-domain-without-custom-domains' title='Permalink'></a></h3>
+<p><strong>Source installations:</strong></p>
+
+<ol>
+<li><a href="administration.html#install-the-pages-daemon">Install the pages daemon</a></li>
+<li><p>In <code>gitlab.yml</code>, set the port to <code>443</code> and https to <code>true</code>:</p>
+<pre class="highlight shell"><code> <span class="c">## GitLab Pages</span>
+ pages:
+   enabled: <span class="nb">true</span>
+   <span class="c"># The location where pages are stored (default: shared/pages).</span>
+   <span class="c"># path: shared/pages</span>
+
+   host: example.io
+   port: 443
+   https: <span class="nb">true</span>
+</code></pre></li>
+<li><p>Make sure to <a href="administration.html#nginx-configuration">configure NGINX</a> properly.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Omnibus installations:</strong></p>
+
+<ol>
+<li>Place the certificate and key inside <code>/etc/gitlab/ssl</code></li>
+<li><p>In <code>/etc/gitlab/gitlab.rb</code> specify the following configuration:</p>
+<pre class="highlight ruby"><code><span class="n">pages_external_url</span> <span class="s1">'https://example.io'</span>
+
+<span class="n">pages_nginx</span><span class="p">[</span><span class="s1">'redirect_http_to_https'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">pages_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/pages-nginx.crt"</span>
+<span class="n">pages_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate_key'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/pages-nginx.key"</span>
+</code></pre>
+<p>where <code>pages-nginx.crt</code> and <code>pages-nginx.key</code> are the SSL cert and key,
+respectively.</p></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a></p></li>
+</ol>
+<h2 id='nginx-configuration'>NGINX configuration <a class='anchor' href='administration.html#nginx-configuration' title='Permalink'></a></h2>
+<p>Depending on your setup, you will need to make some changes to NGINX.
+Specifically you must change the domain name and the IP address where NGINX
+listens to. Read the following sections for more details.</p>
+<h3 id='nginx-configuration-files'>NGINX configuration files <a class='anchor' href='administration.html#nginx-configuration-files' title='Permalink'></a></h3>
+<p>Copy the <code>gitlab-pages-ssl</code> Nginx configuration file:</p>
+<pre class="highlight shell"><code>sudo cp lib/support/nginx/gitlab-pages-ssl /etc/nginx/sites-available/gitlab-pages-ssl.conf
+sudo ln -sf /etc/nginx/sites-<span class="o">{</span>available,enabled<span class="o">}</span>/gitlab-pages-ssl.conf
+</code></pre>
+<p>Replace <code>gitlab-pages-ssl</code> with <code>gitlab-pages</code> if you are not using SSL.</p>
+<h3 id='nginx-configuration-for-custom-domains'>NGINX configuration for custom domains <a class='anchor' href='administration.html#nginx-configuration-for-custom-domains' title='Permalink'></a></h3>
+<blockquote>
+<p>If you are not using custom domains ignore this section.</p>
+</blockquote>
+
+<p><a href="administration.html#the-gitlab-pages-daemon-and-the-case-of-custom-domains">In the case of custom domains</a>,
+if you have the secondary IP address configured on the same server as GitLab,
+you need to change <strong>all</strong> NGINX configs to listen on the first IP address.</p>
+
+<p><strong>Source installations:</strong></p>
+
+<ol>
+<li>Edit all GitLab related configs in <code>/etc/nginx/site-available/</code> and replace
+<code>0.0.0.0</code> with <code>1.1.1.1</code>, where <code>1.1.1.1</code> the primary IP where GitLab
+listens to.</li>
+<li>Restart NGINX</li>
+</ol>
+
+<p><strong>Omnibus installations:</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gilab.rb</code>:</p>
+<pre class="highlight plaintext"><code>nginx['listen_addresses'] = ['1.1.1.1']
+</code></pre></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a></p></li>
+</ol>
+<h3 id='nginx-caveats'>NGINX caveats <a class='anchor' href='administration.html#nginx-caveats' title='Permalink'></a></h3>
+<p>Be extra careful when setting up the domain name in the NGINX config. You must
+not remove the backslashes.</p>
+
+<p>If your GitLab pages domain is <code>example.io</code>, replace:</p>
+<pre class="highlight shell"><code>server_name ~^.<span class="k">*</span><span class="se">\.</span>YOUR_GITLAB_PAGES<span class="se">\.</span>DOMAIN<span class="nv">$;</span>
+</code></pre>
+<p>with:</p>
+<pre class="highlight plaintext"><code>server_name ~^.*\.example\.io$;
+</code></pre>
+<p>If you are using a subdomain, make sure to escape all dots (<code>.</code>) except from
+the first one with a backslash (). For example <code>pages.example.io</code> would be:</p>
+<pre class="highlight plaintext"><code>server_name ~^.*\.pages\.example\.io$;
+</code></pre><h2 id='set-maximum-pages-size'>Set maximum pages size <a class='anchor' href='administration.html#set-maximum-pages-size' title='Permalink'></a></h2>
+<p>The maximum size of the unpacked archive per project can be configured in the
+Admin area under the Application settings in the <strong>Maximum size of pages (MB)</strong>.
+The default is 100MB.</p>
+<h2 id='change-storage-path'>Change storage path <a class='anchor' href='administration.html#change-storage-path' title='Permalink'></a></h2>
+<p><strong>Source installations:</strong></p>
+
+<ol>
+<li><p>Pages are stored by default in <code>/home/git/gitlab/shared/pages</code>.
+If you wish to store them in another location you must set it up in
+<code>gitlab.yml</code> under the <code>pages</code> section:</p>
+<pre class="highlight yaml"><code> <span class="na">pages</span><span class="pi">:</span>
+   <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+   <span class="c1"># The location where pages are stored (default: shared/pages).</span>
+   <span class="na">path</span><span class="pi">:</span> <span class="s">/mnt/storage/pages</span>
+</code></pre></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#installations-from-source">Restart GitLab</a></p></li>
+</ol>
+
+<p><strong>Omnibus installations:</strong></p>
+
+<ol>
+<li><p>Pages are stored by default in <code>/var/opt/gitlab/gitlab-rails/shared/pages</code>.
+If you wish to store them in another location you must set it up in
+<code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code> <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'pages_path'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/mnt/storage/pages"</span>
+</code></pre></li>
+<li><p><a href="https://doc.gitlab.cc/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a></p></li>
+</ol>
+<h2 id='backup'>Backup <a class='anchor' href='administration.html#backup' title='Permalink'></a></h2>
+<p>Pages are part of the <a href="https://doc.gitlab.cc/raketasks/backup_restore.html">regular backup</a> so there is nothing to configure.</p>
+<h2 id='security'>Security <a class='anchor' href='administration.html#security' title='Permalink'></a></h2>
+<p>You should strongly consider running GitLab pages under a different hostname
+than GitLab to prevent XSS attacks.</p>
+<h2 id='changelog'>Changelog <a class='anchor' href='administration.html#changelog' title='Permalink'></a></h2>
+<p>GitLab Pages were first introduced in GitLab EE 8.3. Since then, many features
+where added, like custom CNAME and TLS support, and many more are likely to
+come. Below is a brief changelog. If no changes were introduced or a version is
+missing from the changelog, assume that the documentation is the same as the
+latest previous version.</p>
+
+<hr>
+
+<p><strong>GitLab 8.5 (<a href="https://gitlab.com/gitlab-org/gitlab-ee/blob/8-5-stable-ee/doc/pages/administration.md">documentation</a>)</strong></p>
+
+<ul>
+<li>In GitLab 8.5 we introduced the <a href="https://gitlab.com/gitlab-org/gitlab-pages/tree/v0.2.1">gitlab-pages</a> daemon which is now the
+recommended way to set up GitLab Pages.</li>
+<li>The <a href="https://gitlab.com/gitlab-org/gitlab-ee/tree/8-5-stable-ee/lib/support/nginx">NGINX configs</a> have changed to reflect this change. So make sure to
+update them.</li>
+<li>Custom CNAME and TLS certificates support</li>
+<li>Documentation was moved to one place</li>
+</ul>
+
+<hr>
+
+<p><strong>GitLab 8.4</strong></p>
+
+<p>No new changes.</p>
+
+<hr>
+
+<p><strong>GitLab 8.3 (<a href="https://gitlab.com/gitlab-org/gitlab-ee/blob/8-3-stable-ee/doc/pages/administration.md">source docs</a>, <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/8-3-stable-ee/doc/settings/pages.md">Omnibus docs</a>)</strong></p>
+
+<ul>
+<li>GitLab Pages feature was introduced.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/pages/administration.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

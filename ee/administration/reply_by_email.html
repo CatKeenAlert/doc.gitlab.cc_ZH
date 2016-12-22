@@ -1,0 +1,451 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Reply by email - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Reply by email</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="reply_by_email.html#reply-by-email">Reply by email</a>
+<ul>
+<li>
+<a href="reply_by_email.html#requirement">Requirement</a>
+<ul>
+<li>
+<a href="reply_by_email.html#email-sub-addressing">Email sub-addressing</a>
+</li>
+<li>
+<a href="reply_by_email.html#dedicated-email-address">Dedicated email address</a>
+</li>
+<li>
+<a href="reply_by_email.html#catch-all-mailbox">Catch-all mailbox</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="reply_by_email.html#how-it-works">How it works?</a>
+<ul>
+<li>
+<a href="reply_by_email.html#1-gitlab-sends-a-notification-email">1. GitLab sends a notification email</a>
+</li>
+<li>
+<a href="reply_by_email.html#2-you-reply-to-the-notification-email">2. You reply to the notification email</a>
+</li>
+<li>
+<a href="reply_by_email.html#3-gitlab-receives-your-reply-to-the-notification-email">3. GitLab receives your reply to the notification email</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="reply_by_email.html#set-it-up">Set it up</a>
+<ul>
+<li>
+<a href="reply_by_email.html#omnibus-package-installations">Omnibus package installations</a>
+</li>
+<li>
+<a href="reply_by_email.html#installations-from-source">Installations from source</a>
+</li>
+<li>
+<a href="reply_by_email.html#development">Development</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='reply-by-email'>Reply by email <a class='anchor' href='reply_by_email.html#reply-by-email' title='Permalink'></a></h1>
+<p>GitLab can be set up to allow users to comment on issues and merge requests by
+replying to notification emails.</p>
+<h2 id='requirement'>Requirement <a class='anchor' href='reply_by_email.html#requirement' title='Permalink'></a></h2>
+<p>Reply by email requires an IMAP-enabled email account. GitLab allows you to use
+three strategies for this feature:</p>
+
+<ul>
+<li>using email sub-addressing</li>
+<li>using a dedicated email address</li>
+<li>using a catch-all mailbox</li>
+</ul>
+<h3 id='email-sub-addressing'>Email sub-addressing <a class='anchor' href='reply_by_email.html#email-sub-addressing' title='Permalink'></a></h3>
+<p><strong>If your provider or server supports email sub-addressing, we recommend using it.</strong></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Email_address#Sub-addressing">Sub-addressing</a> is
+a feature where any email to <code>user+some_arbitrary_tag@example.com</code> will end up
+in the mailbox for <code>user@example.com</code>, and is supported by providers such as
+Gmail, Google Apps, Yahoo! Mail, Outlook.com and iCloud, as well as the Postfix
+mail server which you can run on-premises.</p>
+<h3 id='dedicated-email-address'>Dedicated email address <a class='anchor' href='reply_by_email.html#dedicated-email-address' title='Permalink'></a></h3>
+<p>This solution is really simple to set up: you just have to create an email
+address dedicated to receive your users&#39; replies to GitLab notifications.</p>
+<h3 id='catch-all-mailbox'>Catch-all mailbox <a class='anchor' href='reply_by_email.html#catch-all-mailbox' title='Permalink'></a></h3>
+<p>A <a href="https://en.wikipedia.org/wiki/Catch-all">catch-all mailbox</a> for a domain will
+&quot;catch all&quot; the emails addressed to the domain that do not exist in the mail
+server.</p>
+<h2 id='how-it-works'>How it works? <a class='anchor' href='reply_by_email.html#how-it-works' title='Permalink'></a></h2><h3 id='1-gitlab-sends-a-notification-email'>1. GitLab sends a notification email <a class='anchor' href='reply_by_email.html#1-gitlab-sends-a-notification-email' title='Permalink'></a></h3>
+<p>When GitLab sends a notification and Reply by email is enabled, the <code>Reply-To</code>
+header is set to the address defined in your GitLab configuration, with the
+<code>%{key}</code> placeholder (if present) replaced by a specific &quot;reply key&quot;. In
+addition, this &quot;reply key&quot; is also added to the <code>References</code> header.</p>
+<h3 id='2-you-reply-to-the-notification-email'>2. You reply to the notification email <a class='anchor' href='reply_by_email.html#2-you-reply-to-the-notification-email' title='Permalink'></a></h3>
+<p>When you reply to the notification email, your email client will:</p>
+
+<ul>
+<li>send the email to the <code>Reply-To</code> address it got from the notification email</li>
+<li>set the <code>In-Reply-To</code> header to the value of the <code>Message-ID</code> header from the
+notification email</li>
+<li>set the <code>References</code> header to the value of the <code>Message-ID</code> plus the value of
+the notification email&#39;s <code>References</code> header.</li>
+</ul>
+<h3 id='3-gitlab-receives-your-reply-to-the-notification-email'>3. GitLab receives your reply to the notification email <a class='anchor' href='reply_by_email.html#3-gitlab-receives-your-reply-to-the-notification-email' title='Permalink'></a></h3>
+<p>When GitLab receives your reply, it will look for the &quot;reply key&quot; in the
+following headers, in this order:</p>
+
+<ol>
+<li>the <code>To</code> header</li>
+<li>the <code>References</code> header</li>
+</ol>
+
+<p>If it finds a reply key, it will be able to leave your reply as a comment on
+the entity the notification was about (issue, merge request, commit...).</p>
+
+<p>For more details about the <code>Message-ID</code>, <code>In-Reply-To</code>, and <code>References headers</code>,
+please consult <a href="https://tools.ietf.org/html/rfc5322#section-3.6.4">RFC 5322</a>.</p>
+<h2 id='set-it-up'>Set it up <a class='anchor' href='reply_by_email.html#set-it-up' title='Permalink'></a></h2>
+<p>If you want to use Gmail / Google Apps with Reply by email, make sure you have
+<a href="https://support.google.com/mail/troubleshooter/1668960?hl=en#ts=1665018">IMAP access enabled</a>
+and <a href="https://support.google.com/accounts/answer/6010255">allowed less secure apps to access the account</a>.</p>
+
+<p>To set up a basic Postfix mail server with IMAP access on Ubuntu, follow
+<a href="https://doc.gitlab.cc/ee/administration/postfix.html">these instructions</a>.</p>
+<h3 id='omnibus-package-installations'>Omnibus package installations <a class='anchor' href='reply_by_email.html#omnibus-package-installations' title='Permalink'></a></h3>
+<ol>
+<li><p>Find the <code>incoming_email</code> section in <code>/etc/gitlab/gitlab.rb</code>, enable the
+feature and fill in the details for your specific IMAP server and email account:</p>
+<pre class="highlight ruby"><code><span class="c1"># Configuration for Postfix mail server, assumes mailbox incoming@gitlab.example.com</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># The email address including the `%{key}` placeholder that will be replaced to reference the item being replied to.</span>
+<span class="c1"># The placeholder can be omitted but if present, it must appear in the "user" part of the address (before the `@`).</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"incoming+%{key}@gitlab.example.com"</span>
+
+<span class="c1"># Email account username</span>
+<span class="c1"># With third party providers, this is usually the full email address.</span>
+<span class="c1"># With self-hosted email servers, this is usually the user part of the email address.</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_email'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"incoming"</span>
+<span class="c1"># Email account password</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"[REDACTED]"</span>
+
+<span class="c1"># IMAP server host</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gitlab.example.com"</span>
+<span class="c1"># IMAP server port</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">143</span>
+<span class="c1"># Whether the IMAP server uses SSL</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_ssl'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="c1"># Whether the IMAP server uses StartTLS</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_start_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># The mailbox where incoming mail will end up. Usually "inbox".</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_mailbox_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"inbox"</span>
+<span class="c1"># The IDLE command timeout.</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_idle_timeout'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">60</span>
+</code></pre><pre class="highlight ruby"><code><span class="c1"># Configuration for Gmail / Google Apps, assumes mailbox gitlab-incoming@gmail.com</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># The email address including the `%{key}` placeholder that will be replaced to reference the item being replied to.</span>
+<span class="c1"># The placeholder can be omitted but if present, it must appear in the "user" part of the address (before the `@`).</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gitlab-incoming+%{key}@gmail.com"</span>
+
+<span class="c1"># Email account username</span>
+<span class="c1"># With third party providers, this is usually the full email address.</span>
+<span class="c1"># With self-hosted email servers, this is usually the user part of the email address.</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_email'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"gitlab-incoming@gmail.com"</span>
+<span class="c1"># Email account password</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"[REDACTED]"</span>
+
+<span class="c1"># IMAP server host</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_host'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"imap.gmail.com"</span>
+<span class="c1"># IMAP server port</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">993</span>
+<span class="c1"># Whether the IMAP server uses SSL</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_ssl'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="c1"># Whether the IMAP server uses StartTLS</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_start_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># The mailbox where incoming mail will end up. Usually "inbox".</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_mailbox_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"inbox"</span>
+<span class="c1"># The IDLE command timeout.</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'incoming_email_idle_timeout'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">60</span>
+</code></pre></li>
+<li><p>Reconfigure GitLab and restart mailroom for the changes to take effect:</p>
+<pre class="highlight shell"><code>sudo gitlab-ctl reconfigure
+sudo gitlab-ctl restart mailroom
+</code></pre></li>
+<li><p>Verify that everything is configured correctly:</p>
+<pre class="highlight shell"><code>sudo gitlab-rake gitlab:incoming_email:check
+</code></pre></li>
+<li><p>Reply by email should now be working.</p></li>
+</ol>
+<h3 id='installations-from-source'>Installations from source <a class='anchor' href='reply_by_email.html#installations-from-source' title='Permalink'></a></h3>
+<ol>
+<li><p>Go to the GitLab installation directory:</p>
+<pre class="highlight shell"><code><span class="nb">cd</span> /home/git/gitlab
+</code></pre></li>
+<li><p>Find the <code>incoming_email</code> section in <code>config/gitlab.yml</code>, enable the feature
+and fill in the details for your specific IMAP server and email account:</p>
+<pre class="highlight shell"><code>sudo editor config/gitlab.yml
+</code></pre><pre class="highlight yaml"><code><span class="c1"># Configuration for Postfix mail server, assumes mailbox incoming@gitlab.example.com</span>
+<span class="na">incoming_email</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+
+  <span class="c1"># The email address including the `%{key}` placeholder that will be replaced to reference the item being replied to.</span>
+  <span class="c1"># The placeholder can be omitted but if present, it must appear in the "user" part of the address (before the `@`).</span>
+  <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">incoming+%{key}@gitlab.example.com"</span>
+
+  <span class="c1"># Email account username</span>
+  <span class="c1"># With third party providers, this is usually the full email address.</span>
+  <span class="c1"># With self-hosted email servers, this is usually the user part of the email address.</span>
+  <span class="na">user</span><span class="pi">:</span> <span class="s2">"</span><span class="s">incoming"</span>
+  <span class="c1"># Email account password</span>
+  <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">[REDACTED]"</span>
+
+  <span class="c1"># IMAP server host</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gitlab.example.com"</span>
+  <span class="c1"># IMAP server port</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="s">143</span>
+  <span class="c1"># Whether the IMAP server uses SSL</span>
+  <span class="na">ssl</span><span class="pi">:</span> <span class="s">false</span>
+  <span class="c1"># Whether the IMAP server uses StartTLS</span>
+  <span class="na">start_tls</span><span class="pi">:</span> <span class="s">false</span>
+
+  <span class="c1"># The mailbox where incoming mail will end up. Usually "inbox".</span>
+  <span class="na">mailbox</span><span class="pi">:</span> <span class="s2">"</span><span class="s">inbox"</span>
+  <span class="c1"># The IDLE command timeout.</span>
+  <span class="na">idle_timeout</span><span class="pi">:</span> <span class="s">60</span>
+</code></pre><pre class="highlight yaml"><code><span class="c1"># Configuration for Gmail / Google Apps, assumes mailbox gitlab-incoming@gmail.com</span>
+<span class="na">incoming_email</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+
+  <span class="c1"># The email address including the `%{key}` placeholder that will be replaced to reference the item being replied to.</span>
+  <span class="c1"># The placeholder can be omitted but if present, it must appear in the "user" part of the address (before the `@`).</span>
+  <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gitlab-incoming+%{key}@gmail.com"</span>
+
+  <span class="c1"># Email account username</span>
+  <span class="c1"># With third party providers, this is usually the full email address.</span>
+  <span class="c1"># With self-hosted email servers, this is usually the user part of the email address.</span>
+  <span class="na">user</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gitlab-incoming@gmail.com"</span>
+  <span class="c1"># Email account password</span>
+  <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">[REDACTED]"</span>
+
+  <span class="c1"># IMAP server host</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">imap.gmail.com"</span>
+  <span class="c1"># IMAP server port</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="s">993</span>
+  <span class="c1"># Whether the IMAP server uses SSL</span>
+  <span class="na">ssl</span><span class="pi">:</span> <span class="s">true</span>
+  <span class="c1"># Whether the IMAP server uses StartTLS</span>
+  <span class="na">start_tls</span><span class="pi">:</span> <span class="s">false</span>
+
+  <span class="c1"># The mailbox where incoming mail will end up. Usually "inbox".</span>
+  <span class="na">mailbox</span><span class="pi">:</span> <span class="s2">"</span><span class="s">inbox"</span>
+  <span class="c1"># The IDLE command timeout.</span>
+  <span class="na">idle_timeout</span><span class="pi">:</span> <span class="s">60</span>
+</code></pre></li>
+<li><p>Enable <code>mail_room</code> in the init script at <code>/etc/default/gitlab</code>:</p>
+<pre class="highlight shell"><code>sudo mkdir -p /etc/default
+<span class="nb">echo</span> <span class="s1">'mail_room_enabled=true'</span> | sudo tee -a /etc/default/gitlab
+</code></pre></li>
+<li><p>Restart GitLab:</p>
+<pre class="highlight shell"><code>sudo service gitlab restart
+</code></pre></li>
+<li><p>Verify that everything is configured correctly:</p>
+<pre class="highlight shell"><code>sudo -u git -H bundle <span class="nb">exec </span>rake gitlab:incoming_email:check <span class="nv">RAILS_ENV</span><span class="o">=</span>production
+</code></pre></li>
+<li><p>Reply by email should now be working.</p></li>
+</ol>
+<h3 id='development'>Development <a class='anchor' href='reply_by_email.html#development' title='Permalink'></a></h3>
+<ol>
+<li><p>Go to the GitLab installation directory.</p></li>
+<li><p>Find the <code>incoming_email</code> section in <code>config/gitlab.yml</code>, enable the feature and fill in the details for your specific IMAP server and email account:</p>
+<pre class="highlight yaml"><code><span class="c1"># Configuration for Gmail / Google Apps, assumes mailbox gitlab-incoming@gmail.com</span>
+<span class="na">incoming_email</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+
+  <span class="c1"># The email address including the `%{key}` placeholder that will be replaced to reference the item being replied to.</span>
+  <span class="c1"># The placeholder can be omitted but if present, it must appear in the "user" part of the address (before the `@`).</span>
+  <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gitlab-incoming+%{key}@gmail.com"</span>
+
+  <span class="c1"># Email account username</span>
+  <span class="c1"># With third party providers, this is usually the full email address.</span>
+  <span class="c1"># With self-hosted email servers, this is usually the user part of the email address.</span>
+  <span class="na">user</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gitlab-incoming@gmail.com"</span>
+  <span class="c1"># Email account password</span>
+  <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">[REDACTED]"</span>
+
+  <span class="c1"># IMAP server host</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">imap.gmail.com"</span>
+  <span class="c1"># IMAP server port</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="s">993</span>
+  <span class="c1"># Whether the IMAP server uses SSL</span>
+  <span class="na">ssl</span><span class="pi">:</span> <span class="s">true</span>
+  <span class="c1"># Whether the IMAP server uses StartTLS</span>
+  <span class="na">start_tls</span><span class="pi">:</span> <span class="s">false</span>
+
+  <span class="c1"># The mailbox where incoming mail will end up. Usually "inbox".</span>
+  <span class="na">mailbox</span><span class="pi">:</span> <span class="s2">"</span><span class="s">inbox"</span>
+  <span class="c1"># The IDLE command timeout.</span>
+  <span class="na">idle_timeout</span><span class="pi">:</span> <span class="s">60</span>
+</code></pre>
+<p>As mentioned, the part after <code>+</code> is ignored, and this will end up in the mailbox for <code>gitlab-incoming@gmail.com</code>.</p></li>
+<li><p>Uncomment the <code>mail_room</code> line in your <code>Procfile</code>:</p>
+<pre class="highlight yaml"><code><span class="na">mail_room</span><span class="pi">:</span> <span class="s">bundle exec mail_room -q -c config/mail_room.yml</span>
+</code></pre></li>
+<li><p>Restart GitLab:</p>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>foreman start
+</code></pre></li>
+<li><p>Verify that everything is configured correctly:</p>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>rake gitlab:incoming_email:check <span class="nv">RAILS_ENV</span><span class="o">=</span>development
+</code></pre></li>
+<li><p>Reply by email should now be working.</p></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/reply_by_email.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

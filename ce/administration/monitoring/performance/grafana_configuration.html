@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Grafana Configuration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Grafana Configuration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="grafana_configuration.html#grafana-configuration">Grafana Configuration</a>
+<ul>
+<li>
+<a href="grafana_configuration.html#installation">Installation</a>
+</li>
+<li>
+<a href="grafana_configuration.html#configuration">Configuration</a>
+</li>
+<li>
+<a href="grafana_configuration.html#apply-retention-policies-and-create-continuous-queries">Apply retention policies and create continuous queries</a>
+</li>
+<li>
+<a href="grafana_configuration.html#import-dashboards">Import Dashboards</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='grafana-configuration'>Grafana Configuration <a class='anchor' href='grafana_configuration.html#grafana-configuration' title='Permalink'></a></h1>
+<p><a href="http://grafana.org/">Grafana</a> is a tool that allows you to visualize time
+series metrics through graphs and dashboards. It supports several backend
+data stores, including InfluxDB. GitLab writes performance data to InfluxDB
+and Grafana will allow you to query InfluxDB to display useful graphs.</p>
+
+<p>For the easiest installation and configuration, install Grafana on the same
+server as InfluxDB. For larger installations, you may want to split out these
+services.</p>
+<h2 id='installation'>Installation <a class='anchor' href='grafana_configuration.html#installation' title='Permalink'></a></h2>
+<p>Grafana supplies package repositories (Yum/Apt) for easy installation.
+See <a href="http://docs.grafana.org/installation/">Grafana installation documentation</a>
+for detailed steps.</p>
+
+<blockquote>
+<p><strong>Note</strong>: Before starting Grafana for the first time, set the admin user
+and password in <code>/etc/grafana/grafana.ini</code>. Otherwise, the default password
+will be <code>admin</code>.</p>
+</blockquote>
+<h2 id='configuration'>Configuration <a class='anchor' href='grafana_configuration.html#configuration' title='Permalink'></a></h2>
+<p>Login as the admin user. Expand the menu by clicking the Grafana logo in the
+top left corner. Choose &#39;Data Sources&#39; from the menu. Then, click &#39;Add new&#39;
+in the top bar.</p>
+
+<p><a target="_blank" href="img/grafana_data_source_empty.png"><img src="img/grafana_data_source_empty.png" title="" alt="Grafana empty data source page"/></a></p>
+
+<p>Fill in the configuration details for the InfluxDB data source. Save and
+Test Connection to ensure the configuration is correct.</p>
+
+<ul>
+<li><strong>Name</strong>: InfluxDB</li>
+<li><strong>Default</strong>: Checked</li>
+<li><strong>Type</strong>: InfluxDB 0.9.x (Even if you&#39;re using InfluxDB 0.10.x)</li>
+<li><strong>Url</strong>: <a href="https://localhost:8086">https://localhost:8086</a> (Or the remote URL if you&#39;ve installed InfluxDB
+on a separate server)</li>
+<li><strong>Access</strong>: proxy</li>
+<li><strong>Database</strong>: gitlab</li>
+<li><strong>User</strong>: admin (Or the username configured when setting up InfluxDB)</li>
+<li><strong>Password</strong>: The password configured when you set up InfluxDB</li>
+</ul>
+
+<p><a target="_blank" href="img/grafana_data_source_configuration.png"><img src="img/grafana_data_source_configuration.png" title="" alt="Grafana data source configurations"/></a></p>
+<h2 id='apply-retention-policies-and-create-continuous-queries'>Apply retention policies and create continuous queries <a class='anchor' href='grafana_configuration.html#apply-retention-policies-and-create-continuous-queries' title='Permalink'></a></h2>
+<p>If you intend to import the GitLab provided Grafana dashboards, you will need to
+set up the right retention policies and continuous queries. The easiest way of
+doing this is by using the <a href="https://gitlab.com/gitlab-org/influxdb-management">influxdb-management</a>
+repository.</p>
+
+<p>To use this repository you must first clone it:</p>
+<pre class="highlight plaintext"><code>git clone https://gitlab.com/gitlab-org/influxdb-management.git
+cd influxdb-management
+</code></pre>
+<p>Next you must install the required dependencies:</p>
+<pre class="highlight plaintext"><code>gem install bundler
+bundle install
+</code></pre>
+<p>Now you must configure the repository by first copying <code>.env.example</code> to <code>.env</code>
+and then editing the <code>.env</code> file to contain the correct InfluxDB settings. Once
+configured you can simply run <code>bundle exec rake</code> and the InfluxDB database will
+be configured for you.</p>
+
+<p>For more information see the <a href="https://gitlab.com/gitlab-org/influxdb-management/blob/master/README.md">influxdb-management README</a>.</p>
+<h2 id='import-dashboards'>Import Dashboards <a class='anchor' href='grafana_configuration.html#import-dashboards' title='Permalink'></a></h2>
+<p>You can now import a set of default dashboards that will give you a good
+start on displaying useful information. GitLab has published a set of default
+<a href="https://gitlab.com/gitlab-org/grafana-dashboards">Grafana dashboards</a> to get you started. Clone the
+repository or download a zip/tarball, then follow these steps to import each
+JSON file.</p>
+
+<p>Open the dashboard dropdown menu and click &#39;Import&#39;</p>
+
+<p><a target="_blank" href="img/grafana_dashboard_dropdown.png"><img src="img/grafana_dashboard_dropdown.png" title="" alt="Grafana dashboard dropdown"/></a></p>
+
+<p>Click &#39;Choose file&#39; and browse to the location where you downloaded or cloned
+the dashboard repository. Pick one of the JSON files to import.</p>
+
+<p><a target="_blank" href="img/grafana_dashboard_import.png"><img src="img/grafana_dashboard_import.png" title="" alt="Grafana dashboard import"/></a></p>
+
+<p>Once the dashboard is imported, be sure to click save icon in the top bar. If
+you do not save the dashboard after importing it will be removed when you
+navigate away.</p>
+
+<p><a target="_blank" href="img/grafana_save_icon.png"><img src="img/grafana_save_icon.png" title="" alt="Grafana save icon"/></a></p>
+
+<p>Repeat this process for each dashboard you wish to import.</p>
+
+<p>Alternatively you can automatically import all the dashboards into your Grafana
+instance. See the README of the <a href="https://gitlab.com/gitlab-org/grafana-dashboards">Grafana dashboards</a>
+repository for more information on this process.</p>
+
+<hr>
+
+<p>Read more on:</p>
+
+<ul>
+<li><a href="introduction.html">Introduction to GitLab Performance Monitoring</a></li>
+<li><a href="gitlab_configuration.html">GitLab Configuration</a></li>
+<li><a href="influxdb_configuration.html">InfluxDB Installation/Configuration</a></li>
+<li><a href="influxdb_schema.html">InfluxDB Schema</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/monitoring/performance/grafana_configuration.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

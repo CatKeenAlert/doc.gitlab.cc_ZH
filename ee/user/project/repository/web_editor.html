@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Web Editor - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Web Editor</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="web_editor.html#gitlab-web-editor">GitLab Web Editor</a>
+<ul>
+<li>
+<a href="web_editor.html#create-a-file">Create a file</a>
+<ul>
+<li>
+<a href="web_editor.html#template-dropdowns">Template dropdowns</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="web_editor.html#upload-a-file">Upload a file</a>
+</li>
+<li>
+<a href="web_editor.html#create-a-directory">Create a directory</a>
+</li>
+<li>
+<a href="web_editor.html#create-a-new-branch">Create a new branch</a>
+<ul>
+<li>
+<a href="web_editor.html#create-a-new-branch-from-an-issue">Create a new branch from an issue</a>
+</li>
+<li>
+<a href="web_editor.html#create-a-new-branch-from-a-project-s-dashboard">Create a new branch from a project's dashboard</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="web_editor.html#create-a-new-tag">Create a new tag</a>
+</li>
+<li>
+<a href="web_editor.html#tips">Tips</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-web-editor'>GitLab Web Editor <a class='anchor' href='web_editor.html#gitlab-web-editor' title='Permalink'></a></h1>
+<p>Sometimes it&#39;s easier to make quick changes directly from the GitLab interface
+than to clone the project and use the Git command line tool. In this feature
+highlight we look at how you can create a new file, directory, branch or
+tag from the file browser. All of these actions are available from a single
+dropdown menu.</p>
+<h2 id='create-a-file'>Create a file <a class='anchor' href='web_editor.html#create-a-file' title='Permalink'></a></h2>
+<p>From a project&#39;s files page, click the &#39;+&#39; button to the right of the branch selector.
+Choose <strong>New file</strong> from the dropdown.</p>
+
+<p><a target="_blank" href="img/web_editor_new_file_dropdown.png"><img src="img/web_editor_new_file_dropdown.png" title="" alt="New file dropdown menu"/></a></p>
+
+<hr>
+
+<p>Enter a file name in the <strong>File name</strong> box. Then, add file content in the editor
+area. Add a descriptive commit message and choose a branch. The branch field
+will default to the branch you were viewing in the file browser. If you enter
+a new branch name, a checkbox will appear allowing you to start a new merge
+request after you commit the changes.</p>
+
+<p>When you are satisfied with your new file, click <strong>Commit Changes</strong> at the bottom.</p>
+
+<p><a target="_blank" href="img/web_editor_new_file_editor.png"><img src="img/web_editor_new_file_editor.png" title="" alt="Create file editor"/></a></p>
+<h3 id='template-dropdowns'>Template dropdowns <a class='anchor' href='web_editor.html#template-dropdowns' title='Permalink'></a></h3>
+<p>When starting a new project, there are some common files which the new project
+might need too. Therefore a message will be displayed by GitLab to make this
+easy for you.</p>
+
+<p><a target="_blank" href="img/web_editor_template_dropdown_first_file.png"><img src="img/web_editor_template_dropdown_first_file.png" title="" alt="First file for your project"/></a></p>
+
+<p>When clicking on either <code>LICENSE</code> or <code>.gitignore</code>, a dropdown will be displayed
+to provide you with a template which might be suitable for your project.</p>
+
+<p><a target="_blank" href="img/web_editor_template_dropdown_mit_license.png"><img src="img/web_editor_template_dropdown_mit_license.png" title="" alt="MIT license selected"/></a></p>
+
+<p>The license, changelog, contribution guide, or <code>.gitlab-ci.yml</code> file could also
+be added through a button on the project page. In the example below the license
+has already been created, which creates a link to the license itself.</p>
+
+<p><a target="_blank" href="img/web_editor_template_dropdown_buttons.png"><img src="img/web_editor_template_dropdown_buttons.png" title="" alt="New file button"/></a></p>
+
+<blockquote>
+<p><strong>Note:</strong>
+The <strong>Set up CI</strong> button will not appear on an empty repository. You have to at
+least add a file in order for the button to show up.</p>
+</blockquote>
+<h2 id='upload-a-file'>Upload a file <a class='anchor' href='web_editor.html#upload-a-file' title='Permalink'></a></h2>
+<p>The ability to create a file is great when the content is text. However, this
+doesn&#39;t work well for binary data such as images, PDFs or other file types. In
+this case you need to upload a file.</p>
+
+<p>From a project&#39;s files page, click the &#39;+&#39; button to the right of the branch
+selector. Choose <strong>Upload file</strong> from the dropdown.</p>
+
+<p><a target="_blank" href="img/web_editor_upload_file_dropdown.png"><img src="img/web_editor_upload_file_dropdown.png" title="" alt="Upload file dropdown menu"/></a></p>
+
+<hr>
+
+<p>Once the upload dialog pops up there are two ways to upload your file. Either
+drag and drop a file on the pop up or use the <strong>click to upload</strong> link. A file
+preview will appear once you have selected a file to upload.</p>
+
+<p>Enter a commit message, choose a branch, and click <strong>Upload file</strong> when you are
+ready.</p>
+
+<p><a target="_blank" href="img/web_editor_upload_file_dialog.png"><img src="img/web_editor_upload_file_dialog.png" title="" alt="Upload file dialog"/></a></p>
+<h2 id='create-a-directory'>Create a directory <a class='anchor' href='web_editor.html#create-a-directory' title='Permalink'></a></h2>
+<p>To keep files in the repository organized it is often helpful to create a new
+directory.</p>
+
+<p>From a project&#39;s files page, click the &#39;+&#39; button to the right of the branch selector.
+Choose <strong>New directory</strong> from the dropdown.</p>
+
+<p><a target="_blank" href="img/web_editor_new_directory_dropdown.png"><img src="img/web_editor_new_directory_dropdown.png" title="" alt="New directory dropdown"/></a></p>
+
+<hr>
+
+<p>In the new directory dialog enter a directory name, a commit message and choose
+the target branch. Click <strong>Create directory</strong> to finish.</p>
+
+<p><a target="_blank" href="img/web_editor_new_directory_dialog.png"><img src="img/web_editor_new_directory_dialog.png" title="" alt="New directory dialog"/></a></p>
+<h2 id='create-a-new-branch'>Create a new branch <a class='anchor' href='web_editor.html#create-a-new-branch' title='Permalink'></a></h2>
+<p>There are multiple ways to create a branch from GitLab&#39;s web interface.</p>
+<h3 id='create-a-new-branch-from-an-issue'>Create a new branch from an issue <a class='anchor' href='web_editor.html#create-a-new-branch-from-an-issue' title='Permalink'></a></h3>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/2808">Introduced</a> in GitLab 8.6.</p>
+</blockquote>
+
+<p>In case your development workflow dictates to have an issue for every merge
+request, you can quickly create a branch right on the issue page which will be
+tied with the issue itself. You can see a <strong>New branch</strong> button after the issue
+description, unless there is already a branch with the same name or a referenced
+merge request.</p>
+
+<p><a target="_blank" href="img/web_editor_new_branch_from_issue.png"><img src="img/web_editor_new_branch_from_issue.png" title="" alt="New Branch Button"/></a></p>
+
+<p>Once you click it, a new branch will be created that diverges from the default
+branch of your project, by default <code>master</code>. The branch name will be based on
+the title of the issue and as suffix it will have its ID. Thus, the example
+screenshot above will yield a branch named
+<code>2-et-cum-et-sed-expedita-repellat-consequatur-ut-assumenda-numquam-rerum</code>.</p>
+
+<p>After the branch is created, you can edit files in the repository to fix
+the issue. When a merge request is created based on the newly created branch,
+the description field will automatically display the <a href="https://doc.gitlab.cc/ee/user/project/user/project/issues/automatic_issue_closing.html">issue closing pattern</a>
+<code>Closes #ID</code>, where <code>ID</code> the ID of the issue. This will close the issue once the
+merge request is merged.</p>
+<h3 id='create-a-new-branch-from-a-project-39-s-dashboard'>Create a new branch from a project&#39;s dashboard <a class='anchor' href='web_editor.html#create-a-new-branch-from-a-project-39-s-dashboard' title='Permalink'></a></h3>
+<p>If you want to make changes to several files before creating a new merge
+request, you can create a new branch up front. From a project&#39;s files page,
+choose <strong>New branch</strong> from the dropdown.</p>
+
+<p><a target="_blank" href="img/web_editor_new_branch_dropdown.png"><img src="img/web_editor_new_branch_dropdown.png" title="" alt="New branch dropdown"/></a></p>
+
+<hr>
+
+<p>Enter a new <strong>Branch name</strong>. Optionally, change the <strong>Create from</strong> field
+to choose which branch, tag or commit SHA this new branch will originate from.
+This field will autocomplete if you start typing an existing branch or tag.
+Click <strong>Create branch</strong> and you will be returned to the file browser on this new
+branch.</p>
+
+<p><a target="_blank" href="img/web_editor_new_branch_page.png"><img src="img/web_editor_new_branch_page.png" title="" alt="New branch page"/></a></p>
+
+<hr>
+
+<p>You can now make changes to any files, as needed. When you&#39;re ready to merge
+the changes back to master you can use the widget at the top of the screen.
+This widget only appears for a period of time after you create the branch or
+modify files.</p>
+
+<p><a target="_blank" href="img/web_editor_new_push_widget.png"><img src="img/web_editor_new_push_widget.png" title="" alt="New push widget"/></a></p>
+<h2 id='create-a-new-tag'>Create a new tag <a class='anchor' href='web_editor.html#create-a-new-tag' title='Permalink'></a></h2>
+<p>Tags are useful for marking major milestones such as production releases,
+release candidates, and more. You can create a tag from a branch or a commit
+SHA. From a project&#39;s files page, choose <strong>New tag</strong> from the dropdown.</p>
+
+<p><a target="_blank" href="img/web_editor_new_tag_dropdown.png"><img src="img/web_editor_new_tag_dropdown.png" title="" alt="New tag dropdown"/></a></p>
+
+<hr>
+
+<p>Give the tag a name such as <code>v1.0.0</code>. Choose the branch or SHA from which you
+would like to create this new tag. You can optionally add a message and
+release notes. The release notes section supports markdown format and you can
+also upload an attachment. Click <strong>Create tag</strong> and you will be taken to the tag
+list page.</p>
+
+<p><a target="_blank" href="img/web_editor_new_tag_page.png"><img src="img/web_editor_new_tag_page.png" title="" alt="New tag page"/></a></p>
+<h2 id='tips'>Tips <a class='anchor' href='web_editor.html#tips' title='Permalink'></a></h2>
+<p>When creating or uploading a new file, or creating a new directory, you can
+trigger a new merge request rather than committing directly to master. Enter
+a new branch name in the <strong>Target branch</strong> field. You will notice a checkbox
+appear that is labeled <strong>Start a new merge request with these changes</strong>. After
+you commit the changes you will be taken to a new merge request form.</p>
+
+<p><a target="_blank" href="img/web_editor_start_new_merge_request.png"><img src="img/web_editor_start_new_merge_request.png" title="" alt="Start a new merge request with these changes"/></a></p>
+
+<p><a target="_blank" href="https://doc.gitlab.cc/ee/user/project/repository/basicsimages/file_button.png"><img src="https://doc.gitlab.cc/ee/user/project/repository/basicsimages/file_button.png" title="" alt="New file button"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/repository/web_editor.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

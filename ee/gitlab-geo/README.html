@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Geo - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Geo</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-geo">GitLab Geo</a>
+<ul>
+<li>
+<a href="README.html#overview">Overview</a>
+</li>
+<li>
+<a href="README.html#setup-instructions">Setup instructions</a>
+</li>
+<li>
+<a href="README.html#after-setup">After setup</a>
+</li>
+<li>
+<a href="README.html#current-limitations">Current limitations</a>
+</li>
+<li>
+<a href="README.html#frequently-asked-questions">Frequently Asked Questions</a>
+<ul>
+<li>
+<a href="README.html#can-i-use-geo-in-a-disaster-recovery-situation">Can I use Geo in a disaster recovery situation?</a>
+</li>
+<li>
+<a href="README.html#what-data-is-replicated-to-a-secondary-node">What data is replicated to a secondary node?</a>
+</li>
+<li>
+<a href="README.html#can-i-git-push-to-a-secondary-node">Can I git push to a secondary node?</a>
+</li>
+<li>
+<a href="README.html#how-long-does-it-take-to-have-a-commit-replicated-to-a-secondary-node">How long does it take to have a commit replicated to a secondary node?</a>
+</li>
+<li>
+<a href="README.html#what-happens-if-the-ssh-server-runs-at-a-different-port">What happens if the SSH server runs at a different port?</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-geo'>GitLab Geo <a class='anchor' href='README.html#gitlab-geo' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong>
+This feature was introduced in GitLab 8.5 EE as Alpha.
+We recommend you use with at least GitLab 8.6 EE.</p>
+</blockquote>
+
+<p>GitLab Geo allows you to replicate your GitLab instance to other geographical
+locations as a read-only fully operational version.</p>
+
+<ul>
+<li><a href="README.html#overview">Overview</a></li>
+<li><a href="README.html#setup-instructions">Setup instructions</a>
+
+<ul>
+<li><a href="database.html">Database Replication</a></li>
+<li><a href="configuration.html">Configuration</a></li>
+</ul></li>
+<li><a href="README.html#current-limitations">Current limitations</a></li>
+<li><a href="disaster-recovery.html">Disaster Recovery</a></li>
+<li><a href="README.html#frequently-asked-questions">Frequently Asked Questions</a>
+
+<ul>
+<li><a href="README.html#can-i-use-geo-in-a-disaster-recovery-situation">Can I use Geo in a disaster recovery situation?</a></li>
+<li><a href="README.html#what-data-is-replicated-to-a-secondary-node">What data is replicated to a secondary node?</a></li>
+<li><a href="README.html#can-i-git-push-to-a-secondary-node">Can I git push to a secondary node?</a></li>
+<li><a href="README.html#how-long-does-it-take-to-have-a-commit-replicated-to-a-secondary-node">How long does it take to have a commit replicated to a secondary node?</a></li>
+<li><a href="README.html#what-happens-if-the-ssh-server-runs-at-a-different-port">What happens if the SSH server runs at a different port?</a></li>
+</ul></li>
+</ul>
+<h2 id='overview'>Overview <a class='anchor' href='README.html#overview' title='Permalink'></a></h2>
+<p>If you have two or more teams geographically spread out, but your GitLab
+instance is in a single location, fetching large repositories can take a long
+time.</p>
+
+<p>Your Geo instance can be used for cloning and fetching projects, in addition to
+reading any data. This will make working with large repositories over large
+distances much faster.</p>
+
+<p><a target="_blank" href="img/geo-overview.png"><img src="img/geo-overview.png" title="" alt="GitLab Geo overview"/></a></p>
+
+<p>When Geo is enabled, we refer to your original instance as a <strong>primary</strong> node
+and the replicated read-only ones as <strong>secondaries</strong>.</p>
+
+<p>Keep in mind that:</p>
+
+<ul>
+<li>Secondaries talk to primary to get user data for logins (API), and to
+clone/pull from repositories (HTTP(S)/SSH).</li>
+<li>Primary talks to secondaries to notify for changes (API).</li>
+</ul>
+<h2 id='setup-instructions'>Setup instructions <a class='anchor' href='README.html#setup-instructions' title='Permalink'></a></h2>
+<p>In order to set up one or more GitLab Geo instances, follow the steps below in
+this <strong>exact order</strong>:</p>
+
+<ol>
+<li>Follow the first 3 steps to <a href="https://about.gitlab.com/downloads-ee/">install GitLab Enterprise Edition</a>
+on the server that will serve as the secondary Geo node. Do not login or
+set up anything else in the secondary node for the moment.</li>
+<li><a href="database.html">Setup the database replication</a>  (<code>primary &lt;-&gt; secondary (read-only)</code> topology)</li>
+<li><a href="configuration.html">Configure GitLab</a> to set the primary and secondary nodes.</li>
+</ol>
+<h2 id='after-setup'>After setup <a class='anchor' href='README.html#after-setup' title='Permalink'></a></h2>
+<p>After you set up the database replication and configure the GitLab Geo nodes,
+there are a few things to consider:</p>
+
+<ol>
+<li>When you create a new project in the primary node, the Git repository will
+appear in the secondary only <em>after</em> the first <code>git push</code>.</li>
+<li><p>You need an extra step to be able to fetch code from the <code>secondary</code> and push
+to <code>primary</code>:</p>
+
+<ol>
+<li>Clone your repository as you would normally do from the <code>secondary</code> node</li>
+<li><p>Change the remote push URL following this example:</p>
+<pre class="highlight shell"><code> git remote <span class="nb">set</span>-url --push origin git@primary.gitlab.example.com:user/repo.git
+</code></pre></li>
+</ol></li>
+</ol>
+
+<blockquote>
+<p><strong>Important</strong>:
+The initialization of a new Geo secondary node on versions older than 8.14 
+requires data to be copied from the primary, as there is no backfill 
+feature bundled with those versions.
+See more details in the <a href="configuration.html">Configure GitLab</a> step.</p>
+</blockquote>
+<h2 id='current-limitations'>Current limitations <a class='anchor' href='README.html#current-limitations' title='Permalink'></a></h2>
+<ul>
+<li>You cannot push code to secondary nodes</li>
+<li>Git LFS is not supported yet</li>
+<li>Git Annex is not supported yet</li>
+<li>Primary node has to be online for OAuth login to happen (existing sessions and git are not affected)</li>
+</ul>
+<h2 id='frequently-asked-questions'>Frequently Asked Questions <a class='anchor' href='README.html#frequently-asked-questions' title='Permalink'></a></h2><h3 id='can-i-use-geo-in-a-disaster-recovery-situation'>Can I use Geo in a disaster recovery situation? <a class='anchor' href='README.html#can-i-use-geo-in-a-disaster-recovery-situation' title='Permalink'></a></h3>
+<p>There are limitations to what we replicate (see
+<a href="README.html#what-data-is-replicated-to-a-secondary-node">What data is replicated to a secondary node?</a>).
+In an extreme data-loss situation you can make a secondary Geo into your
+primary, but this is not officially supported yet.</p>
+
+<p>If you still want to proceed, see our step-by-step instructions on how to
+manually <a href="disaster-recovery.html">promote a secondary node</a> into primary.</p>
+<h3 id='what-data-is-replicated-to-a-secondary-node'>What data is replicated to a secondary node? <a class='anchor' href='README.html#what-data-is-replicated-to-a-secondary-node' title='Permalink'></a></h3>
+<p>We currently replicate project repositories and the whole database. This
+means user accounts, issues, merge requests, groups, project data, etc.,
+will be available for query.
+We currently don&#39;t replicate user generated attachments / avatars or any
+other file in <code>public/upload</code>. We also don&#39;t replicate LFS / Annex or
+artifacts data (<code>shared/folder</code>).</p>
+<h3 id='can-i-git-push-to-a-secondary-node'>Can I git push to a secondary node? <a class='anchor' href='README.html#can-i-git-push-to-a-secondary-node' title='Permalink'></a></h3>
+<p>No. All writing operations (this includes <code>git push</code>) must be done in your
+primary node.</p>
+<h3 id='how-long-does-it-take-to-have-a-commit-replicated-to-a-secondary-node'>How long does it take to have a commit replicated to a secondary node? <a class='anchor' href='README.html#how-long-does-it-take-to-have-a-commit-replicated-to-a-secondary-node' title='Permalink'></a></h3>
+<p>All replication operations are asynchronous and are queued to be dispatched in
+a batched request every 10 seconds. Besides that, it depends on a lot of other
+factors including the amount of traffic, how big your commit is, the
+connectivity between your nodes, your hardware, etc.</p>
+<h3 id='what-happens-if-the-ssh-server-runs-at-a-different-port'>What happens if the SSH server runs at a different port? <a class='anchor' href='README.html#what-happens-if-the-ssh-server-runs-at-a-different-port' title='Permalink'></a></h3>
+<p>We send the clone url from the primary server to any secondaries, so it
+doesn&#39;t matter. If primary is running on port <code>2200</code> clone url will reflect
+that.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/gitlab-geo/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

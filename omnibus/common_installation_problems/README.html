@@ -1,0 +1,651 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Common installation problems - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+          
+          <li class="breadcrumb">Common installation problems</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#common-installation-problems">Common installation problems</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="README.html#hash-sum-mismatch-when-downloading-packages">Hash Sum mismatch when downloading packages</a>
+</li>
+<li>
+<a href="README.html#gitlab-is-unreachable-in-my-browser">GitLab is unreachable in my browser</a>
+</li>
+<li>
+<a href="README.html#gitlab-ci-shows-gitlab-login-page">GitLab CI shows GitLab login page</a>
+</li>
+<li>
+<a href="README.html#emails-are-not-being-delivered">Emails are not being delivered</a>
+</li>
+<li>
+<a href="README.html#reconfigure-freezes-at-ruby_block-supervise_redis_sleep-action-run">Reconfigure freezes at <code>ruby_block[supervise_redis_sleep] action run</code></a>
+</li>
+<li>
+<a href="README.html#tcp-ports-for-gitlab-services-are-already-taken">TCP ports for GitLab services are already taken</a>
+</li>
+<li>
+<a href="README.html#git-user-does-not-have-ssh-access">Git user does not have SSH access</a>
+<ul>
+<li>
+<a href="README.html#selinux-enabled-systems">SELinux-enabled systems</a>
+</li>
+<li>
+<a href="README.html#all-systems">All systems</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#postgres-error-fatal-could-not-create-shared-memory-segment-cannot-allocate-memory">Postgres error 'FATAL:  could not create shared memory segment: Cannot allocate memory'</a>
+</li>
+<li>
+<a href="README.html#reconfigure-complains-about-the-glibc-version">Reconfigure complains about the GLIBC version</a>
+</li>
+<li>
+<a href="README.html#reconfigure-fails-to-create-the-git-user">Reconfigure fails to create the git user</a>
+</li>
+<li>
+<a href="README.html#failed-to-modify-kernel-parameters-with-sysctl">Failed to modify kernel parameters with sysctl</a>
+</li>
+<li>
+<a href="README.html#i-am-unable-to-install-omnibus-gitlab-without-root-access">I am unable to install omnibus-gitlab without root access</a>
+<ul>
+<li>
+<a href="README.html#installing-the-deb-or-rpm">Installing the .deb or .rpm</a>
+</li>
+<li>
+<a href="README.html#hassle-free-hosting-on-port-80-and-443">Hassle-free hosting on port 80 and 443</a>
+</li>
+<li>
+<a href="README.html#isolation-between-omnibus-services">Isolation between Omnibus services</a>
+</li>
+<li>
+<a href="README.html#tweaking-the-operating-system-for-better-performance">Tweaking the operating system for better performance</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#gitlab-rake-assets-precompile-fails-with-permission-denied">gitlab-rake assets:precompile fails with 'Permission denied'</a>
+</li>
+<li>
+<a href="README.html#short-read-or-oom-loading-db-error">'Short read or OOM loading DB' error</a>
+</li>
+<li>
+<a href="README.html#apt-error-the-requested-url-returned-error-403">Apt error 'The requested URL returned error: 403'</a>
+</li>
+<li>
+<a href="README.html#using-self-signed-certificate-or-custom-certificate-authorities">Using self signed certificate or custom certificate authorities</a>
+<ul>
+<li>
+<a href="README.html#install-custom-certificate-authorities">Install custom certificate authorities:</a>
+</li>
+<li>
+<a href="README.html#enable-self-signed-certificates">Enable self-signed certificates</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#error-executing-action-create-on-resource-cron-gitlab-ci-schedule-builds">Error executing action create on resource cron[gitlab-ci schedule builds]</a>
+</li>
+<li>
+<a href="README.html#error-proxyroundtripper-xxx-failed-with-net-http-timeout-awaiting-response-headers">error: proxyRoundTripper: XXX failed with: "net/http: timeout awaiting response headers"</a>
+</li>
+<li>
+<a href="README.html#the-change-you-wanted-was-rejected">The change you wanted was rejected</a>
+</li>
+<li>
+<a href="README.html#can-t-verify-csrf-token-authenticity-completed-422-unprocessable">Can't verify CSRF token authenticity Completed 422 Unprocessable</a>
+</li>
+<li>
+<a href="README.html#extension-missing-pg_trgm">Extension missing pg_trgm</a>
+</li>
+<li>
+<a href="README.html#errno-enomem-cannot-allocate-memory-during-backup-or-upgrade">Errno::ENOMEM: Cannot allocate memory during backup or upgrade</a>
+</li>
+<li>
+<a href="README.html#nginx-error-could-not-build-server_names_hash-you-should-increase-server_names_hash_bucket_size">NGINX error: 'could not build server_names_hash, you should increase server_names_hash_bucket_size'</a>
+</li>
+<li>
+<a href="README.html#reconfigure-fails-due-to-root-cannot-chown-with-nfs-root_squash">Reconfigure fails due to "'root' cannot chown" with NFS root_squash</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='common-installation-problems'>Common installation problems <a class='anchor' href='README.html#common-installation-problems' title='Permalink'></a></h1>
+<p>Below you can find the most common issues users encounter when installing omnibus-gitlab packages.</p>
+<h3 id='hash-sum-mismatch-when-downloading-packages'>Hash Sum mismatch when downloading packages <a class='anchor' href='README.html#hash-sum-mismatch-when-downloading-packages' title='Permalink'></a></h3>
+<p>apt-get install outputs something like:</p>
+<pre class="highlight plaintext"><code>E: Failed to fetch https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/pool/trusty/main/g/gitlab-ce/gitlab-ce_8.1.0-ce.0_amd64.deb  Hash Sum mismatch
+</code></pre>
+<p>Please run the following to fix this:</p>
+<pre class="highlight plaintext"><code>sudo rm -rf /var/lib/apt/lists/partial/*
+sudo apt-get update
+sudo apt-get clean
+</code></pre>
+<p>See <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/issues/628#note_1824330">Joe Damato&#39;s from Packagecloud comment</a> and <a href="http://blog.packagecloud.io/eng/2016/03/21/apt-hash-sum-mismatch/">his blog article</a> for more context.</p>
+
+<p>Another workaround is to download the package manually by selecting the correct package from <a href="https://packages.gitlab.com/gitlab/gitlab-ce">packages.gitlab.com CE</a> <a href="https://packages.gitlab.com/gitlab/gitlab-ee">or EE repository</a>:</p>
+<pre class="highlight plaintext"><code>curl -LJO https://packages.gitlab.com/gitlab/gitlab-ce/packages/ubuntu/trusty/gitlab-ce_8.1.0-ce.0_amd64.deb/download
+dpkg -i gitlab-ce_8.1.0-ce.0_amd64.deb
+</code></pre><h3 id='gitlab-is-unreachable-in-my-browser'>GitLab is unreachable in my browser <a class='anchor' href='README.html#gitlab-is-unreachable-in-my-browser' title='Permalink'></a></h3>
+<p>Try <a href="README.html#configuring-the-external-url-for-gitlab">specifying</a> an <code>external_url</code> in
+<code>/etc/gitlab/gitlab.rb</code>. Also check your firewall settings; port 80 (HTTP) or
+443 (HTTPS) might be closed on your GitLab server.</p>
+<h3 id='gitlab-ci-shows-gitlab-login-page'>GitLab CI shows GitLab login page <a class='anchor' href='README.html#gitlab-ci-shows-gitlab-login-page' title='Permalink'></a></h3>
+<p>This section is deprecated for GitLab 8.0 and later versions.</p>
+<h3 id='emails-are-not-being-delivered'>Emails are not being delivered <a class='anchor' href='README.html#emails-are-not-being-delivered' title='Permalink'></a></h3>
+<p>To test email delivery you can create a new GitLab account for an email that is
+not used in your GitLab instance yet.</p>
+
+<p>If necessary, you can modify the &#39;From&#39; field of the emails sent by GitLab with
+the following setting in <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight plaintext"><code>gitlab_rails['gitlab_email_from'] = 'gitlab@example.com'
+</code></pre>
+<p>Run <code>sudo gitlab-ctl reconfigure</code> for the change to take effect.</p>
+<h3 id='reconfigure-freezes-at-ruby_block-supervise_redis_sleep-action-run'>Reconfigure freezes at <code>ruby_block[supervise_redis_sleep] action run</code> <a class='anchor' href='README.html#reconfigure-freezes-at-ruby_block-supervise_redis_sleep-action-run' title='Permalink'></a></h3>
+<p>If you uninstall and reinstall GitLab, it&#39;s possible that the process
+supervisor (runit) may not be in the proper state if it continued to run.
+To troubleshoot this error:</p>
+
+<ol>
+<li><p>First check that the runit directory exists:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>ls -al /opt/gitlab/sv/redis/supervise
+</code></pre></li>
+<li><p>If you see the message, continue to the next step:</p>
+<pre class="highlight plaintext"><code>ls: cannot access /opt/gitlab/sv/redis/supervise: No such file or directory
+</code></pre></li>
+<li><p>Restart the runit server.<br>
+Using upstart (Ubuntu &lt;= 14.04):</p>
+<pre class="highlight plaintext"><code>$ sudo initctl restart gitlab-runsvdir
+</code></pre>
+<p>Using systemd (CentOS, Ubuntu &gt;= 16.04):</p>
+<pre class="highlight plaintext"><code>$ systemctl restart gitlab-runsvdir.service
+</code></pre></li>
+</ol>
+
+<p><em>Note</em> This should be resolved starting from 7.13 omnibus-gitlab packages.</p>
+
+<p>During the first <code>gitlab-ctl reconfigure</code> run, omnibus-gitlab needs to figure
+out if your Linux server is using SysV Init, Upstart or Systemd so that it can
+install and activate the <code>gitlab-runsvdir</code> service. If <code>gitlab-ctl reconfigure</code>
+makes the wrong decision, it will later hang at
+<code>ruby_block[supervise_redis_sleep] action run</code>.</p>
+
+<p>The choice of init system is currently made in <a href="https://doc.gitlab.cc/omnibus/common_installation_problems/files/gitlab-cookbooks/runit/recipes/default.rb">the embedded Runit
+cookbook</a> by essentially
+looking at the output of <code>uname -a</code>, <code>/etc/issue</code> and others. This mechanism
+can make the wrong decision in situations such as:</p>
+
+<ul>
+<li>your OS release looks like &#39;Debian 7&#39; but it is really some variant which
+uses Upstart instead of SysV Init;</li>
+<li>your OS release is unknown to the Runit cookbook (e.g. ClearOS 6.5).</li>
+</ul>
+
+<p>Solving problems like this would require changes to the embedded Runit
+cookbook; Merge Requests are welcome. Until this problem is fixed, you can work
+around it by manually performing the appropriate installation steps for your
+particular init system. For instance, to manually set up <code>gitlab-runsvdir</code> with
+Upstart, you can do the following:</p>
+<pre class="highlight plaintext"><code>sudo cp /opt/gitlab/embedded/cookbooks/runit/files/default/gitlab-runsvdir.conf /etc/init/
+sudo initctl start gitlab-runsvdir
+sudo gitlab-ctl reconfigure # Resume gitlab-ctl reconfigure
+</code></pre><h3 id='tcp-ports-for-gitlab-services-are-already-taken'>TCP ports for GitLab services are already taken <a class='anchor' href='README.html#tcp-ports-for-gitlab-services-are-already-taken' title='Permalink'></a></h3>
+<p>By default, Unicorn listens at TCP address 127.0.0.1:8080. Nginx
+listens on port 80 (HTTP) and/or 443 (HTTPS) on all interfaces.</p>
+
+<p>The ports for Redis, PostgreSQL and Unicorn can be overriden in
+<code>/etc/gitlab/gitlab.rb</code> as follows:</p>
+<pre class="highlight ruby"><code><span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1234</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2345</span>
+<span class="n">unicorn</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3456</span>
+</code></pre>
+<p>For Nginx port changes please see
+<a href="https://doc.gitlab.cc/omnibus/common_installation_problems/doc/settings/nginx.html">doc/settings/nginx.md</a>.</p>
+<h3 id='git-user-does-not-have-ssh-access'>Git user does not have SSH access <a class='anchor' href='README.html#git-user-does-not-have-ssh-access' title='Permalink'></a></h3><h4 id='selinux-enabled-systems'>SELinux-enabled systems <a class='anchor' href='README.html#selinux-enabled-systems' title='Permalink'></a></h4>
+<p>On SELinux-enabled systems the git user&#39;s <code>.ssh</code> directory or its contents can
+get their security context messed up. You can fix this by running <code>sudo
+gitlab-ctl reconfigure</code>, which will run a <code>chcon --recursive</code> command on
+<code>/var/opt/gitlab/.ssh</code>.</p>
+<h4 id='all-systems'>All systems <a class='anchor' href='README.html#all-systems' title='Permalink'></a></h4>
+<p>The git user is created, by default, with a locked password, shown by <code>&#39;!&#39;</code> in
+/etc/shadow. Unless &quot;UsePam yes&quot; is enabled, the OpenSSH daemon will prevent the
+git user from authenticating even with ssh keys. An alternative secure solution
+is to unlock the password by replacing <code>&#39;!&#39;</code> with <code>&#39;*&#39;</code> in <code>/etc/shadow</code>. The git
+user will still be unable to change the password because it runs in a restricted
+shell and the <code>passwd</code> command for non-superusers requires entering the current
+password prior to a new password. The user cannot enter a password that will
+match <code>&#39;*&#39;</code> and therefore the account remains password-less.</p>
+<h3 id='postgres-error-39-fatal-could-not-create-shared-memory-segment-cannot-allocate-memory-39'>Postgres error &#39;FATAL:  could not create shared memory segment: Cannot allocate memory&#39; <a class='anchor' href='README.html#postgres-error-39-fatal-could-not-create-shared-memory-segment-cannot-allocate-memory-39' title='Permalink'></a></h3>
+<p>The packaged Postgres instance will try to allocate 25% of total memory as
+shared memory. On some Linux (virtual) servers, there is less shared memory
+available, which will prevent Postgres from starting. In
+<code>/var/log/gitlab/postgresql/current</code>:</p>
+<pre class="highlight plaintext"><code>  1885  2014-08-08_16:28:43.71000 FATAL:  could not create shared memory segment: Cannot allocate memory
+  1886  2014-08-08_16:28:43.71002 DETAIL:  Failed system call was shmget(key=5432001, size=1126563840, 03600).
+  1887  2014-08-08_16:28:43.71003 HINT:  This error usually means that PostgreSQL's request for a shared memory segment exceeded available memory or swap space, or exceeded your kernel's SHMALL parameter.  You can either reduce the request size or reconfigure the kernel with larger SHMALL.  To reduce the request size (currently 1126563840 bytes), reduce PostgreSQL's shared memory usage, perhaps by reducing shared_buffers or max_connections.
+  1888  2014-08-08_16:28:43.71004       The PostgreSQL documentation contains more information about shared memory configuration.
+</code></pre>
+<p>You can manually lower the amount of shared memory Postgres tries to allocate
+in <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">postgresql</span><span class="p">[</span><span class="s1">'shared_buffers'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"100MB"</span>
+</code></pre>
+<p>Run <code>sudo gitlab-ctl reconfigure</code> for the change to take effect.</p>
+<h3 id='reconfigure-complains-about-the-glibc-version'>Reconfigure complains about the GLIBC version <a class='anchor' href='README.html#reconfigure-complains-about-the-glibc-version' title='Permalink'></a></h3><pre class="highlight plaintext"><code>$ gitlab-ctl reconfigure
+/opt/gitlab/embedded/bin/ruby: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by /opt/gitlab/embedded/lib/libruby.so.2.1)
+/opt/gitlab/embedded/bin/ruby: /lib64/libc.so.6: version `GLIBC_2.17' not found (required by /opt/gitlab/embedded/lib/libruby.so.2.1)
+</code></pre>
+<p>This can happen if the omnibus package you installed was built for a different
+OS release than the one on your server. Double-check that you downloaded and
+installed the correct omnibus-gitlab package for your operating system.</p>
+<h3 id='reconfigure-fails-to-create-the-git-user'>Reconfigure fails to create the git user <a class='anchor' href='README.html#reconfigure-fails-to-create-the-git-user' title='Permalink'></a></h3>
+<p>This can happen if you run <code>sudo gitlab-ctl reconfigure</code> as the git user.
+Switch to another user.</p>
+
+<p>More importantly: do not give sudo rights to the git user or to any of the
+other users used by omnibus-gitlab. Bestowing unnecessary privileges on a
+system user weakens the security of your system.</p>
+<h3 id='failed-to-modify-kernel-parameters-with-sysctl'>Failed to modify kernel parameters with sysctl <a class='anchor' href='README.html#failed-to-modify-kernel-parameters-with-sysctl' title='Permalink'></a></h3>
+<p>If sysctl cannot modify the kernel parameters you could possibly get an error with the following stack trace:</p>
+<pre class="highlight plaintext"><code> * execute[sysctl] action run
+================================================================================
+Error executing action `run` on resource 'execute[sysctl]'
+================================================================================
+
+
+Mixlib::ShellOut::ShellCommandFailed
+------------------------------------
+Expected process to exit with [0], but received '255'
+---- Begin output of /sbin/sysctl -p /etc/sysctl.conf ----
+
+</code></pre>
+<p>This is unlikely to happen with non virtualized machines but on a VPS with virtualization like openVZ, container might not have the required module enabled
+or container doesn&#39;t have access to kernel parameters.</p>
+
+<p>Try enabling the module on which sysctl errored out, on how to enable the module see example <a href="http://serverfault.com/questions/477718/sysctl-p-etc-sysctl-conf-returns-error">here</a>.</p>
+
+<p>There is a reported workaround described in <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/issues/361">this issue</a> which requires editing the GitLab&#39; internal recipe by supplying the switch which will ignore failures. Ignoring errors can have unexpected side effects on performance of your GitLab server so it is not recommended to do so.</p>
+<h3 id='i-am-unable-to-install-omnibus-gitlab-without-root-access'>I am unable to install omnibus-gitlab without root access <a class='anchor' href='README.html#i-am-unable-to-install-omnibus-gitlab-without-root-access' title='Permalink'></a></h3>
+<p>Occasionally people ask if they can install GitLab without root access.
+This is problematic for several reasons.</p>
+<h4 id='installing-the-deb-or-rpm'>Installing the .deb or .rpm <a class='anchor' href='README.html#installing-the-deb-or-rpm' title='Permalink'></a></h4>
+<p>To our knowledge there is no clean way to install Debian or RPM
+packages as a non-privileged user. You cannot install omnibus-gitlab
+RPM&#39;s because the Omnibus build process does not create source RPM&#39;s.</p>
+<h4 id='hassle-free-hosting-on-port-80-and-443'>Hassle-free hosting on port 80 and 443 <a class='anchor' href='README.html#hassle-free-hosting-on-port-80-and-443' title='Permalink'></a></h4>
+<p>The most common way to deploy GitLab is to have a web server
+(NGINX/Apache) running on the same server as GitLab, with the web
+server listening on a privileged (below-1024) TCP port. In
+omnibus-gitlab we provide this convenience by bundling an
+automatically configured NGINX service that needs to run its master
+process as root to open ports 80 and 443.</p>
+
+<p>If this is problematic, administrators installing GitLab can disable
+the bundled NGINX service, but this puts the burden on them to keep
+the NGINX configuration in tune with GitLab during application
+updates.</p>
+<h4 id='isolation-between-omnibus-services'>Isolation between Omnibus services <a class='anchor' href='README.html#isolation-between-omnibus-services' title='Permalink'></a></h4>
+<p>Bundled services in omnibus-gitlab (GitLab itself, NGINX, Postgres,
+Redis, Mattermost) are isolated from each other using Unix user
+accounts. Creating and managing these user accounts requires root
+access. By default, omnibus-gitlab will create the required Unix
+accounts during &#39;gitlab-ctl reconfigure&#39; but that behavior can be
+<a href="https://docs.gitlab.com/omnibus/settings/configuration.html#disable-user-and-group-account-management">disabled</a>.</p>
+
+<p>In principle omnibus-gitlab could do with only 2 user accounts (one
+for GitLab and one for Mattermost) if we give each application its own
+Runit (runsvdir), Postgres and Redis process. But this would be a
+major change in the &#39;gitlab-ctl reconfigure&#39; Chef code and it would
+probably create major upgrade pain for all existing omnibus-gitlab
+installations. (We would probably have to rearrange the directory
+structure under /var/opt/gitlab.)</p>
+<h4 id='tweaking-the-operating-system-for-better-performance'>Tweaking the operating system for better performance <a class='anchor' href='README.html#tweaking-the-operating-system-for-better-performance' title='Permalink'></a></h4>
+<p>During &#39;gitlab-ctl reconfigure&#39; we set and install several sysctl
+tweaks to improve Postgres performance and increase connection limits.
+This can only be done with root access.</p>
+<h3 id='gitlab-rake-assets-precompile-fails-with-39-permission-denied-39'>gitlab-rake assets:precompile fails with &#39;Permission denied&#39; <a class='anchor' href='README.html#gitlab-rake-assets-precompile-fails-with-39-permission-denied-39' title='Permalink'></a></h3>
+<p>Some users report that running <code>gitlab-rake assets:precompile</code> does not work
+with the omnibus packages. The short answer to this is: do not run that
+command, it is only for GitLab installations from source.</p>
+
+<p>The GitLab web interface uses CSS and JavaScript files, called &#39;assets&#39; in Ruby
+on Rails-speak. In the <a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/app/assets">upstream GitLab
+repository</a>
+these files are stored in a developer-friendly way: easy to read and edit. When
+you are a normal user of GitLab, you do not want these files to be in the
+developer friendly format however because that makes GitLab slow. This is why
+part of the GitLab setup process is to convert the assets from a
+developer-friendly format to an end-user friendly (compact, fast) format; that
+is what the <code>rake assets:precompile</code> script is for.</p>
+
+<p>When you install GitLab from source (which was the only way to do it before we
+had omnibus packages) you need to convert the assets on your GitLab server
+every time you update GitLab. People used to overlook this step and there are
+still posts, comments and mails out there on the internet where users recommend
+each other to run <code>rake assets:precompile</code>. With the omnibus packages things
+are different: when we build the package <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/1cfe925e0c015df7722bb85eddc0b4a3b59c1211/config/software/gitlab-rails.rb#L74">we convert the assets for
+you</a>.
+When you install GitLab with an omnibus package, the converted assets are
+already there! That is why you do not need to run <code>rake assets:precompile</code> when
+you install GitLab from a package.</p>
+
+<p>When <code>gitlab-rake assets:precompile</code> fails with a permission error it fails for
+a good reason from a security standpoint: the fact that the assets cannot
+easily be rewritten makes it harder for an attacker to use your GitLab server
+to serve evil JavaScript code to the visitors of your GitLab server.</p>
+
+<p>If you want to run GitLab with custom JavaScript or CSS code you are probably
+better off running GitLab from source, or building your own packages.</p>
+
+<p>If you really know what you are doing,
+you can execute <code>gitlab-rake assets:precompile</code> like this</p>
+<pre class="highlight shell"><code>sudo <span class="nv">NO_PRIVILEGE_DROP</span><span class="o">=</span><span class="nb">true </span><span class="nv">USE_DB</span><span class="o">=</span><span class="nb">false </span>gitlab-rake assets:clean assets:precompile
+<span class="c"># user and path might be different if you changed the defaults of</span>
+<span class="c"># user['username'], user['group'] and gitlab_rails['dir'] in gitlab.rb</span>
+sudo chown -R git:git /var/opt/gitlab/gitlab-rails/tmp/cache
+</code></pre><h3 id='39-short-read-or-oom-loading-db-39-error'>&#39;Short read or OOM loading DB&#39; error <a class='anchor' href='README.html#39-short-read-or-oom-loading-db-39-error' title='Permalink'></a></h3>
+<p>Try cleaning the old redis session by following the <a href="https://docs.gitlab.com/ce/operations/cleaning_up_redis_sessions.html">documentation here.</a></p>
+<h3 id='apt-error-39-the-requested-url-returned-error-403-39'>Apt error &#39;The requested URL returned error: 403&#39; <a class='anchor' href='README.html#apt-error-39-the-requested-url-returned-error-403-39' title='Permalink'></a></h3>
+<p>When trying to install GitLab using the apt repo if you receive an error similar to:</p>
+<pre class="highlight shell"><code>W: Failed to fetch https://packages.gitlab.com/gitlab/gitlab-ce/DISTRO/dists/CODENAME/main/source/Sources  The requested URL returned error: 403
+</code></pre>
+<p>check if there is a repository cacher in front of your server, like for example <code>apt-cacher-ng</code>.</p>
+
+<p>Add the following line to apt-cacher-ng config(eg. in  <code>/etc/apt-cacher-ng/acng.conf</code>):</p>
+<pre class="highlight shell"><code>PassThroughPattern: <span class="o">(</span>packages<span class="se">\.</span>gitlab<span class="se">\.</span>com|packages-gitlab-com<span class="se">\.</span>s3<span class="se">\.</span>amazonaws<span class="se">\.</span>com<span class="o">)</span>
+</code></pre>
+<p>Read more about <code>apt-cacher-ng</code> and the reasons why this change is needed <a href="http://blog.packagecloud.io/eng/2015/05/05/using-apt-cacher-ng-with-ssl-tls/">on the packagecloud blog</a>.</p>
+<h3 id='using-self-signed-certificate-or-custom-certificate-authorities'>Using self signed certificate or custom certificate authorities <a class='anchor' href='README.html#using-self-signed-certificate-or-custom-certificate-authorities' title='Permalink'></a></h3>
+<p>Omnibus-gitlab is shipped with the official <a href="http://www.cacert.org/">CAcert.org</a> collection of trusted root certification authorities which are used to verify certificate authenticity.</p>
+
+<p>If you are installing GitLab in an isolated network with custom certificate authorities or using self-signed certificate make sure that the certificate can be reached by GitLab. Not doing so will cause errors like:</p>
+<pre class="highlight shell"><code>Faraday::SSLError <span class="o">(</span>SSL_connect <span class="nv">returned</span><span class="o">=</span>1 <span class="nv">errno</span><span class="o">=</span>0 <span class="nv">state</span><span class="o">=</span>SSLv3 <span class="nb">read </span>server certificate B: certificate verify failed<span class="o">)</span>
+</code></pre>
+<p>when GitLab tries to connect with the internal services like gitlab-shell or GitLab CI.</p>
+<h4 id='install-custom-certificate-authorities'>Install custom certificate authorities: <a class='anchor' href='README.html#install-custom-certificate-authorities' title='Permalink'></a></h4>
+<p>Starting from GitLab version <em>8.9</em>, the omnibus-gitlab package will handle
+custom certificates.</p>
+
+<ol>
+<li>Place your custom (Root CA) or a self-signed certificate in the
+<code>/etc/gitlab/trusted-certs/</code> directory;
+For example, <code>/etc/gitlab/trusted-certs/customcacert.pem</code>.
+<strong>Note</strong>: The certificate must be either <strong>DER- or PEM-encoded</strong>.</li>
+<li>Run <code>gitlab-ctl reconfigure</code>.</li>
+</ol>
+
+<p>This will create a symlink in <code>/opt/gitlab/embedded/ssl/certs/</code> pointing to
+your custom certificate. The symlink name is the subject hash.
+<strong>Warning</strong> Any broken symlink found in <code>/opt/gitlab/embedded/ssl/certs</code> will be
+removed and any existing symlink will not be changed.
+If the directory contains valid certificates, they will be automatically moved
+to <code>/etc/gitlab/trusted-certs</code>. If the directory contains any other files,
+reconfigure run will fail with:</p>
+<pre class="highlight plaintext"><code>ERROR: Not a certificate: /opt/gitlab/embedded/ssl/certs/FILE -&gt; /opt/gitlab/embedded/ssl/certs/FILE
+</code></pre>
+<p>Move the files that are not certificates out of <code>/opt/gitlab/embedded/ssl/certs</code>
+and run reconfigure once more.</p>
+
+<p><strong>WARNING</strong> In GitLab version 8.9.0, 8.9.1 and 8.9.2, the directory that was used
+to hold the custom certificates was mistakenly set to <code>/etc/gitlab/ssl/trusted-certs/</code>.
+If you <strong>do not</strong> have any files inside of this directory, it is safe to remove it.
+If you do have custom certificates in there, move them to <code>/etc/gitlab/trusted-certs/</code>
+and run <code>sudo gitlab-ctl reconfigure</code>.</p>
+<h4 id='enable-self-signed-certificates'>Enable self-signed certificates <a class='anchor' href='README.html#enable-self-signed-certificates' title='Permalink'></a></h4>
+<p>If you are using self-signed certificate do not forget to set <code>self_signed_cert: true</code> for gitlab-shell, see <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template">gitlab.rb.template</a> for more details.</p>
+<h3 id='error-executing-action-create-on-resource-cron-gitlab-ci-schedule-builds'>Error executing action create on resource cron[gitlab-ci schedule builds] <a class='anchor' href='README.html#error-executing-action-create-on-resource-cron-gitlab-ci-schedule-builds' title='Permalink'></a></h3>
+<ol>
+<li>Double check if you have cron package installed: For Debian like systems <code>sudo apt-get install cron</code> or RHEL-like systems <code>sudo yum install cronie</code></li>
+<li>Check if user <code>gitlab-ci</code> is in <code>/etc/cron.deny</code> and if yes remove it. You can add the <code>gitlab-ci</code> user to <code>/etc/cron.allow</code>`.</li>
+<li>Check if you have PAM enabled and if gitlab-ci user is allowed to access crontab. If yes, try changing your <code>/etc/security/access.conf</code> to allow the user access to the resource, for example <code>+:gitlab-ci:ALL</code>.</li>
+</ol>
+<h3 id='error-proxyroundtripper-xxx-failed-with-quot-net-http-timeout-awaiting-response-headers-quot'>error: proxyRoundTripper: XXX failed with: &quot;net/http: timeout awaiting response headers&quot; <a class='anchor' href='README.html#error-proxyroundtripper-xxx-failed-with-quot-net-http-timeout-awaiting-response-headers-quot' title='Permalink'></a></h3>
+<p>Starting with version 8.3, gitlab-workorse is the default router for any requests
+going to GitLab.</p>
+
+<p>If gitlab-workhorse doesn&#39;t receive an answer from
+GitLab within 1 minute (default), it will serve a 502 page.</p>
+
+<p>There are various reasons why the request might timeout, perhaps user
+was loading a very large diff or similar.</p>
+
+<p>You can increase the default timeout value by setting the value in <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_workhorse</span><span class="p">[</span><span class="s1">'proxy_headers_timeout'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"2m0s"</span>
+</code></pre>
+<p>Save the file and <a href="https://docs.gitlab.com/ce/administration/restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p>
+<h3 id='the-change-you-wanted-was-rejected'>The change you wanted was rejected <a class='anchor' href='README.html#the-change-you-wanted-was-rejected' title='Permalink'></a></h3>
+<p>Most likely you have GitLab setup in an environment that has proxy in front
+of GitLab and the proxy headers set in package by default are incorrect
+for your environment.</p>
+
+<p>See <a href="https://doc.gitlab.cc/omnibus/common_installation_problems/doc/settings/nginx.html">Change the default proxy headers section of nginx doc</a> for details on
+how to override the default headers.</p>
+<h3 id='can-39-t-verify-csrf-token-authenticity-completed-422-unprocessable'>Can&#39;t verify CSRF token authenticity Completed 422 Unprocessable <a class='anchor' href='README.html#can-39-t-verify-csrf-token-authenticity-completed-422-unprocessable' title='Permalink'></a></h3>
+<p>Most likely you have GitLab setup in an environment that has proxy in front
+of GitLab and the proxy headers set in package by default are incorrect
+for your environment.</p>
+
+<p>See <a href="https://doc.gitlab.cc/omnibus/common_installation_problems/doc/settings/nginx.html">Change the default proxy headers section of nginx doc</a> for details on
+how to override the default headers.</p>
+<h3 id='extension-missing-pg_trgm'>Extension missing pg_trgm <a class='anchor' href='README.html#extension-missing-pg_trgm' title='Permalink'></a></h3>
+<p>Starting from GitLab 8.6, <a href="https://docs.gitlab.com/ce/install/requirements.html#postgresql-requirements">GitLab requires</a>
+the PostgreSQL extension <code>pg_trgm</code>.
+If you are using omnibus-gitlab package with the bundled database, the extension
+should be automatically enabled when you upgrade.</p>
+
+<p>If you however, are using an external (non-packaged) database, you will need to
+enable the extension manually. The reason for this is that omnibus-gitlab
+package with external database has no way of confirming if the extension exists,
+and it also doesn&#39;t have a way of enabling the extension.</p>
+
+<p>To fix this issue, you&#39;ll need to first install the <code>pg_trgm</code> extension.
+The extension is located in the <code>postgresql-contrib</code> package. For Debian:</p>
+<pre class="highlight plaintext"><code>sudo apt-get install postgresql-contrib
+</code></pre>
+<p>Once the extension is installed, access the <code>psql</code> as superuser and enable the
+extension.</p>
+
+<ol>
+<li><p>Access <code>psql</code> as superuser:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-psql -d gitlabhq_production
+</code></pre></li>
+<li><p>Enable the extension:</p>
+<pre class="highlight plaintext"><code>CREATE EXTENSION pg_trgm;
+\q
+</code></pre></li>
+<li><p>Now run migrations again:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake db:migrate
+</code></pre>
+<hr></li>
+</ol>
+
+<p>If using Docker, you first need to access your container, then run the commands
+above, and finally restart the container.</p>
+
+<ol>
+<li><p>Access the container:</p>
+<pre class="highlight plaintext"><code>docker exec -it gitlab bash
+</code></pre></li>
+<li><p>Run the commands above</p></li>
+<li><p>Restart the container:</p>
+<pre class="highlight plaintext"><code>docker restart gitlab
+</code></pre></li>
+</ol>
+<h3 id='errno-enomem-cannot-allocate-memory-during-backup-or-upgrade'>Errno::ENOMEM: Cannot allocate memory during backup or upgrade <a class='anchor' href='README.html#errno-enomem-cannot-allocate-memory-during-backup-or-upgrade' title='Permalink'></a></h3>
+<p><a href="https://docs.gitlab.com/ce/install/requirements.html#memory">GitLab requires</a>
+2GB of available memory to run without errors. Having 2GB of memory installed may
+not be enough depending on the resource usage of other processes on your server.
+If GitLab runs fine when not upgrading or running a backup, then adding more swap
+should solve your problem. If you see the server using swap during normal usage,
+you can add more RAM to improve performance.</p>
+<h3 id='nginx-error-39-could-not-build-server_names_hash-you-should-increase-server_names_hash_bucket_size-39'>NGINX error: &#39;could not build server_names_hash, you should increase server_names_hash_bucket_size&#39; <a class='anchor' href='README.html#nginx-error-39-could-not-build-server_names_hash-you-should-increase-server_names_hash_bucket_size-39' title='Permalink'></a></h3>
+<p>If your external url for GitLab is longer than the default bucket size (64 bytes),
+NGINX may stop working and show this error in the the logs. To allow larger server
+names, double the bucket size in <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">nginx</span><span class="p">[</span><span class="s1">'server_names_hash_bucket_size'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">128</span>
+</code></pre>
+<p>Run <code>sudo gitlab-ctl reconfigure</code> for the change to take effect.</p>
+<h3 id='reconfigure-fails-due-to-quot-39-root-39-cannot-chown-quot-with-nfs-root_squash'>Reconfigure fails due to &quot;&#39;root&#39; cannot chown&quot; with NFS root_squash <a class='anchor' href='README.html#reconfigure-fails-due-to-quot-39-root-39-cannot-chown-quot-with-nfs-root_squash' title='Permalink'></a></h3><pre class="highlight plaintext"><code>$ gitlab-ctl reconfigure
+    ================================================================================
+    Error executing action `run` on resource 'ruby_block[directory resource: /gitlab-data/git-data]'
+    ================================================================================
+
+    Errno::EPERM
+    ------------
+    'root' cannot chown /gitlab-data/git-data. If using NFS mounts you will need to re-export them in 'no_root_squash' mode and try again.
+    Operation not permitted @ chown_internal - /gitlab-data/git-data
+</code></pre>
+<p>This can happen if you have directories mounted using NFS and configured in <code>root_squash</code>
+mode. Reconfigure is not able to properly set the ownership of your directories. You
+will need to switch to using <code>no_root_squash</code> in your NFS exports on the NFS server, or
+<a href="https://doc.gitlab.cc/omnibus/common_installation_problems/doc/settings/configuration.html#disable-storage-directories-management">disable storage directory management</a>
+ and manage the permissions yourself.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/common_installation_problems/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

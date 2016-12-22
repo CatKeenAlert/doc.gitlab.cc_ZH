@@ -1,0 +1,732 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Documentation styleguide - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Documentation styleguide</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="doc_styleguide.html#documentation-styleguide">Documentation styleguide</a>
+<ul>
+<li>
+<a href="doc_styleguide.html#location-and-naming-of-documents">Location and naming of documents</a>
+</li>
+<li>
+<a href="doc_styleguide.html#text">Text</a>
+</li>
+<li>
+<a href="doc_styleguide.html#formatting">Formatting</a>
+</li>
+<li>
+<a href="doc_styleguide.html#headings">Headings</a>
+</li>
+<li>
+<a href="doc_styleguide.html#links">Links</a>
+</li>
+<li>
+<a href="doc_styleguide.html#images">Images</a>
+</li>
+<li>
+<a href="doc_styleguide.html#notes">Notes</a>
+</li>
+<li>
+<a href="doc_styleguide.html#new-features">New features</a>
+</li>
+<li>
+<a href="doc_styleguide.html#references">References</a>
+</li>
+<li>
+<a href="doc_styleguide.html#installation-guide">Installation guide</a>
+</li>
+<li>
+<a href="doc_styleguide.html#changing-document-location">Changing document location</a>
+</li>
+<li>
+<a href="doc_styleguide.html#configuration-documentation-for-source-and-omnibus-installations">Configuration documentation for source and Omnibus installations</a>
+</li>
+<li>
+<a href="doc_styleguide.html#fake-tokens">Fake tokens</a>
+</li>
+<li>
+<a href="doc_styleguide.html#api">API</a>
+<ul>
+<li>
+<a href="doc_styleguide.html#method-description">Method description</a>
+</li>
+<li>
+<a href="doc_styleguide.html#curl-commands">cURL commands</a>
+</li>
+<li>
+<a href="doc_styleguide.html#curl-examples">cURL Examples</a>
+<ul>
+<li>
+<a href="doc_styleguide.html#simple-curl-command">Simple cURL command</a>
+</li>
+<li>
+<a href="doc_styleguide.html#curl-example-with-parameters-passed-in-the-url">cURL example with parameters passed in the URL</a>
+</li>
+<li>
+<a href="doc_styleguide.html#post-data-using-curl-s-data">Post data using cURL's --data</a>
+</li>
+<li>
+<a href="doc_styleguide.html#post-data-using-json-content">Post data using JSON content</a>
+</li>
+<li>
+<a href="doc_styleguide.html#post-data-using-form-data">Post data using form-data</a>
+</li>
+<li>
+<a href="doc_styleguide.html#escape-special-characters">Escape special characters</a>
+</li>
+<li>
+<a href="doc_styleguide.html#pass-arrays-to-api-calls">Pass arrays to API calls</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='documentation-styleguide'>Documentation styleguide <a class='anchor' href='doc_styleguide.html#documentation-styleguide' title='Permalink'></a></h1>
+<p>This styleguide recommends best practices to improve documentation and to keep
+it organized and easy to find.</p>
+<h2 id='location-and-naming-of-documents'>Location and naming of documents <a class='anchor' href='doc_styleguide.html#location-and-naming-of-documents' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+These guidelines derive from the discussion taken place in issue <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/3349" title="Documentation restructure">#3349</a>.</p>
+</blockquote>
+
+<p>The documentation hierarchy can be vastly improved by providing a better layout
+and organization of directories.</p>
+
+<p>Having a structured document layout, we will be able to have meaningful URLs
+like <code>docs.gitlab.com/user/project/merge_requests.html</code>. With this pattern,
+you can immediately tell that you are navigating a user related documentation
+and is about the project and its merge requests.</p>
+
+<p>The table below shows what kind of documentation goes where.</p>
+
+<table><thead>
+<tr>
+<th>Directory</th>
+<th>What belongs here</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>doc/user/</code></td>
+<td>User related documentation. Anything that can be done within the GitLab UI goes here including <code>/admin</code>.</td>
+</tr>
+<tr>
+<td><code>doc/administration/</code></td>
+<td>Documentation that requires the user to have access to the server where GitLab is installed. The admin settings that can be accessed via GitLab&#39;s interface go under <code>doc/user/admin_area/</code>.</td>
+</tr>
+<tr>
+<td><code>doc/api/</code></td>
+<td>API related documentation.</td>
+</tr>
+<tr>
+<td><code>doc/development/</code></td>
+<td>Documentation related to the development of GitLab. Any styleguides should go here.</td>
+</tr>
+<tr>
+<td><code>doc/legal/</code></td>
+<td>Legal documents about contributing to GitLab.</td>
+</tr>
+<tr>
+<td><code>doc/install/</code></td>
+<td>Probably the most visited directory, since <code>installation.md</code> is there. Ideally this should go under <code>doc/administration/</code>, but it&#39;s best to leave it as-is in order to avoid confusion (still debated though).</td>
+</tr>
+<tr>
+<td><code>doc/update/</code></td>
+<td>Same with <code>doc/install/</code>. Should be under <code>administration/</code>, but this is a well known location, better leave as-is, at least for now.</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<p><strong>General rules:</strong></p>
+
+<ol>
+<li>The correct naming and location of a new document, is a combination
+of the relative URL of the document in question and the GitLab Map design
+that is used for UX purposes (<a href="https://gitlab.com/gitlab-org/gitlab-design/blob/d8d39f4a87b90fb9ae89ca12dc565347b4900d5e/production/resources/gitlab-map.graffle">source</a>, <a href="https://gitlab.com/gitlab-org/gitlab-design/raw/master/production/resources/gitlab-map.png">image</a>).</li>
+<li>When creating a new document and it has more than one word in its name,
+make sure to use underscores instead of spaces or dashes (<code>-</code>). For example,
+a proper naming would be <code>import_projects_from_github.md</code>. The same rule
+applies to images.</li>
+<li>There are four main directories, <code>user</code>, <code>administration</code>, <code>api</code> and <code>development</code>.</li>
+<li>The <code>doc/user/</code> directory has five main subdirectories: <code>project/</code>, <code>group/</code>,
+<code>profile/</code>, <code>dashboard/</code> and <code>admin_area/</code>.
+
+<ol>
+<li><code>doc/user/project/</code> should contain all project related documentation.</li>
+<li><code>doc/user/group/</code> should contain all group related documentation.</li>
+<li><code>doc/user/profile/</code> should contain all profile related documentation.
+Every page you would navigate under <code>/profile</code> should have its own document,
+i.e. <code>account.md</code>, <code>applications.md</code>, <code>emails.md</code>, etc.</li>
+<li><code>doc/user/dashboard/</code> should contain all dashboard related documentation.</li>
+<li><code>doc/user/admin_area/</code> should contain all admin related documentation
+describing what can be achieved by accessing GitLab&#39;s admin interface
+(<em>not to be confused with <code>doc/administration</code> where server access is
+required</em>).
+
+<ol>
+<li>Every category under <code>/admin/application_settings</code> should have its
+own document located at <code>doc/user/admin_area/settings/</code>. For example,
+the <strong>Visibility and Access Controls</strong> category should have a document
+located at <code>doc/user/admin_area/settings/visibility_and_access_controls.md</code>.</li>
+</ol></li>
+</ol></li>
+</ol>
+
+<hr>
+
+<p>If you are unsure where a document should live, you can ping <code>@axil</code> in your
+merge request.</p>
+<h2 id='text'>Text <a class='anchor' href='doc_styleguide.html#text' title='Permalink'></a></h2>
+<ul>
+<li>Split up long lines, this makes it much easier to review and edit. Only
+double line breaks are shown as a full line break in <a href="http://docs.gitlab.com/ce/user/markdown.html#newlines" title="GitLab flavored markdown documentation">GitLab markdown</a>.
+80-100 characters is a good line length</li>
+<li>Make sure that the documentation is added in the correct directory and that
+there&#39;s a link to it somewhere useful</li>
+<li>Do not duplicate information</li>
+<li>Be brief and clear</li>
+<li>Unless there&#39;s a logical reason not to, add documents in alphabetical order</li>
+<li>Write in US English</li>
+<li>Use <a href="http://www.slate.com/articles/technology/technology/2011/01/space_invaders.html">single spaces</a> instead of double spaces</li>
+</ul>
+<h2 id='formatting'>Formatting <a class='anchor' href='doc_styleguide.html#formatting' title='Permalink'></a></h2>
+<ul>
+<li>Use dashes (<code>-</code>) for unordered lists instead of asterisks (<code>*</code>)</li>
+<li>Use the number one (<code>1</code>) for ordered lists</li>
+<li>Use underscores (<code>_</code>) to mark a word or text in italics</li>
+<li>Use double asterisks (<code>**</code>) to mark a word or text in bold</li>
+<li>When using lists, prefer not to end each item with a period. You can use
+them if there are multiple sentences, just keep the last sentence without
+a period</li>
+</ul>
+<h2 id='headings'>Headings <a class='anchor' href='doc_styleguide.html#headings' title='Permalink'></a></h2>
+<ul>
+<li>Add only one H1 title in each document, by adding <code>#</code> at the beginning of
+it (when using markdown). For subheadings, use <code>##</code>, <code>###</code> and so on</li>
+<li>Avoid putting numbers in headings. Numbers shift, hence documentation anchor
+links shift too, which eventually leads to dead links. If you think it is
+compelling to add numbers in headings, make sure to at least discuss it with
+someone in the Merge Request</li>
+<li>Avoid adding things that show ephemeral statuses. For example, if a feature is
+considered beta or experimental, put this info in a note, not in the heading.</li>
+<li>When introducing a new document, be careful for the headings to be
+grammatically and syntactically correct. It is advised to mention one or all
+of the following GitLab members for a review: <code>@axil</code>, <code>@rspeicher</code>, <code>@marcia</code>,
+<code>@SeanPackham</code>. This is to ensure that no document with wrong heading is going
+live without an audit, thus preventing dead links and redirection issues when
+corrected</li>
+<li>Leave exactly one newline after a heading</li>
+</ul>
+<h2 id='links'>Links <a class='anchor' href='doc_styleguide.html#links' title='Permalink'></a></h2>
+<ul>
+<li>If a link makes the paragraph to span across multiple lines, do not use
+the regular Markdown approach: <code>[Text](https://example.com)</code>. Instead use
+<code>[Text][identifier]</code> and at the very bottom of the document add:
+<code>[identifier]: https://example.com</code>. This is another way to create Markdown
+links which keeps the document clear and concise. Bonus points if you also
+add an alternative text: <code>[identifier]: https://example.com &quot;Alternative text&quot;</code>
+that appears when hovering your mouse on a link</li>
+</ul>
+<h2 id='images'>Images <a class='anchor' href='doc_styleguide.html#images' title='Permalink'></a></h2>
+<ul>
+<li>Place images in a separate directory named <code>img/</code> in the same directory where
+the <code>.md</code> document that you&#39;re working on is located. Always prepend their
+names with the name of the document that they will be included in. For
+example, if there is a document called <code>twitter.md</code>, then a valid image name
+could be <code>twitter_login_screen.png</code>.</li>
+<li>Images should have a specific, non-generic name that will differentiate them.</li>
+<li>Keep all file names in lower case.</li>
+<li>Consider using PNG images instead of JPEG.</li>
+</ul>
+
+<p>Inside the document:</p>
+
+<ul>
+<li>The Markdown way of using an image inside a document is:
+<code>![Proper description what the image is about](img/document_image_title.png)</code></li>
+<li>Always use a proper description for what the image is about. That way, when a
+browser fails to show the image, this text will be used as an alternative
+description</li>
+<li>If there are consecutive images with little text between them, always add
+three dashes (<code>---</code>) between the image and the text to create a horizontal
+line for better clarity</li>
+<li>If a heading is placed right after an image, always add three dashes (<code>---</code>)
+between the image and the heading</li>
+</ul>
+<h2 id='notes'>Notes <a class='anchor' href='doc_styleguide.html#notes' title='Permalink'></a></h2>
+<ul>
+<li><p>Notes should be quoted with the word <code>Note:</code> being bold. Use this form:</p>
+<pre class="highlight plaintext"><code>&gt;**Note:**
+This is something to note.
+</code></pre>
+<p>which renders to:</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+This is something to note.</p>
+</blockquote>
+
+<p>If the note spans across multiple lines it&#39;s OK to split the line.</p></li>
+</ul>
+<h2 id='new-features'>New features <a class='anchor' href='doc_styleguide.html#new-features' title='Permalink'></a></h2>
+<ul>
+<li><p>Every piece of documentation that comes with a new feature should declare the
+GitLab version that feature got introduced. Right below the heading add a
+note:</p>
+<pre class="highlight plaintext"><code>&gt; Introduced in GitLab 8.3.
+</code></pre></li>
+<li><p>If possible every feature should have a link to the MR that introduced it.
+The above note would be then transformed to:</p>
+<pre class="highlight plaintext"><code>&gt; [Introduced][ce-1242] in GitLab 8.3.
+</code></pre>
+<p>, where the <a href="doc_styleguide.html#links">link identifier</a> is named after the repository (CE) and
+the MR number.</p></li>
+<li><p>If the feature is only in GitLab Enterprise Edition, don&#39;t forget to mention
+it, like:</p>
+<pre class="highlight plaintext"><code>&gt; Introduced in GitLab Enterprise Edition 8.3.
+</code></pre>
+<p>Otherwise, leave this mention out.</p></li>
+</ul>
+<h2 id='references'>References <a class='anchor' href='doc_styleguide.html#references' title='Permalink'></a></h2>
+<ul>
+<li><p><strong>GitLab Restart:</strong>
+There are many cases that a restart/reconfigure of GitLab is required. To
+avoid duplication, link to the special document that can be found in
+<a href="../administration/restart_gitlab.html" title="GitLab restart documentation"><code>doc/administration/restart_gitlab.md</code></a>. Usually the text will
+read like:</p>
+<pre class="highlight plaintext"><code>Save the file and [reconfigure GitLab](../administration/restart_gitlab.md)
+for the changes to take effect.
+</code></pre>
+<p>If the document you are editing resides in a place other than the GitLab CE/EE
+<code>doc/</code> directory, instead of the relative link, use the full path:
+<code>http://docs.gitlab.com/ce/administration/restart_gitlab.html</code>.
+Replace <code>reconfigure</code> with <code>restart</code> where appropriate.</p></li>
+</ul>
+<h2 id='installation-guide'>Installation guide <a class='anchor' href='doc_styleguide.html#installation-guide' title='Permalink'></a></h2>
+<ul>
+<li><strong>Ruby:</strong>
+In <a href="../install/installation.html#2-ruby">step 2 of the installation guide</a>,
+we install Ruby from source. Whenever there is a new version that needs to
+be updated, remember to change it throughout the codeblock and also replace
+the sha256sum (it can be found in the <a href="https://www.ruby-lang.org/en/downloads/" title="Ruby download website">downloads page</a> of the Ruby
+website).</li>
+</ul>
+<h2 id='changing-document-location'>Changing document location <a class='anchor' href='doc_styleguide.html#changing-document-location' title='Permalink'></a></h2>
+<p>Changing a document&#39;s location is not to be taken lightly. Remember that the
+documentation is available to all installations under <code>help/</code> and not only to
+GitLab.com or <a href="http://docs.gitlab.com">http://docs.gitlab.com</a>. Make sure this is discussed with the
+Documentation team beforehand.</p>
+
+<p>If you indeed need to change a document&#39;s location, do NOT remove the old
+document, but rather put a text in it that points to the new location, like:</p>
+<pre class="highlight plaintext"><code>This document was moved to [path/to/new_doc.md](path/to/new_doc.md).
+</code></pre>
+<p>where <code>path/to/new_doc.md</code> is the relative path to the root directory <code>doc/</code>.</p>
+
+<hr>
+
+<p>For example, if you were to move <code>doc/workflow/lfs/lfs_administration.md</code> to
+<code>doc/administration/lfs.md</code>, then the steps would be:</p>
+
+<ol>
+<li>Copy <code>doc/workflow/lfs/lfs_administration.md</code> to <code>doc/administration/lfs.md</code></li>
+<li><p>Replace the contents of <code>doc/workflow/lfs/lfs_administration.md</code> with:</p>
+<pre class="highlight plaintext"><code>This document was moved to [administration/lfs.md](../../administration/lfs.md).
+</code></pre></li>
+<li><p>Find and replace any occurrences of the old location with the new one.
+A quick way to find them is to use <code>git grep</code>. First go to the root directory
+where you cloned the <code>gitlab-ce</code> repository and then do:</p>
+<pre class="highlight plaintext"><code>git grep -n "workflow/lfs/lfs_administration"
+git grep -n "lfs/lfs_administration"
+</code></pre></li>
+</ol>
+
+<p>Things to note:</p>
+
+<ul>
+<li>Since we also use inline documentation, except for the documentation itself,
+the document might also be referenced in the views of GitLab (<code>app/</code>) which will
+render when visiting <code>/help</code>, and sometimes in the testing suite (<code>spec/</code>).</li>
+<li>The above <code>git grep</code> command will search recursively in the directory you run
+it in for <code>workflow/lfs/lfs_administration</code> and <code>lfs/lfs_administration</code>
+and will print the file and the line where this file is mentioned.
+You may ask why the two greps. Since we use relative paths to link to
+documentation, sometimes it might be useful to search a path deeper.</li>
+<li>The <code>*.md</code> extension is not used when a document is linked to GitLab&#39;s
+built-in help page, that&#39;s why we omit it in <code>git grep</code>.</li>
+</ul>
+<h2 id='configuration-documentation-for-source-and-omnibus-installations'>Configuration documentation for source and Omnibus installations <a class='anchor' href='doc_styleguide.html#configuration-documentation-for-source-and-omnibus-installations' title='Permalink'></a></h2>
+<p>GitLab currently officially supports two installation methods: installations
+from source and Omnibus packages installations.</p>
+
+<p>Whenever there is a setting that is configurable for both installation methods,
+prefer to document it in the CE docs to avoid duplication.</p>
+
+<p>Configuration settings include:</p>
+
+<ul>
+<li>settings that touch configuration files in <code>config/</code></li>
+<li>NGINX settings and settings in <code>lib/support/</code> in general</li>
+</ul>
+
+<p>When there is a list of steps to perform, usually that entails editing the
+configuration file and reconfiguring/restarting GitLab. In such case, follow
+the style below as a guide:</p>
+<pre class="highlight plaintext"><code>**For Omnibus installations**
+
+1. Edit `/etc/gitlab/gitlab.rb`:
+
+    ```ruby
+    external_url "https://gitlab.example.com"
+    ```
+
+1. Save the file and [reconfigure] GitLab for the changes to take effect.
+
+---
+
+**For installations from source**
+
+1. Edit `config/gitlab.yml`:
+
+    ```yaml
+    gitlab:
+      host: "gitlab.example.com"
+    ```
+
+1. Save the file and [restart] GitLab for the changes to take effect.
+
+
+[reconfigure]: path/to/administration/gitlab_restart.md#omnibus-gitlab-reconfigure
+[restart]: path/to/administration/gitlab_restart.md#installations-from-source
+</code></pre>
+<p>In this case:</p>
+
+<ul>
+<li>before each step list the installation method is declared in bold</li>
+<li>three dashes (<code>---</code>) are used to create an horizontal line and separate the
+two methods</li>
+<li>the code blocks are indented one or more spaces under the list item to render
+correctly</li>
+<li>different highlighting languages are used for each config in the code block</li>
+<li>the <a href="doc_styleguide.html#references">references</a> guide is used for reconfigure/restart</li>
+</ul>
+<h2 id='fake-tokens'>Fake tokens <a class='anchor' href='doc_styleguide.html#fake-tokens' title='Permalink'></a></h2>
+<p>There may be times where a token is needed to demonstrate an API call using
+cURL or a secret variable used in CI. It is strongly advised not to use real
+tokens in documentation even if the probability of a token being exploited is
+low.</p>
+
+<p>You can use the following fake tokens as examples.</p>
+
+<table><thead>
+<tr>
+<th><strong>Token type</strong></th>
+<th><strong>Token value</strong></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Private user token</td>
+<td><code>9koXpg98eAheJpvBs5tK</code></td>
+</tr>
+<tr>
+<td>Personal access token</td>
+<td><code>n671WNGecHugsdEDPsyo</code></td>
+</tr>
+<tr>
+<td>Application ID</td>
+<td><code>2fcb195768c39e9a94cec2c2e32c59c0aad7a3365c10892e8116b5d83d4096b6</code></td>
+</tr>
+<tr>
+<td>Application secret</td>
+<td><code>04f294d1eaca42b8692017b426d53bbc8fe75f827734f0260710b83a556082df</code></td>
+</tr>
+<tr>
+<td>Secret CI variable</td>
+<td><code>Li8j-mLUVA3eZYjPfd_H</code></td>
+</tr>
+<tr>
+<td>Specific Runner token</td>
+<td><code>yrnZW46BrtBFqM7xDzE7dddd</code></td>
+</tr>
+<tr>
+<td>Shared Runner token</td>
+<td><code>6Vk7ZsosqQyfreAxXTZr</code></td>
+</tr>
+<tr>
+<td>Trigger token</td>
+<td><code>be20d8dcc028677c931e04f3871a9b</code></td>
+</tr>
+<tr>
+<td>Webhook secret token</td>
+<td><code>6XhDroRcYPM5by_h-HLY</code></td>
+</tr>
+<tr>
+<td>Health check token</td>
+<td><code>Tu7BgjR9qeZTEyRzGG2P</code></td>
+</tr>
+<tr>
+<td>Request profile token</td>
+<td><code>7VgpS4Ax5utVD2esNstz</code></td>
+</tr>
+</tbody></table>
+<h2 id='api'>API <a class='anchor' href='doc_styleguide.html#api' title='Permalink'></a></h2>
+<p>Here is a list of must-have items. Use them in the exact order that appears
+on this document. Further explanation is given below.</p>
+
+<ul>
+<li><p>Every method must have the REST API request. For example:</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/repository/branches
+</code></pre></li>
+<li><p>Every method must have a detailed
+<a href="doc_styleguide.html#method-description">description of the parameters</a>.</p></li>
+<li><p>Every method must have a cURL example.</p></li>
+<li><p>Every method must have a response body (in JSON format).</p></li>
+</ul>
+<h3 id='method-description'>Method description <a class='anchor' href='doc_styleguide.html#method-description' title='Permalink'></a></h3>
+<p>Use the following table headers to describe the methods. Attributes should
+always be in code blocks using backticks (`).</p>
+<pre class="highlight plaintext"><code>| Attribute | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+</code></pre>
+<p>Rendered example:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>user</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The GitLab username</td>
+</tr>
+</tbody></table>
+<h3 id='curl-commands'>cURL commands <a class='anchor' href='doc_styleguide.html#curl-commands' title='Permalink'></a></h3>
+<ul>
+<li>Use <code>https://gitlab.example.com/api/v3/</code> as an endpoint.</li>
+<li>Wherever needed use this private token: <code>9koXpg98eAheJpvBs5tK</code>.</li>
+<li>Always put the request first. <code>GET</code> is the default so you don&#39;t have to
+include it.</li>
+<li>Use double quotes to the URL when it includes additional parameters.</li>
+<li>Prefer to use examples using the private token and don&#39;t pass data of
+username and password.</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Methods</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>-H &quot;PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK&quot;</code></td>
+<td>Use this method as is, whenever authentication needed</td>
+</tr>
+<tr>
+<td><code>-X POST</code></td>
+<td>Use this method when creating new objects</td>
+</tr>
+<tr>
+<td><code>-X PUT</code></td>
+<td>Use this method when updating existing objects</td>
+</tr>
+<tr>
+<td><code>-X DELETE</code></td>
+<td>Use this method when removing existing objects</td>
+</tr>
+</tbody></table>
+<h3 id='curl-examples'>cURL Examples <a class='anchor' href='doc_styleguide.html#curl-examples' title='Permalink'></a></h3>
+<p>Below is a set of <a href="http://curl.haxx.se/" title="cURL website">cURL</a> examples that you can use in the API documentation.</p>
+<h4 id='simple-curl-command'>Simple cURL command <a class='anchor' href='doc_styleguide.html#simple-curl-command' title='Permalink'></a></h4>
+<p>Get the details of a group:</p>
+<pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/groups/gitlab-org
+</code></pre><h4 id='curl-example-with-parameters-passed-in-the-url'>cURL example with parameters passed in the URL <a class='anchor' href='doc_styleguide.html#curl-example-with-parameters-passed-in-the-url' title='Permalink'></a></h4>
+<p>Create a new project under the authenticated user&#39;s namespace:</p>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects?name=foo"</span>
+</code></pre><h4 id='post-data-using-curl-39-s-data'>Post data using cURL&#39;s --data <a class='anchor' href='doc_styleguide.html#post-data-using-curl-39-s-data' title='Permalink'></a></h4>
+<p>Instead of using <code>-X POST</code> and appending the parameters to the URI, you can use
+cURL&#39;s <code>--data</code> option. The example below will create a new project <code>foo</code> under
+the authenticated user&#39;s namespace.</p>
+<pre class="highlight shell"><code>curl --data <span class="s2">"name=foo"</span> --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects"</span>
+</code></pre><h4 id='post-data-using-json-content'>Post data using JSON content <a class='anchor' href='doc_styleguide.html#post-data-using-json-content' title='Permalink'></a></h4>
+<blockquote>
+<p><strong>Note:</strong> In this example we create a new group. Watch carefully the single
+and double quotes.</p>
+</blockquote>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --header <span class="s2">"Content-Type: application/json"</span> --data <span class="s1">'{"path": "my-group", "name": "My group"}'</span> https://gitlab.example.com/api/v3/groups
+</code></pre><h4 id='post-data-using-form-data'>Post data using form-data <a class='anchor' href='doc_styleguide.html#post-data-using-form-data' title='Permalink'></a></h4>
+<p>Instead of using JSON or urlencode you can use multipart/form-data which
+properly handles data encoding:</p>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --form <span class="s2">"title=ssh-key"</span> --form <span class="s2">"key=ssh-rsa AAAAB3NzaC1yc2EA..."</span> https://gitlab.example.com/api/v3/users/25/keys
+</code></pre>
+<p>The above example is run by and administrator and will add an SSH public key
+titled ssh-key to user&#39;s account which has an id of 25.</p>
+<h4 id='escape-special-characters'>Escape special characters <a class='anchor' href='doc_styleguide.html#escape-special-characters' title='Permalink'></a></h4>
+<p>Spaces or slashes (<code>/</code>) may sometimes result to errors, thus it is recommended
+to escape them when possible. In the example below we create a new issue which
+contains spaces in its title. Observe how spaces are escaped using the <code>%20</code>
+ASCII code.</p>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects/42/issues?title=Hello%20Dude"</span>
+</code></pre>
+<p>Use <code>%2F</code> for slashes (<code>/</code>).</p>
+<h4 id='pass-arrays-to-api-calls'>Pass arrays to API calls <a class='anchor' href='doc_styleguide.html#pass-arrays-to-api-calls' title='Permalink'></a></h4>
+<p>The GitLab API sometimes accepts arrays of strings or integers. For example, to
+restrict the sign-up e-mail domains of a GitLab instance to <code>*.example.com</code> and
+<code>example.net</code>, you would do something like this:</p>
+<pre class="highlight shell"><code>curl --request PUT --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --data <span class="s2">"domain_whitelist[]=*.example.com"</span> --data <span class="s2">"domain_whitelist[]=example.net"</span> https://gitlab.example.com/api/v3/application/settings
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/development/doc_styleguide.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

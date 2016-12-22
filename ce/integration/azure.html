@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Microsoft Azure OAuth2 OmniAuth Provider - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Microsoft Azure OAuth2 OmniAuth Provider</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="azure.html#microsoft-azure-oauth2-omniauth-provider">Microsoft Azure OAuth2 OmniAuth Provider</a>
+</li>
+</ul>
+<h1 id='microsoft-azure-oauth2-omniauth-provider'>Microsoft Azure OAuth2 OmniAuth Provider <a class='anchor' href='azure.html#microsoft-azure-oauth2-omniauth-provider' title='Permalink'></a></h1>
+<p>To enable the Microsoft Azure OAuth2 OmniAuth provider you must register your application with Azure. Azure will generate a client ID and secret key for you to use.</p>
+
+<ol>
+<li><p>Sign in to the <a href="https://manage.windowsazure.com">Azure Management Portal</a>.</p></li>
+<li><p>Select &quot;Active Directory&quot; on the left and choose the directory you want to use to register GitLab.</p></li>
+<li><p>Select &quot;Applications&quot; at the top bar and click the &quot;Add&quot; button the bottom.</p></li>
+<li><p>Select &quot;Add an application my organization is developing&quot;.</p></li>
+<li><p>Provide the project information and click the &quot;Next&quot; button.</p>
+
+<ul>
+<li>Name: &#39;GitLab&#39; works just fine here.</li>
+<li>Type: &#39;WEB APPLICATION AND/OR WEB API&#39;</li>
+</ul></li>
+<li><p>On the &quot;App properties&quot; page enter the needed URI&#39;s and click the &quot;Complete&quot; button.</p>
+
+<ul>
+<li>SIGN-IN URL: Enter the URL of your GitLab installation (e.g &#39;<a href="https://gitlab.mycompany.com/&#x27;">https://gitlab.mycompany.com/&#39;</a>)</li>
+<li>APP ID URI: Enter the endpoint URL for Microsoft to use, just has to be unique (e.g &#39;<a href="https://mycompany.onmicrosoft.com/gitlab&#x27;">https://mycompany.onmicrosoft.com/gitlab&#39;</a>)</li>
+</ul></li>
+<li><p>Select &quot;Configure&quot; in the top menu.</p></li>
+<li><p>Add a &quot;Reply URL&quot; pointing to the Azure OAuth callback of your GitLab installation (e.g. <a href="https://gitlab.mycompany.com/users/auth/azure_oauth2/callback">https://gitlab.mycompany.com/users/auth/azure_oauth2/callback</a>).</p></li>
+<li><p>Create a &quot;Client secret&quot; by selecting a duration, the secret will be generated as soon as you click the &quot;Save&quot; button in the bottom menu..</p></li>
+<li><p>Note the &quot;CLIENT ID&quot; and the &quot;CLIENT SECRET&quot;.</p></li>
+<li><p>Select &quot;View endpoints&quot; from the bottom menu.</p></li>
+<li><p>You will see lots of endpoint URLs in the form &#39;<a href="https://login.microsoftonline.com/TENANT">https://login.microsoftonline.com/TENANT</a> ID/...&#39;, note down the TENANT ID part of one of those endpoints.</p></li>
+<li><p>On your GitLab server, open the configuration file.</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight shell"><code>  sudo editor /etc/gitlab/gitlab.rb
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight shell"><code>  <span class="nb">cd</span> /home/git/gitlab
+
+  sudo -u git -H editor config/gitlab.yml
+</code></pre></li>
+<li><p>See <a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth Configuration</a> for initial settings.</p></li>
+<li><p>Add the provider configuration:</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight ruby"><code>  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_providers'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">"name"</span> <span class="o">=&gt;</span> <span class="s2">"azure_oauth2"</span><span class="p">,</span>
+      <span class="s2">"args"</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="s2">"client_id"</span> <span class="o">=&gt;</span> <span class="s2">"CLIENT ID"</span><span class="p">,</span>
+        <span class="s2">"client_secret"</span> <span class="o">=&gt;</span> <span class="s2">"CLIENT SECRET"</span><span class="p">,</span>
+        <span class="s2">"tenant_id"</span> <span class="o">=&gt;</span> <span class="s2">"TENANT ID"</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight plaintext"><code> - { name: 'azure_oauth2',
+   args: { client_id: "CLIENT ID",
+   client_secret: "CLIENT SECRET",
+   tenant_id: "TENANT ID" } }
+</code></pre></li>
+<li><p>Replace &#39;CLIENT ID&#39;, &#39;CLIENT SECRET&#39; and &#39;TENANT ID&#39; with the values you got above.</p></li>
+<li><p>Save the configuration file.</p></li>
+<li><p>Restart GitLab for the changes to take effect.</p></li>
+</ol>
+
+<p>On the sign in page there should now be a Microsoft icon below the regular sign in form. Click the icon to begin the authentication process. Microsoft will ask the user to sign in and authorize the GitLab application. If everything goes well the user will be returned to GitLab and will be signed in.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/integration/azure.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Updating GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Updating GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#updating-gitlab">Updating GitLab</a>
+<ul>
+<li>
+<a href="README.html#omnibus-packages">Omnibus Packages</a>
+</li>
+<li>
+<a href="README.html#installation-from-source">Installation from source</a>
+</li>
+<li>
+<a href="README.html#installation-using-docker">Installation using Docker</a>
+</li>
+<li>
+<a href="README.html#upgrading-between-editions">Upgrading between editions</a>
+<ul>
+<li>
+<a href="README.html#community-to-enterprise-edition">Community to Enterprise Edition</a>
+</li>
+<li>
+<a href="README.html#enterprise-to-community-edition">Enterprise to Community Edition</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#miscellaneous">Miscellaneous</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='updating-gitlab'>Updating GitLab <a class='anchor' href='README.html#updating-gitlab' title='Permalink'></a></h1>
+<p>Depending on the installation method and your GitLab version, there are multiple
+update guides.</p>
+
+<p>There are currently 3 official ways to install GitLab:</p>
+
+<ul>
+<li>Omnibus packages</li>
+<li>Source installation</li>
+<li>Docker installation</li>
+</ul>
+
+<p>Based on your installation, choose a section below that fits your needs.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="README.html#omnibus-packages">Omnibus Packages</a></li>
+<li><a href="README.html#installation-from-source">Installation from source</a></li>
+<li><a href="README.html#installation-using-docker">Installation using Docker</a></li>
+<li><a href="README.html#upgrading-between-editions">Upgrading between editions</a>
+
+<ul>
+<li><a href="README.html#community-to-enterprise-edition">Community to Enterprise Edition</a></li>
+<li><a href="README.html#enterprise-to-community-edition">Enterprise to Community Edition</a></li>
+</ul></li>
+<li><a href="README.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='omnibus-packages'>Omnibus Packages <a class='anchor' href='README.html#omnibus-packages' title='Permalink'></a></h2>
+<ul>
+<li>The <a href="http://docs.gitlab.com/omnibus/update/README.html">Omnibus update guide</a>
+contains the steps needed to update an Omnibus GitLab package.</li>
+</ul>
+<h2 id='installation-from-source'>Installation from source <a class='anchor' href='README.html#installation-from-source' title='Permalink'></a></h2>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/doc/update">Upgrading Community Edition from source</a> - The individual
+upgrade guides are for those who have installed GitLab CE from source.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ee/tree/master/doc/update">Upgrading Enterprise Edition from source</a> - The individual
+upgrade guides are for those who have installed GitLab EE from source.</li>
+<li><a href="patch_versions.html">Patch versions</a> guide includes the steps needed for a
+patch version, eg. 6.2.0 to 6.2.1, and apply to both Community and Enterprise
+Editions.</li>
+</ul>
+<h2 id='installation-using-docker'>Installation using Docker <a class='anchor' href='README.html#installation-using-docker' title='Permalink'></a></h2>
+<p>GitLab provides official Docker images for both Community and Enterprise
+editions. They are based on the Omnibus package and instructions on how to
+update them are in <a href="http://docs.gitlab.com/omnibus/docker/README.html">a separate document</a>.</p>
+<h2 id='upgrading-between-editions'>Upgrading between editions <a class='anchor' href='README.html#upgrading-between-editions' title='Permalink'></a></h2>
+<p>GitLab comes in two flavors: <a href="https://about.gitlab.com/features/#community">Community Edition</a> which is MIT licensed,
+and <a href="https://about.gitlab.com/features/#enterprise">Enterprise Edition</a> which builds on top of the Community Edition and
+includes extra features mainly aimed at organizations with more than 100 users.</p>
+
+<p>Below you can find some guides to help you change editions easily.</p>
+<h3 id='community-to-enterprise-edition'>Community to Enterprise Edition <a class='anchor' href='README.html#community-to-enterprise-edition' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+The following guides are for subscribers of the Enterprise Edition only.</p>
+</blockquote>
+
+<p>If you wish to upgrade your GitLab installation from Community to Enterprise
+Edition, follow the guides below based on the installation method:</p>
+
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ee/tree/master/doc/update">Source CE to EE update guides</a> - Find your version, and follow the
+<code>-ce-to-ee.md</code> guide. The steps are very similar to a version upgrade: stop
+the server, get the code, update config files for the new functionality,
+install libraries and do migrations, update the init script, start the
+application and check its status.</li>
+<li><a href="http://docs.gitlab.com/omnibus/update/README.html#from-community-edition-to-enterprise-edition">Omnibus CE to EE</a> - Follow this guide to update your Omnibus
+GitLab Community Edition to the Enterprise Edition.</li>
+</ul>
+<h3 id='enterprise-to-community-edition'>Enterprise to Community Edition <a class='anchor' href='README.html#enterprise-to-community-edition' title='Permalink'></a></h3>
+<p>If you need to downgrade your Enterprise Edition installation back to Community
+Edition, you can follow <a href="../downgrade_ee_to_ce/README.html">this guide</a> to make the process as smooth as
+possible.</p>
+<h2 id='miscellaneous'>Miscellaneous <a class='anchor' href='README.html#miscellaneous' title='Permalink'></a></h2>
+<ul>
+<li><a href="mysql_to_postgresql.html">MySQL to PostgreSQL</a> guides you through migrating
+your database from MySQL to PostgreSQL.</li>
+<li><a href="../install/database_mysql.html">MySQL installation guide</a> contains additional
+information about configuring GitLab to work with a MySQL database.</li>
+<li><a href="restore_after_failure.html">Restoring from backup after a failed upgrade</a></li>
+<li><a href="upgrading_postgresql_using_slony.html">Upgrading PostgreSQL Using Slony</a>, for
+upgrading a PostgreSQL database with minimal downtime.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/update/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

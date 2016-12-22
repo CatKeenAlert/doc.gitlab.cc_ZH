@@ -1,0 +1,389 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Kerberos integration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Kerberos integration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="kerberos.html#kerberos-integration">Kerberos integration</a>
+<ul>
+<li>
+<a href="kerberos.html#configuration">Configuration</a>
+<ul>
+<li>
+<a href="kerberos.html#gitlab-keytab">GitLab keytab</a>
+</li>
+<li>
+<a href="kerberos.html#configure-gitlab">Configure GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="kerberos.html#creating-and-linking-kerberos-accounts">Creating and linking Kerberos accounts</a>
+</li>
+<li>
+<a href="kerberos.html#http-git-access">HTTP Git access</a>
+<ul>
+<li>
+<a href="kerberos.html#http-git-access-with-kerberos-token-passwordless-authentication">HTTP Git access with Kerberos token (passwordless authentication)</a>
+<ul>
+<li>
+<a href="kerberos.html#support-for-git-before-2-4">Support for Git before 2.4</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="kerberos.html#upgrading-from-password-based-to-ticket-based-kerberos-sign-ins">Upgrading from password-based to ticket-based Kerberos sign-ins</a>
+</li>
+<li>
+<a href="kerberos.html#support-for-active-directory-kerberos-environments">Support for Active Directory Kerberos environments</a>
+</li>
+<li>
+<a href="kerberos.html#helpful-links-to-setup-development-kerberos-environment">Helpful links to setup development Kerberos environment.</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='kerberos-integration'>Kerberos integration <a class='anchor' href='kerberos.html#kerberos-integration' title='Permalink'></a></h1>
+<p>GitLab can be configured to allow your users to sign with their Kerberos credentials.</p>
+<h2 id='configuration'>Configuration <a class='anchor' href='kerberos.html#configuration' title='Permalink'></a></h2>
+<p>For GitLab to offer Kerberos token-based authentication, perform the
+following prerequisites. You still need to configure your system for
+Kerberos usage, such as specifying realms. GitLab will make use of the
+system&#39;s Kerberos settings.</p>
+<h3 id='gitlab-keytab'>GitLab keytab <a class='anchor' href='kerberos.html#gitlab-keytab' title='Permalink'></a></h3>
+<ol>
+<li>Create a Kerberos Service Principal for the HTTP service on your GitLab server.
+If your GitLab server is <code>gitlab.example.com</code> and your Kerberos realm
+<code>EXAMPLE.COM</code>, create a Service Principal <code>HTTP/gitlab.example.com@EXAMPLE.COM</code>
+in your Kerberos database.</li>
+<li>Create a keytab on the GitLab server for the above Service Principal, e.g.
+<code>/etc/http.keytab</code>.</li>
+</ol>
+
+<p>The keytab is a sensitive file and must be readable by the GitLab user. Set
+ownership and protect the file appropriately:</p>
+<pre class="highlight plaintext"><code>sudo chown git /etc/http.keytab
+sudo chmod 0600 /etc/http.keytab
+</code></pre><h3 id='configure-gitlab'>Configure GitLab <a class='anchor' href='kerberos.html#configure-gitlab' title='Permalink'></a></h3>
+<p><strong>Installations from source</strong></p>
+
+<blockquote>
+<p><strong>Note:</strong>
+For source installations, make sure the <code>kerberos</code> gem group
+<a href="../install/installation.html#install-gems">has been installed</a>.</p>
+</blockquote>
+
+<ol>
+<li><p>Edit the kerberos section of <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/config/gitlab.yml.example">gitlab.yml</a> to enable Kerberos ticket-based
+authentication. In most cases, you only need to enable Kerberos and specify
+the location of the keytab:</p>
+<pre class="highlight yaml"><code><span class="na">omniauth</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+  <span class="na">allow_single_sign_on</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">kerberos'</span><span class="pi">]</span>
+
+<span class="na">kerberos</span><span class="pi">:</span>
+  <span class="c1"># Allow the HTTP Negotiate authentication method for Git clients</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="s">true</span>
+
+  <span class="c1"># Kerberos 5 keytab file. The keytab file must be readable by the GitLab user,</span>
+  <span class="c1"># and should be different from other keytabs in the system.</span>
+  <span class="c1"># (default: use default keytab from Krb5 config)</span>
+  <span class="na">keytab</span><span class="pi">:</span> <span class="s">/etc/http.keytab</span>
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#installations-from-source">Restart GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Omnibus package installations</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_allow_single_sign_on'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'kerberos'</span><span class="p">]</span>
+
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'kerberos_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'kerberos_keytab'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/http.keytab"</span>
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p>GitLab will now offer the <code>negotiate</code> authentication method for signing in and
+HTTP Git access, enabling Git clients that support this authentication protocol
+to authenticate with Kerberos tokens.</p>
+<h2 id='creating-and-linking-kerberos-accounts'>Creating and linking Kerberos accounts <a class='anchor' href='kerberos.html#creating-and-linking-kerberos-accounts' title='Permalink'></a></h2>
+<p>The Administrative user can navigate to <strong>Admin &gt; Users &gt; Example User &gt; Identities</strong>
+and attach a Kerberos account. Existing GitLab users can go to <strong>Profile &gt; Account</strong>
+and attach a Kerberos account. If you want to allow users without a GitLab
+account to login, you should enable the option <code>allow_single_sign_on</code> as
+described in the <a href="kerberos.html#configure-gitlab">Configure GitLab</a> section. Then, the first
+time a user signs in with Kerberos credentials, GitLab will create a new GitLab
+user associated with the email, which is built from the Kerberos username and
+realm. User accounts will be created automatically when authentication was
+successful.</p>
+<h2 id='http-git-access'>HTTP Git access <a class='anchor' href='kerberos.html#http-git-access' title='Permalink'></a></h2>
+<p>A linked Kerberos account enables you to <code>git pull</code> and <code>git push</code> using your
+Kerberos account, as well as your standard GitLab credentials.</p>
+
+<p>GitLab users with a linked Kerberos account can also <code>git pull</code> and <code>git push</code>
+using Kerberos tokens, i.e., without having to send their password with each
+operation.</p>
+<h3 id='http-git-access-with-kerberos-token-passwordless-authentication'>HTTP Git access with Kerberos token (passwordless authentication) <a class='anchor' href='kerberos.html#http-git-access-with-kerberos-token-passwordless-authentication' title='Permalink'></a></h3><h4 id='support-for-git-before-2-4'>Support for Git before 2.4 <a class='anchor' href='kerberos.html#support-for-git-before-2-4' title='Permalink'></a></h4>
+<p>Until Git version 2.4, the <code>git</code> command uses only the <code>negotiate</code> authentication
+method if the HTTP server offers it, even if this method fails (such as when
+the client does not have a Kerberos token). It is thus not possible to fall back
+to username/password (also known as <code>basic</code>) authentication if Kerberos
+authentication fails.</p>
+
+<p>For GitLab users to be able to use either <code>basic</code> or <code>negotiate</code> authentication
+with older Git versions, it is possible to offer Kerberos ticket-based
+authentication on a different port (e.g. 8443) while the standard port will
+keep offering only <code>basic</code> authentication.</p>
+
+<p><strong>For source installations with HTTPS</strong></p>
+
+<ol>
+<li><p>Edit the NGINX configuration file for GitLab
+(e.g., <code>/etc/nginx/sites-available/gitlab-ssl</code>) and configure NGINX to
+listen to port <code>8443</code> in addition to the standard HTTPS port:</p>
+<pre class="highlight conf"><code><span class="n">server</span> {
+  <span class="n">listen</span> <span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>:<span class="m">443</span> <span class="n">ssl</span>;
+  <span class="n">listen</span> [::]:<span class="m">443</span> <span class="n">ipv6only</span>=<span class="n">on</span> <span class="n">ssl</span> <span class="n">default_server</span>;
+  <span class="n">listen</span> <span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>:<span class="m">8443</span> <span class="n">ssl</span>;
+  <span class="n">listen</span> [::]:<span class="m">8443</span> <span class="n">ipv6only</span>=<span class="n">on</span> <span class="n">ssl</span>;
+</code></pre></li>
+<li><p>Update the Kerberos section of <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/config/gitlab.yml.example">gitlab.yml</a>:</p>
+<pre class="highlight yaml"><code><span class="na">kerberos</span><span class="pi">:</span>
+  <span class="c1"># Dedicated port: Git before 2.4 does not fall back to Basic authentication if Negotiate fails.</span>
+  <span class="c1"># To support both Basic and Negotiate methods with older versions of Git, configure</span>
+  <span class="c1"># nginx to proxy GitLab on an extra port (e.g. 8443) and uncomment the following lines</span>
+  <span class="c1"># to dedicate this port to Kerberos authentication. (default: false)</span>
+  <span class="na">use_dedicated_port</span><span class="pi">:</span> <span class="s">true</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="s">8443</span>
+  <span class="na">https</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#installations-from-source">Restart GitLab</a> and NGINX for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>For Omnibus package installations</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'kerberos_use_dedicated_port'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'kerberos_port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8443</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'kerberos_https'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p>After this change, all Git remote URLs will have to be updated to
+<code>https://gitlab.example.com:8443/mygroup/myproject.git</code> in order to use
+Kerberos ticket-based authentication.</p>
+<h2 id='upgrading-from-password-based-to-ticket-based-kerberos-sign-ins'>Upgrading from password-based to ticket-based Kerberos sign-ins <a class='anchor' href='kerberos.html#upgrading-from-password-based-to-ticket-based-kerberos-sign-ins' title='Permalink'></a></h2>
+<p>Prior to GitLab 8.10 Enterprise Edition, users had to submit their
+Kerberos username and password to GitLab when signing in. We will
+remove support for password-based Kerberos sign-ins in a future
+release, so we recommend that you upgrade to ticket-based sign-ins.</p>
+
+<p>Depending on your existing GitLab configuration, the &#39;Sign in with:
+Kerberos Spnego&#39; button may already be visible on your GitLab sign-in
+page. If not, then add the settings <a href="kerberos.html#configuration">described above</a>.</p>
+
+<p>Once you have verified that the &#39;Kerberos Spnego&#39; button works
+without entering any passwords, you can proceed to disable
+password-based Kerberos sign-ins. To do this you need only need to
+remove the OmniAuth provider named <code>kerberos</code> from your <code>gitlab.yml</code> /
+<code>gitlab.rb</code> file.</p>
+
+<p><strong>For installations from source</strong></p>
+
+<ol>
+<li><p>Edit <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/config/gitlab.yml.example">gitlab.yml</a> and remove the <code>- { name: &#39;kerberos&#39; }</code> line under omniauth
+providers:</p>
+<pre class="highlight yaml"><code><span class="na">omniauth</span><span class="pi">:</span>
+  <span class="c1"># ...</span>
+  <span class="na">providers</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">kerberos'</span> <span class="pi">}</span> <span class="c1"># &lt;-- remove this line</span>
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#installations-from-source">Restart GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>For Omnibus installations</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code> and remove the <code>{ &quot;name&quot; =&gt; &quot;kerberos&quot; }</code> line
+under <code>gitlab_rails[&#39;omniauth_providers&#39;]</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_providers'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="s2">"name"</span> <span class="o">=&gt;</span> <span class="s2">"kerberos"</span> <span class="p">}</span> <span class="c1"># &lt;-- remove this entry</span>
+<span class="p">]</span>
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h2 id='support-for-active-directory-kerberos-environments'>Support for Active Directory Kerberos environments <a class='anchor' href='kerberos.html#support-for-active-directory-kerberos-environments' title='Permalink'></a></h2>
+<p>When using Kerberos ticket-based authentication in an Active Directory domain,
+it may be necessary to increase the maximum header size allowed by NGINX,
+as extensions to the Kerberos protocol may result in HTTP authentication headers
+larger than the default size of 8kB. Configure <code>large_client_header_buffers</code>
+to a larger value in <a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers">the NGINX configuration</a>.</p>
+<h2 id='helpful-links-to-setup-development-kerberos-environment'>Helpful links to setup development Kerberos environment. <a class='anchor' href='kerberos.html#helpful-links-to-setup-development-kerberos-environment' title='Permalink'></a></h2>
+<ul>
+<li><a href="https://help.ubuntu.com/community/Kerberos">https://help.ubuntu.com/community/Kerberos</a></li>
+<li><a href="http://blog.manula.org/2012/04/setting-up-kerberos-server-with-debian.html">http://blog.manula.org/2012/04/setting-up-kerberos-server-with-debian.html</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/integration/kerberos.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

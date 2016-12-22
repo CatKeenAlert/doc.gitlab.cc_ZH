@@ -1,0 +1,1043 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Configuring Redis for GitLab HA - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">High Availability</a></li>
+            
+          
+          <li class="breadcrumb">Configuring Redis for GitLab HA</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="redis.html#configuring-redis-for-gitlab-ha">Configuring Redis for GitLab HA</a>
+<ul>
+<li>
+<a href="redis.html#overview">Overview</a>
+<ul>
+<li>
+<a href="redis.html#high-availability-with-sentinel">High Availability with Sentinel</a>
+</li>
+<li>
+<a href="redis.html#recommended-setup">Recommended setup</a>
+</li>
+<li>
+<a href="redis.html#redis-setup-overview">Redis setup overview</a>
+</li>
+<li>
+<a href="redis.html#sentinel-setup-overview">Sentinel setup overview</a>
+</li>
+<li>
+<a href="redis.html#available-configuration-setups">Available configuration setups</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="redis.html#configuring-redis-ha">Configuring Redis HA</a>
+<ul>
+<li>
+<a href="redis.html#prerequisites">Prerequisites</a>
+</li>
+<li>
+<a href="redis.html#step-1-configuring-the-master-redis-instance">Step 1. Configuring the master Redis instance</a>
+</li>
+<li>
+<a href="redis.html#step-2-configuring-the-slave-redis-instances">Step 2. Configuring the slave Redis instances</a>
+</li>
+<li>
+<a href="redis.html#step-3-configuring-the-redis-sentinel-instances">Step 3. Configuring the Redis Sentinel instances</a>
+</li>
+<li>
+<a href="redis.html#step-4-configuring-the-gitlab-application">Step 4. Configuring the GitLab application</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="redis.html#switching-from-an-existing-single-machine-installation-to-redis-ha">Switching from an existing single-machine installation to Redis HA</a>
+</li>
+<li>
+<a href="redis.html#example-of-a-minimal-configuration-with-1-master-2-slaves-and-3-sentinels">Example of a minimal configuration with 1 master, 2 slaves and 3 Sentinels</a>
+<ul>
+<li>
+<a href="redis.html#example-configuration-for-redis-master-and-sentinel-1">Example configuration for Redis master and Sentinel 1</a>
+</li>
+<li>
+<a href="redis.html#example-configuration-for-redis-slave-1-and-sentinel-2">Example configuration for Redis slave 1 and Sentinel 2</a>
+</li>
+<li>
+<a href="redis.html#example-configuration-for-redis-slave-2-and-sentinel-3">Example configuration for Redis slave 2 and Sentinel 3</a>
+</li>
+<li>
+<a href="redis.html#example-configuration-for-the-gitlab-application">Example configuration for the GitLab application</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="redis.html#advanced-configuration">Advanced configuration</a>
+<ul>
+<li>
+<a href="redis.html#control-running-services">Control running services</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="redis.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="redis.html#troubleshooting-redis-replication">Troubleshooting Redis replication</a>
+</li>
+<li>
+<a href="redis.html#troubleshooting-sentinel">Troubleshooting Sentinel</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="redis.html#changelog">Changelog</a>
+</li>
+<li>
+<a href="redis.html#further-reading">Further reading</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='configuring-redis-for-gitlab-ha'>Configuring Redis for GitLab HA <a class='anchor' href='redis.html#configuring-redis-for-gitlab-ha' title='Permalink'></a></h1>
+<blockquote>
+<p>Experimental Redis Sentinel support was <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/1877">Introduced</a> in GitLab 8.11.
+Starting with 8.14, Redis Sentinel is no longer experimental.
+If you&#39;ve used it with versions <code>&lt; 8.14</code> before, please check the updated
+documentation here.</p>
+</blockquote>
+
+<p>High Availability with <a href="http://redis.io/">Redis</a> is possible using a <strong>Master</strong> x <strong>Slave</strong>
+topology with a <a href="http://redis.io/topics/sentinel">Redis Sentinel</a> service to watch and automatically
+start the failover procedure.</p>
+
+<p>You can choose to install and manage Redis and Sentinel yourself, use
+a hosted cloud solution or you can use the one that comes bundled with
+Omnibus GitLab packages.</p>
+
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Redis requires authentication for High Availability. See
+<a href="http://redis.io/topics/security">Redis Security</a> documentation for more
+information. We recommend using a combination of a Redis password and tight
+firewall rules to secure your Redis service.</li>
+<li>You are highly encouraged to read the <a href="http://redis.io/topics/sentinel">Redis Sentinel</a> documentation
+before configuring Redis HA with GitLab to fully understand the topology and
+architecture.</li>
+<li>This is the documentation for the Omnibus GitLab packages. For installations
+from source, follow the <a href="redis_source.html">Redis HA source installation</a> guide.</li>
+<li>Redis Sentinel daemon is bundled with Omnibus GitLab Enterprise Edition only.
+For configuring Sentinel with the Omnibus GitLab Community Edition and
+installations from source, read the
+<a href="redis.html#available-configuration-setups">Available configuration setups</a> section
+below.</li>
+</ul>
+</blockquote>
+<h2 id='overview'>Overview <a class='anchor' href='redis.html#overview' title='Permalink'></a></h2>
+<p>Before diving into the details of setting up Redis and Redis Sentinel for HA,
+make sure you read this Overview section to better understand how the components
+are tied together.</p>
+
+<p>You need at least <code>3</code> independent machines: physical, or VMs running into
+distinct physical machines. It is essential that all master and slaves Redis
+instances run in different machines. If you fail to provision the machines in
+that specific way, any issue with the shared environment can bring your entire
+setup down.</p>
+
+<p>It is OK to run a Sentinel along with a master or slave Redis instance.
+No more than one Sentinel in the same machine though.</p>
+
+<p>You also need to take in consideration the underlying network topology,
+making sure you have redundant connectivity between Redis / Sentinel and
+GitLab instances, otherwise the networks will become a single point of
+failure.</p>
+
+<p>Make sure that you read this document once as a whole before configuring the
+components below.</p>
+<h3 id='high-availability-with-sentinel'>High Availability with Sentinel <a class='anchor' href='redis.html#high-availability-with-sentinel' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Starting with GitLab <code>8.11</code>, you can configure a list of Redis Sentinel
+servers that will monitor a group of Redis servers to provide failover support.</li>
+<li>Starting with GitLab <code>8.14</code>, the Omnibus GitLab Enterprise Edition package
+comes with Redis Sentinel daemon built-in.</li>
+</ul>
+</blockquote>
+
+<p>High Availability with Redis requires a few things:</p>
+
+<ul>
+<li>Multiple Redis instances</li>
+<li>Run Redis in a <strong>Master</strong> x <strong>Slave</strong> topology</li>
+<li>Multiple Sentinel instances</li>
+<li>Application support and visibility to all Sentinel and Redis instances</li>
+</ul>
+
+<p>Redis Sentinel can handle the most important tasks in an HA environment and that&#39;s
+to help keep servers online with minimal to no downtime. Redis Sentinel:</p>
+
+<ul>
+<li>Monitors <strong>Master</strong> and <strong>Slaves</strong> instances to see if they are available</li>
+<li>Promotes a <strong>Slave</strong> to <strong>Master</strong> when the <strong>Master</strong> fails</li>
+<li>Demotes a <strong>Master</strong> to <strong>Slave</strong> when the failed <strong>Master</strong> comes back online
+(to prevent data-partitioning)</li>
+<li>Can be queried by the application to always connect to the current <strong>Master</strong>
+server</li>
+</ul>
+
+<p>When a <strong>Master</strong> fails to respond, it&#39;s the application&#39;s responsibility
+(in our case GitLab) to handle timeout and reconnect (querying a <strong>Sentinel</strong>
+for a new <strong>Master</strong>).</p>
+
+<p>To get a better understanding on how to correctly setup Sentinel, please read
+the <a href="http://redis.io/topics/sentinel">Redis Sentinel documentation</a> first, as
+failing to configure it correctly can lead to data loss or can bring your
+whole cluster down, invalidating the failover effort.</p>
+<h3 id='recommended-setup'>Recommended setup <a class='anchor' href='redis.html#recommended-setup' title='Permalink'></a></h3>
+<p>For a minimal setup, you will install the Omnibus GitLab package in <code>3</code>
+<strong>independent</strong> machines, both with <strong>Redis</strong> and <strong>Sentinel</strong>:</p>
+
+<ul>
+<li>Redis Master + Sentinel</li>
+<li>Redis Slave + Sentinel</li>
+<li>Redis Slave + Sentinel</li>
+</ul>
+
+<p>If you are not sure or don&#39;t understand why and where the amount of nodes come
+from, read <a href="redis.html#redis-setup-overview">Redis setup overview</a> and
+<a href="redis.html#sentinel-setup-overview">Sentinel setup overview</a>.</p>
+
+<p>For a recommended setup that can resist more failures, you will install
+the Omnibus GitLab package in <code>5</code> <strong>independent</strong> machines, both with
+<strong>Redis</strong> and <strong>Sentinel</strong>:</p>
+
+<ul>
+<li>Redis Master + Sentinel</li>
+<li>Redis Slave + Sentinel</li>
+<li>Redis Slave + Sentinel</li>
+<li>Redis Slave + Sentinel</li>
+<li>Redis Slave + Sentinel</li>
+</ul>
+<h3 id='redis-setup-overview'>Redis setup overview <a class='anchor' href='redis.html#redis-setup-overview' title='Permalink'></a></h3>
+<p>You must have at least <code>3</code> Redis servers: <code>1</code> Master, <code>2</code> Slaves, and they
+need to be each in a independent machine (see explanation above).</p>
+
+<p>You can have additional Redis nodes, that will help survive a situation
+where more nodes goes down. Whenever there is only <code>2</code> nodes online, a failover
+will not be initiated.</p>
+
+<p>As an example, if you have <code>6</code> Redis nodes, a maximum of <code>3</code> can be
+simultaneously down.</p>
+
+<p>Please note that there are different requirements for Sentinel nodes.
+If you host them in the same Redis machines, you may need to take
+that restrictions into consideration when calculating the amount of
+nodes to be provisioned. See <a href="redis.html#sentinel-setup-overview">Sentinel setup overview</a>
+documentation for more information.</p>
+
+<p>All Redis nodes should be configured the same way and with similar server specs, as
+in a failover situation, any <strong>Slave</strong> can be promoted as the new <strong>Master</strong> by
+the Sentinel servers.</p>
+
+<p>The replication requires authentication, so you need to define a password to
+protect all Redis nodes and the Sentinels. They will all share the same
+password, and all instances must be able to talk to
+each other over the network.</p>
+<h3 id='sentinel-setup-overview'>Sentinel setup overview <a class='anchor' href='redis.html#sentinel-setup-overview' title='Permalink'></a></h3>
+<p>Sentinels watch both other Sentinels and Redis nodes. Whenever a Sentinel
+detects that a Redis node is not responding, it will announce that to the
+other Sentinels. They have to reach the <strong>quorum</strong>, that is the minimum amount
+of Sentinels that agrees a node is down, in order to be able to start a failover.</p>
+
+<p>Whenever the <strong>quorum</strong> is met, the <strong>majority</strong> of all known Sentinel nodes
+need to be available and reachable, so that they can elect the Sentinel <strong>leader</strong>
+who will take all the decisions to restore the service availability by:</p>
+
+<ul>
+<li>Promoting a new <strong>Master</strong></li>
+<li>Reconfiguring the other <strong>Slaves</strong> and make them point to the new <strong>Master</strong></li>
+<li>Announce the new <strong>Master</strong> to every other Sentinel peer</li>
+<li>Reconfigure the old <strong>Master</strong> and demote to <strong>Slave</strong> when it comes back online</li>
+</ul>
+
+<p>You must have at least <code>3</code> Redis Sentinel servers, and they need to
+be each in a independent machine (that are believed to fail independently),
+ideally in different geographical areas.</p>
+
+<p>You can configure them in the same machines where you&#39;ve configured the other
+Redis servers, but understand that if a whole node goes down, you loose both
+a Sentinel and a Redis instance.</p>
+
+<p>The number of sentinels should ideally always be an <strong>odd</strong> number, for the
+consensus algorithm to be effective in the case of a failure.</p>
+
+<p>In a <code>3</code> nodes topology, you can only afford <code>1</code> Sentinel node going down.
+Whenever the <strong>majority</strong> of the Sentinels goes down, the network partition
+protection prevents destructive actions and a failover <strong>will not be started</strong>.</p>
+
+<p>Here are some examples:</p>
+
+<ul>
+<li>With <code>5</code> or <code>6</code> sentinels, a maximum of <code>2</code> can go down for a failover begin.</li>
+<li>With <code>7</code> sentinels, a maximum of <code>3</code> nodes can go down.</li>
+</ul>
+
+<p>The <strong>Leader</strong> election can sometimes fail the voting round when <strong>consensus</strong>
+is not achieved (see the odd number of nodes requirement above). In that case,
+a new attempt will be made after the amount of time defined in
+<code>sentinel[&#39;failover_timeout&#39;]</code> (in milliseconds).</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+We will see where <code>sentinel[&#39;failover_timeout&#39;]</code> is defined later.</p>
+</blockquote>
+
+<p>The <code>failover_timeout</code> variable has a lot of different use cases. According to
+the official documentation:</p>
+
+<ul>
+<li><p>The time needed to re-start a failover after a previous failover was
+already tried against the same master by a given Sentinel, is two
+times the failover timeout.</p></li>
+<li><p>The time needed for a slave replicating to a wrong master according
+to a Sentinel current configuration, to be forced to replicate
+with the right master, is exactly the failover timeout (counting since
+the moment a Sentinel detected the misconfiguration).</p></li>
+<li><p>The time needed to cancel a failover that is already in progress but
+did not produced any configuration change (SLAVEOF NO ONE yet not
+acknowledged by the promoted slave).</p></li>
+<li><p>The maximum time a failover in progress waits for all the slaves to be
+reconfigured as slaves of the new master. However even after this time
+the slaves will be reconfigured by the Sentinels anyway, but not with
+the exact parallel-syncs progression as specified.</p></li>
+</ul>
+<h3 id='available-configuration-setups'>Available configuration setups <a class='anchor' href='redis.html#available-configuration-setups' title='Permalink'></a></h3>
+<p>Based on your infrastructure setup and how you have installed GitLab, there are
+multiple ways to configure Redis HA. Omnibus GitLab packages have Redis and/or
+Redis Sentinel bundled with them so you only need to focus on configuration.
+Pick the one that suits your needs.</p>
+
+<ul>
+<li><a href="../../install/installation.html">Installations from source</a>: You need to install Redis and Sentinel
+yourself. Use the <a href="redis_source.html">Redis HA installation from source</a>
+documentation.</li>
+<li><a href="https://about.gitlab.com/downloads">Omnibus GitLab <strong>Community Edition</strong> (CE) package</a>: Redis is bundled, so you
+can use the package with only the Redis service enabled as described in steps
+1 and 2 of this document (works for both master and slave setups). To install
+and configure Sentinel, jump directly to the Sentinel section in the
+<a href="redis_source.html#step-3-configuring-the-redis-sentinel-instances">Redis HA installation from source</a> documentation.</li>
+<li><a href="https://about.gitlab.com/downloads-ee">Omnibus GitLab <strong>Enterprise Edition</strong> (EE) package</a>: Both Redis and Sentinel
+are bundled in the package, so you can use the EE package to setup the whole
+Redis HA infrastructure (master, slave and Sentinel) which is described in
+this document.</li>
+<li>If you have installed GitLab using the Omnibus GitLab packages (CE or EE),
+but you want to use your own external Redis server, follow steps 1-3 in the
+<a href="redis_source.html">Redis HA installation from source</a> documentation, then go
+straight to step 4 in this guide to
+<a href="redis.html#step-4-configuring-the-gitlab-application">set up the GitLab application</a>.</li>
+</ul>
+<h2 id='configuring-redis-ha'>Configuring Redis HA <a class='anchor' href='redis.html#configuring-redis-ha' title='Permalink'></a></h2>
+<p>This is the section where we install and setup the new Redis instances.</p>
+
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>We assume that you install GitLab and all HA components from scratch. If you
+already have it installed and running, read how to
+<a href="redis.html#switching-from-an-existing-single-machine-installation-to-redis-ha">switch from a single-machine installation to Redis HA</a>.</li>
+<li>Redis nodes (both master and slaves) will need the same password defined in
+<code>redis[&#39;password&#39;]</code>. At any time during a failover the Sentinels can
+reconfigure a node and change its status from master to slave and vice versa.</li>
+</ul>
+</blockquote>
+<h3 id='prerequisites'>Prerequisites <a class='anchor' href='redis.html#prerequisites' title='Permalink'></a></h3>
+<p>The prerequisites for a HA Redis setup are the following:</p>
+
+<ol>
+<li>Provision the minimum required number of instances as specified in the
+<a href="redis.html#recommended-setup">recommended setup</a> section.</li>
+<li><strong>Do NOT</strong> install Redis or Redis Sentinel in the same machines your
+GitLab application is running on. You can however opt in to install Redis
+and Sentinel in the same machine (each in independent ones is recommended
+though).</li>
+<li>All Redis nodes must be able to talk to each other and accept incoming
+connections over Redis (<code>6379</code>) and Sentinel (<code>26379</code>) ports (unless you
+change the default ones).</li>
+<li>The server that hosts the GitLab application must be able to access the
+Redis nodes.</li>
+<li>Protect the nodes from access from external networks (<a href="https://gitlab.com/gitlab-org/gitlab-ce/uploads/c4cc8cd353604bd80315f9384035ff9e/The_Internet_IT_Crowd.png">Internet</a>), using
+firewall.</li>
+</ol>
+<h3 id='step-1-configuring-the-master-redis-instance'>Step 1. Configuring the master Redis instance <a class='anchor' href='redis.html#step-1-configuring-the-master-redis-instance' title='Permalink'></a></h3>
+<ol>
+<li>SSH into the <strong>master</strong> Redis server.</li>
+<li><p><a href="https://about.gitlab.com/installation">Download/install</a> the Omnibus GitLab
+package you want using <strong>steps 1 and 2</strong> from the GitLab downloads page.</p>
+
+<ul>
+<li>Make sure you select the correct Omnibus package, with the same version
+and type (Community, Enterprise editions) of your current install.</li>
+<li>Do not complete any other steps on the download page.</li>
+</ul></li>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code> and add the contents:</p>
+<pre class="highlight ruby"><code><span class="c1"># Enable the master role and disable all other services in the machine</span>
+<span class="c1"># (you can still enable Sentinel).</span>
+<span class="n">redis_master_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># IP address pointing to a local IP that the other machines can reach to.</span>
+<span class="c1"># You can also set bind to '0.0.0.0' which listen in all interfaces.</span>
+<span class="c1"># If you really need to bind to an external accessible IP, make</span>
+<span class="c1"># sure you add extra firewall rules to prevent unauthorized access.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span>
+
+<span class="c1"># Define a port so Redis can listen for TCP requests which will allow other</span>
+<span class="c1"># machines to connect to it.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6379</span>
+
+<span class="c1"># Set up password authentication for Redis (use the same password in all nodes).</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+</code></pre></li>
+<li><p>To prevent database migrations from running on upgrade, run:</p>
+<pre class="highlight plaintext"><code>sudo touch /etc/gitlab/skip-auto-migrations
+</code></pre>
+<p>Only the primary GitLab application server should handle migrations.</p></li>
+<li><p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h3 id='step-2-configuring-the-slave-redis-instances'>Step 2. Configuring the slave Redis instances <a class='anchor' href='redis.html#step-2-configuring-the-slave-redis-instances' title='Permalink'></a></h3>
+<ol>
+<li>SSH into the <strong>slave</strong> Redis server.</li>
+<li><p><a href="https://about.gitlab.com/installation">Download/install</a> the Omnibus GitLab
+package you want using <strong>steps 1 and 2</strong> from the GitLab downloads page.</p>
+
+<ul>
+<li>Make sure you select the correct Omnibus package, with the same version
+and type (Community, Enterprise editions) of your current install.</li>
+<li>Do not complete any other steps on the download page.</li>
+</ul></li>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code> and add the contents:</p>
+<pre class="highlight ruby"><code><span class="c1"># Enable the slave role and disable all other services in the machine</span>
+<span class="c1"># (you can still enable Sentinel). This will also set automatically</span>
+<span class="c1"># `redis['master'] = false`.</span>
+<span class="n">redis_slave_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># IP address pointing to a local IP that the other machines can reach to.</span>
+<span class="c1"># You can also set bind to '0.0.0.0' which listen in all interfaces.</span>
+<span class="c1"># If you really need to bind to an external accessible IP, make</span>
+<span class="c1"># sure you add extra firewall rules to prevent unauthorized access.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.2'</span>
+
+<span class="c1"># Define a port so Redis can listen for TCP requests which will allow other</span>
+<span class="c1"># machines to connect to it.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6379</span>
+
+<span class="c1"># The same password for Redeis authentication you set up for the master node.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+
+<span class="c1"># The IP of the master Redis node.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_ip'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span>
+
+<span class="c1"># Port of master Redis server, uncomment to change to non default. Defaults</span>
+<span class="c1"># to `6379`.</span>
+<span class="c1">#redis['master_port'] = 6379</span>
+</code></pre></li>
+<li><p>To prevent database migrations from running on upgrade, run:</p>
+<pre class="highlight plaintext"><code>sudo touch /etc/gitlab/skip-auto-migrations
+</code></pre>
+<p>Only the primary GitLab application server should handle migrations.</p></li>
+<li><p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p></li>
+<li><p>Go through the steps again for all the other slave nodes.</p></li>
+</ol>
+
+<hr>
+
+<p>These values don&#39;t have to be changed again in <code>/etc/gitlab/gitlab.rb</code> after
+a failover, as the nodes will be managed by the Sentinels, and even after a
+<code>gitlab-ctl reconfigure</code>, they will get their configuration restored by
+the same Sentinels.</p>
+<h3 id='step-3-configuring-the-redis-sentinel-instances'>Step 3. Configuring the Redis Sentinel instances <a class='anchor' href='redis.html#step-3-configuring-the-redis-sentinel-instances' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+Redis Sentinel is bundled with Omnibus GitLab Enterprise Edition only. The
+following section assumes you are using Omnibus GitLab Enterprise Edition.
+For the Omnibus Community Edition and installations from source, follow the
+<a href="redis_source.html">Redis HA source install</a> guide.</p>
+</blockquote>
+
+<p>Now that the Redis servers are all set up, let&#39;s configure the Sentinel
+servers.</p>
+
+<p>If you are not sure if your Redis servers are working and replicating
+correctly, please read the <a href="redis.html#troubleshooting-replication">Troubleshooting Replication</a>
+and fix it before proceeding with Sentinel setup.</p>
+
+<p>You must have at least <code>3</code> Redis Sentinel servers, and they need to
+be each in an independent machine. You can configure them in the same
+machines where you&#39;ve configured the other Redis servers.</p>
+
+<p>With GitLab Enterprise Edition, you can use the Omnibus package to setup
+multiple machines with the Sentinel daemon.</p>
+
+<hr>
+
+<ol>
+<li>SSH into the server that will host Redis Sentinel.</li>
+<li><p><strong>You can omit this step if the Sentinels will be hosted in the same node as
+the other Redis instances.</strong></p>
+
+<p><a href="https://about.gitlab.com/downloads-ee">Download/install</a> the
+ Omnibus GitLab Enterprise Edition package using <strong>steps 1 and 2</strong> from the
+ GitLab downloads page.</p>
+
+<ul>
+<li>Make sure you select the correct Omnibus package, with the same version
+ the GitLab application is running.</li>
+<li>Do not complete any other steps on the download page.</li>
+</ul></li>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code> and add the contents (if you are installing the
+Sentinels in the same node as the other Redis instances, some values might
+be duplicate below):</p>
+<pre class="highlight ruby"><code><span class="n">redis_sentinel_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># Must be the same in every sentinel node</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'gitlab-redis'</span>
+
+<span class="c1"># The same password for Redis authentication you set up for the master node.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+
+<span class="c1"># The IP of the master Redis node.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_ip'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span>
+
+<span class="c1"># Define a port so Redis can listen for TCP requests which will allow other</span>
+<span class="c1"># machines to connect to it.</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6379</span>
+
+<span class="c1"># Port of master Redis server, uncomment to change to non default. Defaults</span>
+<span class="c1"># to `6379`.</span>
+<span class="c1">#redis['master_port'] = 6379</span>
+
+<span class="c1">## Configure Sentinel</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span>
+
+<span class="c1"># Port that Sentinel listens on, uncomment to change to non default. Defaults</span>
+<span class="c1"># to `26379`.</span>
+<span class="c1"># sentinel['port'] = 26379</span>
+
+<span class="c1">## Quorum must reflect the amount of voting sentinels it take to start a failover.</span>
+<span class="c1">## Value must NOT be greater then the amount of sentinels.</span>
+<span class="c1">##</span>
+<span class="c1">## The quorum can be used to tune Sentinel in two ways:</span>
+<span class="c1">## 1. If a the quorum is set to a value smaller than the majority of Sentinels</span>
+<span class="c1">##    we deploy, we are basically making Sentinel more sensible to master failures,</span>
+<span class="c1">##    triggering a failover as soon as even just a minority of Sentinels is no longer</span>
+<span class="c1">##    able to talk with the master.</span>
+<span class="c1">## 1. If a quorum is set to a value greater than the majority of Sentinels, we are</span>
+<span class="c1">##    making Sentinel able to failover only when there are a very large number (larger</span>
+<span class="c1">##    than majority) of well connected Sentinels which agree about the master being down.s</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'quorum'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1">## Consider unresponsive server down after x amount of ms.</span>
+<span class="c1"># sentinel['down_after_milliseconds'] = 10000</span>
+
+<span class="c1">## Specifies the failover timeout in milliseconds. It is used in many ways:</span>
+<span class="c1">##</span>
+<span class="c1">## - The time needed to re-start a failover after a previous failover was</span>
+<span class="c1">##   already tried against the same master by a given Sentinel, is two</span>
+<span class="c1">##   times the failover timeout.</span>
+<span class="c1">##</span>
+<span class="c1">## - The time needed for a slave replicating to a wrong master according</span>
+<span class="c1">##   to a Sentinel current configuration, to be forced to replicate</span>
+<span class="c1">##   with the right master, is exactly the failover timeout (counting since</span>
+<span class="c1">##   the moment a Sentinel detected the misconfiguration).</span>
+<span class="c1">##</span>
+<span class="c1">## - The time needed to cancel a failover that is already in progress but</span>
+<span class="c1">##   did not produced any configuration change (SLAVEOF NO ONE yet not</span>
+<span class="c1">##   acknowledged by the promoted slave).</span>
+<span class="c1">##</span>
+<span class="c1">## - The maximum time a failover in progress waits for all the slaves to be</span>
+<span class="c1">##   reconfigured as slaves of the new master. However even after this time</span>
+<span class="c1">##   the slaves will be reconfigured by the Sentinels anyway, but not with</span>
+<span class="c1">##   the exact parallel-syncs progression as specified.</span>
+<span class="c1"># sentinel['failover_timeout'] = 60000</span>
+</code></pre></li>
+<li><p>To prevent database migrations from running on upgrade, run:</p>
+<pre class="highlight plaintext"><code>sudo touch /etc/gitlab/skip-auto-migrations
+</code></pre>
+<p>Only the primary GitLab application server should handle migrations.</p></li>
+<li><p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p></li>
+<li><p>Go through the steps again for all the other Sentinel nodes.</p></li>
+</ol>
+<h3 id='step-4-configuring-the-gitlab-application'>Step 4. Configuring the GitLab application <a class='anchor' href='redis.html#step-4-configuring-the-gitlab-application' title='Permalink'></a></h3>
+<p>The final part is to inform the main GitLab application server of the Redis
+Sentinels servers and authentication credentials.</p>
+
+<p>You can enable or disable Sentinel support at any time in new or existing
+installations. From the GitLab application perspective, all it requires is
+the correct credentials for the Sentinel nodes.</p>
+
+<p>While it doesn&#39;t require a list of all Sentinel nodes, in case of a failure,
+it needs to access at least one of the listed.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+The following steps should be performed in the <a href="gitlab.html">GitLab application server</a>
+which ideally should not have Redis or Sentinels on it for a HA setup.</p>
+</blockquote>
+
+<ol>
+<li>SSH into the server where the GitLab application is installed.</li>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code> and add/change the following lines:</p>
+<pre class="highlight plaintext"><code>## Must be the same in every sentinel node
+redis['master_name'] = 'gitlab-redis'
+
+## The same password for Redis authentication you set up for the master node.
+redis['password'] = 'redis-password-goes-here'
+
+## A list of sentinels with `host` and `port`
+gitlab_rails['redis_sentinels'] = [
+  {'host' =&gt; '10.0.0.1', 'port' =&gt; 26379},
+  {'host' =&gt; '10.0.0.2', 'port' =&gt; 26379},
+  {'host' =&gt; '10.0.0.3', 'port' =&gt; 26379}
+]
+</code></pre></li>
+<li><p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h2 id='switching-from-an-existing-single-machine-installation-to-redis-ha'>Switching from an existing single-machine installation to Redis HA <a class='anchor' href='redis.html#switching-from-an-existing-single-machine-installation-to-redis-ha' title='Permalink'></a></h2>
+<p>If you already have a single-machine GitLab install running, you will need to
+replicate from this machine first, before de-activating the Redis instance
+inside it.</p>
+
+<p>Your single-machine install will be the initial <strong>Master</strong>, and the <code>3</code> others
+should be configured as <strong>Slave</strong> pointing to this machine.</p>
+
+<p>After replication catches up, you will need to stop services in the
+single-machine install, to rotate the <strong>Master</strong> to one of the new nodes.</p>
+
+<p>Make the required changes in configuration and restart the new nodes again.</p>
+
+<p>To disable redis in the single install, edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">redis</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p>If you fail to replicate first, you may loose data (unprocessed background jobs).</p>
+<h2 id='example-of-a-minimal-configuration-with-1-master-2-slaves-and-3-sentinels'>Example of a minimal configuration with 1 master, 2 slaves and 3 Sentinels <a class='anchor' href='redis.html#example-of-a-minimal-configuration-with-1-master-2-slaves-and-3-sentinels' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+Redis Sentinel is bundled with Omnibus GitLab Enterprise Edition only. For
+different setups, read the
+<a href="redis.html#available-configuration-setups">available configuration setups</a> section.</p>
+</blockquote>
+
+<p>In this example we consider that all servers have an internal network
+interface with IPs in the <code>10.0.0.x</code> range, and that they can connect
+to each other using these IPs.</p>
+
+<p>In a real world usage, you would also setup firewall rules to prevent
+unauthorized access from other machines and block traffic from the
+outside (Internet).</p>
+
+<p>We will use the same <code>3</code> nodes with <strong>Redis</strong> + <strong>Sentinel</strong> topology
+discussed in <a href="redis.html#redis-setup-overview">Redis setup overview</a> and
+<a href="redis.html#sentinel-setup-overview">Sentinel setup overview</a> documentation.</p>
+
+<p>Here is a list and description of each <strong>machine</strong> and the assigned <strong>IP</strong>:</p>
+
+<ul>
+<li><code>10.0.0.1</code>: Redis Master + Sentinel 1</li>
+<li><code>10.0.0.2</code>: Redis Slave 1 + Sentinel 2</li>
+<li><code>10.0.0.3</code>: Redis Slave 2 + Sentinel 3</li>
+<li><code>10.0.0.4</code>: GitLab application</li>
+</ul>
+
+<p>Please note that after the initial configuration, if a failover is initiated
+by the Sentinel nodes, the Redis nodes will be reconfigured and the <strong>Master</strong>
+will change permanently (including in <code>redis.conf</code>) from one node to the other,
+until a new failover is initiated again.</p>
+
+<p>The same thing will happen with <code>sentinel.conf</code> that will be overridden after the
+initial execution, after any new sentinel node starts watching the <strong>Master</strong>,
+or a failover promotes a different <strong>Master</strong> node.</p>
+<h3 id='example-configuration-for-redis-master-and-sentinel-1'>Example configuration for Redis master and Sentinel 1 <a class='anchor' href='redis.html#example-configuration-for-redis-master-and-sentinel-1' title='Permalink'></a></h3>
+<p>In <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">redis_master_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">redis_sentinel_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6379</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'gitlab-redis'</span> <span class="c1"># must be the same in every sentinel node</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span> <span class="c1"># the same value defined in redis['password'] in the master instance</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_ip'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span> <span class="c1"># ip of the initial master redis instance</span>
+<span class="c1">#redis['master_port'] = 6379 # port of the initial master redis instance, uncomment to change to non default</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span>
+<span class="c1"># sentinel['port'] = 26379 # uncomment to change default port</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'quorum'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1"># sentinel['down_after_milliseconds'] = 10000</span>
+<span class="c1"># sentinel['failover_timeout'] = 60000</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p>
+<h3 id='example-configuration-for-redis-slave-1-and-sentinel-2'>Example configuration for Redis slave 1 and Sentinel 2 <a class='anchor' href='redis.html#example-configuration-for-redis-slave-1-and-sentinel-2' title='Permalink'></a></h3>
+<p>In <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">redis_slave_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">redis_sentinel_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.2'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6379</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_ip'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span> <span class="c1"># IP of master Redis server</span>
+<span class="c1">#redis['master_port'] = 6379 # Port of master Redis server, uncomment to change to non default</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'gitlab-redis'</span> <span class="c1"># must be the same in every sentinel node</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.2'</span>
+<span class="c1"># sentinel['port'] = 26379 # uncomment to change default port</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'quorum'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1"># sentinel['down_after_milliseconds'] = 10000</span>
+<span class="c1"># sentinel['failover_timeout'] = 60000</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p>
+<h3 id='example-configuration-for-redis-slave-2-and-sentinel-3'>Example configuration for Redis slave 2 and Sentinel 3 <a class='anchor' href='redis.html#example-configuration-for-redis-slave-2-and-sentinel-3' title='Permalink'></a></h3>
+<p>In <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">redis_slave_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">redis_sentinel_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.3'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6379</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_ip'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.1'</span> <span class="c1"># IP of master Redis server</span>
+<span class="c1">#redis['master_port'] = 6379 # Port of master Redis server, uncomment to change to non default</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'gitlab-redis'</span> <span class="c1"># must be the same in every sentinel node</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'bind'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10.0.0.3'</span>
+<span class="c1"># sentinel['port'] = 26379 # uncomment to change default port</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'quorum'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1"># sentinel['down_after_milliseconds'] = 10000</span>
+<span class="c1"># sentinel['failover_timeout'] = 60000</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p>
+<h3 id='example-configuration-for-the-gitlab-application'>Example configuration for the GitLab application <a class='anchor' href='redis.html#example-configuration-for-the-gitlab-application' title='Permalink'></a></h3>
+<p>In <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">redis</span><span class="p">[</span><span class="s1">'master_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'gitlab-redis'</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'redis-password-goes-here'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'redis_sentinels'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span><span class="s1">'host'</span> <span class="o">=&gt;</span> <span class="s1">'10.0.0.1'</span><span class="p">,</span> <span class="s1">'port'</span> <span class="o">=&gt;</span> <span class="mi">26379</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">'host'</span> <span class="o">=&gt;</span> <span class="s1">'10.0.0.2'</span><span class="p">,</span> <span class="s1">'port'</span> <span class="o">=&gt;</span> <span class="mi">26379</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">'host'</span> <span class="o">=&gt;</span> <span class="s1">'10.0.0.3'</span><span class="p">,</span> <span class="s1">'port'</span> <span class="o">=&gt;</span> <span class="mi">26379</span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure Omnibus GitLab</a> for the changes to take effect.</p>
+<h2 id='advanced-configuration'>Advanced configuration <a class='anchor' href='redis.html#advanced-configuration' title='Permalink'></a></h2>
+<p>Omnibus GitLab configures some things behind the curtains to make the sysadmins&#39;
+lives easier. If you want to know what happens underneath keep reading.</p>
+<h3 id='control-running-services'>Control running services <a class='anchor' href='redis.html#control-running-services' title='Permalink'></a></h3>
+<p>In the previous example, we&#39;ve used <code>redis_sentinel_role</code> and
+<code>redis_master_role</code> which simplifies the amount of configuration changes.</p>
+
+<p>If you want more control, here is what each one sets for you automatically
+when enabled:</p>
+<pre class="highlight ruby"><code><span class="c1">## Redis Sentinel Role</span>
+<span class="n">redis_sentinel_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># When Sentinel Role is enabled, the following services are also enabled</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="c1"># The following services are disabled</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">bootstrap</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">mailroom</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="o">-------</span>
+
+<span class="c1">## Redis master/slave Role</span>
+<span class="n">redis_master_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span> <span class="c1"># enable only one of them</span>
+<span class="n">redis_slave_role</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span> <span class="c1"># enable only one of them</span>
+
+<span class="c1"># When Redis Master or Slave role are enabled, the following services are</span>
+<span class="c1"># enabled/disabled. Note that if Redis and Sentinel roles are combined, both</span>
+<span class="c1"># services will be enabled.</span>
+
+<span class="c1"># The following services are disabled</span>
+<span class="n">sentinel</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">bootstrap</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">mailroom</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># For Redis Slave role, also change this setting from default 'true' to 'false':</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'master'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p>You can find the relevant attributes defined in <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-cookbooks/gitlab/libraries/gitlab_rails.rb">gitlab_rails.rb</a>.</p>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='redis.html#troubleshooting' title='Permalink'></a></h2>
+<p>There are a lot of moving parts that needs to be taken care carefully
+in order for the HA setup to work as expected.</p>
+
+<p>Before proceeding with the troubleshooting below, check your firewall rules:</p>
+
+<ul>
+<li>Redis machines
+
+<ul>
+<li>Accept TCP connection in <code>6379</code></li>
+<li>Connect to the other Redis machines via TCP in <code>6379</code></li>
+</ul></li>
+<li>Sentinel machines
+
+<ul>
+<li>Accept TCP connection in <code>26379</code></li>
+<li>Connect to other Sentinel machines via TCP in <code>26379</code></li>
+<li>Connect to the Redis machines via TCP in <code>6379</code></li>
+</ul></li>
+</ul>
+<h3 id='troubleshooting-redis-replication'>Troubleshooting Redis replication <a class='anchor' href='redis.html#troubleshooting-redis-replication' title='Permalink'></a></h3>
+<p>You can check if everything is correct by connecting to each server using
+<code>redis-cli</code> application, and sending the <code>INFO</code> command.</p>
+
+<p>If authentication was correctly defined, it should fail with:
+<code>NOAUTH Authentication required</code> error. Try to authenticate with the
+previous defined password with <code>AUTH redis-password-goes-here</code> and
+try the <code>INFO</code> command again.</p>
+
+<p>Look for the <code># Replication</code> section where you should see some important
+information like the <code>role</code> of the server.</p>
+
+<p>When connected to a <code>master</code> redis, you will see the number of connected
+<code>slaves</code>, and a list of each with connection details:</p>
+<pre class="highlight plaintext"><code># Replication
+role:master
+connected_slaves:1
+slave0:ip=10.133.5.21,port=6379,state=online,offset=208037514,lag=1
+master_repl_offset:208037658
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:206989083
+repl_backlog_histlen:1048576
+</code></pre>
+<p>When it&#39;s a <code>slave</code>, you will see details of the master connection and if
+its <code>up</code> or <code>down</code>:</p>
+<pre class="highlight plaintext"><code># Replication
+role:slave
+master_host:10.133.1.58
+master_port:6379
+master_link_status:up
+master_last_io_seconds_ago:1
+master_sync_in_progress:0
+slave_repl_offset:208096498
+slave_priority:100
+slave_read_only:1
+connected_slaves:0
+master_repl_offset:0
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+</code></pre><h3 id='troubleshooting-sentinel'>Troubleshooting Sentinel <a class='anchor' href='redis.html#troubleshooting-sentinel' title='Permalink'></a></h3>
+<p>If you get an error like: <code>Redis::CannotConnectError: No sentinels available.</code>,
+there may be something wrong with your configuration files or it can be related
+to <a href="https://github.com/redis/redis-rb/issues/531">this issue</a>.</p>
+
+<p>You must make sure you are defining the same value in <code>redis[&#39;master_name&#39;]</code>
+and <code>redis[&#39;master_pasword&#39;]</code> as you defined for your sentinel node.</p>
+
+<p>The way the redis connector <code>redis-rb</code> works with sentinel is a bit
+non-intuitive. We try to hide the complexity in omnibus, but it still requires
+a few extra configs.</p>
+
+<hr>
+
+<p>To make sure your configuration is correct:</p>
+
+<ol>
+<li>SSH into your GitLab application server</li>
+<li><p>Enter the Rails console:</p>
+<pre class="highlight plaintext"><code># For Omnibus installations
+sudo gitlab-rails console
+
+# For source installations
+sudo -u git rails console production
+</code></pre></li>
+<li><p>Run in the console:</p>
+<pre class="highlight ruby"><code><span class="n">redis</span> <span class="o">=</span> <span class="no">Redis</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">Gitlab</span><span class="o">::</span><span class="no">Redis</span><span class="p">.</span><span class="nf">params</span><span class="p">)</span>
+<span class="n">redis</span><span class="p">.</span><span class="nf">info</span>
+</code></pre>
+<p>Keep this screen open and try to simulate a failover below.</p></li>
+<li><p>To simulate a failover on master Redis, SSH into the Redis server and run:</p>
+<pre class="highlight shell"><code><span class="c"># port must match your master redis port, and the sleep time must be a few seconds bigger than defined one</span>
+ redis-cli -h localhost -p 6379 DEBUG sleep 20
+</code></pre></li>
+<li><p>Then back in the Rails console from the first step, run:</p>
+<pre class="highlight plaintext"><code>redis.info
+</code></pre>
+<p>You should see a different port after a few seconds delay
+(the failover/reconnect time).</p></li>
+</ol>
+<h2 id='changelog'>Changelog <a class='anchor' href='redis.html#changelog' title='Permalink'></a></h2>
+<p>Changes to Redis HA over time.</p>
+
+<p><strong>8.14</strong></p>
+
+<ul>
+<li>Redis Sentinel support is production-ready and bundled in the Omnibus GitLab
+Enterprise Edition package</li>
+<li>Documentation restructure for better readability</li>
+</ul>
+
+<p><strong>8.11</strong></p>
+
+<ul>
+<li>Experimental Redis Sentinel support was added</li>
+</ul>
+<h2 id='further-reading'>Further reading <a class='anchor' href='redis.html#further-reading' title='Permalink'></a></h2>
+<p>Read more on High Availability:</p>
+
+<ol>
+<li><a href="README.html">High Availability Overview</a></li>
+<li><a href="database.html">Configure the database</a></li>
+<li><a href="nfs.html">Configure NFS</a></li>
+<li><a href="gitlab.html">Configure the GitLab application servers</a></li>
+<li><a href="load_balancer.html">Configure the load balancers</a></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/high_availability/redis.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

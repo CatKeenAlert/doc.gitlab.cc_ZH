@@ -1,0 +1,449 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>SAML OmniAuth Provider - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">SAML OmniAuth Provider</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="saml.html#saml-omniauth-provider">SAML OmniAuth Provider</a>
+<ul>
+<li>
+<a href="saml.html#external-groups">External Groups</a>
+<ul>
+<li>
+<a href="saml.html#requirements">Requirements</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="saml.html#customization">Customization</a>
+<ul>
+<li>
+<a href="saml.html#auto_sign_in_with_provider"><code>auto_sign_in_with_provider</code></a>
+</li>
+<li>
+<a href="saml.html#attribute_statements"><code>attribute_statements</code></a>
+</li>
+<li>
+<a href="saml.html#allowed_clock_drift"><code>allowed_clock_drift</code></a>
+</li>
+</ul>
+</li>
+<li>
+<a href="saml.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="saml.html#500-error-after-login">500 error after login</a>
+</li>
+<li>
+<a href="saml.html#redirect-back-to-login-screen-with-no-evident-error">Redirect back to login screen with no evident error</a>
+</li>
+<li>
+<a href="saml.html#invalid-audience">Invalid audience</a>
+</li>
+<li>
+<a href="saml.html#missing-claims">Missing claims</a>
+</li>
+<li>
+<a href="saml.html#key-validation-error-digest-mismatch-or-fingerprint-mismatch">Key validation error, Digest mismatch or Fingerprint mismatch</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='saml-omniauth-provider'>SAML OmniAuth Provider <a class='anchor' href='saml.html#saml-omniauth-provider' title='Permalink'></a></h1>
+<p>GitLab can be configured to act as a SAML 2.0 Service Provider (SP). This allows
+GitLab to consume assertions from a SAML 2.0 Identity Provider (IdP) such as
+Microsoft ADFS to authenticate users.</p>
+
+<p>First configure SAML 2.0 support in GitLab, then register the GitLab application
+in your SAML IdP:</p>
+
+<ol>
+<li><p>Make sure GitLab is configured with HTTPS.
+See <a href="../install/installation.html#using-https">Using HTTPS</a> for instructions.</p></li>
+<li><p>On your GitLab server, open the configuration file.</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight shell"><code>  sudo editor /etc/gitlab/gitlab.rb
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight shell"><code>  <span class="nb">cd</span> /home/git/gitlab
+
+  sudo -u git -H editor config/gitlab.yml
+</code></pre></li>
+<li><p>See <a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth Configuration</a>
+for initial settings.</p></li>
+<li><p>To allow your users to use SAML to sign up without having to manually create
+an account first, don&#39;t forget to add the following values to your configuration:</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight ruby"><code>  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_allow_single_sign_on'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'saml'</span><span class="p">]</span>
+  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_block_auto_created_users'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight yaml"><code>  <span class="na">allow_single_sign_on</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">saml"</span><span class="pi">]</span>
+  <span class="na">block_auto_created_users</span><span class="pi">:</span> <span class="s">false</span>
+</code></pre></li>
+<li><p>You can also automatically link SAML users with existing GitLab users if their
+email addresses match by adding the following setting:</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight ruby"><code>  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_auto_link_saml_user'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight yaml"><code>  <span class="na">auto_link_saml_user</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre></li>
+<li><p>Add the provider configuration:</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight ruby"><code>  <span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_providers'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="ss">name: </span><span class="s1">'saml'</span><span class="p">,</span>
+      <span class="ss">args: </span><span class="p">{</span>
+               <span class="ss">assertion_consumer_service_url: </span><span class="s1">'https://gitlab.example.com/users/auth/saml/callback'</span><span class="p">,</span>
+               <span class="ss">idp_cert_fingerprint: </span><span class="s1">'43:51:43:a1:b5:fc:8b:b7:0a:3a:a9:b1:0f:66:73:a8'</span><span class="p">,</span>
+               <span class="ss">idp_sso_target_url: </span><span class="s1">'https://login.example.com/idp'</span><span class="p">,</span>
+               <span class="ss">issuer: </span><span class="s1">'https://gitlab.example.com'</span><span class="p">,</span>
+               <span class="ss">name_identifier_format: </span><span class="s1">'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'</span>
+             <span class="p">},</span>
+      <span class="ss">label: </span><span class="s1">'Company Login'</span> <span class="c1"># optional label for SAML login button, defaults to "Saml"</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight yaml"><code>  <span class="pi">-</span> <span class="pi">{</span>
+      <span class="nv">name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">saml'</span><span class="pi">,</span>
+      <span class="nv">args</span><span class="pi">:</span> <span class="pi">{</span>
+             <span class="nv">assertion_consumer_service_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com/users/auth/saml/callback'</span><span class="pi">,</span>
+             <span class="nv">idp_cert_fingerprint</span><span class="pi">:</span> <span class="s1">'</span><span class="s">43:51:43:a1:b5:fc:8b:b7:0a:3a:a9:b1:0f:66:73:a8'</span><span class="pi">,</span>
+             <span class="nv">idp_sso_target_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://login.example.com/idp'</span><span class="pi">,</span>
+             <span class="nv">issuer</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com'</span><span class="pi">,</span>
+             <span class="nv">name_identifier_format</span><span class="pi">:</span> <span class="s1">'</span><span class="s">urn:oasis:names:tc:SAML:2.0:nameid-format:transient'</span>
+           <span class="pi">},</span>
+      <span class="nv">label</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Company</span><span class="nv"> </span><span class="s">Login'</span> <span class="c1"># optional label for SAML login button, defaults to "Saml"</span>
+    <span class="pi">}</span>
+</code></pre></li>
+<li><p>Change the value for <code>assertion_consumer_service_url</code> to match the HTTPS endpoint
+of GitLab (append <code>users/auth/saml/callback</code> to the HTTPS URL of your GitLab
+installation to generate the correct value).</p></li>
+<li><p>Change the values of <code>idp_cert_fingerprint</code>, <code>idp_sso_target_url</code>,
+<code>name_identifier_format</code> to match your IdP. Check
+<a href="https://github.com/omniauth/omniauth-saml">the omniauth-saml documentation</a>
+for details on these options.</p></li>
+<li><p>Change the value of <code>issuer</code> to a unique name, which will identify the application
+to the IdP.</p></li>
+<li><p>Restart GitLab for the changes to take effect.</p></li>
+<li><p>Register the GitLab SP in your SAML 2.0 IdP, using the application name specified
+in <code>issuer</code>.</p></li>
+</ol>
+
+<p>To ease configuration, most IdP accept a metadata URL for the application to provide
+configuration information to the IdP. To build the metadata URL for GitLab, append
+<code>users/auth/saml/metadata</code> to the HTTPS URL of your GitLab installation, for instance:</p>
+<pre class="highlight plaintext"><code>   https://gitlab.example.com/users/auth/saml/metadata
+</code></pre>
+<p>At a minimum the IdP <em>must</em> provide a claim containing the user&#39;s email address, using
+claim name <code>email</code> or <code>mail</code>. The email will be used to automatically generate the GitLab
+username. GitLab will also use claims with name <code>name</code>, <code>first_name</code>, <code>last_name</code>
+(see <a href="https://github.com/omniauth/omniauth-saml/blob/master/lib/omniauth/strategies/saml.rb">the omniauth-saml gem</a>
+for supported claims).</p>
+
+<p>On the sign in page there should now be a SAML button below the regular sign in form.
+Click the icon to begin the authentication process. If everything goes well the user
+will be returned to GitLab and will be signed in.</p>
+<h2 id='external-groups'>External Groups <a class='anchor' href='saml.html#external-groups' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+This setting is only available on GitLab 8.7 and above.</p>
+</blockquote>
+
+<p>SAML login includes support for external groups. You can define in the SAML
+settings which groups, to which your users belong in your IdP, you wish to be
+marked as <a href="../user/permissions.html">external</a>.</p>
+<h3 id='requirements'>Requirements <a class='anchor' href='saml.html#requirements' title='Permalink'></a></h3>
+<p>First you need to tell GitLab where to look for group information. For this you
+need to make sure that your IdP server sends a specific <code>AttributeStament</code> along
+with the regular SAML response. Here is an example:</p>
+<pre class="highlight xml"><code><span class="nt">&lt;saml:AttributeStatement&gt;</span>
+  <span class="nt">&lt;saml:Attribute</span> <span class="na">Name=</span><span class="s">"Groups"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">"xs:string"</span><span class="nt">&gt;</span>SecurityGroup<span class="nt">&lt;/saml:AttributeValue&gt;</span>
+    <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">"xs:string"</span><span class="nt">&gt;</span>Developers<span class="nt">&lt;/saml:AttributeValue&gt;</span>
+    <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">"xs:string"</span><span class="nt">&gt;</span>Designers<span class="nt">&lt;/saml:AttributeValue&gt;</span>
+  <span class="nt">&lt;/saml:Attribute&gt;</span>
+<span class="nt">&lt;/saml:AttributeStatement&gt;</span>
+</code></pre>
+<p>The name of the attribute can be anything you like, but it must contain the groups
+to which a user belongs. In order to tell GitLab where to find these groups, you need
+to add a <code>groups_attribute:</code> element to your SAML settings. You will also need to
+tell GitLab which groups are external via the <code>external_groups:</code> element:</p>
+<pre class="highlight yaml"><code><span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">saml'</span><span class="pi">,</span>
+  <span class="nv">label</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Our</span><span class="nv"> </span><span class="s">SAML</span><span class="nv"> </span><span class="s">Provider'</span><span class="pi">,</span>
+  <span class="nv">groups_attribute</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Groups'</span><span class="pi">,</span>
+  <span class="nv">external_groups</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">Freelancers'</span><span class="pi">,</span> <span class="s1">'</span><span class="s">Interns'</span><span class="pi">],</span>
+  <span class="nv">args</span><span class="pi">:</span> <span class="pi">{</span>
+          <span class="nv">assertion_consumer_service_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com/users/auth/saml/callback'</span><span class="pi">,</span>
+          <span class="nv">idp_cert_fingerprint</span><span class="pi">:</span> <span class="s1">'</span><span class="s">43:51:43:a1:b5:fc:8b:b7:0a:3a:a9:b1:0f:66:73:a8'</span><span class="pi">,</span>
+          <span class="nv">idp_sso_target_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://login.example.com/idp'</span><span class="pi">,</span>
+          <span class="nv">issuer</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com'</span><span class="pi">,</span>
+          <span class="nv">name_identifier_format</span><span class="pi">:</span> <span class="s1">'</span><span class="s">urn:oasis:names:tc:SAML:2.0:nameid-format:transient'</span>
+        <span class="pi">}</span> <span class="pi">}</span>
+</code></pre><h2 id='customization'>Customization <a class='anchor' href='saml.html#customization' title='Permalink'></a></h2><h3 id='auto_sign_in_with_provider'><code>auto_sign_in_with_provider</code> <a class='anchor' href='saml.html#auto_sign_in_with_provider' title='Permalink'></a></h3>
+<p>You can add this setting to your GitLab configuration to automatically redirect you
+to your SAML server for authentication, thus removing the need to click a button
+before actually signing in.</p>
+
+<p>For omnibus package:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_auto_sign_in_with_provider'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'saml'</span>
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight yaml"><code><span class="na">omniauth</span><span class="pi">:</span>
+  <span class="na">auto_sign_in_with_provider</span><span class="pi">:</span> <span class="s">saml</span>
+</code></pre>
+<p>Please keep in mind that every sign in attempt will be redirected to the SAML server,
+so you will not be able to sign in using local credentials. Make sure that at least one
+of the SAML users has admin permissions.</p>
+<h3 id='attribute_statements'><code>attribute_statements</code> <a class='anchor' href='saml.html#attribute_statements' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+This setting is only available on GitLab 8.6 and above.
+This setting should only be used to map attributes that are part of the
+OmniAuth info hash schema.</p>
+</blockquote>
+
+<p><code>attribute_statements</code> is used to map Attribute Names in a SAMLResponse to entries
+in the OmniAuth <a href="https://github.com/intridea/omniauth/wiki/Auth-Hash-Schema#schema-10-and-later">info hash</a>.</p>
+
+<p>For example, if your SAMLResponse contains an Attribute called &#39;EmailAddress&#39;,
+specify <code>{ email: [&#39;EmailAddress&#39;] }</code> to map the Attribute to the
+corresponding key in the info hash.  URI-named Attributes are also supported, e.g.
+<code>{ email: [&#39;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress&#39;] }</code>.</p>
+
+<p>This setting allows you tell GitLab where to look for certain attributes required
+to create an account. Like mentioned above, if your IdP sends the user&#39;s email
+address as <code>EmailAddress</code> instead of <code>email</code>, let GitLab know by setting it on
+your configuration:</p>
+<pre class="highlight yaml"><code><span class="na">args</span><span class="pi">:</span> <span class="pi">{</span>
+        <span class="nv">assertion_consumer_service_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com/users/auth/saml/callback'</span><span class="pi">,</span>
+        <span class="nv">idp_cert_fingerprint</span><span class="pi">:</span> <span class="s1">'</span><span class="s">43:51:43:a1:b5:fc:8b:b7:0a:3a:a9:b1:0f:66:73:a8'</span><span class="pi">,</span>
+        <span class="nv">idp_sso_target_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://login.example.com/idp'</span><span class="pi">,</span>
+        <span class="nv">issuer</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com'</span><span class="pi">,</span>
+        <span class="nv">name_identifier_format</span><span class="pi">:</span> <span class="s1">'</span><span class="s">urn:oasis:names:tc:SAML:2.0:nameid-format:transient'</span><span class="pi">,</span>
+        <span class="nv">attribute_statements</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">email</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">EmailAddress'</span><span class="pi">]</span> <span class="pi">}</span>
+<span class="pi">}</span>
+</code></pre><h3 id='allowed_clock_drift'><code>allowed_clock_drift</code> <a class='anchor' href='saml.html#allowed_clock_drift' title='Permalink'></a></h3>
+<p>The clock of the Identity Provider may drift slightly ahead of your system clocks.
+To allow for a small amount of clock drift you can use <code>allowed_clock_drift</code> within
+your settings. Its value must be given in a number (and/or fraction) of seconds.
+The value given is added to the current time at which the response is validated.</p>
+<pre class="highlight yaml"><code><span class="na">args</span><span class="pi">:</span> <span class="pi">{</span>
+        <span class="nv">assertion_consumer_service_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com/users/auth/saml/callback'</span><span class="pi">,</span>
+        <span class="nv">idp_cert_fingerprint</span><span class="pi">:</span> <span class="s1">'</span><span class="s">43:51:43:a1:b5:fc:8b:b7:0a:3a:a9:b1:0f:66:73:a8'</span><span class="pi">,</span>
+        <span class="nv">idp_sso_target_url</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://login.example.com/idp'</span><span class="pi">,</span>
+        <span class="nv">issuer</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://gitlab.example.com'</span><span class="pi">,</span>
+        <span class="nv">name_identifier_format</span><span class="pi">:</span> <span class="s1">'</span><span class="s">urn:oasis:names:tc:SAML:2.0:nameid-format:transient'</span><span class="pi">,</span>
+        <span class="nv">attribute_statements</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">email</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">EmailAddress'</span><span class="pi">]</span> <span class="pi">},</span>
+        <span class="nv">allowed_clock_drift</span><span class="pi">:</span> <span class="nv">1</span> <span class="c1"># for one second clock drift</span>
+<span class="pi">}</span>
+</code></pre><h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='saml.html#troubleshooting' title='Permalink'></a></h2><h3 id='500-error-after-login'>500 error after login <a class='anchor' href='saml.html#500-error-after-login' title='Permalink'></a></h3>
+<p>If you see a &quot;500 error&quot; in GitLab when you are redirected back from the SAML sign in page,
+this likely indicates that GitLab could not get the email address for the SAML user.</p>
+
+<p>Make sure the IdP provides a claim containing the user&#39;s email address, using claim name
+<code>email</code> or <code>mail</code>.</p>
+<h3 id='redirect-back-to-login-screen-with-no-evident-error'>Redirect back to login screen with no evident error <a class='anchor' href='saml.html#redirect-back-to-login-screen-with-no-evident-error' title='Permalink'></a></h3>
+<p>If after signing in into your SAML server you are redirected back to the sign in page and
+no error is displayed, check your <code>production.log</code> file. It will most likely contain the
+message <code>Can&#39;t verify CSRF token authenticity</code>. This means that there is an error during
+the SAML request, but this error never reaches GitLab due to the CSRF check.</p>
+
+<p>To bypass this you can add <code>skip_before_action :verify_authenticity_token</code> to the
+<code>omniauth_callbacks_controller.rb</code> file immediately after the <code>class</code> line and
+comment out the <code>protect_from_forgery</code> line using a <code>#</code> then restart Unicorn. This
+will allow the error to hit GitLab, where it can then be seen in the usual logs,
+or as a flash message on the login screen.</p>
+
+<p>That file is located in <code>/opt/gitlab/embedded/service/gitlab-rails/app/controllers</code>
+for Omnibus installations and by default in <code>/home/git/gitlab/app/controllers</code> for
+installations from source. Restart Unicorn using the <code>sudo gitlab-ctl restart unicorn</code>
+command on Omnibus installations and <code>sudo service gitlab restart</code> on installations
+from source.</p>
+
+<p>You may also find the <a href="https://addons.mozilla.org/en-US/firefox/addon/sso-tracer">SSO Tracer</a>
+(Firefox) and <a href="https://chrome.google.com/webstore/detail/saml-chrome-panel/paijfdbeoenhembfhkhllainmocckace">SAML Chrome Panel</a>
+(Chrome) browser extensions useful in your debugging.</p>
+<h3 id='invalid-audience'>Invalid audience <a class='anchor' href='saml.html#invalid-audience' title='Permalink'></a></h3>
+<p>This error means that the IdP doesn&#39;t recognize GitLab as a valid sender and
+receiver of SAML requests. Make sure to add the GitLab callback URL to the approved
+audiences of the IdP server.</p>
+<h3 id='missing-claims'>Missing claims <a class='anchor' href='saml.html#missing-claims' title='Permalink'></a></h3>
+<p>The IdP server needs to pass certain information in order for GitLab to either
+create an account, or match the login information to an existing account. <code>email</code>
+is the minimum amount of information that needs to be passed. If the IdP server
+is not providing this information, all SAML requests will fail.</p>
+
+<p>Make sure this information is provided.</p>
+<h3 id='key-validation-error-digest-mismatch-or-fingerprint-mismatch'>Key validation error, Digest mismatch or Fingerprint mismatch <a class='anchor' href='saml.html#key-validation-error-digest-mismatch-or-fingerprint-mismatch' title='Permalink'></a></h3>
+<p>These errors all come from a similar place, the SAML certificate. SAML requests
+need to be validated using a fingerprint, a certificate or a validator.</p>
+
+<p>For this you need take the following into account:</p>
+
+<ul>
+<li>If no certificate is provided in the settings, a fingerprint or fingerprint
+validator needs to be provided and the response from the server must contain
+a certificate (<code>&lt;ds:KeyInfo&gt;&lt;ds:X509Data&gt;&lt;ds:X509Certificate&gt;</code>)</li>
+<li>If a certificate is provided in the settings, it is no longer necessary for
+the request to contain one. In this case the fingerprint or fingerprint
+validators are optional</li>
+</ul>
+
+<p>Make sure that one of the above described scenarios is valid, or the requests will
+fail with one of the mentioned errors.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/integration/saml.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

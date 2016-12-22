@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Health Check - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Health Check</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="health_check.html#health-check">Health Check</a>
+<ul>
+<li>
+<a href="health_check.html#access-token">Access Token</a>
+</li>
+<li>
+<a href="health_check.html#using-the-endpoint">Using the Endpoint</a>
+</li>
+<li>
+<a href="health_check.html#status">Status</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='health-check'>Health Check <a class='anchor' href='health_check.html#health-check' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/3888">Introduced</a> in GitLab 8.8.</p>
+</blockquote>
+
+<p>GitLab provides a health check endpoint for uptime monitoring on the <code>health_check</code> web
+endpoint. The health check reports on the overall system status based on the status of
+the database connection, the state of the database migrations, and the ability to write
+and access the cache. This endpoint can be provided to uptime monitoring services like
+<a href="https://www.pingdom.com">Pingdom</a>, <a href="https://nagios-plugins.org/doc/man/check_http.html">Nagios</a>, and <a href="https://docs.newrelic.com/docs/alerts/alert-policies/downtime-alerts/availability-monitoring">NewRelic</a>.</p>
+<h2 id='access-token'>Access Token <a class='anchor' href='health_check.html#access-token' title='Permalink'></a></h2>
+<p>An access token needs to be provided while accessing the health check endpoint. The current
+accepted token can be found on the <code>admin/health_check</code> page of your GitLab instance.</p>
+
+<p><a target="_blank" href="img/health_check_token.png"><img src="img/health_check_token.png" title="" alt="access token"/></a></p>
+
+<p>The access token can be passed as a URL parameter:</p>
+<pre class="highlight plaintext"><code>https://gitlab.example.com/health_check.json?token=ACCESS_TOKEN
+</code></pre>
+<p>or as an HTTP header:</p>
+<pre class="highlight shell"><code>curl --header <span class="s2">"TOKEN: ACCESS_TOKEN"</span> https://gitlab.example.com/health_check.json
+</code></pre><h2 id='using-the-endpoint'>Using the Endpoint <a class='anchor' href='health_check.html#using-the-endpoint' title='Permalink'></a></h2>
+<p>Once you have the access token, health information can be retrieved as plain text, JSON,
+or XML using the <code>health_check</code> endpoint:</p>
+
+<ul>
+<li><code>https://gitlab.example.com/health_check?token=ACCESS_TOKEN</code></li>
+<li><code>https://gitlab.example.com/health_check.json?token=ACCESS_TOKEN</code></li>
+<li><code>https://gitlab.example.com/health_check.xml?token=ACCESS_TOKEN</code></li>
+</ul>
+
+<p>You can also ask for the status of specific services:</p>
+
+<ul>
+<li><code>https://gitlab.example.com/health_check/cache.json?token=ACCESS_TOKEN</code></li>
+<li><code>https://gitlab.example.com/health_check/database.json?token=ACCESS_TOKEN</code></li>
+<li><code>https://gitlab.example.com/health_check/migrations.json?token=ACCESS_TOKEN</code></li>
+</ul>
+
+<p>For example, the JSON output of the following health check:</p>
+<pre class="highlight shell"><code>curl --header <span class="s2">"TOKEN: ACCESS_TOKEN"</span> https://gitlab.example.com/health_check.json
+</code></pre>
+<p>would be like:</p>
+<pre class="highlight plaintext"><code>{"healthy":true,"message":"success"}
+</code></pre><h2 id='status'>Status <a class='anchor' href='health_check.html#status' title='Permalink'></a></h2>
+<p>On failure, the endpoint will return a <code>500</code> HTTP status code. On success, the endpoint
+will return a valid successful HTTP status code, and a <code>success</code> message. Ideally your
+uptime monitoring should look for the success message.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/admin_area/monitoring/health_check.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

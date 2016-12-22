@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>CI/CD pipelines settings - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">CI/CD pipelines settings</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="settings.html#ci-cd-pipelines-settings">CI/CD pipelines settings</a>
+<ul>
+<li>
+<a href="settings.html#git-strategy">Git strategy</a>
+</li>
+<li>
+<a href="settings.html#timeout">Timeout</a>
+</li>
+<li>
+<a href="settings.html#test-coverage-parsing">Test coverage parsing</a>
+</li>
+<li>
+<a href="settings.html#visibility-of-pipelines">Visibility of pipelines</a>
+</li>
+<li>
+<a href="settings.html#badges">Badges</a>
+<ul>
+<li>
+<a href="settings.html#build-status-badge">Build status badge</a>
+</li>
+<li>
+<a href="settings.html#test-coverage-report-badge">Test coverage report badge</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='ci-cd-pipelines-settings'>CI/CD pipelines settings <a class='anchor' href='settings.html#ci-cd-pipelines-settings' title='Permalink'></a></h1>
+<p>To reach the pipelines settings:</p>
+
+<ol>
+<li><p>Navigate to your project and click the cog icon in the upper right corner.</p>
+
+<p><a target="_blank" href="../img/project_settings_list.png"><img src="../img/project_settings_list.png" title="" alt="Project settings menu"/></a></p></li>
+<li><p>Select <strong>CI/CD Pipelines</strong> from the menu.</p></li>
+</ol>
+
+<p>The following settings can be configured per project.</p>
+<h2 id='git-strategy'>Git strategy <a class='anchor' href='settings.html#git-strategy' title='Permalink'></a></h2>
+<p>With Git strategy, you can choose the default way your repository is fetched
+from GitLab in a job.</p>
+
+<p>There are two options:</p>
+
+<ul>
+<li>Using <code>git clone</code> which is slower since it clones the repository from scratch
+for every job, ensuring that the project workspace is always pristine.</li>
+<li>Using <code>git fetch</code> which is faster as it re-uses the project workspace (falling
+back to clone if it doesn&#39;t exist).</li>
+</ul>
+
+<p>The default Git strategy can be overridden by the <a href="../../../ci/yaml/README.html#git-strategy">GIT_STRATEGY variable</a>
+in <code>.gitlab-ci.yml</code>.</p>
+<h2 id='timeout'>Timeout <a class='anchor' href='settings.html#timeout' title='Permalink'></a></h2>
+<p>Timeout defines the maximum amount of time in minutes that a job is able run.
+The default value is 60 minutes. Decrease the time limit if you want to impose
+a hard limit on your jobs&#39; running time or increase it otherwise. In any case,
+if the job surpasses the threshold, it is marked as failed.</p>
+<h2 id='test-coverage-parsing'>Test coverage parsing <a class='anchor' href='settings.html#test-coverage-parsing' title='Permalink'></a></h2>
+<p>If you use test coverage in your code, GitLab can capture its output in the
+build log using a regular expression. In the pipelines settings, search for the
+&quot;Test coverage parsing&quot; section.</p>
+
+<p><a target="_blank" href="img/pipelines_settings_test_coverage.png"><img src="img/pipelines_settings_test_coverage.png" title="" alt="Pipelines settings test coverage"/></a></p>
+
+<p>Leave blank if you want to disable it or enter a ruby regular expression. You
+can use <a href="http://rubular.com">http://rubular.com</a> to test your regex.</p>
+
+<p>If the pipeline succeeds, the coverage is shown in the merge request widget and
+in the builds table.</p>
+
+<p><a target="_blank" href="img/pipelines_test_coverage_mr_widget.png"><img src="img/pipelines_test_coverage_mr_widget.png" title="" alt="MR widget coverage"/></a></p>
+
+<p><a target="_blank" href="img/pipelines_test_coverage_build.png"><img src="img/pipelines_test_coverage_build.png" title="" alt="Build status coverage"/></a></p>
+
+<p>A few examples of known coverage tools for a variety of languages can be found
+in the pipelines settings page.</p>
+<h2 id='visibility-of-pipelines'>Visibility of pipelines <a class='anchor' href='settings.html#visibility-of-pipelines' title='Permalink'></a></h2>
+<p>For public and internal projects, the pipelines page can be accessed by
+anyone and those logged in respectively. If you wish to hide it so that only
+the members of the project or group have access to it, uncheck the <strong>Public
+pipelines</strong> checkbox and save the changes.</p>
+<h2 id='badges'>Badges <a class='anchor' href='settings.html#badges' title='Permalink'></a></h2>
+<p>In the pipelines settings page you can find build status and test coverage
+badges for your project. The latest successful pipeline will be used to read
+the build status and test coverage values.</p>
+
+<p>Visit the pipelines settings page in your project to see the exact link to
+your badges, as well as ways to embed the badge image in your HTML or Markdown
+pages.</p>
+
+<p><a target="_blank" href="img/pipelines_settings_badges.png"><img src="img/pipelines_settings_badges.png" title="" alt="Pipelines badges"/></a></p>
+<h3 id='build-status-badge'>Build status badge <a class='anchor' href='settings.html#build-status-badge' title='Permalink'></a></h3>
+<p>Depending on the status of your build, a badge can have the following values:</p>
+
+<ul>
+<li>running</li>
+<li>success</li>
+<li>failed</li>
+<li>skipped</li>
+<li>unknown</li>
+</ul>
+
+<p>You can access a build status badge image using the following link:</p>
+<pre class="highlight plaintext"><code>https://example.gitlab.com/&lt;namespace&gt;/&lt;project&gt;/badges/&lt;branch&gt;/build.svg
+</code></pre><h3 id='test-coverage-report-badge'>Test coverage report badge <a class='anchor' href='settings.html#test-coverage-report-badge' title='Permalink'></a></h3>
+<p>GitLab makes it possible to define the regular expression for <a href="settings.html#test-coverage-parsing">coverage report</a>,
+that each build log will be matched against. This means that each build in the
+pipeline can have the test coverage percentage value defined.</p>
+
+<p>The test coverage badge can be accessed using following link:</p>
+<pre class="highlight plaintext"><code>https://example.gitlab.com/&lt;namespace&gt;/&lt;project&gt;/badges/&lt;branch&gt;/coverage.svg
+</code></pre>
+<p>If you would like to get the coverage report from a specific job, you can add
+the <code>job=coverage_job_name</code> parameter to the URL. For example, the following
+Markdown code will embed the test coverage report badge of the <code>coverage</code> job
+into your <code>README.md</code>:</p>
+<pre class="highlight markdown"><code><span class="p">![</span><span class="nv">coverage</span><span class="p">](</span><span class="sx">https://gitlab.com/gitlab-org/gitlab-ce/badges/master/coverage.svg?job=coverage</span><span class="p">)</span>
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/user/project/pipelines/settings.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

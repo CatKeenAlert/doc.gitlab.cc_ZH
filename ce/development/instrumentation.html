@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Instrumenting Ruby Code - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Instrumenting Ruby Code</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="instrumentation.html#instrumenting-ruby-code">Instrumenting Ruby Code</a>
+<ul>
+<li>
+<a href="instrumentation.html#instrumenting-methods">Instrumenting Methods</a>
+<ul>
+<li>
+<a href="instrumentation.html#examples">Examples</a>
+</li>
+<li>
+<a href="instrumentation.html#checking-instrumented-methods">Checking Instrumented Methods</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="instrumentation.html#instrumenting-ruby-blocks">Instrumenting Ruby Blocks</a>
+</li>
+<li>
+<a href="instrumentation.html#tracking-custom-events">Tracking Custom Events</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='instrumenting-ruby-code'>Instrumenting Ruby Code <a class='anchor' href='instrumentation.html#instrumenting-ruby-code' title='Permalink'></a></h1>
+<p>GitLab Performance Monitoring allows instrumenting of both methods and custom
+blocks of Ruby code. Method instrumentation is the primary form of
+instrumentation with block-based instrumentation only being used when we want to
+drill down to specific regions of code within a method.</p>
+<h2 id='instrumenting-methods'>Instrumenting Methods <a class='anchor' href='instrumentation.html#instrumenting-methods' title='Permalink'></a></h2>
+<p>Instrumenting methods is done by using the <code>Gitlab::Metrics::Instrumentation</code>
+module. This module offers a few different methods that can be used to
+instrument code:</p>
+
+<ul>
+<li><code>instrument_method</code>: instruments a single class method.</li>
+<li><code>instrument_instance_method</code>: instruments a single instance method.</li>
+<li><code>instrument_class_hierarchy</code>: given a Class this method will recursively
+instrument all sub-classes (both class and instance methods).</li>
+<li><code>instrument_methods</code>: instruments all public and private class methods of a Module.</li>
+<li><code>instrument_instance_methods</code>: instruments all public and private instance methods of a
+Module.</li>
+</ul>
+
+<p>To remove the need for typing the full <code>Gitlab::Metrics::Instrumentation</code>
+namespace you can use the <code>configure</code> class method. This method simply yields
+the supplied block while passing <code>Gitlab::Metrics::Instrumentation</code> as its
+argument. An example:</p>
+<pre class="highlight ruby"><code><span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="o">::</span><span class="no">Instrumentation</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+  <span class="n">conf</span><span class="p">.</span><span class="nf">instrument_method</span><span class="p">(</span><span class="no">Foo</span><span class="p">,</span> <span class="ss">:bar</span><span class="p">)</span>
+  <span class="n">conf</span><span class="p">.</span><span class="nf">instrument_method</span><span class="p">(</span><span class="no">Foo</span><span class="p">,</span> <span class="ss">:baz</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+<p>Using this method is in general preferred over directly calling the various
+instrumentation methods.</p>
+
+<p>Method instrumentation should be added in the initializer
+<code>config/initializers/metrics.rb</code>.</p>
+<h3 id='examples'>Examples <a class='anchor' href='instrumentation.html#examples' title='Permalink'></a></h3>
+<p>Instrumenting a single method:</p>
+<pre class="highlight ruby"><code><span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="o">::</span><span class="no">Instrumentation</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+  <span class="n">conf</span><span class="p">.</span><span class="nf">instrument_method</span><span class="p">(</span><span class="no">User</span><span class="p">,</span> <span class="ss">:find_by</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+<p>Instrumenting an entire class hierarchy:</p>
+<pre class="highlight ruby"><code><span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="o">::</span><span class="no">Instrumentation</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+  <span class="n">conf</span><span class="p">.</span><span class="nf">instrument_class_hierarchy</span><span class="p">(</span><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+<p>Instrumenting all public class methods:</p>
+<pre class="highlight ruby"><code><span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="o">::</span><span class="no">Instrumentation</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+  <span class="n">conf</span><span class="p">.</span><span class="nf">instrument_methods</span><span class="p">(</span><span class="no">User</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre><h3 id='checking-instrumented-methods'>Checking Instrumented Methods <a class='anchor' href='instrumentation.html#checking-instrumented-methods' title='Permalink'></a></h3>
+<p>The easiest way to check if a method has been instrumented is to check its
+source location. For example:</p>
+<pre class="highlight ruby"><code><span class="nb">method</span> <span class="o">=</span> <span class="no">Rugged</span><span class="o">::</span><span class="no">TagCollection</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:[]</span><span class="p">)</span>
+
+<span class="nb">method</span><span class="p">.</span><span class="nf">source_location</span>
+</code></pre>
+<p>If the source location points to <code>lib/gitlab/metrics/instrumentation.rb</code> you
+know the method has been instrumented.</p>
+
+<p>If you&#39;re using Pry you can use the <code>$</code> command to display the source code of a
+method (along with its source location), this is easier than running the above
+Ruby code. In case of the above snippet you&#39;d run the following:</p>
+<pre class="highlight plaintext"><code>$ Rugged::TagCollection#[]
+</code></pre>
+<p>This will print out something along the lines of:</p>
+<pre class="highlight plaintext"><code>From: /path/to/your/gitlab/lib/gitlab/metrics/instrumentation.rb @ line 148:
+Owner: #&lt;Module:0x0055f0865c6d50&gt;
+Visibility: public
+Number of lines: 21
+
+def #{name}(#{args_signature})
+  if trans = Gitlab::Metrics::Instrumentation.transaction
+    trans.measure_method(#{label.inspect}) { super }
+  else
+    super
+  end
+end
+</code></pre><h2 id='instrumenting-ruby-blocks'>Instrumenting Ruby Blocks <a class='anchor' href='instrumentation.html#instrumenting-ruby-blocks' title='Permalink'></a></h2>
+<p>Measuring blocks of Ruby code is done by calling <code>Gitlab::Metrics.measure</code> and
+passing it a block. For example:</p>
+<pre class="highlight ruby"><code><span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="p">.</span><span class="nf">measure</span><span class="p">(</span><span class="ss">:foo</span><span class="p">)</span> <span class="k">do</span>
+  <span class="p">.</span><span class="nf">.</span><span class="p">.</span>
+<span class="nf">end</span>
+</code></pre>
+<p>The block is executed and the execution time is stored as a set of fields in the
+currently running transaction. If no transaction is present the block is yielded
+without measuring anything.</p>
+
+<p>3 values are measured for a block:</p>
+
+<ol>
+<li>The real time elapsed, stored in NAME_real_time.</li>
+<li>The CPU time elapsed, stored in NAME_cpu_time.</li>
+<li>The call count, stored in NAME_call_count.</li>
+</ol>
+
+<p>Both the real and CPU timings are measured in milliseconds.</p>
+
+<p>Multiple calls to the same block will result in the final values being the sum
+of all individual values. Take this code for example:</p>
+<pre class="highlight ruby"><code><span class="mi">3</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span>
+  <span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="p">.</span><span class="nf">measure</span><span class="p">(</span><span class="ss">:sleep</span><span class="p">)</span> <span class="k">do</span>
+    <span class="nb">sleep</span> <span class="mi">1</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>Here the final value of <code>sleep_real_time</code> will be <code>3</code>, <em>not</em> <code>1</code>.</p>
+<h2 id='tracking-custom-events'>Tracking Custom Events <a class='anchor' href='instrumentation.html#tracking-custom-events' title='Permalink'></a></h2>
+<p>Besides instrumenting code GitLab Performance Monitoring also supports tracking
+of custom events. This is primarily intended to be used for tracking business
+metrics such as the number of Git pushes, repository imports, and so on.</p>
+
+<p>To track a custom event simply call <code>Gitlab::Metrics.add_event</code> passing it an
+event name and a custom set of (optional) tags. For example:</p>
+<pre class="highlight ruby"><code><span class="no">Gitlab</span><span class="o">::</span><span class="no">Metrics</span><span class="p">.</span><span class="nf">add_event</span><span class="p">(</span><span class="ss">:user_login</span><span class="p">,</span> <span class="ss">email: </span><span class="n">current_user</span><span class="p">.</span><span class="nf">email</span><span class="p">)</span>
+</code></pre>
+<p>Event names should be verbs such as <code>push_repository</code> and <code>remove_branch</code>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/instrumentation.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

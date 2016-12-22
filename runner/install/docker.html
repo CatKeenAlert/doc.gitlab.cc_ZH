@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Install GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Current page</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="docker.html#run-gitlab-runner-in-a-container">Run gitlab-runner in a container</a>
+<ul>
+<li>
+<a href="docker.html#docker-image-installation-and-configuration">Docker image installation and configuration</a>
+</li>
+<li>
+<a href="docker.html#update">Update</a>
+</li>
+<li>
+<a href="docker.html#installing-trusted-ssl-server-certificates">Installing Trusted SSL Server Certificates</a>
+</li>
+<li>
+<a href="docker.html#alpine-linux">Alpine Linux</a>
+</li>
+<li>
+<a href="docker.html#selinux">SELinux</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='run-gitlab-runner-in-a-container'>Run gitlab-runner in a container <a class='anchor' href='docker.html#run-gitlab-runner-in-a-container' title='Permalink'></a></h2><h3 id='docker-image-installation-and-configuration'>Docker image installation and configuration <a class='anchor' href='docker.html#docker-image-installation-and-configuration' title='Permalink'></a></h3>
+<p>Install Docker first:</p>
+<pre class="highlight shell"><code>curl -sSL https://get.docker.com/ | sh
+</code></pre>
+<p>We need to mount a config volume into our gitlab-runner container to
+be used for configs and other resources:</p>
+<pre class="highlight shell"><code>docker run -d --name gitlab-runner --restart always <span class="se">\</span>
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner <span class="se">\</span>
+  gitlab/gitlab-runner:latest
+</code></pre>
+<p>OR you can use a config container to mount your custom data volume:</p>
+<pre class="highlight shell"><code>docker run -d --name gitlab-runner-config <span class="se">\</span>
+    -v /etc/gitlab-runner <span class="se">\</span>
+    busybox:latest <span class="se">\</span>
+    /bin/true
+
+docker run -d --name gitlab-runner --restart always <span class="se">\</span>
+    --volumes-from gitlab-runner-config <span class="se">\</span>
+    gitlab/gitlab-runner:latest
+</code></pre>
+<p>If you plan on using Docker as the method of spawning runners, you will need to
+mount your docker socket like this:</p>
+<pre class="highlight shell"><code>docker run -d --name gitlab-runner --restart always <span class="se">\</span>
+  -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner <span class="se">\</span>
+  gitlab/gitlab-runner:latest
+</code></pre>
+<p>Register the runner (Look into <a href="http://doc.gitlab.com/ce/ci/runners/README.html">runners documentation</a> to learn how to obtain a token):</p>
+<pre class="highlight shell"><code>docker <span class="nb">exec</span> -it gitlab-runner gitlab-runner register
+
+Please enter the gitlab-ci coordinator URL <span class="o">(</span>e.g. https://gitlab.com <span class="o">)</span>
+https://gitlab.com
+Please enter the gitlab-ci token <span class="k">for </span>this runner
+xxx
+Please enter the gitlab-ci description <span class="k">for </span>this runner
+my-runner
+INFO[0034] fcf5c619 Registering runner... succeeded
+Please enter the executor: shell, docker, docker-ssh, ssh?
+docker
+Please enter the Docker image <span class="o">(</span>eg. ruby:2.1<span class="o">)</span>:
+ruby:2.1
+INFO[0037] Runner registered successfully. Feel free to start it, but <span class="k">if </span>it<span class="s1">'s
+running already the config should be automatically reloaded!
+</span></code></pre>
+<p>The runner should is started already and you are ready to build your projects!</p>
+
+<p>Make sure that you read the <a href="../faq/README.html">FAQ</a> section which describes
+some of the most common problems with GitLab Runner.</p>
+<h3 id='update'>Update <a class='anchor' href='docker.html#update' title='Permalink'></a></h3>
+<p>Pull the latest version:</p>
+<pre class="highlight shell"><code>docker pull gitlab/gitlab-runner:latest
+</code></pre>
+<p>Stop and remove the existing container:</p>
+<pre class="highlight shell"><code>docker stop gitlab-runner <span class="o">&amp;&amp;</span> docker rm gitlab-runner
+</code></pre>
+<p>Start the container as you did originally:</p>
+<pre class="highlight shell"><code>docker run -d --name gitlab-runner --restart always <span class="se">\</span>
+  -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner <span class="se">\</span>
+  gitlab/gitlab-runner:latest
+</code></pre>
+<p><strong>Note</strong>: you need to use the same method for mounting you data volume as you
+    did originally (<code>-v /srv/gitlab-runner/config:/etc/gitlab-runner</code> or <code>--volumes-from gitlab-runner</code>)</p>
+<h3 id='installing-trusted-ssl-server-certificates'>Installing Trusted SSL Server Certificates <a class='anchor' href='docker.html#installing-trusted-ssl-server-certificates' title='Permalink'></a></h3>
+<p>If your GitLab CI server is using self-signed SSL certificates then you should
+make sure the GitLab CI server certificate is trusted by the gitlab-ci-multi-runner
+container for them to be able to talk to each other.</p>
+
+<p>The <code>gitlab/gitlab-runner</code> image is configured to look for the trusted SSL
+certificates at <code>/etc/gitlab-runner/certs/ca.crt</code>, this can however be changed using the
+<code>-e &quot;CA_CERTIFICATES_PATH=/DIR/CERT&quot;</code> configuration option.</p>
+
+<p>Copy the <code>ca.crt</code> file into the <code>certs</code> directory on the data volume (or container).
+The <code>ca.crt</code> file should contain the root certificates of all the servers you
+want gitlab-ci-multi-runner to trust. The gitlab-ci-multi-runner container will
+import the <code>ca.crt</code> file on startup so if your container is already running you
+may need to restart it for the changes to take effect.</p>
+<h3 id='alpine-linux'>Alpine Linux <a class='anchor' href='docker.html#alpine-linux' title='Permalink'></a></h3>
+<p>You can also use alternative <a href="https://www.alpinelinux.org/">Alpine Linux</a> based image with much smaller footprint:</p>
+<pre class="highlight plaintext"><code>gitlab/gitlab-runner    latest              3e8077e209f5        13 hours ago        304.3 MB
+gitlab/gitlab-runner    alpine              7c431ac8f30f        13 hours ago        25.98 MB
+</code></pre>
+<p><strong>Alpine Linux image is designed to use only Docker as the method of spawning runners.</strong></p>
+
+<p>The original <code>gitlab/gitlab-runner:latest</code> is based on Ubuntu 14.04 LTS.</p>
+<h3 id='selinux'>SELinux <a class='anchor' href='docker.html#selinux' title='Permalink'></a></h3>
+<p>Some distributions (CentOS, RedHat, Fedora) use SELinux by default to enhance the security of the underlying system.</p>
+
+<p>The special care must be taken when dealing with such configuration.</p>
+
+<ol>
+<li><p>If you want to use Docker executor to run builds in containers you need to access the <code>/var/run/docker.sock</code>.
+However, if you have a SELinux in enforcing mode, you will see the <code>Permission denied</code> when accessing the <code>/var/run/docker.sock</code>.
+Install the <code>selinux-dockersock</code> and to resolve the issue: <a href="https://github.com/dpw/selinux-dockersock">https://github.com/dpw/selinux-dockersock</a>.</p></li>
+<li><p>Make sure that persistent directory is created on host: <code>mkdir -p /srv/gitlab-runner/config</code>.</p></li>
+<li><p>Run docker with <code>:Z</code> on volumes:</p></li>
+</ol>
+<pre class="highlight shell"><code>    docker run -d --name gitlab-runner --restart always <span class="se">\</span>
+      -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+      -v /srv/gitlab-runner/config:/etc/gitlab-runner:Z <span class="se">\</span>
+      gitlab/gitlab-runner:latest
+</code></pre>
+<p>More information about the cause and resolution can be found here:
+<a href="http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/">http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/</a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/docker.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

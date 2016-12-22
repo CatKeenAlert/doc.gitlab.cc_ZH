@@ -1,0 +1,525 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Geo configuration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Geo</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Geo configuration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="configuration.html#gitlab-geo-configuration">GitLab Geo configuration</a>
+<ul>
+<li>
+<a href="configuration.html#setting-up-gitlab">Setting up GitLab</a>
+<ul>
+<li>
+<a href="configuration.html#prerequisites">Prerequisites</a>
+</li>
+<li>
+<a href="configuration.html#step-1-adding-the-primary-gitlab-node">Step 1. Adding the primary GitLab node</a>
+</li>
+<li>
+<a href="configuration.html#step-2-updating-the-known_hosts-file-of-the-secondary-nodes">Step 2. Updating the <code>known_hosts</code> file of the secondary nodes</a>
+</li>
+<li>
+<a href="configuration.html#step-3-copying-the-database-encryption-key">Step 3. Copying the database encryption key</a>
+</li>
+<li>
+<a href="configuration.html#step-4-enabling-the-secondary-gitlab-node">Step 4. Enabling the secondary GitLab node</a>
+</li>
+<li>
+<a href="configuration.html#step-5-replicating-the-repositories-data">Step 5. Replicating the repositories data</a>
+</li>
+<li>
+<a href="configuration.html#step-6-regenerating-the-authorized-keys-in-the-secondary-node">Step 6. Regenerating the authorized keys in the secondary node</a>
+</li>
+<li>
+<a href="configuration.html#next-steps">Next steps</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="configuration.html#adding-another-secondary-geo-node">Adding another secondary Geo node</a>
+</li>
+<li>
+<a href="configuration.html#additional-information-for-the-ssh-key-pairs">Additional information for the SSH key pairs</a>
+</li>
+<li>
+<a href="configuration.html#troubleshooting">Troubleshooting</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-geo-configuration'>GitLab Geo configuration <a class='anchor' href='configuration.html#gitlab-geo-configuration' title='Permalink'></a></h1>
+<p>This is the final step you need to follow in order to setup a Geo node.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong></p>
+
+<ul>
+<li><a href="configuration.html#setting-up-gitlab">Setting up GitLab</a>
+
+<ul>
+<li><a href="configuration.html#prerequisites">Prerequisites</a></li>
+<li><a href="configuration.html#step-1-adding-the-primary-gitlab-node">Step 1. Adding the primary GitLab node</a></li>
+<li><a href="configuration.html#step-2-updating-the-known_hosts-file-of-the-secondary-nodes">Step 2. Updating the <code>known_hosts</code> file of the secondary nodes</a></li>
+<li><a href="configuration.html#step-3-copying-the-database-encryption-key">Step 3. Copying the database encryption key</a></li>
+<li><a href="configuration.html#step-4-enabling-the-secondary-gitlab-node">Step 4. Enabling the secondary GitLab node</a></li>
+<li><a href="configuration.html#step-5-replicating-the-repositories-data">Step 5. Replicating the repositories data</a></li>
+<li><a href="configuration.html#step-6-regenerating-the-authorized-keys-in-the-secondary-node">Step 6. Regenerating the authorized keys in the secondary node</a></li>
+<li><a href="configuration.html#next-steps">Next steps</a></li>
+</ul></li>
+<li><a href="configuration.html#adding-another-secondary-geo-node">Adding another secondary Geo node</a></li>
+<li><a href="configuration.html#additional-information-for-the-ssh-key-pairs">Additional information for the SSH key pairs</a></li>
+<li><a href="configuration.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='setting-up-gitlab'>Setting up GitLab <a class='anchor' href='configuration.html#setting-up-gitlab' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Don&#39;t setup any custom authentication in the secondary nodes, this will be
+handled by the primary node.</li>
+<li>Do not add anything in the secondaries Geo nodes admin area
+(<strong>Admin Area ➔ Geo Nodes</strong>). This is handled solely by the primary node.</li>
+</ul>
+</blockquote>
+
+<hr>
+
+<p>After having installed GitLab Enterprise Edition in the instance that will serve
+as a Geo node and set up the <a href="database.html">database replication</a>, the next steps can be summed
+up to:</p>
+
+<ol>
+<li>Configure the primary node</li>
+<li>Replicate some required configurations between the primary and the secondaries</li>
+<li>Start GitLab in the secondary node&#39;s machine</li>
+<li>Configure every secondary node in the primary&#39;s Admin screen</li>
+</ol>
+<h3 id='prerequisites'>Prerequisites <a class='anchor' href='configuration.html#prerequisites' title='Permalink'></a></h3>
+<p>This is the last step of configuring a Geo node. Make sure you have followed the
+first two steps of the <a href="README.html#setup-instructions">Setup instructions</a>:</p>
+
+<ol>
+<li>You have already installed on the secondary server the same version of
+GitLab Enterprise Edition that is present on the primary server.</li>
+<li>You have set up the database replication.</li>
+<li>Your secondary node is allowed to communicate via HTTP/HTTPS and SSH with
+your primary node (make sure your firewall is not blocking that).</li>
+</ol>
+
+<p>Some of the following steps require to configure the primary and secondary
+nodes almost at the same time. For your convenience make sure you have SSH
+logins opened on all nodes as we will be moving back and forth.</p>
+<h3 id='step-1-adding-the-primary-gitlab-node'>Step 1. Adding the primary GitLab node <a class='anchor' href='configuration.html#step-1-adding-the-primary-gitlab-node' title='Permalink'></a></h3>
+<ol>
+<li><p>SSH into the <strong>primary</strong> node and login as root:</p>
+<pre class="highlight plaintext"><code>sudo -i
+</code></pre></li>
+<li><p>Create a new SSH key pair for the primary node. Choose the default location
+and leave the password blank by hitting &#39;Enter&#39; three times:</p>
+<pre class="highlight shell"><code>sudo -u git -H ssh-keygen -b 4096 -C <span class="s1">'Primary GitLab Geo node'</span>
+</code></pre>
+<p>Read more in <a href="configuration.html#additional-information-for-the-ssh-key-pairs">additional info for SSH key pairs</a>.</p></li>
+<li><p>Get the contents of <code>id_rsa.pub</code> the was just created:</p>
+<pre class="highlight plaintext"><code># Omnibus GitLab installations
+sudo -u git cat /var/opt/gitlab/.ssh/id_rsa.pub
+
+# Installations from source
+sudo -u git cat /home/git/.ssh/id_rsa.pub
+</code></pre></li>
+<li><p>Visit the primary node&#39;s <strong>Admin Area ➔ Geo Nodes</strong> (<code>/admin/geo_nodes</code>) in
+your browser.</p></li>
+<li><p>Add the primary node by providing its full URL and the public SSH key
+you created previously. Make sure to check the box &#39;This is a primary node&#39;
+when adding it.</p>
+
+<p><a target="_blank" href="img/geo_nodes_add_new.png"><img src="img/geo_nodes_add_new.png" title="" alt="Add new primary Geo node"/></a></p></li>
+<li><p>Click the <strong>Add node</strong> button.</p></li>
+</ol>
+<h3 id='step-2-updating-the-known_hosts-file-of-the-secondary-nodes'>Step 2. Updating the <code>known_hosts</code> file of the secondary nodes <a class='anchor' href='configuration.html#step-2-updating-the-known_hosts-file-of-the-secondary-nodes' title='Permalink'></a></h3>
+<ol>
+<li><p>SSH into the <strong>secondary</strong> node and login as root:</p>
+<pre class="highlight plaintext"><code>sudo -i
+</code></pre></li>
+<li><p>The secondary nodes need to know the SSH fingerprint of the primary node that
+will be used for the Git clone/fetch operations. In order to add it to the
+<code>known_hosts</code> file, run the following command and type <code>yes</code> when asked:</p>
+<pre class="highlight plaintext"><code>sudo -u git -H ssh git@&lt;primary-node-url&gt;
+</code></pre>
+<p>Replace <code>&lt;primary-node-url&gt;</code> with the FQDN of the primary node.</p></li>
+<li><p>Verify that the fingerprint was added by checking <code>known_hosts</code>:</p>
+<pre class="highlight plaintext"><code># Omnibus GitLab installations
+cat /var/opt/gitlab/.ssh/known_hosts
+
+# Installations from source
+cat /home/git/.ssh/known_hosts
+</code></pre></li>
+</ol>
+<h3 id='step-3-copying-the-database-encryption-key'>Step 3. Copying the database encryption key <a class='anchor' href='configuration.html#step-3-copying-the-database-encryption-key' title='Permalink'></a></h3>
+<p>GitLab stores a unique encryption key in disk that we use to safely store
+sensitive data in the database. Any secondary node must have the
+<strong>exact same value</strong> for <code>db_key_base</code> as defined in the primary one.</p>
+
+<ol>
+<li><p>SSH into the <strong>primary</strong> node and login as root:</p>
+<pre class="highlight plaintext"><code>sudo -i
+</code></pre></li>
+<li><p>Find the value of <code>db_key_base</code> and copy it:</p>
+<pre class="highlight plaintext"><code> # Omnibus GitLab installations
+ cat /etc/gitlab/gitlab-secrets.json
+
+ # Installations from source
+ cat /home/git/gitlab/config/secrets.yml
+</code></pre></li>
+<li><p>SSH into the <strong>secondary</strong> node and login as root:</p>
+<pre class="highlight plaintext"><code>sudo -i
+</code></pre></li>
+<li><p>Open the secrets file and paste the value of <code>db_key_base</code> you copied in the
+previous step:</p>
+<pre class="highlight plaintext"><code> # Omnibus GitLab installations
+ editor /etc/gitlab/gitlab-secrets.json
+
+ # Installations from source
+ editor /home/git/gitlab/config/secrets.yml
+</code></pre></li>
+<li><p>Save and close the file.</p></li>
+</ol>
+<h3 id='step-4-enabling-the-secondary-gitlab-node'>Step 4. Enabling the secondary GitLab node <a class='anchor' href='configuration.html#step-4-enabling-the-secondary-gitlab-node' title='Permalink'></a></h3>
+<ol>
+<li><p>SSH into the <strong>secondary</strong> node and login as root:</p>
+<pre class="highlight plaintext"><code>sudo -i
+</code></pre></li>
+<li><p>Create a new SSH key pair for the secondary node. Choose the default location
+and leave the password blank by hitting &#39;Enter&#39; three times:</p>
+<pre class="highlight shell"><code>sudo -u git -H ssh-keygen -b 4096 -C <span class="s1">'Secondary GitLab Geo node'</span>
+</code></pre>
+<p>Read more in <a href="configuration.html#additional-information-for-the-ssh-key-pairs">additional info for SSH key pairs</a>.</p></li>
+<li><p>Get the contents of <code>id_rsa.pub</code> the was just created:</p>
+<pre class="highlight plaintext"><code># Omnibus installations
+sudo -u git cat /var/opt/gitlab/.ssh/id_rsa.pub
+
+# Installations from source
+sudo -u git cat /home/git/.ssh/id_rsa.pub
+</code></pre></li>
+<li><p>Visit the <strong>primary</strong> node&#39;s <strong>Admin Area ➔ Geo Nodes</strong> (<code>/admin/geo_nodes</code>)
+in your browser.</p></li>
+<li><p>Add the secondary node by providing its full URL and the public SSH key
+you created previously. <strong>Do NOT</strong> check the box &#39;This is a primary node&#39;.</p></li>
+<li><p>Click the <strong>Add node</strong> button.</p></li>
+</ol>
+
+<hr>
+
+<p>After the <strong>Add Node</strong> button is pressed, the primary node will start to notify
+changes to the secondary. Make sure the secondary instance is running and
+accessible.</p>
+
+<p>The two most obvious issues that replication can have here are:</p>
+
+<ol>
+<li>Database replication not working well</li>
+<li>Instance to instance notification not working. In that case, it can be
+something of the following:
+
+<ul>
+<li>You are using a custom certificate or custom CA (see the
+<a href="configuration.html#troubleshooting">Troubleshooting</a> section)</li>
+<li>Instance is firewalled (check your firewall rules)</li>
+</ul></li>
+</ol>
+<h3 id='step-5-replicating-the-repositories-data'>Step 5. Replicating the repositories data <a class='anchor' href='configuration.html#step-5-replicating-the-repositories-data' title='Permalink'></a></h3>
+<p>Getting a new secondary Geo node up and running, will also require the
+repositories directory to be synced from the primary node.</p>
+
+<p>With GitLab <strong>8.14</strong> you can start the syncing process by clicking the
+&quot;Backfill all repositories&quot; button on <code>Admin &gt; Geo Nodes</code> screen. </p>
+
+<p>On previous versions, you can use <code>rsync</code> for that:</p>
+
+<p>Make sure <code>rsync</code> is installed in both primary and secondary servers and root
+SSH access with a password is enabled. Otherwise, you can set up an SSH key-based
+connection between the servers.</p>
+
+<ol>
+<li><p>SSH into the <strong>secondary</strong> node and login as root:</p>
+<pre class="highlight plaintext"><code>sudo -i
+</code></pre></li>
+<li><p>Assuming <code>1.2.3.4</code> is the IP of the primary node, run the following command
+to start the sync:</p>
+<pre class="highlight shell"><code><span class="c"># For Omnibus installations</span>
+rsync -guavrP root@1.2.3.4:/var/opt/gitlab/git-data/repositories/ /var/opt/gitlab/git-data/repositories/
+gitlab-ctl reconfigure <span class="c"># to fix directory permissions</span>
+
+<span class="c"># For installations from source</span>
+rsync -guavrP root@1.2.3.4:/home/git/repositories/ /home/git/repositories/
+chmod ug+rwX,o-rwx /home/git/repositories
+</code></pre></li>
+</ol>
+
+<p>If this step is not followed, the secondary node will eventually clone and
+fetch every missing repository as they are updated with new commits on the
+primary node, so syncing the repositories beforehand will buy you some time.</p>
+
+<p>While active repositories will be eventually replicated, if you don&#39;t rsync,
+the files, any archived/inactive repositories will not get in the secondary node
+as Geo doesn&#39;t run any routine task to look for missing repositories.</p>
+<h3 id='step-6-regenerating-the-authorized-keys-in-the-secondary-node'>Step 6. Regenerating the authorized keys in the secondary node <a class='anchor' href='configuration.html#step-6-regenerating-the-authorized-keys-in-the-secondary-node' title='Permalink'></a></h3>
+<p>The final step is to regenerate the keys for <code>~/.ssh/authorized_keys</code>
+(HTTPS clone will still work without this extra step).</p>
+
+<p>On the <strong>secondary</strong> node where the database is <a href="database.html">already replicated</a>,
+run:</p>
+<pre class="highlight plaintext"><code># For Omnibus installations
+gitlab-rake gitlab:shell:setup
+
+# For source installations
+sudo -u git -H bundle exec rake gitlab:shell:setup RAILS_ENV=production
+</code></pre>
+<p>This will enable <code>git</code> operations to authorize against your existing users.
+New users and SSH keys updated after this step, will be replicated automatically.</p>
+<h3 id='next-steps'>Next steps <a class='anchor' href='configuration.html#next-steps' title='Permalink'></a></h3>
+<p>Your nodes should now be ready to use. You can login to the secondary node
+with the same credentials as used in the primary. Visit the secondary node&#39;s
+<strong>Admin Area ➔ Geo Nodes</strong> (<code>/admin/geo_nodes</code>) in your browser to check if it&#39;s
+correctly identified as a secondary Geo node and if Geo is enabled.</p>
+
+<p>If your installation isn&#39;t working properly, check the
+<a href="configuration.html#troubleshooting">troubleshooting</a> section.</p>
+<h2 id='adding-another-secondary-geo-node'>Adding another secondary Geo node <a class='anchor' href='configuration.html#adding-another-secondary-geo-node' title='Permalink'></a></h2>
+<p>To add another Geo node in an already Geo configured infrastructure, just follow
+<a href="configuration.html#step-2-updating-the-known_hosts-file-of-the-secondary-nodes">the steps starting form step 2</a>.
+Just omit the first step that sets up the primary node.</p>
+<h2 id='additional-information-for-the-ssh-key-pairs'>Additional information for the SSH key pairs <a class='anchor' href='configuration.html#additional-information-for-the-ssh-key-pairs' title='Permalink'></a></h2>
+<p>When adding a new Geo node, you must provide an SSH public key of the user that
+your GitLab instance runs on (unless changed, should be the user <code>git</code>). This
+user will act as a &quot;normal user&quot; who fetches from the primary Geo node.</p>
+
+<p>If for any reason you generate the key using a different name from the default
+<code>id_rsa</code>, or you want to generate an extra key only for the repository
+synchronization feature, you can do so, but you have to create/modify your
+<code>~/.ssh/config</code> (for the <code>git</code> user).</p>
+
+<p>This is an example on how to change the default key for all remote hosts:</p>
+<pre class="highlight shell"><code>Host <span class="k">*</span>                              <span class="c"># Match all remote hosts</span>
+  IdentityFile ~/.ssh/mycustom.key  <span class="c"># The location of your private key</span>
+</code></pre>
+<p>This is how to change it for an specific host:</p>
+<pre class="highlight shell"><code>Host example.com                    <span class="c"># The FQDN of the primary Geo node</span>
+  HostName example.com              <span class="c"># The FQDN of the primary Geo node</span>
+  IdentityFile ~/.ssh/mycustom.key  <span class="c"># The location of your private key</span>
+</code></pre><h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='configuration.html#troubleshooting' title='Permalink'></a></h2>
+<p>Setting up Geo requires careful attention to details and sometimes it&#39;s easy to
+miss a step. Here is a checklist of questions you should ask to try to detect
+where you have to fix (all commands and path locations are for Omnibus installs):</p>
+
+<ul>
+<li>Is Postgres replication working?</li>
+<li>Are my nodes pointing to the correct database instance?
+
+<ul>
+<li>You should make sure your primary Geo node points to the instance with
+writing permissions.</li>
+<li>Any secondary nodes should point only to read-only instances.</li>
+</ul></li>
+<li><p>Can Geo detect my current node correctly?</p>
+
+<ul>
+<li>Geo uses your defined node from <code>Admin ➔ Geo</code> screen, and tries to match
+with the value defined in <code>/etc/gitlab/gitlab.rb</code> configuration file.
+The relevant line looks like: <code>external_url &quot;http://gitlab.example.com&quot;</code>.</li>
+<li><p>To check if node on current machine is correctly detected type:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-rails runner "puts Gitlab::Geo.current_node.inspect"
+</code></pre>
+<p>and expect something like:</p>
+<pre class="highlight plaintext"><code>#&lt;GeoNode id: 2, schema: "https", host: "gitlab.example.com", port: 443, relative_url_root: "", primary: false, ...&gt;
+</code></pre></li>
+<li><p>By running the command above, <code>primary</code> should be <code>true</code> when executed in
+the primary node, and <code>false</code> on any secondary</p></li>
+</ul></li>
+<li><p>Did I define the correct SSH Key for the node?</p>
+
+<ul>
+<li>You must create an SSH Key for <code>git</code> user</li>
+<li>This key is the one you have to inform at <code>Admin &gt; Geo</code></li>
+</ul></li>
+<li><p>Can I SSH from secondary to primary node using <code>git</code> user account?</p>
+
+<ul>
+<li><p>This is the most obvious cause of problems with repository replication issues.
+If you haven&#39;t added the primary node&#39;s key to <code>known_hosts</code>, you will end up with
+a lot of failed sidekiq jobs with an error similar to:</p>
+<pre class="highlight plaintext"><code>Gitlab::Shell::Error: Host key verification failed. fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.
+</code></pre>
+<p>An easy way to fix is by logging in as the <code>git</code> user in the secondary node and run:</p>
+<pre class="highlight plaintext"><code># remove old entries to your primary gitlab in known_hosts
+ssh-keyscan -R your-primary-gitlab.example.com
+
+# add a new entry in known_hosts
+ssh-keyscan -t rsa your-primary-gitlab.example.com &gt;&gt; ~/.ssh/known_hosts
+</code></pre></li>
+</ul></li>
+<li><p>Can primary node communicate with secondary node by HTTP/HTTPS ports?</p></li>
+<li><p>Can secondary nodes communicate with primary node by HTTP/HTTPS/SSH ports?</p></li>
+<li><p>Can secondary nodes execute a successful git clone using git user&#39;s own
+SSH Key to primary node repository?</p></li>
+</ul>
+
+<blockquote>
+<p><strong>Note:</strong>
+This list is an attempt to document all the moving parts that can go wrong.
+We are working into getting all this steps verified automatically in a
+rake task in the future.</p>
+</blockquote>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/gitlab-geo/configuration.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

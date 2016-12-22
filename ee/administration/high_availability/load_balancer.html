@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Load Balancer for GitLab HA - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">High Availability</a></li>
+            
+          
+          <li class="breadcrumb">Load Balancer for GitLab HA</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="load_balancer.html#load-balancer-for-gitlab-ha">Load Balancer for GitLab HA</a>
+<ul>
+<li>
+<a href="load_balancer.html#basic-ports">Basic ports</a>
+</li>
+<li>
+<a href="load_balancer.html#gitlab-pages-ports">GitLab Pages Ports</a>
+</li>
+<li>
+<a href="load_balancer.html#alternate-ssh-port">Alternate SSH Port</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='load-balancer-for-gitlab-ha'>Load Balancer for GitLab HA <a class='anchor' href='load_balancer.html#load-balancer-for-gitlab-ha' title='Permalink'></a></h1>
+<p>In an active/active GitLab configuration, you will need a load balancer to route
+traffic to the application servers. The specifics on which load balancer to use
+or the exact configuration is beyond the scope of GitLab documentation. We hope
+that if you&#39;re managing HA systems like GitLab you have a load balancer of
+choice already. Some examples including HAProxy (open-source), F5 Big-IP LTM,
+and Citrix Net Scaler. This documentation will outline what ports and protocols
+you need to use with GitLab.</p>
+<h2 id='basic-ports'>Basic ports <a class='anchor' href='load_balancer.html#basic-ports' title='Permalink'></a></h2>
+<table><thead>
+<tr>
+<th>LB Port</th>
+<th>Backend Port</th>
+<th>Protocol</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>80</td>
+<td>80</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>443</td>
+<td>443</td>
+<td>HTTPS <sup id="fnref1"><a href="load_balancer.html#fn1" rel="footnote">1</a></sup></td>
+</tr>
+<tr>
+<td>22</td>
+<td>22</td>
+<td>TCP</td>
+</tr>
+</tbody></table>
+<h2 id='gitlab-pages-ports'>GitLab Pages Ports <a class='anchor' href='load_balancer.html#gitlab-pages-ports' title='Permalink'></a></h2>
+<p>If you&#39;re using GitLab Pages you will need some additional port configurations.
+GitLab Pages requires a separate VIP. Configure DNS to point the
+<code>pages_external_url</code> from <code>/etc/gitlab/gitlab.rb</code> at the new VIP. See the
+<a href="http://docs.gitlab.com/ee/pages/administration.html">GitLab Pages documentation</a> for more information.</p>
+
+<table><thead>
+<tr>
+<th>LB Port</th>
+<th>Backend Port</th>
+<th>Protocol</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>80</td>
+<td>Varies <sup id="fnref2"><a href="load_balancer.html#fn2" rel="footnote">2</a></sup></td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>443</td>
+<td>Varies <sup id="fnref2"><a href="load_balancer.html#fn2" rel="footnote">2</a></sup></td>
+<td>TCP <sup id="fnref3"><a href="load_balancer.html#fn3" rel="footnote">3</a></sup></td>
+</tr>
+</tbody></table>
+<h2 id='alternate-ssh-port'>Alternate SSH Port <a class='anchor' href='load_balancer.html#alternate-ssh-port' title='Permalink'></a></h2>
+<p>Some organizations have policies against opening SSH port 22. In this case,
+it may be helpful to configure an alternate SSH hostname that allows users
+to use SSH on port 443. An alternate SSH hostname will require a new VIP
+compared to the other GitLab HTTP configuration above.</p>
+
+<p>Configure DNS for an alternate SSH hostname such as altssh.gitlab.example.com.</p>
+
+<table><thead>
+<tr>
+<th>LB Port</th>
+<th>Backend Port</th>
+<th>Protocol</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>443</td>
+<td>22</td>
+<td>TCP</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<p>Read more on high-availability configuration:</p>
+
+<ol>
+<li><a href="database.html">Configure the database</a></li>
+<li><a href="redis.html">Configure Redis</a></li>
+<li><a href="nfs.html">Configure NFS</a></li>
+<li><a href="gitlab.html">Configure the GitLab application servers</a></li>
+</ol>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>When using HTTPS protocol for port 443, you will need to add an SSL
+  certificate to the load balancers. If you wish to terminate SSL at the
+  GitLab application server instead, use TCP protocol.&nbsp;<a href="load_balancer.html#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p>The backend port for GitLab Pages depends on the
+  <code>gitlab_pages[&#39;external_http&#39;]</code> and <code>gitlab_pages[&#39;external_https&#39;]</code>
+  setting. See <a href="http://docs.gitlab.com/ee/pages/administration.html">GitLab Pages documentation</a> for more details.&nbsp;<a href="load_balancer.html#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn3">
+<p>Port 443 for GitLab Pages should always use the TCP protocol. Users can
+  configure custom domains with custom SSL, which would not be possible
+  if SSL was terminated at the load balancer.&nbsp;<a href="load_balancer.html#fnref3" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/high_availability/load_balancer.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Push Rules - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Push Rules</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="push_rules.html#push-rules">Push Rules</a>
+<ul>
+<li>
+<a href="push_rules.html#new-hooks">New hooks</a>
+</li>
+<li>
+<a href="push_rules.html#how-to-use">How to use</a>
+</li>
+<li>
+<a href="push_rules.html#prevent-pushing-secrets-to-the-repository">Prevent pushing secrets to the repository</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='push-rules'>Push Rules <a class='anchor' href='push_rules.html#push-rules' title='Permalink'></a></h1>
+<p>Sometimes you need additional control over pushes to your repository.
+GitLab already offers protected branches.
+But there are cases when you need some specific rules like preventing git tag removal or enforcing a special format for commit messages.
+GitLab Enterprise Edition offers a user-friendly interface for such cases.</p>
+
+<p>Push Rules are defined per project so you can have different rules applied to different projects depends on your needs.
+Push Rules settings can be found at Project settings -&gt; Push Rules page.</p>
+<h2 id='new-hooks'>New hooks <a class='anchor' href='push_rules.html#new-hooks' title='Permalink'></a></h2>
+<p>If you are a subscriber and need a hook that is not there yet we would be glad to add it for free, please contact support to request one.</p>
+<h2 id='how-to-use'>How to use <a class='anchor' href='push_rules.html#how-to-use' title='Permalink'></a></h2>
+<p>Let&#39;s assume you have the following requirements for your workflow:</p>
+
+<ul>
+<li>every commit should reference a reference JIRA issue. For example: <code>Refactored css. Fixes JIRA-123.</code></li>
+<li>users should not be able to remove git tags with <code>git push</code></li>
+</ul>
+
+<p>All you need to do is write simple regular expression that requires mention of JIRA issue in a commit message.
+It can be something like this <code>/JIRA\-\d+/</code>.
+Just paste regular expression into commit message textfield(without start and ending slash) and save changes.
+See the screenshot below:</p>
+
+<p><a target="_blank" href="push_rules.png"><img src="push_rules.png" title="" alt="screenshot"/></a></p>
+
+<p>Now when a user tries to push a commit like <code>Bugfix</code> - their push will be declined.
+And pushing commit with message like <code>Bugfix according to JIRA-123</code> will be accepted.</p>
+<h2 id='prevent-pushing-secrets-to-the-repository'>Prevent pushing secrets to the repository <a class='anchor' href='push_rules.html#prevent-pushing-secrets-to-the-repository' title='Permalink'></a></h2>
+<p>You can turn on a predefined blacklist of files which won&#39;t be allowed to be pushed to a repository.</p>
+
+<p>By selecting the checkbox <em>Prevent committing secrets to Git</em>, GitLab prevents pushes to the repository when a file matches a regular expression as read from <code>lib/gitlab/checks/files_blacklist.yml</code> (make sure you are at the right branch as your GitLab version when viewing this file).</p>
+
+<p>Below is the list of what will be rejected by these regular expressions :</p>
+<pre class="highlight shell"><code><span class="c">#####################</span>
+<span class="c"># AWS CLI credential blobs</span>
+<span class="c">#####################</span>
+.aws/credentials
+aws/credentials
+homefolder/aws/credentials
+
+<span class="c">#####################</span>
+<span class="c"># Private RSA SSH keys</span>
+<span class="c">#####################</span>
+/ssh/id_rsa
+/.ssh/personal_rsa
+/config/server_rsa
+id_rsa
+.id_rsa
+
+<span class="c">#####################</span>
+<span class="c"># Private DSA SSH keys</span>
+<span class="c">#####################</span>
+/ssh/id_dsa
+/.ssh/personal_dsa
+/config/server_dsa
+id_dsa
+.id_dsa
+
+<span class="c">#####################</span>
+<span class="c"># Private ed25519 SSH keys</span>
+<span class="c">#####################</span>
+/ssh/id_ed25519
+/.ssh/personal_ed25519
+/config/server_ed25519
+id_ed25519
+.id_ed25519
+
+<span class="c">#####################</span>
+<span class="c"># Private ECDSA SSH keys</span>
+<span class="c">#####################</span>
+/ssh/id_ecdsa
+/.ssh/personal_ecdsa
+/config/server_ecdsa
+id_ecdsa
+.id_ecdsa
+
+<span class="c">#####################</span>
+<span class="c"># Any file with .pem or .key extensions</span>
+<span class="c">#####################</span>
+secret.pem
+private.key
+
+<span class="c">#####################</span>
+<span class="c"># Any file ending with _history or .history extension</span>
+<span class="c">#####################</span>
+pry.history
+bash_history
+
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/push_rules/push_rules.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

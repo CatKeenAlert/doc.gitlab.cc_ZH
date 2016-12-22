@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Shibboleth OmniAuth Provider - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Shibboleth OmniAuth Provider</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="shibboleth.html#shibboleth-omniauth-provider">Shibboleth OmniAuth Provider</a>
+<ul>
+<li>
+<a href="shibboleth.html#apache-2-4-gitlab-8-6-update">Apache 2.4 / GitLab 8.6 update</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='shibboleth-omniauth-provider'>Shibboleth OmniAuth Provider <a class='anchor' href='shibboleth.html#shibboleth-omniauth-provider' title='Permalink'></a></h1>
+<p>This documentation is for enabling shibboleth with omnibus-gitlab package.</p>
+
+<p>In order to enable Shibboleth support in gitlab we need to use Apache instead of Nginx (It may be possible to use Nginx, however this is difficult to configure using the bundled NIGNX provided in the omnibus-gitlab package). Apache uses mod_shib2 module for shibboleth authentication and can pass attributes as headers to omniauth-shibboleth provider.</p>
+
+<p>To enable the Shibboleth OmniAuth provider you must:</p>
+
+<ol>
+<li><p>Configure Apache shibboleth module. Installation and configuration of module it self is out of scope of this document.
+Check <a href="https://wiki.shibboleth.net/">https://wiki.shibboleth.net/</a> for more info.</p></li>
+<li><p>You can find Apache config in gitlab-recipes (<a href="https://gitlab.com/gitlab-org/gitlab-recipes/tree/master/web-server/apache">https://gitlab.com/gitlab-org/gitlab-recipes/tree/master/web-server/apache</a>)</p></li>
+</ol>
+
+<p>Following changes are needed to enable shibboleth:</p>
+
+<p>protect omniauth-shibboleth callback URL:</p>
+<pre class="highlight plaintext"><code>  &lt;Location /users/auth/shibboleth/callback&gt;
+    AuthType shibboleth
+    ShibRequestSetting requireSession 1
+    ShibUseHeaders On
+    require valid-user
+  &lt;/Location&gt;
+
+  Alias /shibboleth-sp /usr/share/shibboleth
+  &lt;Location /shibboleth-sp&gt;
+    Satisfy any
+  &lt;/Location&gt;
+
+  &lt;Location /Shibboleth.sso&gt;
+    SetHandler shib
+  &lt;/Location&gt;
+</code></pre>
+<p>exclude shibboleth URLs from rewriting, add &quot;RewriteCond %{REQUEST_URI} !/Shibboleth.sso&quot; and &quot;RewriteCond %{REQUEST_URI} !/shibboleth-sp&quot;, config should look like this:</p>
+<pre class="highlight plaintext"><code>  # Apache equivalent of Nginx try files
+  RewriteEngine on
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_URI} !/Shibboleth.sso
+  RewriteCond %{REQUEST_URI} !/shibboleth-sp
+  RewriteRule .* http://127.0.0.1:8080%{REQUEST_URI} [P,QSA]
+  RequestHeader set X_FORWARDED_PROTO 'https'
+</code></pre>
+<ol>
+<li> Edit /etc/gitlab/gitlab.rb configuration file, your shibboleth attributes should be in form of &quot;HTTP_ATTRIBUTE&quot; and you should addjust them to your need and environment. Add any other configuration you need.</li>
+</ol>
+
+<p>File should look like this:</p>
+<pre class="highlight plaintext"><code>external_url 'https://gitlab.example.com'
+gitlab_rails['internal_api_url'] = 'https://gitlab.example.com'
+
+# disable Nginx
+nginx['enable'] = false
+
+gitlab_rails['omniauth_allow_single_sign_on'] = true
+gitlab_rails['omniauth_block_auto_created_users'] = false
+gitlab_rails['omniauth_enabled'] = true
+gitlab_rails['omniauth_providers'] = [
+  {
+    "name" =&gt; 'shibboleth',
+        "args" =&gt; {
+        "shib_session_id_field" =&gt; "HTTP_SHIB_SESSION_ID",
+        "shib_application_id_field" =&gt; "HTTP_SHIB_APPLICATION_ID",
+        "uid_field" =&gt; 'HTTP_EPPN',
+        "name_field" =&gt; 'HTTP_CN',
+        "info_fields" =&gt; { "email" =&gt; 'HTTP_MAIL'}
+        }
+  }
+]
+
+</code></pre>
+<ol>
+<li>Save changes and reconfigure gitlab:
+<code>
+sudo gitlab-ctl reconfigure
+</code></li>
+</ol>
+
+<p>On the sign in page there should now be a &quot;Sign in with: Shibboleth&quot; icon below the regular sign in form. Click the icon to begin the authentication process. You will be redirected to IdP server (Depends on your Shibboleth module configuration). If everything goes well the user will be returned to GitLab and will be signed in.</p>
+<h2 id='apache-2-4-gitlab-8-6-update'>Apache 2.4 / GitLab 8.6 update <a class='anchor' href='shibboleth.html#apache-2-4-gitlab-8-6-update' title='Permalink'></a></h2>
+<p>The order of the first 2 Location directives is important. If they are reversed,
+you will not get a shibboleth session!</p>
+<pre class="highlight plaintext"><code>  &lt;Location /&gt;
+    Require all granted
+    ProxyPassReverse http://127.0.0.1:8181
+    ProxyPassReverse http://YOUR_SERVER_FQDN/
+  &lt;/Location&gt;
+
+  &lt;Location /users/auth/shibboleth/callback&gt;
+    AuthType shibboleth
+    ShibRequestSetting requireSession 1
+    ShibUseHeaders On
+    Require shib-session
+  &lt;/Location&gt;
+
+  Alias /shibboleth-sp /usr/share/shibboleth
+
+  &lt;Location /shibboleth-sp&gt;
+    Require all granted
+  &lt;/Location&gt;
+
+  &lt;Location /Shibboleth.sso&gt;
+    SetHandler shib
+  &lt;/Location&gt;
+
+  RewriteEngine on
+
+  #Don't escape encoded characters in api requests
+  RewriteCond %{REQUEST_URI} ^/api/v3/.*
+  RewriteCond %{REQUEST_URI} !/Shibboleth.sso
+  RewriteCond %{REQUEST_URI} !/shibboleth-sp
+  RewriteRule .* http://127.0.0.1:8181%{REQUEST_URI} [P,QSA,NE]
+
+  #Forward all requests to gitlab-workhorse except existing files
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f [OR]
+  RewriteCond %{REQUEST_URI} ^/uploads/.*
+  RewriteCond %{REQUEST_URI} !/Shibboleth.sso
+  RewriteCond %{REQUEST_URI} !/shibboleth-sp
+  RewriteRule .* http://127.0.0.1:8181%{REQUEST_URI} [P,QSA]
+
+  RequestHeader set X_FORWARDED_PROTO 'https'
+  RequestHeader set X-Forwarded-Ssl on
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/integration/shibboleth.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

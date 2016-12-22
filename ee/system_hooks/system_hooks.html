@@ -1,0 +1,459 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>System hooks - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">System hooks</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="system_hooks.html#system-hooks">System hooks</a>
+<ul>
+<li>
+<a href="system_hooks.html#hooks-request-example">Hooks request example</a>
+</li>
+<li>
+<a href="system_hooks.html#push-events">Push events</a>
+</li>
+<li>
+<a href="system_hooks.html#tag-events">Tag events</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='system-hooks'>System hooks <a class='anchor' href='system_hooks.html#system-hooks' title='Permalink'></a></h1>
+<p>Your GitLab instance can perform HTTP POST requests on the following events: <code>project_create</code>, <code>project_destroy</code>, <code>project_rename</code>, <code>project_transfer</code>, <code>user_add_to_team</code>, <code>user_remove_from_team</code>, <code>user_create</code>, <code>user_destroy</code>, <code>key_create</code>, <code>key_destroy</code>, <code>group_create</code>, <code>group_destroy</code>, <code>user_add_to_group</code> and <code>user_remove_from_group</code>.</p>
+
+<p>System hooks can be used, e.g. for logging or changing information in a LDAP server.</p>
+
+<blockquote>
+<p><strong>Note:</strong></p>
+
+<p>We follow the same structure from Webhooks for Push and Tag events, but we never display commits.</p>
+
+<p>Same deprecations from Webhooks are valid here.</p>
+</blockquote>
+<h2 id='hooks-request-example'>Hooks request example <a class='anchor' href='system_hooks.html#hooks-request-example' title='Permalink'></a></h2>
+<p><strong>Request header</strong>:</p>
+<pre class="highlight plaintext"><code>X-Gitlab-Event: System Hook
+</code></pre>
+<p><strong>Project created:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:54Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"project_create"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"owner_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"owner_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+ </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/storecloud"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"private"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Project destroyed:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:58Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"project_destroy"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Underscore"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"owner_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"owner_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"underscore"</span><span class="p">,</span><span class="w">
+ </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/underscore"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"internal"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Project renamed:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+               </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:58Z"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"project_rename"</span><span class="p">,</span><span class="w">
+                     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Underscore"</span><span class="p">,</span><span class="w">
+                     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"underscore"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/underscore"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"owner_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"owner_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+       </span><span class="s2">"project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"internal"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"old_path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/overscore"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Project transferred:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+               </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:58Z"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"project_transfer"</span><span class="p">,</span><span class="w">
+                     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Underscore"</span><span class="p">,</span><span class="w">
+                     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"underscore"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scores/underscore"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"owner_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"owner_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+       </span><span class="s2">"project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"internal"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"old_path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/overscore"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>New Team Member:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+                  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:56Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_add_to_team"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Master"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"project_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"project_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+ </span><span class="s2">"project_path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/storecloud"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"user_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+                   </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"user_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith"</span><span class="p">,</span><span class="w">
+                     </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"private"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Team Member Removed:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+                  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:56Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_remove_from_team"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Master"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"project_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"project_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+ </span><span class="s2">"project_path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith/storecloud"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"user_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+                   </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"user_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith"</span><span class="p">,</span><span class="w">
+                     </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"private"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>User created:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:44:07Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js@gitlabhq.com"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_create"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>User removed:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:44:07Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js@gitlabhq.com"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_destroy"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Key added</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"key_create"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-08-18 18:45:16 UTC"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC58FwqHUbebw2SdT7SP4FxZ0w+lAO/erhy2ylhlcW/tZ3GY3mBu9VeeiSGoGz8hCx80Zrz+aQv28xfFfKlC8XQFpCWwsnWnQqO2Lv9bS8V1fIHgMxOHIt5Vs+9CAWGCCvUOAurjsUDoE2ALIXLDMKnJxcxD13XjWdK54j6ZXDB4syLF0C2PnAQSVY9X7MfCYwtuFmhQhKaBussAXpaVMRHltie3UYSBUUuZaB3J4cg/7TxlmxcNd+ppPRIpSZAB0NI6aOnqoBCpimscO/VpQRJMVLr3XiSYeT6HBiDXWHnIVPfQc03OGcaFqOit6p8lYKMaP/iUQLm+pgpZqrXZ9vB john@localhost"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Key removed</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"key_destroy"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-08-18 18:45:16 UTC"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC58FwqHUbebw2SdT7SP4FxZ0w+lAO/erhy2ylhlcW/tZ3GY3mBu9VeeiSGoGz8hCx80Zrz+aQv28xfFfKlC8XQFpCWwsnWnQqO2Lv9bS8V1fIHgMxOHIt5Vs+9CAWGCCvUOAurjsUDoE2ALIXLDMKnJxcxD13XjWdK54j6ZXDB4syLF0C2PnAQSVY9X7MfCYwtuFmhQhKaBussAXpaVMRHltie3UYSBUUuZaB3J4cg/7TxlmxcNd+ppPRIpSZAB0NI6aOnqoBCpimscO/VpQRJMVLr3XiSYeT6HBiDXWHnIVPfQc03OGcaFqOit6p8lYKMaP/iUQLm+pgpZqrXZ9vB john@localhost"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Group created:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:54Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group_create"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"owner_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"owner_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"group_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">78</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Group removed:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:54Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group_destroy"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"owner_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"owner_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"group_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">78</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>New Group Member:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:56Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_add_to_group"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Master"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"group_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"group_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"user_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+ </span><span class="s2">"user_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith"</span><span class="p">,</span><span class="w">
+       </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Group Member Removed:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:30:56Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-07-21T07:38:22Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_remove_from_group"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Master"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"group_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"StoreCloud"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"group_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"storecloud"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"user_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith@gmail.com"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+ </span><span class="s2">"user_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnsmith"</span><span class="p">,</span><span class="w">
+       </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='push-events'>Push events <a class='anchor' href='system_hooks.html#push-events' title='Permalink'></a></h2>
+<p>Triggered when you push to the repository except when pushing tags.</p>
+
+<p><strong>Request header</strong>:</p>
+<pre class="highlight plaintext"><code>X-Gitlab-Event: System Hook
+</code></pre>
+<p><strong>Request body:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"95790bf891e76fee5e1747ab589903a6a1f80f22"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"da1560886d4f094c3e6c9ef40349f7d38b5d27d7"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refs/heads/master"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"checkout_sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"da1560886d4f094c3e6c9ef40349f7d38b5d27d7"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s.gravatar.com/avatar/d4c74594d841139328695756648b6bd6?s=8://s.gravatar.com/avatar/d4c74594d841139328695756648b6bd6?s=80"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project"</span><span class="p">:{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="s2">"http://example.com/mike/diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_ssh_url"</span><span class="p">:</span><span class="s2">"git@example.com:mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_http_url"</span><span class="p">:</span><span class="s2">"http://example.com/mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="s2">"Mike"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="s2">"mike/diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"homepage"</span><span class="p">:</span><span class="s2">"http://example.com/mike/diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"git@example.com:mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ssh_url"</span><span class="p">:</span><span class="s2">"git@example.com:mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"http_url"</span><span class="p">:</span><span class="s2">"http://example.com/mike/diaspora.git"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"repository"</span><span class="p">:{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"homepage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/mike/diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_http_url"</span><span class="p">:</span><span class="s2">"http://example.com/mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_ssh_url"</span><span class="p">:</span><span class="s2">"git@example.com:mike/diaspora.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="mi">0</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"commits"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"total_commits_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='tag-events'>Tag events <a class='anchor' href='system_hooks.html#tag-events' title='Permalink'></a></h2>
+<p>Triggered when you create (or delete) tags to the repository.</p>
+
+<p><strong>Request header</strong>:</p>
+<pre class="highlight plaintext"><code>X-Gitlab-Event: System Hook
+</code></pre>
+<p><strong>Request body:</strong></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tag_push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0000000000000000000000000000000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"82b3d5ae55f7080f1e6022629cdb57bfae7cccc7"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refs/tags/v1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"checkout_sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5937ac0a7beb003549fc5fd26fc247adbce4a52e"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s.gravatar.com/avatar/d4c74594d841139328695756648b6bd6?s=8://s.gravatar.com/avatar/d4c74594d841139328695756648b6bd6?s=80"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project"</span><span class="p">:{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="s2">"http://example.com/jsmith/example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_ssh_url"</span><span class="p">:</span><span class="s2">"git@example.com:jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_http_url"</span><span class="p">:</span><span class="s2">"http://example.com/jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="s2">"Jsmith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="s2">"jsmith/example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"homepage"</span><span class="p">:</span><span class="s2">"http://example.com/jsmith/example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"git@example.com:jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ssh_url"</span><span class="p">:</span><span class="s2">"git@example.com:jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"http_url"</span><span class="p">:</span><span class="s2">"http://example.com/jsmith/example.git"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"repository"</span><span class="p">:{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh://git@example.com/jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"homepage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/jsmith/example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_http_url"</span><span class="p">:</span><span class="s2">"http://example.com/jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"git_ssh_url"</span><span class="p">:</span><span class="s2">"git@example.com:jsmith/example.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="mi">0</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"commits"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"total_commits_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/system_hooks/system_hooks.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

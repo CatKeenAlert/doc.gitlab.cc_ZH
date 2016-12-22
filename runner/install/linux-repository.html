@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>For Debian/Ubuntu - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Install GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">For Debian/Ubuntu</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="linux-repository.html#install-using-official-gitlab-repositories">Install using official GitLab repositories</a>
+</li>
+<li>
+<a href="linux-repository.html#update">Update</a>
+</li>
+</ul>
+<h3 id='install-using-official-gitlab-repositories'>Install using official GitLab repositories <a class='anchor' href='linux-repository.html#install-using-official-gitlab-repositories' title='Permalink'></a></h3>
+<p>Currently we support Debian, Ubuntu and CentOS.</p>
+
+<p>If you want to use Docker runner, install it before using the multi runner:</p>
+<pre class="highlight shell"><code>curl -sSL https://get.docker.com/ | sh
+</code></pre>
+<p>Add GitLab&#39;s official repository via apt-get or yum:</p>
+<pre class="highlight shell"><code><span class="c"># For Debian/Ubuntu</span>
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh | sudo bash
+
+<span class="c"># For CentOS</span>
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.rpm.sh | sudo bash
+</code></pre>
+<hr>
+
+<p><strong>APT pinning - Debian only</strong></p>
+
+<p>Since Debian Stretch, Debian maintainers added their native package
+with the same name as is used by our package. And by default the official
+repositories will have a priority.</p>
+
+<p>If you want to use our package you should manually set the source of
+the package. The best would be to add the pinning configuration file.
+Thanks to this every next update of the Runner&#39;s package - whether it will
+be done manually or automatically - will be done using the same source:</p>
+<pre class="highlight shell"><code>cat &gt; /etc/apt/preferences.d/pin-gitlab-runner.pref <span class="sh">&lt;&lt;EOF
+Explanation: Prefer GitLab provided packages over the Debian native ones
+Package: gitlab-ci-multi-runner
+Pin: origin packages.gitlab.com
+Pin-Priority: 1001
+EOF
+</span></code></pre>
+<hr>
+
+<p>Install <code>gitlab-ci-multi-runner</code>:</p>
+<pre class="highlight shell"><code><span class="c"># For Debian/Ubuntu</span>
+sudo apt-get install gitlab-ci-multi-runner
+
+<span class="c"># For CentOS</span>
+sudo yum install gitlab-ci-multi-runner
+</code></pre>
+<p>Register the runner (Look into <a href="http://doc.gitlab.com/ce/ci/runners/README.html">runners documentation</a> to learn how to obtain a token):</p>
+<pre class="highlight shell"><code>sudo gitlab-ci-multi-runner register
+
+Please enter the gitlab-ci coordinator URL <span class="o">(</span>e.g. https://gitlab.com <span class="o">)</span>
+https://gitlab.com
+Please enter the gitlab-ci token <span class="k">for </span>this runner
+xxx
+Please enter the gitlab-ci description <span class="k">for </span>this runner
+my-runner
+INFO[0034] fcf5c619 Registering runner... succeeded
+Please enter the executor: shell, docker, docker-ssh, ssh?
+docker
+Please enter the Docker image <span class="o">(</span>eg. ruby:2.1<span class="o">)</span>:
+ruby:2.1
+INFO[0037] Runner registered successfully. Feel free to start it, but <span class="k">if </span>it<span class="s1">'s
+running already the config should be automatically reloaded!
+</span></code></pre>
+<p>The runner should be started already and you are ready to build your projects!</p>
+
+<p>Make sure that you read the <a href="../faq/README.html">FAQ</a> section which describes
+some of the most common problems with GitLab Runner.</p>
+<h3 id='update'>Update <a class='anchor' href='linux-repository.html#update' title='Permalink'></a></h3>
+<p>Simply execute to install latest version:</p>
+<pre class="highlight shell"><code><span class="c"># For Debian/Ubuntu</span>
+sudo apt-get update
+sudo apt-get install gitlab-ci-multi-runner
+
+<span class="c"># For CentOS</span>
+sudo yum update
+sudo yum install gitlab-ci-multi-runner
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/linux-repository.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

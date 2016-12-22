@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Generate a changelog entry - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Generate a changelog entry</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="changelog.html#generate-a-changelog-entry">Generate a changelog entry</a>
+<ul>
+<li>
+<a href="changelog.html#overview">Overview</a>
+</li>
+<li>
+<a href="changelog.html#instructions">Instructions</a>
+<ul>
+<li>
+<a href="changelog.html#arguments">Arguments</a>
+<ul>
+<li>
+<a href="changelog.html#amend"><code>--amend</code></a>
+</li>
+<li>
+<a href="changelog.html#force-or-f"><code>--force</code> or <code>-f</code></a>
+</li>
+<li>
+<a href="changelog.html#merge-request-or-m"><code>--merge-request</code> or <code>-m</code></a>
+</li>
+<li>
+<a href="changelog.html#dry-run-or-n"><code>--dry-run</code> or <code>-n</code></a>
+</li>
+<li>
+<a href="changelog.html#git-username-or-u"><code>--git-username</code> or <code>-u</code></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="changelog.html#history-and-reasoning">History and Reasoning</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='generate-a-changelog-entry'>Generate a changelog entry <a class='anchor' href='changelog.html#generate-a-changelog-entry' title='Permalink'></a></h1>
+<p>This guide contains instructions for generating a changelog entry data file, as
+well as information and history about our changelog process.</p>
+<h2 id='overview'>Overview <a class='anchor' href='changelog.html#overview' title='Permalink'></a></h2>
+<p>Each bullet point, or <strong>entry</strong>, in our <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/CHANGELOG.md"><code>CHANGELOG.md</code></a> file is
+generated from a single data file in the <a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/changelogs/"><code>changelogs/unreleased/</code></a>
+(or corresponding EE) folder. The file is expected to be a <a href="https://en.wikipedia.org/wiki/YAML">YAML</a> file in the
+following format:</p>
+<pre class="highlight yaml"><code><span class="nn">---</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Going</span><span class="nv"> </span><span class="s">through</span><span class="nv"> </span><span class="s">change[log]s"</span>
+<span class="na">merge_request</span><span class="pi">:</span> <span class="s">1972</span>
+<span class="na">author</span><span class="pi">:</span> <span class="s">Ozzy Osbourne</span>
+</code></pre>
+<p>The <code>merge_request</code> value is a reference to a merge request that adds this
+entry, and the <code>author</code> key is used to give attribution to community
+contributors. Both are optional.</p>
+
+<p>Community contributors and core team members are encouraged to add their name to
+the <code>author</code> field. GitLab team members should not.</p>
+
+<p>If you&#39;re working on the GitLab EE repository, the entry will be added to
+<code>changelogs/unreleased-ee/</code> instead.</p>
+<h2 id='instructions'>Instructions <a class='anchor' href='changelog.html#instructions' title='Permalink'></a></h2>
+<p>A <code>bin/changelog</code> script is available to generate the changelog entry file
+automatically.</p>
+
+<p>Its simplest usage is to provide the value for <code>title</code>:</p>
+<pre class="highlight plaintext"><code>$ bin/changelog 'Hey DZ, I added a feature to GitLab!'
+create changelogs/unreleased/my-feature.yml
+---
+title: Hey DZ, I added a feature to GitLab!
+merge_request:
+author:
+</code></pre>
+<p>The entry filename is based on the name of the current Git branch. If you run
+the command above on a branch called <code>feature/hey-dz</code>, it will generate a
+<code>changelogs/unreleased/feature-hey-dz.yml</code> file.</p>
+<h3 id='arguments'>Arguments <a class='anchor' href='changelog.html#arguments' title='Permalink'></a></h3>
+<table><thead>
+<tr>
+<th>Argument</th>
+<th>Shorthand</th>
+<th>Purpose</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>--amend</code></td>
+<td></td>
+<td>Amend the previous commit</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td><code>-f</code></td>
+<td>Overwrite an existing entry</td>
+</tr>
+<tr>
+<td><code>--merge-request</code></td>
+<td><code>-m</code></td>
+<td>Merge Request ID</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td><code>-n</code></td>
+<td>Don&#39;t actually write anything, just print</td>
+</tr>
+<tr>
+<td><code>--git-username</code></td>
+<td><code>-u</code></td>
+<td>Use Git user.name configuration as the author</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td><code>-h</code></td>
+<td>Print help message</td>
+</tr>
+</tbody></table>
+<h4 id='amend'><code>--amend</code> <a class='anchor' href='changelog.html#amend' title='Permalink'></a></h4>
+<p>You can pass the <strong><code>--amend</code></strong> argument to automatically stage the generated
+file and amend it to the previous commit.</p>
+
+<p>If you use <strong><code>--amend</code></strong> and don&#39;t provide a title, it will automatically use
+the &quot;subject&quot; of the previous commit, which is the first line of the commit
+message:</p>
+<pre class="highlight plaintext"><code>$ git show --oneline
+ab88683 Added an awesome new feature to GitLab
+
+$ bin/changelog --amend
+create changelogs/unreleased/feature-hey-dz.yml
+---
+title: Added an awesome new feature to GitLab
+merge_request:
+author:
+</code></pre><h4 id='force-or-f'><code>--force</code> or <code>-f</code> <a class='anchor' href='changelog.html#force-or-f' title='Permalink'></a></h4>
+<p>Use <strong><code>--force</code></strong> or <strong><code>-f</code></strong> to overwrite an existing changelog entry if it
+already exists.</p>
+<pre class="highlight plaintext"><code>$ bin/changelog 'Hey DZ, I added a feature to GitLab!'
+error changelogs/unreleased/feature-hey-dz.yml already exists! Use `--force` to overwrite.
+
+$ bin/changelog 'Hey DZ, I added a feature to GitLab!' --force
+create changelogs/unreleased/feature-hey-dz.yml
+---
+title: Hey DZ, I added a feature to GitLab!
+merge_request: 1983
+author:
+</code></pre><h4 id='merge-request-or-m'><code>--merge-request</code> or <code>-m</code> <a class='anchor' href='changelog.html#merge-request-or-m' title='Permalink'></a></h4>
+<p>Use the <strong><code>--merge-request</code></strong> or <strong><code>-m</code></strong> argument to provide the
+<code>merge_request</code> value:</p>
+<pre class="highlight plaintext"><code>$ bin/changelog 'Hey DZ, I added a feature to GitLab!' -m 1983
+create changelogs/unreleased/feature-hey-dz.yml
+---
+title: Hey DZ, I added a feature to GitLab!
+merge_request: 1983
+author:
+</code></pre><h4 id='dry-run-or-n'><code>--dry-run</code> or <code>-n</code> <a class='anchor' href='changelog.html#dry-run-or-n' title='Permalink'></a></h4>
+<p>Use the <strong><code>--dry-run</code></strong> or <strong><code>-n</code></strong> argument to prevent actually writing or
+committing anything:</p>
+<pre class="highlight plaintext"><code>$ bin/changelog --amend --dry-run
+create changelogs/unreleased/feature-hey-dz.yml
+---
+title: Added an awesome new feature to GitLab
+merge_request:
+author:
+
+$ ls changelogs/unreleased/
+</code></pre><h4 id='git-username-or-u'><code>--git-username</code> or <code>-u</code> <a class='anchor' href='changelog.html#git-username-or-u' title='Permalink'></a></h4>
+<p>Use the <strong><code>--git-username</code></strong> or <strong><code>-u</code></strong> argument to automatically fill in the
+<code>author</code> value with your configured Git <code>user.name</code> value:</p>
+<pre class="highlight plaintext"><code>$ git config user.name
+Jane Doe
+
+$ bin/changelog --u 'Hey DZ, I added a feature to GitLab!'
+create changelogs/unreleased/feature-hey-dz.yml
+---
+title: Hey DZ, I added a feature to GitLab!
+merge_request:
+author: Jane Doe
+</code></pre><h2 id='history-and-reasoning'>History and Reasoning <a class='anchor' href='changelog.html#history-and-reasoning' title='Permalink'></a></h2>
+<p>Our <code>CHANGELOG</code> file was previously updated manually by each contributor that
+felt their change warranted an entry. When two merge requests added their own
+entries at the same spot in the list, it created a merge conflict in one as soon
+as the other was merged. When we had dozens of merge requests fighting for the
+same changelog entry location, this quickly became a major source of merge
+conflicts and delays in development.</p>
+
+<p>This led us to a <a href="https://about.gitlab.com/handbook/#boring-solutions">boring solution</a> of &quot;add your entry in a random location in
+the list.&quot; This actually worked pretty well as we got further along in each
+monthly release cycle, but at the start of a new cycle, when a new version
+section was added and there were fewer places to &quot;randomly&quot; add an entry, the
+conflicts became a problem again until we had a sufficient number of entries.</p>
+
+<p>On top of all this, it created an entirely different headache for <a href="https://gitlab.com/gitlab-org/release-tools/blob/master/doc/release-manager.md">release managers</a>
+when they cherry-picked a commit into a stable branch for a patch release. If
+the commit included an entry in the <code>CHANGELOG</code>, it would include the entire
+changelog for the latest version in <code>master</code>, so the release manager would have
+to manually remove the later entries. They often would have had to do this
+multiple times per patch release. This was compounded when we had to release
+multiple patches at once due to a security issue.</p>
+
+<p>We needed to automate all of this manual work. So we <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/17826">started brainstorming</a>.
+After much discussion we settled on the current solution of one file per entry,
+and then compiling the entries into the overall <code>CHANGELOG.md</code> file during the
+<a href="https://gitlab.com/gitlab-org/release-tools">release process</a>.</p>
+
+<hr>
+
+<p><a href="README.html">Return to Development documentation</a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/changelog.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

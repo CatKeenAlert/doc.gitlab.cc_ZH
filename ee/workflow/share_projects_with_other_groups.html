@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Share Projects with other Groups - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Workflow</a></li>
+            
+          
+          <li class="breadcrumb">Share Projects with other Groups</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="share_projects_with_other_groups.html#share-projects-with-other-groups">Share Projects with other Groups</a>
+<ul>
+<li>
+<a href="share_projects_with_other_groups.html#groups-as-collections-of-users">Groups as collections of users</a>
+</li>
+<li>
+<a href="share_projects_with_other_groups.html#sharing-a-project-with-a-group-of-users">Sharing a project with a group of users</a>
+</li>
+<li>
+<a href="share_projects_with_other_groups.html#maximum-access-level">Maximum access level</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='share-projects-with-other-groups'>Share Projects with other Groups <a class='anchor' href='share_projects_with_other_groups.html#share-projects-with-other-groups' title='Permalink'></a></h1>
+<p>You can share projects with other groups. This makes it possible to add a group of users
+to a project with a single action.</p>
+<h2 id='groups-as-collections-of-users'>Groups as collections of users <a class='anchor' href='share_projects_with_other_groups.html#groups-as-collections-of-users' title='Permalink'></a></h2>
+<p>Groups are used primarily to <a href="groups.html">create collections of projects</a>, but you can also
+take advantage of the fact that groups define collections of <em>users</em>, namely the group
+members.</p>
+<h2 id='sharing-a-project-with-a-group-of-users'>Sharing a project with a group of users <a class='anchor' href='share_projects_with_other_groups.html#sharing-a-project-with-a-group-of-users' title='Permalink'></a></h2>
+<p>The primary mechanism to give a group of users, say &#39;Engineering&#39;, access to a project,
+say &#39;Project Acme&#39;, in GitLab is to make the &#39;Engineering&#39; group the owner of &#39;Project
+Acme&#39;.  But what if &#39;Project Acme&#39; already belongs to another group, say &#39;Open Source&#39;?
+This is where the group sharing feature can be of use.</p>
+
+<p>To share &#39;Project Acme&#39; with the &#39;Engineering&#39; group, go to the project settings page for &#39;Project Acme&#39; and use the left navigation menu to go to the &#39;Groups&#39; section.</p>
+
+<p><a target="_blank" href="groups/share_project_with_groups.png"><img src="groups/share_project_with_groups.png" title="" alt="The 'Groups' section in the project settings screen"/></a></p>
+
+<p>Now you can add the &#39;Engineering&#39; group with the maximum access level of your choice.
+After sharing &#39;Project Acme&#39; with &#39;Engineering&#39;, the project is listed on the group dashboard.</p>
+
+<p><a target="_blank" href="groups/other_group_sees_shared_project.png"><img src="groups/other_group_sees_shared_project.png" title="" alt="'Project Acme' is listed as a shared project for 'Engineering'"/></a></p>
+<h2 id='maximum-access-level'>Maximum access level <a class='anchor' href='share_projects_with_other_groups.html#maximum-access-level' title='Permalink'></a></h2>
+<p><a target="_blank" href="groups/max_access_level.png"><img src="groups/max_access_level.png" title="" alt="'Project Acme' is shared with 'Engineering' with a maximum access level of 'Developer'"/></a></p>
+
+<p>In the screenshot above, the maximum access level of &#39;Developer&#39; for members from &#39;Engineering&#39; means that users with higher access levels in &#39;Engineering&#39; (&#39;Master&#39; or &#39;Owner&#39;) will only have &#39;Developer&#39; access to &#39;Project Acme&#39;.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/share_projects_with_other_groups.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Features - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">Development</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">GitLab UX Guide</a></li>
+            
+          
+          <li class="breadcrumb">Features</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="features.html#features">Features</a>
+<ul>
+<li>
+<a href="features.html#contents">Contents</a>
+</li>
+<li>
+<a href="features.html#navigation">Navigation</a>
+<ul>
+<li>
+<a href="features.html#global-navigation">Global navigation</a>
+</li>
+<li>
+<a href="features.html#contextual-navigation">Contextual navigation</a>
+</li>
+<li>
+<a href="features.html#information-architecture">Information architecture</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="features.html#filtering">Filtering</a>
+</li>
+<li>
+<a href="features.html#search-results">Search results</a>
+<ul>
+<li>
+<a href="features.html#global-search">Global search</a>
+</li>
+<li>
+<a href="features.html#list-search">List search</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="features.html#empty-states">Empty states</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='features'>Features <a class='anchor' href='features.html#features' title='Permalink'></a></h1><h2 id='contents'>Contents <a class='anchor' href='features.html#contents' title='Permalink'></a></h2>
+<ul>
+<li><a href="features.html#navigation">Navigation</a></li>
+<li><a href="features.html#filtering">Filtering</a></li>
+<li><a href="features.html#search-results">Search results</a></li>
+<li><a href="features.html#conversations">Conversations</a></li>
+<li><a href="features.html#empty-states">Empty states</a></li>
+</ul>
+
+<hr>
+<h2 id='navigation'>Navigation <a class='anchor' href='features.html#navigation' title='Permalink'></a></h2><h3 id='global-navigation'>Global navigation <a class='anchor' href='features.html#global-navigation' title='Permalink'></a></h3>
+<p>The global navigation is accessible via the menu button on the top left of the screen, and can be pinned to keep it open. It contains a consistent list of pages that allow you to view content that is across GitLab. For example, you can view your todos, issues and merge requests across projects and groups.</p>
+
+<p><a target="_blank" href="img/features-globalnav.png"><img src="img/features-globalnav.png" title="" alt="Global nav"/></a></p>
+<h3 id='contextual-navigation'>Contextual navigation <a class='anchor' href='features.html#contextual-navigation' title='Permalink'></a></h3>
+<p>The navigation in the header is contextual to each page. These options change depending on if you are looking at a project, group, or settings page. There should be no more than 10 items on a level in the contextual navigation, allowing it to comfortably fit on a typical laptop screen. There can be up to too levels of navigation. Each sub nav group should be a self-contained group of functionality. For example, everything related to the issue tracker should be under the &#39;Issue&#39; tab, while everything relating to the wiki will be grouped under the &#39;Wiki&#39; tab. The names used for each section should be short and easy to remember, ideally 1-2 words in length.</p>
+
+<p><a target="_blank" href="img/features-contextualnav.png"><img src="img/features-contextualnav.png" title="" alt="Contextual nav"/></a></p>
+<h3 id='information-architecture'>Information architecture <a class='anchor' href='features.html#information-architecture' title='Permalink'></a></h3>
+<p>The <a href="https://gitlab.com/gitlab-org/gitlab-design/raw/master/production/resources/gitlab-map.png">GitLab Product Map</a> shows a visual representation of the information architecture for GitLab.</p>
+
+<hr>
+<h2 id='filtering'>Filtering <a class='anchor' href='features.html#filtering' title='Permalink'></a></h2>
+<p>Today, lists are filtered by a series of dropdowns. Some of these dropdowns allow multiselect (labels), while others allow you to filter to one option (milestones). However, we are currently implementing a <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/21747">new model</a> for this, and will update the guide when it is ready.</p>
+
+<p><a target="_blank" href="img/features-filters.png"><img src="img/features-filters.png" title="" alt="Filters"/></a></p>
+
+<hr>
+<h2 id='search-results'>Search results <a class='anchor' href='features.html#search-results' title='Permalink'></a></h2><h3 id='global-search'>Global search <a class='anchor' href='features.html#global-search' title='Permalink'></a></h3>
+<p><a href="https://gitlab.com/search?group_id=&amp;project_id=13083&amp;repository_ref=&amp;scope=issues&amp;search=mobile">Global search</a> allows you to search across items in a project, or even across multiple projects. You can switch tabs to filter on type of object, or filter by group.</p>
+<h3 id='list-search'>List search <a class='anchor' href='features.html#list-search' title='Permalink'></a></h3>
+<p>There are several core lists in the GitLab experience, such as the Issue list and the Merge Request list. You are also able to <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues?utf8=%E2%9C%93&amp;search=mobile">filter and search these lists</a>. This UI will be updated with the <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/21747">new filtering model</a>.</p>
+
+<hr>
+<h2 id='empty-states'>Empty states <a class='anchor' href='features.html#empty-states' title='Permalink'></a></h2>
+<p>Empty states need to be considered in the design of features. They are vital to helping onboard new users, making the experience feel more approachable and understandable. Empty states should feel inviting and provide just enough information to get people started. There should be a single call to action and a clear explanation of what to use the feature for.</p>
+
+<p><a target="_blank" href="img/features-emptystates.png"><img src="img/features-emptystates.png" title="" alt="Empty states"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/ux_guide/features.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

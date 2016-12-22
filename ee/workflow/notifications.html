@@ -1,0 +1,361 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Notification Emails - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Workflow</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Notification Emails</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="notifications.html#gitlab-notification-emails">GitLab Notification Emails</a>
+<ul>
+<li>
+<a href="notifications.html#notification-settings">Notification settings</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="notifications.html#global-settings">Global Settings</a>
+</li>
+<li>
+<a href="notifications.html#group-settings">Group Settings</a>
+</li>
+<li>
+<a href="notifications.html#project-settings">Project Settings</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="notifications.html#notification-events">Notification events</a>
+<ul>
+<li>
+<a href="notifications.html#issue-merge-request-events">Issue / Merge Request events</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-notification-emails'>GitLab Notification Emails <a class='anchor' href='notifications.html#gitlab-notification-emails' title='Permalink'></a></h1>
+<p>GitLab has a notification system in place to notify a user of events that are important for the workflow.</p>
+<h2 id='notification-settings'>Notification settings <a class='anchor' href='notifications.html#notification-settings' title='Permalink'></a></h2>
+<p>You can find notification settings under the user profile.</p>
+
+<p><a target="_blank" href="notifications/settings.png"><img src="notifications/settings.png" title="" alt="notification settings"/></a></p>
+
+<p>Notification settings are divided into three groups:</p>
+
+<ul>
+<li>Global Settings</li>
+<li>Group Settings</li>
+<li>Project Settings</li>
+</ul>
+
+<p>Each of these settings have levels of notification:</p>
+
+<ul>
+<li>Disabled - turns off notifications</li>
+<li>Participating - receive notifications from related resources</li>
+<li>Watch - receive notifications from projects or groups user is a member of</li>
+<li>Global - notifications as set at the global settings</li>
+<li>Custom - user will receive notifications when mentioned, is participant and custom selected events.</li>
+</ul>
+<h4 id='global-settings'>Global Settings <a class='anchor' href='notifications.html#global-settings' title='Permalink'></a></h4>
+<p>Global Settings are at the bottom of the hierarchy.
+Any setting set here will be overridden by a setting at the group or a project level.</p>
+
+<p>Group or Project settings can use <code>global</code> notification setting which will then use
+anything that is set at Global Settings.</p>
+<h4 id='group-settings'>Group Settings <a class='anchor' href='notifications.html#group-settings' title='Permalink'></a></h4>
+<p>Group Settings are taking precedence over Global Settings but are on a level below Project Settings.
+This means that you can set a different level of notifications per group while still being able
+to have a finer level setting per project.
+Organization like this is suitable for users that belong to different groups but don&#39;t have the
+same need for being notified for every group they are member of.
+These settings can be configured on group page or user profile notifications dropdown.</p>
+<h4 id='project-settings'>Project Settings <a class='anchor' href='notifications.html#project-settings' title='Permalink'></a></h4>
+<p>Project Settings are at the top level and any setting placed at this level will take precedence of any
+other setting.
+This is suitable for users that have different needs for notifications per project basis.
+These settings can be configured on project page or user profile notifications dropdown.</p>
+<h2 id='notification-events'>Notification events <a class='anchor' href='notifications.html#notification-events' title='Permalink'></a></h2>
+<p>Below is the table of events users can be notified of:</p>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Sent to</th>
+<th>Settings level</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>New SSH key added</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>New email added</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>New user created</td>
+<td>User</td>
+<td>Sent on user creation, except for omniauth (LDAP)</td>
+</tr>
+<tr>
+<td>User added to project</td>
+<td>User</td>
+<td>Sent when user is added to project</td>
+</tr>
+<tr>
+<td>Project access level changed</td>
+<td>User</td>
+<td>Sent when user project access level is changed</td>
+</tr>
+<tr>
+<td>User added to group</td>
+<td>User</td>
+<td>Sent when user is added to group</td>
+</tr>
+<tr>
+<td>Group access level changed</td>
+<td>User</td>
+<td>Sent when user group access level is changed</td>
+</tr>
+<tr>
+<td>Project moved</td>
+<td>Project members [1]</td>
+<td>[1] not disabled</td>
+</tr>
+</tbody></table>
+<h3 id='issue-merge-request-events'>Issue / Merge Request events <a class='anchor' href='notifications.html#issue-merge-request-events' title='Permalink'></a></h3>
+<p>In all of the below cases, the notification will be sent to:</p>
+
+<ul>
+<li><p>Participants:</p>
+
+<ul>
+<li>the author and assignee of the issue/merge request</li>
+<li>the author of the pipeline</li>
+<li>authors of comments on the issue/merge request</li>
+<li>anyone mentioned by <code>@username</code> in the issue/merge request title or description</li>
+<li>anyone mentioned by <code>@username</code> in any of the comments on the issue/merge request</li>
+</ul>
+
+<p>...with notification level &quot;Participating&quot; or higher</p></li>
+<li><p>Watchers: users with notification level &quot;Watch&quot;</p></li>
+<li><p>Subscribers: anyone who manually subscribed to the issue/merge request</p></li>
+<li><p>Custom: Users with notification level &quot;custom&quot; who turned on notifications for any of the events present in the table below</p></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Sent to</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>New issue</td>
+<td></td>
+</tr>
+<tr>
+<td>Close issue</td>
+<td></td>
+</tr>
+<tr>
+<td>Reassign issue</td>
+<td>The above, plus the old assignee</td>
+</tr>
+<tr>
+<td>Reopen issue</td>
+<td></td>
+</tr>
+<tr>
+<td>New merge request</td>
+<td></td>
+</tr>
+<tr>
+<td>Reassign merge request</td>
+<td>The above, plus the old assignee</td>
+</tr>
+<tr>
+<td>Close merge request</td>
+<td></td>
+</tr>
+<tr>
+<td>Reopen merge request</td>
+<td></td>
+</tr>
+<tr>
+<td>Merge merge request</td>
+<td></td>
+</tr>
+<tr>
+<td>New comment</td>
+<td>The above, plus anyone mentioned by <code>@username</code> in the comment, with notification level &quot;Mention&quot; or higher</td>
+</tr>
+<tr>
+<td>Failed pipeline</td>
+<td>The above, plus the author of the pipeline</td>
+</tr>
+<tr>
+<td>Successful pipeline</td>
+<td>The above, plus the author of the pipeline</td>
+</tr>
+</tbody></table>
+
+<p>In addition, if the title or description of an Issue or Merge Request is
+changed, notifications will be sent to any <strong>new</strong> mentions by <code>@username</code> as
+if they had been mentioned in the original text.</p>
+
+<p>You won&#39;t receive notifications for Issues, Merge Requests or Milestones
+created by yourself. You will only receive automatic notifications when
+somebody else comments or adds changes to the ones that you&#39;ve created or
+mentions you.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/notifications.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Installation</a></li>
+            
+          
+          <li class="breadcrumb">Current page</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="relative_url.html#install-gitlab-under-a-relative-url">Install GitLab under a relative URL</a>
+<ul>
+<li>
+<a href="relative_url.html#relative-url-requirements">Relative URL requirements</a>
+</li>
+<li>
+<a href="relative_url.html#enable-relative-url-in-gitlab">Enable relative URL in GitLab</a>
+</li>
+<li>
+<a href="relative_url.html#disable-relative-url-in-gitlab">Disable relative URL in GitLab</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='install-gitlab-under-a-relative-url'>Install GitLab under a relative URL <a class='anchor' href='relative_url.html#install-gitlab-under-a-relative-url' title='Permalink'></a></h2>
+<p><em><strong>Note:</strong>
+This document describes how to run GitLab under a relative URL for installations
+from source. If you are using an Omnibus package,
+<a href="http://docs.gitlab.com/omnibus/settings/configuration.html#configuring-a-relative-url-for-gitlab" title="How to setup relative URL in Omnibus GitLab">the steps are different</a>. Use this guide along with the
+<a href="installation.html">installation guide</a> if you are installing GitLab for the
+first time.</em></p>
+
+<hr>
+
+<p>While it is recommended to install GitLab on its own (sub)domain, sometimes
+this is not possible due to a variety of reasons. In that case, GitLab can also
+be installed under a relative URL, for example <code>https://example.com/gitlab</code>.</p>
+
+<p>There is no limit to how deeply nested the relative URL can be. For example you
+could serve GitLab under <code>/foo/bar/gitlab/git</code> without any issues.</p>
+
+<p>Note that by changing the URL on an existing GitLab installation, all remote
+URLs will change, so you&#39;ll have to manually edit them in any local repository
+that points to your GitLab instance.</p>
+
+<hr>
+
+<p>The TL;DR list of configuration files that you need to change in order to
+serve GitLab under a relative URL is:</p>
+
+<ul>
+<li><code>/home/git/gitlab/config/initializers/relative_url.rb</code></li>
+<li><code>/home/git/gitlab/config/gitlab.yml</code></li>
+<li><code>/home/git/gitlab/config/unicorn.rb</code></li>
+<li><code>/home/git/gitlab-shell/config.yml</code></li>
+<li><code>/etc/default/gitlab</code></li>
+</ul>
+
+<p>After all the changes you need to recompile the assets and <a href="../administration/restart_gitlab.html#installations-from-source" title="How to restart GitLab">restart GitLab</a>.</p>
+<h3 id='relative-url-requirements'>Relative URL requirements <a class='anchor' href='relative_url.html#relative-url-requirements' title='Permalink'></a></h3>
+<p>If you configure GitLab with a relative URL, the assets (JavaScript, CSS, fonts,
+images, etc.) will need to be recompiled, which is a task which consumes a lot
+of CPU and memory resources. To avoid out-of-memory errors, you should have at
+least 2GB of RAM available on your system, while we recommend 4GB RAM, and 4 or
+8 CPU cores.</p>
+
+<p>See the <a href="requirements.html">requirements</a> document for more information.</p>
+<h3 id='enable-relative-url-in-gitlab'>Enable relative URL in GitLab <a class='anchor' href='relative_url.html#enable-relative-url-in-gitlab' title='Permalink'></a></h3>
+<p><em><strong>Note:</strong>
+Do not make any changes to your web server configuration file regarding
+relative URL. The relative URL support is implemented by GitLab Workhorse.</em></p>
+
+<hr>
+
+<p>Before following the steps below to enable relative URL in GitLab, some
+assumptions are made:</p>
+
+<ul>
+<li>GitLab is served under <code>/gitlab</code></li>
+<li>The directory under which GitLab is installed is <code>/home/git/</code></li>
+</ul>
+
+<p>Make sure to follow all steps below:</p>
+
+<ol>
+<li><p>(Optional) If you run short on resources, you can temporarily free up some
+memory by shutting down the GitLab service with the following command:</p>
+<pre class="highlight shell"><code>sudo service gitlab stop
+</code></pre></li>
+<li><p>Create <code>/home/git/gitlab/config/initializers/relative_url.rb</code></p>
+<pre class="highlight shell"><code>cp /home/git/gitlab/config/initializers/relative_url.rb.sample <span class="se">\</span>
+   /home/git/gitlab/config/initializers/relative_url.rb
+</code></pre>
+<p>and change the following line:</p>
+<pre class="highlight ruby"><code><span class="n">config</span><span class="p">.</span><span class="nf">relative_url_root</span> <span class="o">=</span> <span class="s2">"/gitlab"</span>
+</code></pre></li>
+<li><p>Edit <code>/home/git/gitlab/config/gitlab.yml</code> and uncomment/change the
+following line:</p>
+<pre class="highlight yaml"><code><span class="na">relative_url_root</span><span class="pi">:</span> <span class="s">/gitlab</span>
+</code></pre></li>
+<li><p>Edit <code>/home/git/gitlab/config/unicorn.rb</code> and uncomment/change the
+following line:</p>
+<pre class="highlight ruby"><code><span class="no">ENV</span><span class="p">[</span><span class="s1">'RAILS_RELATIVE_URL_ROOT'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/gitlab"</span>
+</code></pre></li>
+<li><p>Edit <code>/home/git/gitlab-shell/config.yml</code> and append the relative path to
+the following line:</p>
+<pre class="highlight yaml"><code><span class="na">gitlab_url</span><span class="pi">:</span> <span class="s">http://127.0.0.1/gitlab</span>
+</code></pre></li>
+<li><p>Make sure you have copied the supplied init script and the defaults file
+as stated in the <a href="installation.html#install-init-script">installation guide</a>.
+Then, edit <code>/etc/default/gitlab</code> and set in <code>gitlab_workhorse_options</code> the
+<code>-authBackend</code> setting to read like:</p>
+<pre class="highlight shell"><code>-authBackend http://127.0.0.1:8080/gitlab
+</code></pre>
+<p><strong>Note:</strong>
+If you are using a custom init script, make sure to edit the above
+gitlab-workhorse setting as needed.</p></li>
+<li><p>After all the above changes recompile the assets. This is an important task
+and will take some time to complete depending on the server resources:</p>
+<pre class="highlight plaintext"><code>cd /home/git/gitlab
+sudo -u git -H bundle exec rake assets:clean assets:precompile RAILS_ENV=production
+</code></pre></li>
+<li><p><a href="../administration/restart_gitlab.html#installations-from-source" title="How to restart GitLab">Restart GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h3 id='disable-relative-url-in-gitlab'>Disable relative URL in GitLab <a class='anchor' href='relative_url.html#disable-relative-url-in-gitlab' title='Permalink'></a></h3>
+<p>To disable the relative URL:</p>
+
+<ol>
+<li><p>Remove <code>/home/git/gitlab/config/initializers/relative_url.rb</code></p></li>
+<li><p>Follow the same as above starting from 2. and set up the
+GitLab URL to one that doesn&#39;t contain a relative path.</p></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/install/relative_url.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

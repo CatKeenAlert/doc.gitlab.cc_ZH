@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Install Redis on old distributions - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Installation</a></li>
+            
+          
+          <li class="breadcrumb">Install Redis on old distributions</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="redis.html#install-redis-on-old-distributions">Install Redis on old distributions</a>
+<ul>
+<li>
+<a href="redis.html#install-redis-2-8-in-debian-7">Install Redis 2.8 in Debian 7</a>
+</li>
+<li>
+<a href="redis.html#install-redis-2-8-in-ubuntu-12-04">Install Redis 2.8 in Ubuntu 12.04</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='install-redis-on-old-distributions'>Install Redis on old distributions <a class='anchor' href='redis.html#install-redis-on-old-distributions' title='Permalink'></a></h1>
+<p>GitLab requires at least Redis 2.8. The following guide is for Debian 7 and
+Ubuntu 12.04. If you are using Debian 8 or Ubuntu 14.04 and up, follow the
+<a href="installation.html">installation guide</a>.</p>
+<h2 id='install-redis-2-8-in-debian-7'>Install Redis 2.8 in Debian 7 <a class='anchor' href='redis.html#install-redis-2-8-in-debian-7' title='Permalink'></a></h2>
+<p>Redis 2.8 is included in the Debian Wheezy <a href="http://backports.debian.org/Instructions/" title="Debian backports website">backports</a> repository.</p>
+
+<ol>
+<li><p>Edit <code>/etc/apt/sources.list</code> and add the following line:</p>
+<pre class="highlight plaintext"><code>deb http://http.debian.net/debian wheezy-backports main
+</code></pre></li>
+<li><p>Update the repositories:</p>
+<pre class="highlight plaintext"><code>sudo apt-get update
+</code></pre></li>
+<li><p>Install <code>redis-server</code>:</p>
+<pre class="highlight plaintext"><code>sudo apt-get -t wheezy-backports install redis-server
+</code></pre></li>
+<li><p>Follow the rest of the <a href="installation.html">installation guide</a>.</p></li>
+</ol>
+<h2 id='install-redis-2-8-in-ubuntu-12-04'>Install Redis 2.8 in Ubuntu 12.04 <a class='anchor' href='redis.html#install-redis-2-8-in-ubuntu-12-04' title='Permalink'></a></h2>
+<p>We will <a href="https://launchpad.net/%7Echris-lea/+archive/ubuntu/redis-server">use a PPA</a>
+to install a recent version of Redis.</p>
+
+<ol>
+<li><p>Install the PPA repository:</p>
+<pre class="highlight plaintext"><code>sudo add-apt-repository ppa:chris-lea/redis-server
+</code></pre>
+<p>Your system will now fetch the PPA&#39;s key. This enables your Ubuntu system to
+verify that the packages in the PPA have not been interfered with since they
+were built.</p></li>
+<li><p>Update the repositories:</p>
+<pre class="highlight plaintext"><code>sudo apt-get update
+</code></pre></li>
+<li><p>Install <code>redis-server</code>:</p>
+<pre class="highlight plaintext"><code>sudo apt-get install redis-server
+</code></pre></li>
+<li><p>Follow the rest of the <a href="installation.html">installation guide</a>.</p></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/install/redis.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Backups - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Configuring omnibus settings</a></li>
+            
+          
+          <li class="breadcrumb">Backups</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="backups.html#backups">Backups</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="backups.html#backup-and-restore-omnibus-gitlab-configuration">Backup and restore omnibus-gitlab configuration</a>
+<ul>
+<li>
+<a href="backups.html#separate-configuration-backups-from-application-data">Separate configuration backups from application data</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="backups.html#creating-an-application-backup">Creating an application backup</a>
+</li>
+<li>
+<a href="backups.html#creating-backups-for-gitlab-instances-in-docker-containers">Creating backups for GitLab instances in Docker containers</a>
+</li>
+<li>
+<a href="backups.html#restoring-an-application-backup">Restoring an application backup</a>
+</li>
+<li>
+<a href="backups.html#backup-and-restore-using-non-packaged-database">Backup and restore using non-packaged database</a>
+</li>
+<li>
+<a href="backups.html#upload-backups-to-remote-cloud-storage">Upload backups to remote (cloud) storage</a>
+</li>
+<li>
+<a href="backups.html#manually-manage-backup-directory">Manually manage backup directory</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='backups'>Backups <a class='anchor' href='backups.html#backups' title='Permalink'></a></h1><h3 id='backup-and-restore-omnibus-gitlab-configuration'>Backup and restore omnibus-gitlab configuration <a class='anchor' href='backups.html#backup-and-restore-omnibus-gitlab-configuration' title='Permalink'></a></h3>
+<p>It is recommended to keep a copy of <code>/etc/gitlab</code>, or at least of
+<code>/etc/gitlab/gitlab-secrets.json</code>, in a safe place. If you ever
+need to restore a GitLab application backup you need to also restore
+<code>gitlab-secrets.json</code>. If you do not, GitLab users who are using
+two-factor authentication will lose access to your GitLab server
+and &#39;secure variables&#39; stored in GitLab CI will be lost.</p>
+
+<p>It is not recommended to store your configuration backup in the
+same place as your application data backup, see below.</p>
+
+<p>All configuration for omnibus-gitlab is stored in <code>/etc/gitlab</code>. To backup your
+configuration, just backup this directory.</p>
+<pre class="highlight shell"><code><span class="c"># Example backup command for /etc/gitlab:</span>
+<span class="c"># Create a time-stamped .tar file in the current directory.</span>
+<span class="c"># The .tar file will be readable only to root.</span>
+sudo sh -c <span class="s1">'umask 0077; tar -cf $(date "+etc-gitlab-%s.tar") -C / etc/gitlab'</span>
+</code></pre>
+<p>To create a daily application backup, edit the cron table for user root:</p>
+<pre class="highlight shell"><code>sudo crontab -e -u root
+</code></pre>
+<p>The cron table will appear in an editor.</p>
+
+<p>Enter the command to create a compressed tar file containing the contents of
+<code>/etc/gitlab/</code>.  For example, schedule the backup to run every morning after a
+weekday, Tuesday (day 2) through Saturday (day 6):</p>
+<pre class="highlight plaintext"><code>15 04 * * 2-6  umask 0077; tar cfz /secret/gitlab/backups/$(date "+etc-gitlab-\%s.tgz") -C / etc/gitlab
+
+</code></pre>
+<p><a href="http://www.pantz.org/software/cron/croninfo.html">cron is rather particular</a>
+about the cron table. Note:</p>
+
+<ul>
+<li>The empty line after the command</li>
+<li>The escaped percent character:  \%</li>
+</ul>
+
+<p>You can extract the .tar file as follows.</p>
+<pre class="highlight shell"><code><span class="c"># Rename the existing /etc/gitlab, if any</span>
+sudo mv /etc/gitlab /etc/gitlab.<span class="k">$(</span>date +%s<span class="k">)</span>
+<span class="c"># Change the example timestamp below for your configuration backup</span>
+sudo tar -xf etc-gitlab-1399948539.tar -C /
+</code></pre>
+<p>Remember to run <code>sudo gitlab-ctl reconfigure</code> after restoring a configuration
+backup.</p>
+
+<p>NOTE: Your machines SSH host keys are stored in a separate location at <code>/etc/ssh/</code>. Be sure to also <a href="https://superuser.com/questions/532040/copy-ssh-keys-from-one-server-to-another-server/532079#532079">backup and restore those keys</a> to avoid man-in-the-middle attack warnings if you have to perform a full machine restore.</p>
+<h4 id='separate-configuration-backups-from-application-data'>Separate configuration backups from application data <a class='anchor' href='backups.html#separate-configuration-backups-from-application-data' title='Permalink'></a></h4>
+<p>Do not store your GitLab application backups (Git repositories, SQL
+data) in the same place as your configuration backup (<code>/etc/gitlab</code>).
+The <code>gitlab-secrets.json</code> file (and possibly also the <code>gitlab.rb</code>
+file) contain database encryption keys to protect sensitive data
+in the SQL database:</p>
+
+<ul>
+<li>GitLab two-factor authentication (2FA) user secrets (&#39;QR codes&#39;)</li>
+<li>GitLab CI &#39;secure variables&#39;</li>
+</ul>
+
+<p>If you separate your configuration backup from your application data backup,
+you reduce the chance that your encrypted application data will be
+lost/leaked/stolen together with the keys needed to decrypt it.</p>
+<h3 id='creating-an-application-backup'>Creating an application backup <a class='anchor' href='backups.html#creating-an-application-backup' title='Permalink'></a></h3>
+<p>To create a backup of your repositories and GitLab metadata, follow the
+<a href="https://docs.gitlab.com/ce/raketasks/backup_restore.html#create-a-backup-of-the-gitlab-system">backup create documentation</a>.</p>
+
+<p>Backup create will store a tar file in <code>/var/opt/gitlab/backups</code>.</p>
+
+<p>If you want to store your GitLab backups in a different directory, add the
+following setting to <code>/etc/gitlab/gitlab.rb</code> and run <code>sudo gitlab-ctl
+reconfigure</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'backup_path'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/mnt/backups'</span>
+</code></pre><h3 id='creating-backups-for-gitlab-instances-in-docker-containers'>Creating backups for GitLab instances in Docker containers <a class='anchor' href='backups.html#creating-backups-for-gitlab-instances-in-docker-containers' title='Permalink'></a></h3>
+<p>Backups can scheduled on the host by prepending <code>docker exec -t &lt;your container name&gt;</code> to the commands.</p>
+
+<p>Backup application:</p>
+<pre class="highlight shell"><code>docker <span class="nb">exec</span> -t &lt;your container name&gt; gitlab-rake gitlab:backup:create
+</code></pre>
+<p>Backup configuration and secrets:</p>
+<pre class="highlight shell"><code>docker <span class="nb">exec</span> -t &lt;your container name&gt; /bin/sh -c <span class="s1">'umask 0077; tar cfz /secret/gitlab/backups/$(date "+etc-gitlab-\%s.tgz") -C / etc/gitlab'</span>
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong>
+You need to have volumes mounted at <code>/secret/gitlab/backups</code> and <code>/var/opt/gitlab</code>
+in order to have these backups persisted outside the container.</p>
+</blockquote>
+<h3 id='restoring-an-application-backup'>Restoring an application backup <a class='anchor' href='backups.html#restoring-an-application-backup' title='Permalink'></a></h3>
+<p>See <a href="https://docs.gitlab.com/ce/raketasks/backup_restore.html#omnibus-installations">backup restore documentation</a>.</p>
+<h3 id='backup-and-restore-using-non-packaged-database'>Backup and restore using non-packaged database <a class='anchor' href='backups.html#backup-and-restore-using-non-packaged-database' title='Permalink'></a></h3>
+<p>If you are using non-packaged database see <a href="https://doc.gitlab.cc/omnibus/settings/doc/settings/database.html#using-a-non-packaged-postgresql-database-management-server">documentation on using non-packaged database</a>.</p>
+<h3 id='upload-backups-to-remote-cloud-storage'>Upload backups to remote (cloud) storage <a class='anchor' href='backups.html#upload-backups-to-remote-cloud-storage' title='Permalink'></a></h3>
+<p>For details check <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/966f68b33e1f15f08e383ec68346ed1bd690b59b/doc/raketasks/backup_restore.md#upload-backups-to-remote-cloud-storage">backup restore document of GitLab CE</a>.</p>
+<h3 id='manually-manage-backup-directory'>Manually manage backup directory <a class='anchor' href='backups.html#manually-manage-backup-directory' title='Permalink'></a></h3>
+<p>Omnibus-gitlab creates the backup directory set with <code>gitlab_rails[&#39;backup_path&#39;]</code>. The directory is owned by the user that is running GitLab and it has strict permissions set to be accessible to only that user.
+That directory will hold backup archives and they contain sensitive information.
+In some organizations permissions need to be different because of, for example, shipping the backup archives offsite.</p>
+
+<p>To disable backup directory management, in <code>/etc/gitlab/gitlab.rb</code> set:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'manage_backup_path'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre>
+<p><em>Warning</em> If you set this configuration option, it is up to you to create the directory specified in <code>gitlab_rails[&#39;backup_path&#39;]</code> and to set permissions
+which will allow user specified in <code>user[&#39;username&#39;]</code> to have correct access. Failing to do so will prevent GitLab from creating the backup archive.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/backups.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

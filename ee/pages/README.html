@@ -1,0 +1,676 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Pages - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Pages</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-pages">GitLab Pages</a>
+<ul>
+<li>
+<a href="README.html#getting-started-with-gitlab-pages">Getting started with GitLab Pages</a>
+<ul>
+<li>
+<a href="README.html#gitlab-pages-requirements">GitLab Pages requirements</a>
+</li>
+<li>
+<a href="README.html#user-or-group-pages">User or group Pages</a>
+</li>
+<li>
+<a href="README.html#project-pages">Project Pages</a>
+</li>
+<li>
+<a href="README.html#explore-the-contents-of-gitlab-ci-yml">Explore the contents of <code>.gitlab-ci.yml</code></a>
+<ul>
+<li>
+<a href="README.html#how-gitlab-ci-yml-looks-like-when-the-static-content-is-in-your-repository">How <code>.gitlab-ci.yml</code> looks like when the static content is in your repository</a>
+</li>
+<li>
+<a href="README.html#how-gitlab-ci-yml-looks-like-when-using-a-static-generator">How <code>.gitlab-ci.yml</code> looks like when using a static generator</a>
+</li>
+<li>
+<a href="README.html#how-to-set-up-gitlab-pages-in-a-repository-where-there-s-also-actual-code">How to set up GitLab Pages in a repository where there's also actual code</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#next-steps">Next steps</a>
+<ul>
+<li>
+<a href="README.html#example-projects">Example projects</a>
+</li>
+<li>
+<a href="README.html#add-a-custom-domain-to-your-pages-website">Add a custom domain to your Pages website</a>
+</li>
+<li>
+<a href="README.html#secure-your-custom-domain-website-with-tls">Secure your custom domain website with TLS</a>
+</li>
+<li>
+<a href="README.html#custom-error-codes-pages">Custom error codes pages</a>
+</li>
+<li>
+<a href="README.html#remove-the-contents-of-your-pages">Remove the contents of your pages</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#gitlab-pages-on-gitlab-com">GitLab Pages on GitLab.com</a>
+</li>
+<li>
+<a href="README.html#limitations">Limitations</a>
+</li>
+<li>
+<a href="README.html#redirects-in-gitlab-pages">Redirects in GitLab Pages</a>
+</li>
+<li>
+<a href="README.html#frequently-asked-questions">Frequently Asked Questions</a>
+<ul>
+<li>
+<a href="README.html#can-i-download-my-generated-pages">Can I download my generated pages?</a>
+</li>
+<li>
+<a href="README.html#can-i-use-gitlab-pages-if-my-project-is-private">Can I use GitLab Pages if my project is private?</a>
+</li>
+<li>
+<a href="README.html#do-i-need-to-create-a-user-group-website-before-creating-a-project-website">Do I need to create a user/group website before creating a project website?</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#known-issues">Known issues</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-pages'>GitLab Pages <a class='anchor' href='README.html#gitlab-pages' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong>
+This feature was <a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/80">introduced</a> in GitLab EE 8.3.
+Custom CNAMEs with TLS support were <a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/173">introduced</a> in GitLab EE 8.5.</p>
+
+<p><strong>Note:</strong>
+This document is about the user guide. To learn how to enable GitLab Pages
+across your GitLab instance, visit the <a href="administration.html">administrator documentation</a>.</p>
+</blockquote>
+
+<p>With GitLab Pages you can host for free your static websites on GitLab.
+Combined with the power of <a href="https://about.gitlab.com/gitlab-ci">GitLab CI</a> and the help of <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner">GitLab Runner</a> you can
+deploy static pages for your individual projects, your user or your group.</p>
+
+<p>Read <a href="README.html#gitlab-pages-on-gitlabcom">GitLab Pages on GitLab.com</a> for specific
+information, if you are using GitLab.com to host your website.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="README.html#getting-started-with-gitlab-pages">Getting started with GitLab Pages</a>
+
+<ul>
+<li><a href="README.html#gitlab-pages-requirements">GitLab Pages requirements</a></li>
+<li><a href="README.html#user-or-group-pages">User or group Pages</a></li>
+<li><a href="README.html#project-pages">Project Pages</a></li>
+<li><a href="README.html#explore-the-contents-of-gitlab-ciyml">Explore the contents of <code>.gitlab-ci.yml</code></a>
+
+<ul>
+<li><a href="README.html#how-gitlab-ciyml-looks-like-when-the-static-content-is-in-your-repository">How <code>.gitlab-ci.yml</code> looks like when the static content is in your repository</a></li>
+<li><a href="README.html#how-gitlab-ciyml-looks-like-when-using-a-static-generator">How <code>.gitlab-ci.yml</code> looks like when using a static generator</a></li>
+<li><a href="README.html#how-to-set-up-gitlab-pages-in-a-repository-where-theres-also-actual-code">How to set up GitLab Pages in a repository where there&#39;s also actual code</a></li>
+</ul></li>
+</ul></li>
+<li><a href="README.html#next-steps">Next steps</a>
+
+<ul>
+<li><a href="README.html#example-projects">Example projects</a></li>
+<li><a href="README.html#add-a-custom-domain-to-your-pages-website">Add a custom domain to your Pages website</a></li>
+<li><a href="README.html#secure-your-custom-domain-website-with-tls">Secure your custom domain website with TLS</a></li>
+<li><a href="README.html#custom-error-codes-pages">Custom error codes pages</a></li>
+<li><a href="README.html#remove-the-contents-of-your-pages">Remove the contents of your pages</a></li>
+</ul></li>
+<li><a href="README.html#gitlab-pages-on-gitlabcom">GitLab Pages on GitLab.com</a></li>
+<li><a href="README.html#limitations">Limitations</a></li>
+<li><a href="README.html#redirects-in-gitlab-pages">Redirects in GitLab Pages</a></li>
+<li><a href="README.html#frequently-asked-questions">Frequently Asked Questions</a>
+
+<ul>
+<li><a href="README.html#can-i-download-my-generated-pages">Can I download my generated pages?</a></li>
+<li><a href="README.html#can-i-use-gitlab-pages-if-my-project-is-private">Can I use GitLab Pages if my project is private?</a></li>
+<li><a href="README.html#do-i-need-to-create-a-usergroup-website-before-creating-a-project-website">Do I need to create a user/group website before creating a project website?</a></li>
+</ul></li>
+<li><a href="README.html#known-issues">Known issues</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='getting-started-with-gitlab-pages'>Getting started with GitLab Pages <a class='anchor' href='README.html#getting-started-with-gitlab-pages' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+In the rest of this document we will assume that the general domain name that
+is used for GitLab Pages is <code>example.io</code>.</p>
+</blockquote>
+
+<p>In general there are two types of pages one might create:</p>
+
+<ul>
+<li>Pages per user (<code>username.example.io</code>) or per group (<code>groupname.example.io</code>)</li>
+<li>Pages per project (<code>username.example.io/projectname</code> or <code>groupname.example.io/projectname</code>)</li>
+</ul>
+
+<p>In GitLab, usernames and groupnames are unique and we often refer to them
+as namespaces. There can be only one namespace in a GitLab instance. Below you
+can see the connection between the type of GitLab Pages, what the project name
+that is created on GitLab looks like and the website URL it will be ultimately
+be served on.</p>
+
+<table><thead>
+<tr>
+<th>Type of GitLab Pages</th>
+<th>The name of the project created in GitLab</th>
+<th>Website URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>User pages</td>
+<td><code>username.example.io</code></td>
+<td><code>http(s)://username.example.io</code></td>
+</tr>
+<tr>
+<td>Group pages</td>
+<td><code>groupname.example.io</code></td>
+<td><code>http(s)://groupname.example.io</code></td>
+</tr>
+<tr>
+<td>Project pages owned by a user</td>
+<td><code>projectname</code></td>
+<td><code>http(s)://username.example.io/projectname</code></td>
+</tr>
+<tr>
+<td>Project pages owned by a group</td>
+<td><code>projectname</code></td>
+<td><code>http(s)://groupname.example.io/projectname</code></td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p><strong>Warning:</strong>
+There are some known <a href="README.html#limitations">limitations</a> regarding namespaces served
+under the general domain name and HTTPS. Make sure to read that section.</p>
+</blockquote>
+<h3 id='gitlab-pages-requirements'>GitLab Pages requirements <a class='anchor' href='README.html#gitlab-pages-requirements' title='Permalink'></a></h3>
+<p>In brief, this is what you need to upload your website in GitLab Pages:</p>
+
+<ol>
+<li>Find out the general domain name that is used for GitLab Pages
+(ask your administrator). This is very important, so you should first make
+sure you get that right.</li>
+<li>Create a project</li>
+<li>Push a <a href="../ci/yaml/README.html"><code>.gitlab-ci.yml</code> file</a> in the root directory
+of your repository with a specific job named <a href="../ci/yaml/README.html#pages"><code>pages</code></a></li>
+<li>Set up a GitLab Runner to build your website</li>
+</ol>
+
+<blockquote>
+<p><strong>Note:</strong>
+If <a href="../ci/runners/README.html">shared runners</a> are enabled by your GitLab
+administrator, you should be able to use them instead of bringing your own.</p>
+</blockquote>
+<h3 id='user-or-group-pages'>User or group Pages <a class='anchor' href='README.html#user-or-group-pages' title='Permalink'></a></h3>
+<p>For user and group pages, the name of the project should be specific to the
+username or groupname and the general domain name that is used for GitLab Pages.
+Head over your GitLab instance that supports GitLab Pages and create a
+repository named <code>username.example.io</code>, where <code>username</code> is your username on
+GitLab. If the first part of the project name doesn&#39;t match exactly your
+username, it won’t work, so make sure to get it right.</p>
+
+<p>To create a group page, the steps are the same like when creating a website for
+users. Just make sure that you are creating the project within the group&#39;s
+namespace.</p>
+
+<p><a target="_blank" href="img/pages_create_user_page.png"><img src="img/pages_create_user_page.png" title="" alt="Create a user-based pages project"/></a></p>
+
+<hr>
+
+<p>After you push some static content to your repository and GitLab Runner uploads
+the artifacts to GitLab CI, you will be able to access your website under
+<code>http(s)://username.example.io</code>. Keep reading to find out how.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+If your username/groupname contains a dot, for example <code>foo.bar</code>, you will not
+be able to use the wildcard domain HTTPS, read more at <a href="README.html#limitations">limitations</a>.</p>
+</blockquote>
+<h3 id='project-pages'>Project Pages <a class='anchor' href='README.html#project-pages' title='Permalink'></a></h3>
+<p>GitLab Pages for projects can be created by both user and group accounts.
+The steps to create a project page for a user or a group are identical:</p>
+
+<ol>
+<li>Create a new project</li>
+<li>Push a <a href="../ci/yaml/README.html"><code>.gitlab-ci.yml</code> file</a> in the root directory
+of your repository with a specific job named <a href="../ci/yaml/README.html#pages"><code>pages</code></a>.</li>
+<li>Set up a GitLab Runner to build your website</li>
+</ol>
+
+<p>A user&#39;s project will be served under <code>http(s)://username.example.io/projectname</code>
+whereas a group&#39;s project under <code>http(s)://groupname.example.io/projectname</code>.</p>
+<h3 id='explore-the-contents-of-gitlab-ci-yml'>Explore the contents of <code>.gitlab-ci.yml</code> <a class='anchor' href='README.html#explore-the-contents-of-gitlab-ci-yml' title='Permalink'></a></h3>
+<p>The key thing about GitLab Pages is the <code>.gitlab-ci.yml</code> file, something that
+gives you absolute control over the build process. You can actually watch your
+website being built live by following the CI build traces.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+Before reading this section, make sure you familiarize yourself with GitLab CI
+and the specific syntax of<a href="../ci/yaml/README.html"><code>.gitlab-ci.yml</code></a> by
+following our <a href="../ci/quick_start/README.html">quick start guide</a>.</p>
+</blockquote>
+
+<p>To make use of GitLab Pages, the contents of <code>.gitlab-ci.yml</code> must follow the
+rules below:</p>
+
+<ol>
+<li>A special job named <a href="../ci/yaml/README.html#pages"><code>pages</code></a> must be defined</li>
+<li>Any static content which will be served by GitLab Pages must be placed under
+a <code>public/</code> directory</li>
+<li><code>artifacts</code> with a path to the <code>public/</code> directory must be defined</li>
+</ol>
+
+<p>In its simplest form, <code>.gitlab-ci.yml</code> looks like:</p>
+<pre class="highlight yaml"><code><span class="na">pages</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">my_commands</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">public</span>
+</code></pre>
+<p>When the Runner reaches to build the <code>pages</code> job, it executes whatever is
+defined in the <code>script</code> parameter and if the build completes with a non-zero
+exit status, it then uploads the <code>public/</code> directory to GitLab Pages.</p>
+
+<p>The <code>public/</code> directory should contain all the static content of your website.
+Depending on how you plan to publish your website, the steps defined in the
+<a href="../ci/yaml/README.html#script"><code>script</code> parameter</a> may differ.</p>
+
+<p>Be aware that Pages are by default branch/tag agnostic and their deployment
+relies solely on what you specify in <code>.gitlab-ci.yml</code>. If you don&#39;t limit the
+<code>pages</code> job with the <a href="../ci/yaml/README.html#only-and-except"><code>only</code> parameter</a>,
+whenever a new commit is pushed to whatever branch or tag, the Pages will be
+overwritten. In the example below, we limit the Pages to be deployed whenever
+a commit is pushed only on the <code>master</code> branch:</p>
+<pre class="highlight yaml"><code><span class="na">pages</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">my_commands</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">public</span>
+  <span class="na">only</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">master</span>
+</code></pre>
+<p>We then tell the Runner to treat the <code>public/</code> directory as <code>artifacts</code> and
+upload it to GitLab. And since all these parameters were all under a <code>pages</code>
+job, the contents of the <code>public</code> directory will be served by GitLab Pages.</p>
+<h4 id='how-gitlab-ci-yml-looks-like-when-the-static-content-is-in-your-repository'>How <code>.gitlab-ci.yml</code> looks like when the static content is in your repository <a class='anchor' href='README.html#how-gitlab-ci-yml-looks-like-when-the-static-content-is-in-your-repository' title='Permalink'></a></h4>
+<p>Supposedly your repository contained the following files:</p>
+<pre class="highlight plaintext"><code>├── index.html
+├── css
+│   └── main.css
+└── js
+    └── main.js
+</code></pre>
+<p>Then the <code>.gitlab-ci.yml</code> example below simply moves all files from the root
+directory of the project to the <code>public/</code> directory. The <code>.public</code> workaround
+is so <code>cp</code> doesn&#39;t also copy <code>public/</code> to itself in an infinite loop:</p>
+<pre class="highlight yaml"><code><span class="na">pages</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">mkdir .public</span>
+  <span class="pi">-</span> <span class="s">cp -r * .public</span>
+  <span class="pi">-</span> <span class="s">mv .public public</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">public</span>
+  <span class="na">only</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">master</span>
+</code></pre><h4 id='how-gitlab-ci-yml-looks-like-when-using-a-static-generator'>How <code>.gitlab-ci.yml</code> looks like when using a static generator <a class='anchor' href='README.html#how-gitlab-ci-yml-looks-like-when-using-a-static-generator' title='Permalink'></a></h4>
+<p>In general, GitLab Pages support any kind of <a href="https://www.staticgen.com/">static site generator</a>,
+since <code>.gitlab-ci.yml</code> can be configured to run any possible command.</p>
+
+<p>In the root directory of your Git repository, place the source files of your
+favorite static generator. Then provide a <code>.gitlab-ci.yml</code> file which is
+specific to your static generator.</p>
+
+<p>The example below, uses <a href="http://jekyllrb.com/">Jekyll</a> to build the static site:</p>
+<pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">ruby:2.1</span>             <span class="c1"># the script will run in Ruby 2.1 using the Docker image ruby:2.1</span>
+
+<span class="na">pages</span><span class="pi">:</span>                      <span class="c1"># the build job must be named pages</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">gem install jekyll</span>      <span class="c1"># we install jekyll</span>
+  <span class="pi">-</span> <span class="s">jekyll build -d public/</span> <span class="c1"># we tell jekyll to build the site for us</span>
+  <span class="na">artifacts</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">public</span>                <span class="c1"># this is where the site will live and the Runner uploads it in GitLab</span>
+  <span class="na">only</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">master</span>                  <span class="c1"># this script is only affecting the master branch</span>
+</code></pre>
+<p>Here, we used the Docker executor and in the first line we specified the base
+image against which our builds will run.</p>
+
+<p>You have to make sure that the generated static files are ultimately placed
+under the <code>public</code> directory, that&#39;s why in the <code>script</code> section we run the
+<code>jekyll</code> command that builds the website and puts all content in the <code>public/</code>
+directory. Depending on the static generator of your choice, this command will
+differ. Search in the documentation of the static generator you will use if
+there is an option to explicitly set the output directory. If there is not
+such an option, you can always add one more line under <code>script</code> to rename the
+resulting directory in <code>public/</code>.</p>
+
+<p>We then tell the Runner to treat the <code>public/</code> directory as <code>artifacts</code> and
+upload it to GitLab.</p>
+
+<hr>
+
+<p>See the <a href="https://gitlab.com/pages/jekyll">jekyll example project</a> to better understand how this
+works.</p>
+
+<p>For a list of Pages projects, see the <a href="README.html#example-projects">example projects</a> to
+get you started.</p>
+<h4 id='how-to-set-up-gitlab-pages-in-a-repository-where-there-39-s-also-actual-code'>How to set up GitLab Pages in a repository where there&#39;s also actual code <a class='anchor' href='README.html#how-to-set-up-gitlab-pages-in-a-repository-where-there-39-s-also-actual-code' title='Permalink'></a></h4>
+<p>Remember that GitLab Pages are by default branch/tag agnostic and their
+deployment relies solely on what you specify in <code>.gitlab-ci.yml</code>. You can limit
+the <code>pages</code> job with the <a href="../ci/yaml/README.html#only-and-except"><code>only</code> parameter</a>,
+whenever a new commit is pushed to a branch that will be used specifically for
+your pages.</p>
+
+<p>That way, you can have your project&#39;s code in the <code>master</code> branch and use an
+orphan branch (let&#39;s name it <code>pages</code>) that will host your static generator site.</p>
+
+<p>You can create a new empty branch like this:</p>
+<pre class="highlight shell"><code>git checkout --orphan pages
+</code></pre>
+<p>The first commit made on this new branch will have no parents and it will be
+the root of a new history totally disconnected from all the other branches and
+commits. Push the source files of your static generator in the <code>pages</code> branch.</p>
+
+<p>Below is a copy of <code>.gitlab-ci.yml</code> where the most significant line is the last
+one, specifying to execute everything in the <code>pages</code> branch:</p>
+<pre class="highlight plaintext"><code>image: ruby:2.1
+
+pages:
+  script:
+  - gem install jekyll
+  - jekyll build -d public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - pages
+</code></pre>
+<p>See an example that has different files in the <a href="https://gitlab.com/pages/jekyll-branched/tree/master"><code>master</code> branch</a>
+and the source files for Jekyll are in a <a href="https://gitlab.com/pages/jekyll-branched/tree/pages"><code>pages</code> branch</a> which
+also includes <code>.gitlab-ci.yml</code>.</p>
+<h2 id='next-steps'>Next steps <a class='anchor' href='README.html#next-steps' title='Permalink'></a></h2>
+<p>So you have successfully deployed your website, congratulations! Let&#39;s check
+what more you can do with GitLab Pages.</p>
+<h3 id='example-projects'>Example projects <a class='anchor' href='README.html#example-projects' title='Permalink'></a></h3>
+<p>Below is a list of example projects for GitLab Pages with a plain HTML website
+or various static site generators. Contributions are very welcome.</p>
+
+<ul>
+<li><a href="https://gitlab.com/pages/plain-html">Plain HTML</a></li>
+<li><a href="https://gitlab.com/pages/jekyll">Jekyll</a></li>
+<li><a href="https://gitlab.com/pages/hugo">Hugo</a></li>
+<li><a href="https://gitlab.com/pages/middleman">Middleman</a></li>
+<li><a href="https://gitlab.com/pages/hexo">Hexo</a></li>
+<li><a href="https://gitlab.com/pages/brunch">Brunch</a></li>
+<li><a href="https://gitlab.com/pages/metalsmith">Metalsmith</a></li>
+<li><a href="https://gitlab.com/pages/harp">Harp</a></li>
+</ul>
+
+<p>Visit the GitLab Pages group for a full list of example projects:
+<a href="https://gitlab.com/groups/pages">https://gitlab.com/groups/pages</a>.</p>
+<h3 id='add-a-custom-domain-to-your-pages-website'>Add a custom domain to your Pages website <a class='anchor' href='README.html#add-a-custom-domain-to-your-pages-website' title='Permalink'></a></h3>
+<p>If this setting is enabled by your GitLab administrator, you should be able to
+see the <strong>New Domain</strong> button when visiting your project&#39;s <strong>Settings &gt; Pages</strong>.</p>
+
+<p><a target="_blank" href="img/pages_new_domain_button.png"><img src="img/pages_new_domain_button.png" title="" alt="New domain button"/></a></p>
+
+<hr>
+
+<p>You can add multiple domains pointing to your website hosted under GitLab.
+Once the domain is added, you can see it listed under the <strong>Domains</strong> section.</p>
+
+<p><a target="_blank" href="img/pages_multiple_domains.png"><img src="img/pages_multiple_domains.png" title="" alt="Pages multiple domains"/></a></p>
+
+<hr>
+
+<p>As a last step, you need to configure your DNS and add a CNAME pointing to your
+user/group page. Click on the <strong>Details</strong> button of a domain for further
+instructions.</p>
+
+<p><a target="_blank" href="img/pages_dns_details.png"><img src="img/pages_dns_details.png" title="" alt="Pages DNS details"/></a></p>
+
+<hr>
+
+<blockquote>
+<p><strong>Note:</strong>
+Currently there is support only for custom domains on per-project basis. That
+means that if you add a custom domain (<code>example.com</code>) for your user website
+(<code>username.example.io</code>), a project that is served under <code>username.example.io/foo</code>,
+will not be accessible under <code>example.com/foo</code>.</p>
+</blockquote>
+<h3 id='secure-your-custom-domain-website-with-tls'>Secure your custom domain website with TLS <a class='anchor' href='README.html#secure-your-custom-domain-website-with-tls' title='Permalink'></a></h3>
+<p>When you add a new custom domain, you also have the chance to add a TLS
+certificate. If this setting is enabled by your GitLab administrator, you
+should be able to see the option to upload the public certificate and the
+private key when adding a new domain.</p>
+
+<p><a target="_blank" href="img/pages_upload_cert.png"><img src="img/pages_upload_cert.png" title="" alt="Pages upload cert"/></a></p>
+<h3 id='custom-error-codes-pages'>Custom error codes pages <a class='anchor' href='README.html#custom-error-codes-pages' title='Permalink'></a></h3>
+<p>You can provide your own 403 and 404 error pages by creating the <code>403.html</code> and
+<code>404.html</code> files respectively in the root directory of the <code>public/</code> directory
+that will be included in the artifacts. Usually this is the root directory of
+your project, but that may differ depending on your static generator
+configuration.</p>
+
+<p>If the case of <code>404.html</code>, there are different scenarios. For example:</p>
+
+<ul>
+<li>If you use project Pages (served under <code>/projectname/</code>) and try to access
+<code>/projectname/non/exsiting_file</code>, GitLab Pages will try to serve first
+<code>/projectname/404.html</code>, and then <code>/404.html</code>.</li>
+<li>If you use user/group Pages (served under <code>/</code>) and try to access
+<code>/non/existing_file</code> GitLab Pages will try to serve <code>/404.html</code>.</li>
+<li>If you use a custom domain and try to access <code>/non/existing_file</code>, GitLab
+Pages will try to serve only <code>/404.html</code>.</li>
+</ul>
+<h3 id='remove-the-contents-of-your-pages'>Remove the contents of your pages <a class='anchor' href='README.html#remove-the-contents-of-your-pages' title='Permalink'></a></h3>
+<p>If you ever feel the need to purge your Pages content, you can do so by going
+to your project&#39;s <strong>Settings &gt; Pages</strong> and hit <strong>Remove pages</strong>. Simple as that.</p>
+
+<p><a target="_blank" href="img/pages_remove.png"><img src="img/pages_remove.png" title="" alt="Remove pages"/></a></p>
+<h2 id='gitlab-pages-on-gitlab-com'>GitLab Pages on GitLab.com <a class='anchor' href='README.html#gitlab-pages-on-gitlab-com' title='Permalink'></a></h2>
+<p>If you are using GitLab.com to host your website, then:</p>
+
+<ul>
+<li>The general domain name for GitLab Pages on GitLab.com is <code>gitlab.io</code>.</li>
+<li>Custom domains and TLS support are enabled.</li>
+<li>Shared runners are enabled by default, provided for free and can be used to
+build your website. If you want you can still bring your own Runner.</li>
+</ul>
+
+<p>The rest of the guide still applies.</p>
+<h2 id='limitations'>Limitations <a class='anchor' href='README.html#limitations' title='Permalink'></a></h2>
+<p>When using Pages under the general domain of a GitLab instance (<code>*.example.io</code>),
+you <em>cannot</em> use HTTPS with sub-subdomains. That means that if your
+username/groupname contains a dot, for example <code>foo.bar</code>, the domain
+<code>https://foo.bar.example.io</code> will <em>not</em> work. This is a limitation of the
+<a href="https://tools.ietf.org/html/rfc2818#section-3.1" title="HTTP Over TLS RFC">HTTP Over TLS protocol</a>. HTTP pages will continue to work provided you
+don&#39;t redirect HTTP to HTTPS.</p>
+<h2 id='redirects-in-gitlab-pages'>Redirects in GitLab Pages <a class='anchor' href='README.html#redirects-in-gitlab-pages' title='Permalink'></a></h2>
+<p>Since you cannot use any custom server configuration files, like <code>.htaccess</code> or
+any <code>.conf</code> file for that matter, if you want to redirect a web page to another
+location, you can use the <a href="https://en.wikipedia.org/wiki/Meta_refresh">HTTP meta refresh tag</a>.</p>
+
+<p>Some static site generators provide plugins for that functionality so that you
+don&#39;t have to create and edit HTML files manually. For example, Jekyll has the
+<a href="https://github.com/jekyll/jekyll-redirect-from">redirect-from plugin</a>.</p>
+<h2 id='frequently-asked-questions'>Frequently Asked Questions <a class='anchor' href='README.html#frequently-asked-questions' title='Permalink'></a></h2><h3 id='can-i-download-my-generated-pages'>Can I download my generated pages? <a class='anchor' href='README.html#can-i-download-my-generated-pages' title='Permalink'></a></h3>
+<p>Sure. All you need to do is download the artifacts archive from the build page.</p>
+<h3 id='can-i-use-gitlab-pages-if-my-project-is-private'>Can I use GitLab Pages if my project is private? <a class='anchor' href='README.html#can-i-use-gitlab-pages-if-my-project-is-private' title='Permalink'></a></h3>
+<p>Yes. GitLab Pages don&#39;t care whether you set your project&#39;s visibility level
+to private, internal or public.</p>
+<h3 id='do-i-need-to-create-a-user-group-website-before-creating-a-project-website'>Do I need to create a user/group website before creating a project website? <a class='anchor' href='README.html#do-i-need-to-create-a-user-group-website-before-creating-a-project-website' title='Permalink'></a></h3>
+<p>No, you don&#39;t. You can create your project first and it will be accessed under
+<code>http(s)://namespace.example.io/projectname</code>.</p>
+<h2 id='known-issues'>Known issues <a class='anchor' href='README.html#known-issues' title='Permalink'></a></h2>
+<p>For a list of known issues, visit GitLab&#39;s <a href="https://gitlab.com/gitlab-org/gitlab-ee/issues?label_name=Pages">public issue tracker</a>.</p>
+
+<hr>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/pages/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

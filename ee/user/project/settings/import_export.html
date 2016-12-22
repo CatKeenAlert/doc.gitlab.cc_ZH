@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Project import/export - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Project import/export</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="import_export.html#project-import-export">Project import/export</a>
+<ul>
+<li>
+<a href="import_export.html#version-history">Version history</a>
+</li>
+<li>
+<a href="import_export.html#exported-contents">Exported contents</a>
+</li>
+<li>
+<a href="import_export.html#exporting-a-project-and-its-data">Exporting a project and its data</a>
+</li>
+<li>
+<a href="import_export.html#importing-the-project">Importing the project</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='project-import-export'>Project import/export <a class='anchor' href='import_export.html#project-import-export' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/3050">Introduced</a> in GitLab 8.9.</li>
+<li>Importing will not be possible if the import instance version differs from
+that of the exporter.</li>
+<li>For existing installations, the project import option has to be enabled in
+application settings (<code>/admin/application_settings</code>) under &#39;Import sources&#39;.
+Ask your administrator if you don&#39;t see the <strong>GitLab export</strong> button when
+creating a new project.</li>
+<li>You can find some useful raketasks if you are an administrator in the
+<a href="../../../administration/raketasks/project_import_export.html">import_export</a>
+raketask.</li>
+<li>The exports are stored in a temporary <a href="../../../development/shared_files.html">shared directory</a> and are deleted
+every 24 hours by a specific worker.</li>
+</ul>
+</blockquote>
+
+<p>Existing projects running on any GitLab instance or GitLab.com can be exported
+with all their related data and be moved into a new GitLab instance.</p>
+<h2 id='version-history'>Version history <a class='anchor' href='import_export.html#version-history' title='Permalink'></a></h2>
+<table><thead>
+<tr>
+<th>GitLab version</th>
+<th>Import/Export version</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>8.13.0 to current</td>
+<td>0.1.5</td>
+</tr>
+<tr>
+<td>8.12.0</td>
+<td>0.1.4</td>
+</tr>
+<tr>
+<td>8.10.3</td>
+<td>0.1.3</td>
+</tr>
+<tr>
+<td>8.10.0</td>
+<td>0.1.2</td>
+</tr>
+<tr>
+<td>8.9.5</td>
+<td>0.1.1</td>
+</tr>
+<tr>
+<td>8.9.0</td>
+<td>0.1.0</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>The table reflects what GitLab version we updated the Import/Export version at.
+For instance, 8.10.3 and 8.11 will have the same Import/Export version (0.1.3)
+and the exports between them will be compatible.</p>
+</blockquote>
+<h2 id='exported-contents'>Exported contents <a class='anchor' href='import_export.html#exported-contents' title='Permalink'></a></h2>
+<p>The following items will be exported:</p>
+
+<ul>
+<li>Project and wiki repositories</li>
+<li>Project uploads</li>
+<li>Project configuration including web hooks and services</li>
+<li>Issues with comments, merge requests with diffs and comments, labels, milestones, snippets,
+and other project entities</li>
+</ul>
+
+<p>The following items will NOT be exported:</p>
+
+<ul>
+<li>Build traces and artifacts</li>
+<li>LFS objects</li>
+</ul>
+<h2 id='exporting-a-project-and-its-data'>Exporting a project and its data <a class='anchor' href='import_export.html#exporting-a-project-and-its-data' title='Permalink'></a></h2>
+<ol>
+<li><p>Go to the project settings page by clicking on <strong>Edit Project</strong>:</p>
+
+<p><a target="_blank" href="img/settings_edit_button.png"><img src="img/settings_edit_button.png" title="" alt="Project settings button"/></a></p></li>
+<li><p>Scroll down to find the <strong>Export project</strong> button:</p>
+
+<p><a target="_blank" href="img/import_export_export_button.png"><img src="img/import_export_export_button.png" title="" alt="Export button"/></a></p></li>
+<li><p>Once the export is generated, you should receive an e-mail with a link to
+download the file:</p>
+
+<p><a target="_blank" href="img/import_export_mail_link.png"><img src="img/import_export_mail_link.png" title="" alt="Email download link"/></a></p></li>
+<li><p>Alternatively, you can come back to the project settings and download the
+file from there, or generate a new export. Once the file available, the page
+should show the <strong>Download export</strong> button:</p>
+
+<p><a target="_blank" href="img/import_export_download_export.png"><img src="img/import_export_download_export.png" title="" alt="Download export"/></a></p></li>
+</ol>
+<h2 id='importing-the-project'>Importing the project <a class='anchor' href='import_export.html#importing-the-project' title='Permalink'></a></h2>
+<ol>
+<li><p>The new GitLab project import feature is at the far right of the import
+options when creating a New Project. Make sure you are in the right namespace
+and you have entered a project name. Click on <strong>GitLab export</strong>:</p>
+
+<p><a target="_blank" href="img/import_export_new_project.png"><img src="img/import_export_new_project.png" title="" alt="New project"/></a></p></li>
+<li><p>You can see where the project will be imported to. You can now select file
+exported previously:</p>
+
+<p><a target="_blank" href="img/import_export_select_file.png"><img src="img/import_export_select_file.png" title="" alt="Select file"/></a></p></li>
+<li><p>Click on <strong>Import project</strong> to begin importing. Your newly imported project
+page will appear soon.</p></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/settings/import_export.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

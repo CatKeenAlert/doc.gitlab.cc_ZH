@@ -1,0 +1,342 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Mattermost slash commands - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Mattermost slash commands</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="mattermost_slash_commands.html#mattermost-slash-commands">Mattermost slash commands</a>
+<ul>
+<li>
+<a href="mattermost_slash_commands.html#prerequisites">Prerequisites</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#configuration">Configuration</a>
+<ul>
+<li>
+<a href="mattermost_slash_commands.html#step-1-enable-custom-slash-commands-in-mattermost">Step 1. Enable custom slash commands in Mattermost</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#step-2-open-the-mattermost-slash-commands-service-in-gitlab">Step 2. Open the Mattermost slash commands service in GitLab</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#step-3-create-a-new-custom-slash-command-in-mattermost">Step 3. Create a new custom slash command in Mattermost</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#step-4-copy-the-mattermost-token-into-the-mattermost-slash-command-service">Step 4. Copy the Mattermost token into the Mattermost slash command service</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#authorizing-mattermost-to-interact-with-gitlab">Authorizing Mattermost to interact with GitLab</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#available-slash-commands">Available slash commands</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#permissions">Permissions</a>
+</li>
+<li>
+<a href="mattermost_slash_commands.html#further-reading">Further reading</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='mattermost-slash-commands'>Mattermost slash commands <a class='anchor' href='mattermost_slash_commands.html#mattermost-slash-commands' title='Permalink'></a></h1>
+<blockquote>
+<p>Introduced in GitLab 8.14</p>
+</blockquote>
+
+<p>Mattermost commands give users an extra interface to perform common operations
+from the chat environment. This allows one to, for example, create an issue as
+soon as the idea was discussed in Mattermost.</p>
+<h2 id='prerequisites'>Prerequisites <a class='anchor' href='mattermost_slash_commands.html#prerequisites' title='Permalink'></a></h2>
+<p>Mattermost 3.4 and up is required.</p>
+
+<p>If you have the Omnibus GitLab package installed, Mattermost is already bundled
+in it. All you have to do is configure it. Read more in the
+<a href="https://docs.gitlab.com/omnibus/gitlab-mattermost/">Omnibus GitLab Mattermost documentation</a>.</p>
+<h2 id='configuration'>Configuration <a class='anchor' href='mattermost_slash_commands.html#configuration' title='Permalink'></a></h2>
+<p>The configuration consists of two parts. First you need to enable the slash
+commands in Mattermost and then enable the service in GitLab.</p>
+<h3 id='step-1-enable-custom-slash-commands-in-mattermost'>Step 1. Enable custom slash commands in Mattermost <a class='anchor' href='mattermost_slash_commands.html#step-1-enable-custom-slash-commands-in-mattermost' title='Permalink'></a></h3>
+<p>The first thing to do in Mattermost is to enable custom slash commands from
+the administrator console.</p>
+
+<ol>
+<li><p>Log in with an account that has admin privileges and navigate to the system
+console.</p>
+
+<p><a target="_blank" href="img/mattermost_goto_console.png"><img src="img/mattermost_goto_console.png" title="" alt="Mattermost go to console"/></a></p>
+
+<hr></li>
+<li><p>Click <strong>Custom integrations</strong> and set <strong>Enable Custom Slash Commands</strong> to
+true.</p>
+
+<p><a target="_blank" href="img/mattermost_console_integrations.png"><img src="img/mattermost_console_integrations.png" title="" alt="Mattermost console"/></a></p>
+
+<hr></li>
+<li><p>Click <strong>Save</strong> at the bottom to save the changes.</p></li>
+</ol>
+<h3 id='step-2-open-the-mattermost-slash-commands-service-in-gitlab'>Step 2. Open the Mattermost slash commands service in GitLab <a class='anchor' href='mattermost_slash_commands.html#step-2-open-the-mattermost-slash-commands-service-in-gitlab' title='Permalink'></a></h3>
+<ol>
+<li><p>Open a new tab for GitLab and go to your project&#39;s settings
+<strong>Services ➔ Mattermost command</strong>. A screen will appear with all the values you
+need to copy in Mattermost as described in the next step. Leave the window open.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+GitLab will propose some values for the Mattermost settings. The only one
+required to copy-paste as-is is the <strong>Request URL</strong>, all the others are just
+suggestions.</p>
+</blockquote>
+
+<p><a target="_blank" href="img/mattermost_config_help.png"><img src="img/mattermost_config_help.png" title="" alt="Mattermost setup instructions"/></a></p>
+
+<hr></li>
+<li><p>Proceed to the next step and create a slash command in Mattermost with the
+above values.</p></li>
+</ol>
+<h3 id='step-3-create-a-new-custom-slash-command-in-mattermost'>Step 3. Create a new custom slash command in Mattermost <a class='anchor' href='mattermost_slash_commands.html#step-3-create-a-new-custom-slash-command-in-mattermost' title='Permalink'></a></h3>
+<p>Now that you have enabled the custom slash commands in Mattermost and opened
+the Mattermost slash commands service in GitLab, it&#39;s time to copy these values
+in a new slash command.</p>
+
+<ol>
+<li><p>Back to Mattermost, under your team page settings, you should see the
+<strong>Integrations</strong> option.</p>
+
+<p><a target="_blank" href="img/mattermost_team_integrations.png"><img src="img/mattermost_team_integrations.png" title="" alt="Mattermost team integrations"/></a></p>
+
+<hr></li>
+<li><p>Go to the <strong>Slash Commands</strong> integration and add a new one by clicking the
+<strong>Add Slash Command</strong> button.</p>
+
+<p><a target="_blank" href="img/mattermost_add_slash_command.png"><img src="img/mattermost_add_slash_command.png" title="" alt="Mattermost add command"/></a></p>
+
+<hr></li>
+<li><p>Fill in the options for the custom command as described in
+<a href="mattermost_slash_commands.html#step-2-open-the-mattermost-slash-commands-service-in-gitlab">step 2</a>.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you plan on connecting multiple projects, pick a slash command trigger
+word that relates to your projects such as <code>/gitlab-project-name</code> or even
+just <code>/project-name</code>. Only use <code>/gitlab</code> if you will only connect a single
+project to your Mattermost team.</p>
+</blockquote>
+
+<p><a target="_blank" href="img/mattermost_slash_command_configuration.png"><img src="img/mattermost_slash_command_configuration.png" title="" alt="Mattermost add command configuration"/></a></p></li>
+<li><p>After you setup all the values, copy the token (we will use it below) and
+click <strong>Done</strong>.</p>
+
+<p><a target="_blank" href="img/mattermost_slash_command_token.png"><img src="img/mattermost_slash_command_token.png" title="" alt="Mattermost slash command token"/></a></p></li>
+</ol>
+<h3 id='step-4-copy-the-mattermost-token-into-the-mattermost-slash-command-service'>Step 4. Copy the Mattermost token into the Mattermost slash command service <a class='anchor' href='mattermost_slash_commands.html#step-4-copy-the-mattermost-token-into-the-mattermost-slash-command-service' title='Permalink'></a></h3>
+<ol>
+<li><p>In GitLab, paste the Mattermost token you copied in the previous step and
+check the <strong>Active</strong> checkbox.</p>
+
+<p><a target="_blank" href="img/mattermost_gitlab_token.png"><img src="img/mattermost_gitlab_token.png" title="" alt="Mattermost copy token to GitLab"/></a></p></li>
+<li><p>Click <strong>Save changes</strong> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p>You are now set to start using slash commands in Mattermost that talk to the
+GitLab project you configured.</p>
+<h2 id='authorizing-mattermost-to-interact-with-gitlab'>Authorizing Mattermost to interact with GitLab <a class='anchor' href='mattermost_slash_commands.html#authorizing-mattermost-to-interact-with-gitlab' title='Permalink'></a></h2>
+<p>The first time a user will interact with the newly created slash commands,
+Mattermost will trigger an authorization process.</p>
+
+<p><a target="_blank" href="img/mattermost_bot_auth.png"><img src="img/mattermost_bot_auth.png" title="" alt="Mattermost bot authorize"/></a></p>
+
+<p>This will connect your Mattermost user with your GitLab user. You can
+see all authorized chat accounts in your profile&#39;s page under <strong>Chat</strong>.</p>
+
+<p>When the authorization process is complete, you can start interacting with
+GitLab using the Mattermost commands.</p>
+<h2 id='available-slash-commands'>Available slash commands <a class='anchor' href='mattermost_slash_commands.html#available-slash-commands' title='Permalink'></a></h2>
+<p>The available slash commands so far are:</p>
+
+<table><thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>/&lt;trigger&gt; issue create &lt;title&gt;\n&lt;description&gt;</code></td>
+<td>Create a new issue in the project that <code>&lt;trigger&gt;</code> is tied to. <code>&lt;description&gt;</code> is optional.</td>
+<td><code>/trigger issue create We need to change the homepage</code></td>
+</tr>
+<tr>
+<td><code>/&lt;trigger&gt; issue show &lt;issue-number&gt;</code></td>
+<td>Show the issue with ID <code>&lt;issue-number&gt;</code> from the project that <code>&lt;trigger&gt;</code> is tied to.</td>
+<td><code>/trigger issue show 42</code></td>
+</tr>
+<tr>
+<td><code>/&lt;trigger&gt; deploy &lt;environment&gt; to &lt;environment&gt;</code></td>
+<td>Start the CI job that deploys from one environment to another, for example <code>staging</code> to <code>production</code>. CI/CD must be <a href="../ci/yaml/README.html">properly configured</a>.</td>
+<td><code>/trigger deploy staging to production</code></td>
+</tr>
+</tbody></table>
+
+<p>To see a list of available commands that can interact with GitLab, type the
+trigger word followed by <code>help</code>:</p>
+<pre class="highlight plaintext"><code>/my-project help
+</code></pre>
+<p><a target="_blank" href="img/mattermost_bot_available_commands.png"><img src="img/mattermost_bot_available_commands.png" title="" alt="Mattermost bot available commands"/></a></p>
+<h2 id='permissions'>Permissions <a class='anchor' href='mattermost_slash_commands.html#permissions' title='Permalink'></a></h2>
+<p>The permissions to run the <a href="mattermost_slash_commands.html#available-commands">available commands</a> derive from
+the <a href="../user/permissions.html#project">permissions you have on the project</a>.</p>
+<h2 id='further-reading'>Further reading <a class='anchor' href='mattermost_slash_commands.html#further-reading' title='Permalink'></a></h2>
+<ul>
+<li><a href="https://docs.mattermost.com/developer/slash-commands.html">Mattermost slash commands documentation</a></li>
+<li><a href="https://docs.gitlab.com/omnibus/gitlab-mattermost/">Omnibus GitLab Mattermost</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/project_services/mattermost_slash_commands.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

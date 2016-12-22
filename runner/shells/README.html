@@ -1,0 +1,544 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Shells supported by GitLab Runner - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Shells supported by GitLab Runner</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#shells-supported-by-gitlab-runner">Shells supported by GitLab Runner</a>
+<ul>
+<li>
+<a href="README.html#overview">Overview</a>
+</li>
+<li>
+<a href="README.html#sh-bash-shells">Sh/Bash shells</a>
+</li>
+<li>
+<a href="README.html#windows-batch">Windows Batch</a>
+</li>
+<li>
+<a href="README.html#powershell">PowerShell</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='shells-supported-by-gitlab-runner'>Shells supported by GitLab Runner <a class='anchor' href='README.html#shells-supported-by-gitlab-runner' title='Permalink'></a></h1>
+<p>GitLab Runner implements a few shell script generators that allow to execute
+builds on different systems.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="README.html#overview">Overview</a></li>
+<li><a href="README.html#sh-bash-shells">Sh/Bash shells</a></li>
+<li><a href="README.html#windows-batch">Windows Batch</a></li>
+<li><a href="README.html#powershell">PowerShell</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='overview'>Overview <a class='anchor' href='README.html#overview' title='Permalink'></a></h2>
+<p>The shell scripts contain commands to execute all steps of the build:</p>
+
+<ol>
+<li><code>git clone</code></li>
+<li>Restore the build cache</li>
+<li>Build commands</li>
+<li>Update the build cache</li>
+<li>Generate and upload the build artifacts</li>
+</ol>
+
+<p>The shells don&#39;t have any configuration options. The build steps are received
+from the commands defined in the <a href="http://doc.gitlab.com/ce/ci/yaml/README.html#script"><code>script</code> directive in <code>.gitlab-ci.yml</code></a>.</p>
+
+<p>The currently supported shells are:</p>
+
+<table><thead>
+<tr>
+<th>Shell</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>bash</code></td>
+<td>Bash (Bourne-shell) shell. All commands executed in Bash context (default for all Unix systems)</td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>Sh (Bourne-shell) shell. All commands executed in Sh context (fallback for <code>bash</code> for all Unix systems)</td>
+</tr>
+<tr>
+<td><code>cmd</code></td>
+<td>Windows Batch script. All commands are executed in Batch context (default for Windows)</td>
+</tr>
+<tr>
+<td><code>powershell</code></td>
+<td>Windows PowerShell script. All commands are executed in PowerShell context</td>
+</tr>
+</tbody></table>
+<h2 id='sh-bash-shells'>Sh/Bash shells <a class='anchor' href='README.html#sh-bash-shells' title='Permalink'></a></h2>
+<p>This is the default shell used on all Unix based systems. The bash script used
+in <code>.gitlab-ci.yml</code> is executed by piping the shell script to one of the
+following commands:</p>
+<pre class="highlight shell"><code><span class="c"># This command is used if the build should be executed in context</span>
+<span class="c"># of another user (the shell executor)</span>
+cat generated-bash-script | su --shell /bin/bash --login user
+
+<span class="c"># This command is used if the build should be executed using</span>
+<span class="c"># the current user, but in a login environment</span>
+cat generated-bash-script | /bin/bash --login
+
+<span class="c"># This command is used if the build should be executed in</span>
+<span class="c"># a Docker environment</span>
+cat generated-bash-script | /bin/bash
+</code></pre><h2 id='windows-batch'>Windows Batch <a class='anchor' href='README.html#windows-batch' title='Permalink'></a></h2>
+<p>This is the default shell used on Windows. Windows Batch doesn&#39;t support
+executing the build in context of another user.</p>
+
+<p>The generated Batch script is executed by saving its content to file and
+passing the file name to the following command:</p>
+<pre class="highlight shell"><code>cmd /Q /C generated-windows-batch.cmd
+</code></pre>
+<p>This is how an example batch script looks like:</p>
+<pre class="highlight shell"><code>@echo off
+setlocal enableextensions
+setlocal enableDelayedExpansion
+<span class="nb">set </span><span class="nv">nl</span><span class="o">=</span>^
+
+
+<span class="nb">echo </span>Running on %COMPUTERNAME%...
+
+call :prescript
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+call :buildscript
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+call :postscript
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+goto :EOF
+:prescript
+SET <span class="nv">CI</span><span class="o">=</span><span class="nb">true
+</span>SET <span class="nv">CI_BUILD_REF</span><span class="o">=</span>db45ad9af9d7af5e61b829442fd893d96e31250c
+SET <span class="nv">CI_BUILD_BEFORE_SHA</span><span class="o">=</span>d63117656af6ff57d99e50cc270f854691f335ad
+SET <span class="nv">CI_BUILD_REF_NAME</span><span class="o">=</span>master
+SET <span class="nv">CI_BUILD_ID</span><span class="o">=</span>1
+SET <span class="nv">CI_BUILD_REPO</span><span class="o">=</span>http://gitlab.example.com/group/project.git
+SET <span class="nv">CI_PROJECT_ID</span><span class="o">=</span>1
+SET <span class="nv">CI_PROJECT_DIR</span><span class="o">=</span>Z:/Gitlab/tests/test/builds/0/project-1
+SET <span class="nv">CI_SERVER</span><span class="o">=</span>yes
+SET <span class="nv">CI_SERVER_NAME</span><span class="o">=</span>GitLab CI
+SET <span class="nv">CI_SERVER_VERSION</span><span class="o">=</span>
+SET <span class="nv">CI_SERVER_REVISION</span><span class="o">=</span>
+SET <span class="nv">GITLAB_CI</span><span class="o">=</span><span class="nb">true
+</span>md <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Multi-Runner</span><span class="se">\\</span><span class="s2">builds</span><span class="se">\\</span><span class="s2">0</span><span class="se">\\</span><span class="s2">project-1.tmp"</span> 2&gt;NUL 1&gt;NUL
+<span class="nb">echo </span>multiline!nl!tls!nl!chain &gt; C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO
+SET <span class="nv">GIT_SSL_CAINFO</span><span class="o">=</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO
+md <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Multi-Runner</span><span class="se">\\</span><span class="s2">builds</span><span class="se">\\</span><span class="s2">0</span><span class="se">\\</span><span class="s2">project-1.tmp"</span> 2&gt;NUL 1&gt;NUL
+<span class="nb">echo </span>multiline!nl!tls!nl!chain &gt; C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE
+SET <span class="nv">CI_SERVER_TLS_CA_FILE</span><span class="o">=</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE
+<span class="nb">echo </span>Cloning repository...
+rd /s /q <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span> 2&gt;NUL 1&gt;NUL
+<span class="s2">"git"</span> <span class="s2">"clone"</span> <span class="s2">"http://gitlab.example.com/group/project.git"</span> <span class="s2">"Z:/Gitlab/tests/test/builds/0/project-1"</span>
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+<span class="nb">cd</span> /D <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+<span class="nb">echo </span>Checking out db45ad9a as master...
+<span class="s2">"git"</span> <span class="s2">"checkout"</span> <span class="s2">"db45ad9af9d7af5e61b829442fd893d96e31250c"</span>
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+IF EXIST <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span> <span class="o">(</span>
+  <span class="nb">echo </span>Restoring cache...
+  <span class="s2">"gitlab-ci-multi-runner-windows-amd64.exe"</span> <span class="s2">"extract"</span> <span class="s2">"--file"</span> <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span>
+  IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+<span class="o">)</span> ELSE <span class="o">(</span>
+  IF EXIST <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span> <span class="o">(</span>
+    <span class="nb">echo </span>Restoring cache...
+    <span class="s2">"gitlab-ci-multi-runner-windows-amd64.exe"</span> <span class="s2">"extract"</span> <span class="s2">"--file"</span> <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span>
+    IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+  <span class="o">)</span>
+<span class="o">)</span>
+goto :EOF
+
+:buildscript
+SET <span class="nv">CI</span><span class="o">=</span><span class="nb">true
+</span>SET <span class="nv">CI_BUILD_REF</span><span class="o">=</span>db45ad9af9d7af5e61b829442fd893d96e31250c
+SET <span class="nv">CI_BUILD_BEFORE_SHA</span><span class="o">=</span>d63117656af6ff57d99e50cc270f854691f335ad
+SET <span class="nv">CI_BUILD_REF_NAME</span><span class="o">=</span>master
+SET <span class="nv">CI_BUILD_ID</span><span class="o">=</span>1
+SET <span class="nv">CI_BUILD_REPO</span><span class="o">=</span>Z:<span class="se">\G</span>itlab<span class="se">\t</span>ests<span class="se">\t</span>est
+SET <span class="nv">CI_PROJECT_ID</span><span class="o">=</span>1
+SET <span class="nv">CI_PROJECT_DIR</span><span class="o">=</span>Z:/Gitlab/tests/test/builds/0/project-1
+SET <span class="nv">CI_SERVER</span><span class="o">=</span>yes
+SET <span class="nv">CI_SERVER_NAME</span><span class="o">=</span>GitLab CI
+SET <span class="nv">CI_SERVER_VERSION</span><span class="o">=</span>
+SET <span class="nv">CI_SERVER_REVISION</span><span class="o">=</span>
+SET <span class="nv">GITLAB_CI</span><span class="o">=</span><span class="nb">true
+</span>md <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Multi-Runner</span><span class="se">\\</span><span class="s2">builds</span><span class="se">\\</span><span class="s2">0</span><span class="se">\\</span><span class="s2">project-1.tmp"</span> 2&gt;NUL 1&gt;NUL
+<span class="nb">echo </span>multiline!nl!tls!nl!chain &gt; C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO
+SET <span class="nv">GIT_SSL_CAINFO</span><span class="o">=</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO
+md <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Multi-Runner</span><span class="se">\\</span><span class="s2">builds</span><span class="se">\\</span><span class="s2">0</span><span class="se">\\</span><span class="s2">project-1.tmp"</span> 2&gt;NUL 1&gt;NUL
+<span class="nb">echo </span>multiline!nl!tls!nl!chain &gt; C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE
+SET <span class="nv">CI_SERVER_TLS_CA_FILE</span><span class="o">=</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE
+<span class="nb">cd</span> /D <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+<span class="nb">echo</span> <span class="nv">$ </span><span class="nb">echo true
+echo true
+</span>goto :EOF
+
+:postscript
+SET <span class="nv">CI</span><span class="o">=</span><span class="nb">true
+</span>SET <span class="nv">CI_BUILD_REF</span><span class="o">=</span>db45ad9af9d7af5e61b829442fd893d96e31250c
+SET <span class="nv">CI_BUILD_BEFORE_SHA</span><span class="o">=</span>d63117656af6ff57d99e50cc270f854691f335ad
+SET <span class="nv">CI_BUILD_REF_NAME</span><span class="o">=</span>master
+SET <span class="nv">CI_BUILD_ID</span><span class="o">=</span>1
+SET <span class="nv">CI_BUILD_REPO</span><span class="o">=</span>Z:<span class="se">\G</span>itlab<span class="se">\t</span>ests<span class="se">\t</span>est
+SET <span class="nv">CI_PROJECT_ID</span><span class="o">=</span>1
+SET <span class="nv">CI_PROJECT_DIR</span><span class="o">=</span>Z:/Gitlab/tests/test/builds/0/project-1
+SET <span class="nv">CI_SERVER</span><span class="o">=</span>yes
+SET <span class="nv">CI_SERVER_NAME</span><span class="o">=</span>GitLab CI
+SET <span class="nv">CI_SERVER_VERSION</span><span class="o">=</span>
+SET <span class="nv">CI_SERVER_REVISION</span><span class="o">=</span>
+SET <span class="nv">GITLAB_CI</span><span class="o">=</span><span class="nb">true
+</span>md <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Multi-Runner</span><span class="se">\\</span><span class="s2">builds</span><span class="se">\\</span><span class="s2">0</span><span class="se">\\</span><span class="s2">project-1.tmp"</span> 2&gt;NUL 1&gt;NUL
+<span class="nb">echo </span>multiline!nl!tls!nl!chain &gt; C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO
+SET <span class="nv">GIT_SSL_CAINFO</span><span class="o">=</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO
+md <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Multi-Runner</span><span class="se">\\</span><span class="s2">builds</span><span class="se">\\</span><span class="s2">0</span><span class="se">\\</span><span class="s2">project-1.tmp"</span> 2&gt;NUL 1&gt;NUL
+<span class="nb">echo </span>multiline!nl!tls!nl!chain &gt; C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE
+SET <span class="nv">CI_SERVER_TLS_CA_FILE</span><span class="o">=</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE
+<span class="nb">cd</span> /D <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+<span class="nb">echo </span>Archiving cache...
+<span class="s2">"gitlab-ci-multi-runner-windows-amd64.exe"</span> <span class="s2">"archive"</span> <span class="s2">"--file"</span> <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span> <span class="s2">"--path"</span> <span class="s2">"vendor"</span>
+IF %errorlevel% NEQ 0 <span class="nb">exit</span> /b %errorlevel%
+
+goto :EOF
+</code></pre><h2 id='powershell'>PowerShell <a class='anchor' href='README.html#powershell' title='Permalink'></a></h2>
+<p>PowerShell doesn&#39;t support executing the build in context of another user.</p>
+
+<p>The generated PowerShell script is executed by saving it content to a file and
+passing the file name to the following command:</p>
+<pre class="highlight shell"><code>powershell -noprofile -noninteractive -executionpolicy Bypass -command generated-windows-powershell.ps1
+</code></pre>
+<p>This is how an example powershell script looks like:</p>
+<pre class="highlight shell"><code><span class="nv">$ErrorActionPreference</span> <span class="o">=</span> <span class="s2">"Stop"</span>
+
+<span class="nb">echo</span> <span class="s2">"Running on </span><span class="nv">$env</span><span class="s2">:computername..."</span>
+
+&amp; <span class="o">{</span>
+  <span class="nv">$CI</span><span class="o">=</span><span class="s2">"true"</span>
+  <span class="nv">$env</span>:CI<span class="o">=</span><span class="nv">$CI</span>
+  <span class="nv">$CI_BUILD_REF</span><span class="o">=</span><span class="s2">"db45ad9af9d7af5e61b829442fd893d96e31250c"</span>
+  <span class="nv">$env</span>:CI_BUILD_REF<span class="o">=</span><span class="nv">$CI_BUILD_REF</span>
+  <span class="nv">$CI_BUILD_BEFORE_SHA</span><span class="o">=</span><span class="s2">"d63117656af6ff57d99e50cc270f854691f335ad"</span>
+  <span class="nv">$env</span>:CI_BUILD_BEFORE_SHA<span class="o">=</span><span class="nv">$CI_BUILD_BEFORE_SHA</span>
+  <span class="nv">$CI_BUILD_REF_NAME</span><span class="o">=</span><span class="s2">"master"</span>
+  <span class="nv">$env</span>:CI_BUILD_REF_NAME<span class="o">=</span><span class="nv">$CI_BUILD_REF_NAME</span>
+  <span class="nv">$CI_BUILD_ID</span><span class="o">=</span><span class="s2">"1"</span>
+  <span class="nv">$env</span>:CI_BUILD_ID<span class="o">=</span><span class="nv">$CI_BUILD_ID</span>
+  <span class="nv">$CI_BUILD_REPO</span><span class="o">=</span><span class="s2">"Z:</span><span class="se">\G</span><span class="s2">itlab</span><span class="se">\t</span><span class="s2">ests</span><span class="se">\t</span><span class="s2">est"</span>
+  <span class="nv">$env</span>:CI_BUILD_REPO<span class="o">=</span><span class="nv">$CI_BUILD_REPO</span>
+  <span class="nv">$CI_PROJECT_ID</span><span class="o">=</span><span class="s2">"1"</span>
+  <span class="nv">$env</span>:CI_PROJECT_ID<span class="o">=</span><span class="nv">$CI_PROJECT_ID</span>
+  <span class="nv">$CI_PROJECT_DIR</span><span class="o">=</span><span class="s2">"Z:/Gitlab/tests/test/builds/0/project-1"</span>
+  <span class="nv">$env</span>:CI_PROJECT_DIR<span class="o">=</span><span class="nv">$CI_PROJECT_DIR</span>
+  <span class="nv">$CI_SERVER</span><span class="o">=</span><span class="s2">"yes"</span>
+  <span class="nv">$env</span>:CI_SERVER<span class="o">=</span><span class="nv">$CI_SERVER</span>
+  <span class="nv">$CI_SERVER_NAME</span><span class="o">=</span><span class="s2">"GitLab CI"</span>
+  <span class="nv">$env</span>:CI_SERVER_NAME<span class="o">=</span><span class="nv">$CI_SERVER_NAME</span>
+  <span class="nv">$CI_SERVER_VERSION</span><span class="o">=</span><span class="s2">""</span>
+  <span class="nv">$env</span>:CI_SERVER_VERSION<span class="o">=</span><span class="nv">$CI_SERVER_VERSION</span>
+  <span class="nv">$CI_SERVER_REVISION</span><span class="o">=</span><span class="s2">""</span>
+  <span class="nv">$env</span>:CI_SERVER_REVISION<span class="o">=</span><span class="nv">$CI_SERVER_REVISION</span>
+  <span class="nv">$GITLAB_CI</span><span class="o">=</span><span class="s2">"true"</span>
+  <span class="nv">$env</span>:GITLAB_CI<span class="o">=</span><span class="nv">$GITLAB_CI</span>
+  <span class="nv">$GIT_SSL_CAINFO</span><span class="o">=</span><span class="s2">""</span>
+  md <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp"</span> -Force | out-null
+  <span class="nv">$GIT_SSL_CAINFO</span> | Out-File <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\G</span><span class="s2">IT_SSL_CAINFO"</span>
+  <span class="nv">$GIT_SSL_CAINFO</span><span class="o">=</span><span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\G</span><span class="s2">IT_SSL_CAINFO"</span>
+  <span class="nv">$env</span>:GIT_SSL_CAINFO<span class="o">=</span><span class="nv">$GIT_SSL_CAINFO</span>
+  <span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="o">=</span><span class="s2">""</span>
+  md <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp"</span> -Force | out-null
+  <span class="nv">$CI_SERVER_TLS_CA_FILE</span> | Out-File <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\C</span><span class="s2">I_SERVER_TLS_CA_FILE"</span>
+  <span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="o">=</span><span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\C</span><span class="s2">I_SERVER_TLS_CA_FILE"</span>
+  <span class="nv">$env</span>:CI_SERVER_TLS_CA_FILE<span class="o">=</span><span class="nv">$CI_SERVER_TLS_CA_FILE</span>
+  <span class="nb">echo</span> <span class="s2">"Cloning repository..."</span>
+  <span class="k">if</span><span class="o">(</span> <span class="o">(</span>Get-Command -Name Remove-Item2 -Module NTFSSecurity -ErrorAction SilentlyContinue<span class="o">)</span> -and <span class="o">(</span>Test-Path <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span> -PathType Container<span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
+    Remove-Item2 -Force -Recurse <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+  <span class="o">}</span> elseif<span class="o">(</span>Test-Path <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span><span class="o">)</span> <span class="o">{</span>
+    Remove-Item -Force -Recurse <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+  <span class="o">}</span>
+
+  &amp; <span class="s2">"git"</span> <span class="s2">"clone"</span> <span class="s2">"https://gitlab.com/group/project.git"</span> <span class="s2">"Z:/Gitlab/tests/test/builds/0/project-1"</span>
+  <span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+  <span class="nb">cd</span> <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+  <span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+  <span class="nb">echo</span> <span class="s2">"Checking out db45ad9a as master..."</span>
+  &amp; <span class="s2">"git"</span> <span class="s2">"checkout"</span> <span class="s2">"db45ad9af9d7af5e61b829442fd893d96e31250c"</span>
+  <span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+  <span class="k">if</span><span class="o">(</span>Test-Path <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span> -PathType Leaf<span class="o">)</span> <span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">"Restoring cache..."</span>
+    &amp; <span class="s2">"gitlab-ci-multi-runner-windows-amd64.exe"</span> <span class="s2">"extract"</span> <span class="s2">"--file"</span> <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span>
+    <span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span>Test-Path <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span> -PathType Leaf<span class="o">)</span> <span class="o">{</span>
+      <span class="nb">echo</span> <span class="s2">"Restoring cache..."</span>
+      &amp; <span class="s2">"gitlab-ci-multi-runner-windows-amd64.exe"</span> <span class="s2">"extract"</span> <span class="s2">"--file"</span> <span class="s2">"..</span><span class="se">\.</span><span class="s2">.</span><span class="se">\.</span><span class="s2">.</span><span class="se">\c</span><span class="s2">ache</span><span class="se">\p</span><span class="s2">roject-1</span><span class="se">\p</span><span class="s2">ages</span><span class="se">\m</span><span class="s2">aster</span><span class="se">\c</span><span class="s2">ache.tgz"</span>
+      <span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+<span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+&amp; <span class="o">{</span>
+  <span class="nv">$CI</span><span class="o">=</span><span class="s2">"true"</span>
+  <span class="nv">$env</span>:CI<span class="o">=</span><span class="nv">$CI</span>
+  <span class="nv">$CI_BUILD_REF</span><span class="o">=</span><span class="s2">"db45ad9af9d7af5e61b829442fd893d96e31250c"</span>
+  <span class="nv">$env</span>:CI_BUILD_REF<span class="o">=</span><span class="nv">$CI_BUILD_REF</span>
+  <span class="nv">$CI_BUILD_BEFORE_SHA</span><span class="o">=</span><span class="s2">"d63117656af6ff57d99e50cc270f854691f335ad"</span>
+  <span class="nv">$env</span>:CI_BUILD_BEFORE_SHA<span class="o">=</span><span class="nv">$CI_BUILD_BEFORE_SHA</span>
+  <span class="nv">$CI_BUILD_REF_NAME</span><span class="o">=</span><span class="s2">"master"</span>
+  <span class="nv">$env</span>:CI_BUILD_REF_NAME<span class="o">=</span><span class="nv">$CI_BUILD_REF_NAME</span>
+  <span class="nv">$CI_BUILD_ID</span><span class="o">=</span><span class="s2">"1"</span>
+  <span class="nv">$env</span>:CI_BUILD_ID<span class="o">=</span><span class="nv">$CI_BUILD_ID</span>
+  <span class="nv">$CI_BUILD_REPO</span><span class="o">=</span><span class="s2">"Z:</span><span class="se">\G</span><span class="s2">itlab</span><span class="se">\t</span><span class="s2">ests</span><span class="se">\t</span><span class="s2">est"</span>
+  <span class="nv">$env</span>:CI_BUILD_REPO<span class="o">=</span><span class="nv">$CI_BUILD_REPO</span>
+  <span class="nv">$CI_PROJECT_ID</span><span class="o">=</span><span class="s2">"1"</span>
+  <span class="nv">$env</span>:CI_PROJECT_ID<span class="o">=</span><span class="nv">$CI_PROJECT_ID</span>
+  <span class="nv">$CI_PROJECT_DIR</span><span class="o">=</span><span class="s2">"Z:/Gitlab/tests/test/builds/0/project-1"</span>
+  <span class="nv">$env</span>:CI_PROJECT_DIR<span class="o">=</span><span class="nv">$CI_PROJECT_DIR</span>
+  <span class="nv">$CI_SERVER</span><span class="o">=</span><span class="s2">"yes"</span>
+  <span class="nv">$env</span>:CI_SERVER<span class="o">=</span><span class="nv">$CI_SERVER</span>
+  <span class="nv">$CI_SERVER_NAME</span><span class="o">=</span><span class="s2">"GitLab CI"</span>
+  <span class="nv">$env</span>:CI_SERVER_NAME<span class="o">=</span><span class="nv">$CI_SERVER_NAME</span>
+  <span class="nv">$CI_SERVER_VERSION</span><span class="o">=</span><span class="s2">""</span>
+  <span class="nv">$env</span>:CI_SERVER_VERSION<span class="o">=</span><span class="nv">$CI_SERVER_VERSION</span>
+  <span class="nv">$CI_SERVER_REVISION</span><span class="o">=</span><span class="s2">""</span>
+  <span class="nv">$env</span>:CI_SERVER_REVISION<span class="o">=</span><span class="nv">$CI_SERVER_REVISION</span>
+  <span class="nv">$GITLAB_CI</span><span class="o">=</span><span class="s2">"true"</span>
+  <span class="nv">$env</span>:GITLAB_CI<span class="o">=</span><span class="nv">$GITLAB_CI</span>
+  <span class="nv">$GIT_SSL_CAINFO</span><span class="o">=</span><span class="s2">""</span>
+  md <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp"</span> -Force | out-null
+  <span class="nv">$GIT_SSL_CAINFO</span> | Out-File <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\G</span><span class="s2">IT_SSL_CAINFO"</span>
+  <span class="nv">$GIT_SSL_CAINFO</span><span class="o">=</span><span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\G</span><span class="s2">IT_SSL_CAINFO"</span>
+  <span class="nv">$env</span>:GIT_SSL_CAINFO<span class="o">=</span><span class="nv">$GIT_SSL_CAINFO</span>
+  <span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="o">=</span><span class="s2">""</span>
+  md <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp"</span> -Force | out-null
+  <span class="nv">$CI_SERVER_TLS_CA_FILE</span> | Out-File <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\C</span><span class="s2">I_SERVER_TLS_CA_FILE"</span>
+  <span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="o">=</span><span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1.tmp</span><span class="se">\C</span><span class="s2">I_SERVER_TLS_CA_FILE"</span>
+  <span class="nv">$env</span>:CI_SERVER_TLS_CA_FILE<span class="o">=</span><span class="nv">$CI_SERVER_TLS_CA_FILE</span>
+  <span class="nb">cd</span> <span class="s2">"C:</span><span class="se">\M</span><span class="s2">ulti-Runner</span><span class="se">\b</span><span class="s2">uilds</span><span class="se">\0\p</span><span class="s2">roject-1"</span>
+  <span class="k">if</span><span class="o">(</span>!<span class="nv">$?</span><span class="o">)</span> <span class="o">{</span> Exit <span class="nv">$LASTEXITCODE</span> <span class="o">}</span>
+
+  <span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span><span class="nv">$ </span><span class="nb">echo true</span><span class="s2">"
+  echo true
+}
+if(!</span><span class="nv">$?</span><span class="s2">) { Exit </span><span class="nv">$LASTEXITCODE</span><span class="s2"> }
+
+&amp; {
+  </span><span class="nv">$CI</span><span class="s2">="</span><span class="nb">true</span><span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI=</span><span class="nv">$CI</span><span class="s2">
+  </span><span class="nv">$CI_BUILD_REF</span><span class="s2">="</span>db45ad9af9d7af5e61b829442fd893d96e31250c<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_BUILD_REF=</span><span class="nv">$CI_BUILD_REF</span><span class="s2">
+  </span><span class="nv">$CI_BUILD_BEFORE_SHA</span><span class="s2">="</span>d63117656af6ff57d99e50cc270f854691f335ad<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_BUILD_BEFORE_SHA=</span><span class="nv">$CI_BUILD_BEFORE_SHA</span><span class="s2">
+  </span><span class="nv">$CI_BUILD_REF_NAME</span><span class="s2">="</span>master<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_BUILD_REF_NAME=</span><span class="nv">$CI_BUILD_REF_NAME</span><span class="s2">
+  </span><span class="nv">$CI_BUILD_ID</span><span class="s2">="</span>1<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_BUILD_ID=</span><span class="nv">$CI_BUILD_ID</span><span class="s2">
+  </span><span class="nv">$CI_BUILD_REPO</span><span class="s2">="</span>Z:<span class="se">\G</span>itlab<span class="se">\t</span>ests<span class="se">\t</span>est<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_BUILD_REPO=</span><span class="nv">$CI_BUILD_REPO</span><span class="s2">
+  </span><span class="nv">$CI_PROJECT_ID</span><span class="s2">="</span>1<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_PROJECT_ID=</span><span class="nv">$CI_PROJECT_ID</span><span class="s2">
+  </span><span class="nv">$CI_PROJECT_DIR</span><span class="s2">="</span>Z:/Gitlab/tests/test/builds/0/project-1<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_PROJECT_DIR=</span><span class="nv">$CI_PROJECT_DIR</span><span class="s2">
+  </span><span class="nv">$CI_SERVER</span><span class="s2">="</span>yes<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_SERVER=</span><span class="nv">$CI_SERVER</span><span class="s2">
+  </span><span class="nv">$CI_SERVER_NAME</span><span class="s2">="</span>GitLab CI<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_SERVER_NAME=</span><span class="nv">$CI_SERVER_NAME</span><span class="s2">
+  </span><span class="nv">$CI_SERVER_VERSION</span><span class="s2">=""
+  </span><span class="nv">$env</span><span class="s2">:CI_SERVER_VERSION=</span><span class="nv">$CI_SERVER_VERSION</span><span class="s2">
+  </span><span class="nv">$CI_SERVER_REVISION</span><span class="s2">=""
+  </span><span class="nv">$env</span><span class="s2">:CI_SERVER_REVISION=</span><span class="nv">$CI_SERVER_REVISION</span><span class="s2">
+  </span><span class="nv">$GITLAB_CI</span><span class="s2">="</span><span class="nb">true</span><span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:GITLAB_CI=</span><span class="nv">$GITLAB_CI</span><span class="s2">
+  </span><span class="nv">$GIT_SSL_CAINFO</span><span class="s2">=""
+  md "</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="s2">" -Force | out-null
+  </span><span class="nv">$GIT_SSL_CAINFO</span><span class="s2"> | Out-File "</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO<span class="s2">"
+  </span><span class="nv">$GIT_SSL_CAINFO</span><span class="s2">="</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\G</span>IT_SSL_CAINFO<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:GIT_SSL_CAINFO=</span><span class="nv">$GIT_SSL_CAINFO</span><span class="s2">
+  </span><span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="s2">=""
+  md "</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="s2">" -Force | out-null
+  </span><span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="s2"> | Out-File "</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE<span class="s2">"
+  </span><span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="s2">="</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1.tmp<span class="se">\C</span>I_SERVER_TLS_CA_FILE<span class="s2">"
+  </span><span class="nv">$env</span><span class="s2">:CI_SERVER_TLS_CA_FILE=</span><span class="nv">$CI_SERVER_TLS_CA_FILE</span><span class="s2">
+  cd "</span>C:<span class="se">\M</span>ulti-Runner<span class="se">\b</span>uilds<span class="se">\0\p</span>roject-1<span class="s2">"
+  if(!</span><span class="nv">$?</span><span class="s2">) { Exit </span><span class="nv">$LASTEXITCODE</span><span class="s2"> }
+
+  echo "</span>Archiving cache...<span class="s2">"
+  &amp; "</span>gitlab-ci-multi-runner-windows-amd64.exe<span class="s2">" "</span>archive<span class="s2">" "</span>--file<span class="s2">" "</span>..<span class="se">\.</span>.<span class="se">\.</span>.<span class="se">\c</span>ache<span class="se">\p</span>roject-1<span class="se">\p</span>ages<span class="se">\m</span>aster<span class="se">\c</span>ache.tgz<span class="s2">" "</span>--path<span class="s2">" "</span>vendor<span class="s2">"
+  if(!</span><span class="nv">$?</span><span class="s2">) { Exit </span><span class="nv">$LASTEXITCODE</span><span class="s2"> }
+
+}
+if(!</span><span class="nv">$?</span><span class="s2">) { Exit </span><span class="nv">$LASTEXITCODE</span><span class="s2"> }
+</span></code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/shells/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

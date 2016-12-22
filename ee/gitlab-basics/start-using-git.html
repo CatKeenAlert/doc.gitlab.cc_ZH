@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Start using Git on the command line - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab basics</a></li>
+            
+          
+          <li class="breadcrumb">Start using Git on the command line</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="start-using-git.html#start-using-git-on-the-command-line">Start using Git on the command line</a>
+<ul>
+<li>
+<a href="start-using-git.html#open-a-shell">Open a shell</a>
+</li>
+<li>
+<a href="start-using-git.html#check-if-git-has-already-been-installed">Check if Git has already been installed</a>
+</li>
+<li>
+<a href="start-using-git.html#add-your-git-username-and-set-your-email">Add your Git username and set your email</a>
+</li>
+<li>
+<a href="start-using-git.html#check-your-information">Check your information</a>
+</li>
+<li>
+<a href="start-using-git.html#basic-git-commands">Basic Git commands</a>
+<ul>
+<li>
+<a href="start-using-git.html#go-to-the-master-branch-to-pull-the-latest-changes-from-there">Go to the master branch to pull the latest changes from there</a>
+</li>
+<li>
+<a href="start-using-git.html#download-the-latest-changes-in-the-project">Download the latest changes in the project</a>
+</li>
+<li>
+<a href="start-using-git.html#create-a-branch">Create a branch</a>
+</li>
+<li>
+<a href="start-using-git.html#work-on-a-branch-that-has-already-been-created">Work on a branch that has already been created</a>
+</li>
+<li>
+<a href="start-using-git.html#view-the-changes-you-ve-made">View the changes you've made</a>
+</li>
+<li>
+<a href="start-using-git.html#add-changes-to-commit">Add changes to commit</a>
+</li>
+<li>
+<a href="start-using-git.html#send-changes-to-gitlab-com">Send changes to gitlab.com</a>
+</li>
+<li>
+<a href="start-using-git.html#delete-all-changes-in-the-git-repository-but-leave-unstaged-things">Delete all changes in the Git repository, but leave unstaged things</a>
+</li>
+<li>
+<a href="start-using-git.html#delete-all-changes-in-the-git-repository-including-untracked-files">Delete all changes in the Git repository, including untracked files</a>
+</li>
+<li>
+<a href="start-using-git.html#merge-created-branch-with-master-branch">Merge created branch with master branch</a>
+</li>
+<li>
+<a href="start-using-git.html#merge-master-branch-with-created-branch">Merge master branch with created branch</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='start-using-git-on-the-command-line'>Start using Git on the command line <a class='anchor' href='start-using-git.html#start-using-git-on-the-command-line' title='Permalink'></a></h1>
+<p>If you want to start using Git and GitLab, make sure that you have created and/or signed into an account on GitLab.</p>
+<h2 id='open-a-shell'>Open a shell <a class='anchor' href='start-using-git.html#open-a-shell' title='Permalink'></a></h2>
+<p>Depending on your operating system, you will need to use a shell of your preference. Here are some suggestions:</p>
+
+<ul>
+<li><p><a href="http://blog.teamtreehouse.com/introduction-to-the-mac-os-x-command-line">Terminal</a> on  Mac OSX</p></li>
+<li><p><a href="https://msysgit.github.io">GitBash</a> on Windows</p></li>
+<li><p><a href="http://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/">Linux Terminal</a> on Linux</p></li>
+</ul>
+<h2 id='check-if-git-has-already-been-installed'>Check if Git has already been installed <a class='anchor' href='start-using-git.html#check-if-git-has-already-been-installed' title='Permalink'></a></h2>
+<p>Git is usually preinstalled on Mac and Linux.</p>
+
+<p>Type the following command and then press enter:</p>
+<pre class="highlight plaintext"><code>git --version
+</code></pre>
+<p>You should receive a message that will tell you which Git version you have on your computer. If you don’t receive a &quot;Git version&quot; message, it means that you need to <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">download Git</a>.</p>
+
+<p>If Git doesn&#39;t automatically download, there&#39;s an option on the website to <a href="https://git-scm.com/downloads">download manually</a>. Then follow the steps on the installation window.</p>
+
+<p>After you are finished installing, open a new shell and type &quot;git --version&quot; again to verify that it was correctly installed.</p>
+<h2 id='add-your-git-username-and-set-your-email'>Add your Git username and set your email <a class='anchor' href='start-using-git.html#add-your-git-username-and-set-your-email' title='Permalink'></a></h2>
+<p>It is important to configure your Git username and email address as every Git commit will use this information to identify you as the author.</p>
+
+<p>On your shell, type the following command to add your username:</p>
+<pre class="highlight plaintext"><code>git config --global user.name "YOUR_USERNAME"
+</code></pre>
+<p>Then verify that you have the correct username:</p>
+<pre class="highlight plaintext"><code>git config --global user.name
+</code></pre>
+<p>To set your email address, type the following command:</p>
+<pre class="highlight plaintext"><code>git config --global user.email "your_email_address@example.com"
+</code></pre>
+<p>To verify that you entered your email correctly, type:</p>
+<pre class="highlight plaintext"><code>git config --global user.email
+</code></pre>
+<p>You&#39;ll need to do this only once as you are using the <code>--global</code> option. It tells Git to always use this information for anything you do on that system. If you want to override this with a different username or email address for specific projects, you can run the command without the <code>--global</code> option when you’re in that project.</p>
+<h2 id='check-your-information'>Check your information <a class='anchor' href='start-using-git.html#check-your-information' title='Permalink'></a></h2>
+<p>To view the information that you entered, type:</p>
+<pre class="highlight plaintext"><code>git config --global --list
+</code></pre><h2 id='basic-git-commands'>Basic Git commands <a class='anchor' href='start-using-git.html#basic-git-commands' title='Permalink'></a></h2><h3 id='go-to-the-master-branch-to-pull-the-latest-changes-from-there'>Go to the master branch to pull the latest changes from there <a class='anchor' href='start-using-git.html#go-to-the-master-branch-to-pull-the-latest-changes-from-there' title='Permalink'></a></h3><pre class="highlight plaintext"><code>git checkout master
+</code></pre><h3 id='download-the-latest-changes-in-the-project'>Download the latest changes in the project <a class='anchor' href='start-using-git.html#download-the-latest-changes-in-the-project' title='Permalink'></a></h3>
+<p>This is for you to work on an up-to-date copy (it is important to do every time you work on a project), while you setup tracking branches.</p>
+<pre class="highlight plaintext"><code>git pull REMOTE NAME-OF-BRANCH -u
+</code></pre>
+<p>(REMOTE: origin) (NAME-OF-BRANCH: could be &quot;master&quot; or an existing branch)</p>
+<h3 id='create-a-branch'>Create a branch <a class='anchor' href='start-using-git.html#create-a-branch' title='Permalink'></a></h3>
+<p>Spaces won&#39;t be recognized, so you will need to use a hyphen or underscore.</p>
+<pre class="highlight plaintext"><code>git checkout -b NAME-OF-BRANCH
+</code></pre><h3 id='work-on-a-branch-that-has-already-been-created'>Work on a branch that has already been created <a class='anchor' href='start-using-git.html#work-on-a-branch-that-has-already-been-created' title='Permalink'></a></h3><pre class="highlight plaintext"><code>git checkout NAME-OF-BRANCH
+</code></pre><h3 id='view-the-changes-you-39-ve-made'>View the changes you&#39;ve made <a class='anchor' href='start-using-git.html#view-the-changes-you-39-ve-made' title='Permalink'></a></h3>
+<p>It&#39;s important to be aware of what&#39;s happening and what&#39;s the status of your changes.</p>
+<pre class="highlight plaintext"><code>git status
+</code></pre><h3 id='add-changes-to-commit'>Add changes to commit <a class='anchor' href='start-using-git.html#add-changes-to-commit' title='Permalink'></a></h3>
+<p>You&#39;ll see your changes in red when you type &quot;git status&quot;.</p>
+<pre class="highlight plaintext"><code>git add CHANGES IN RED
+git commit -m "DESCRIBE THE INTENTION OF THE COMMIT"
+</code></pre><h3 id='send-changes-to-gitlab-com'>Send changes to gitlab.com <a class='anchor' href='start-using-git.html#send-changes-to-gitlab-com' title='Permalink'></a></h3><pre class="highlight plaintext"><code>git push REMOTE NAME-OF-BRANCH
+</code></pre><h3 id='delete-all-changes-in-the-git-repository-but-leave-unstaged-things'>Delete all changes in the Git repository, but leave unstaged things <a class='anchor' href='start-using-git.html#delete-all-changes-in-the-git-repository-but-leave-unstaged-things' title='Permalink'></a></h3><pre class="highlight plaintext"><code>git checkout .
+</code></pre><h3 id='delete-all-changes-in-the-git-repository-including-untracked-files'>Delete all changes in the Git repository, including untracked files <a class='anchor' href='start-using-git.html#delete-all-changes-in-the-git-repository-including-untracked-files' title='Permalink'></a></h3><pre class="highlight plaintext"><code>git clean -f
+</code></pre><h3 id='merge-created-branch-with-master-branch'>Merge created branch with master branch <a class='anchor' href='start-using-git.html#merge-created-branch-with-master-branch' title='Permalink'></a></h3>
+<p>You need to be in the created branch.</p>
+<pre class="highlight plaintext"><code>git checkout NAME-OF-BRANCH
+git merge master
+</code></pre><h3 id='merge-master-branch-with-created-branch'>Merge master branch with created branch <a class='anchor' href='start-using-git.html#merge-master-branch-with-created-branch' title='Permalink'></a></h3>
+<p>You need to be in the master branch.</p>
+<pre class="highlight plaintext"><code>git checkout master
+git merge NAME-OF-BRANCH
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/gitlab-basics/start-using-git.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

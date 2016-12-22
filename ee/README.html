@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Documentation - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../assets/stylesheets/highlight-v4.css">
+  <script async src="../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../index.html">
+    <img src="../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+          <li class="breadcrumb">Documentation</li>
+        </ul>
+      
+      <h1 id='documentation'>Documentation <a class='anchor' href='README.html#documentation' title='Permalink'></a></h1><h2 id='user-documentation'>User documentation <a class='anchor' href='README.html#user-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="user/account/security.html">Account Security</a> Securing your account via two-factor authentication, etc.</li>
+<li><a href="api/README.html">API</a> Automate GitLab via a simple and powerful API.</li>
+<li><a href="ci/README.html">CI/CD</a> GitLab Continuous Integration (CI) and Continuous Delivery (CD) getting started, <code>.gitlab-ci.yml</code> options, and examples.</li>
+<li><a href="customization/issue_and_merge_request_template.html">Custom templates for issues and merge requests</a> Pre-fill the description of issues and merge requests to your liking.</li>
+<li><a href="integration/oauth_provider.html">GitLab as OAuth2 authentication service provider</a>. It allows you to login to other applications from GitLab.</li>
+<li><a href="user/project/container_registry.html">Container Registry</a> Learn how to use GitLab Container Registry.</li>
+<li><a href="gitlab-basics/README.html">GitLab Basics</a> Find step by step how to start working on your commandline and on GitLab.</li>
+<li><a href="pages/README.html">GitLab Pages</a> Using GitLab Pages.</li>
+<li><a href="workflow/importing/README.html">Importing to GitLab</a>.</li>
+<li><a href="user/project/settings/import_export.html">Importing and exporting projects between instances</a>.</li>
+<li><a href="user/project/koding.html">Koding</a> Learn how to use Koding, the online IDE.</li>
+<li><a href="user/markdown.html">Markdown</a> GitLab&#39;s advanced formatting system.</li>
+<li><a href="workflow/importing/migrating_from_svn.html">Migrating from SVN</a> Convert a SVN repository to Git and GitLab.</li>
+<li><a href="user/permissions.html">Permissions</a> Learn what each role in a project (external/guest/reporter/developer/master/owner) can do.</li>
+<li><a href="profile/README.html">Profile Settings</a></li>
+<li><a href="project_services/project_services.html">Project Services</a> Integrate a project with external services, such as CI and chat.</li>
+<li><a href="public_access/public_access.html">Public access</a> Learn how you can allow public and internal access to projects.</li>
+<li><a href="analytics/README.html">Analytics</a></li>
+<li><a href="ssh/README.html">SSH</a> Setup your ssh keys and deploy keys for secure access to your projects.</li>
+<li><a href="web_hooks/web_hooks.html">Webhooks</a> Let GitLab notify you when new code has been pushed to your project.</li>
+<li><a href="workflow/README.html">Workflow</a> Using GitLab functionality and importing projects from GitHub and SVN.</li>
+<li><a href="university/README.html">University</a> Learn Git and GitLab through videos and courses.</li>
+<li><a href="user/project/git_attributes.html">Git Attributes</a> Managing Git attributes using a <code>.gitattributes</code> file.</li>
+<li><a href="https://gitlab.com/gitlab-com/marketing/raw/master/design/print/git-cheatsheet/print-pdf/git-cheatsheet.pdf">Git cheatsheet</a> Download a PDF describing the most used Git operations.</li>
+</ul>
+<h2 id='administrator-documentation'>Administrator documentation <a class='anchor' href='README.html#administrator-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="user/admin_area/license.html">Upload your GitLab License</a> Upload the license you purchased for GitLab Enterprise Edition to unlock its features.</li>
+<li><a href="administration/audit_events.html">Audit Events</a> Check how user access changed in projects and groups.</li>
+<li><a href="user/admin_area/settings/visibility_and_access_controls.html#enabled-git-access-protocols">Access restrictions</a> Define which Git access protocols can be used to talk to GitLab</li>
+<li><a href="administration/auth/README.html">Authentication/Authorization</a> Configure
+external authentication with LDAP, SAML, CAS and additional Omniauth providers.</li>
+<li><a href="customization/branded_login_page.html">Changing the appearance of the login page</a> Make the login page branded for your GitLab instance.</li>
+<li><a href="administration/custom_hooks.html">Custom git hooks</a> Custom git hooks (on the filesystem) for when webhooks aren&#39;t enough.</li>
+<li><a href="tools/email.html">Email</a> Email GitLab users from GitLab</li>
+<li><a href="push_rules/push_rules.html">Push Rules</a> Advanced push rules for your project.</li>
+<li><a href="customization/help_message.html">Help message</a> Set information about administrators of your GitLab instance.</li>
+<li><a href="install/README.html">Install</a> Requirements, directory structures and installation from source.</li>
+<li><a href="integration/README.html">Integration</a> How to integrate with systems such as JIRA, Redmine, LDAP and Twitter.</li>
+<li><a href="administration/restart_gitlab.html">Restart GitLab</a> Learn how to restart GitLab and its components.</li>
+<li><a href="administration/issue_closing_pattern.html">Issue closing pattern</a> Customize how to close an issue from commit messages.</li>
+<li><a href="administration/integration/koding.html">Koding</a> Set up Koding to use with GitLab.</li>
+<li><a href="customization/libravatar.html">Libravatar</a> Use Libravatar instead of Gravatar for user avatars.</li>
+<li><a href="administration/logs.html">Log system</a> Log system.</li>
+<li><a href="administration/environment_variables.html">Environment Variables</a> to configure GitLab.</li>
+<li><a href="administration/operations.html">Operations</a> Keeping GitLab up and running.</li>
+<li><a href="raketasks/README.html">Raketasks</a> Backups, maintenance, automatic webhook setup and the importing of projects.</li>
+<li><a href="administration/repository_checks.html">Repository checks</a> Periodic Git repository checks.</li>
+<li><a href="administration/repository_storages.html">Repository storages</a> Manage the paths used to store repositories.</li>
+<li><a href="security/README.html">Security</a> Learn what you can do to further secure your GitLab instance.</li>
+<li><a href="system_hooks/system_hooks.html">System hooks</a> Notifications when users, projects and keys are changed.</li>
+<li><a href="update/README.html">Update</a> Update guides to upgrade your installation.</li>
+<li><a href="customization/welcome_message.html">Welcome message</a> Add a custom welcome message to the sign-in page.</li>
+<li><a href="administration/reply_by_email.html">Reply by email</a> Allow users to comment on issues and merge requests by replying to notification emails.</li>
+<li><a href="migrate_ci_to_ce/README.html">Migrate GitLab CI to CE/EE</a> Follow this guide to migrate your existing GitLab CI data to GitLab CE/EE.</li>
+<li><a href="downgrade_ee_to_ce/README.html">Downgrade back to CE</a> Follow this guide if you need to downgrade from EE to CE.</li>
+<li><a href="workflow/git_annex.html#configuration">git-annex configuration</a></li>
+<li><a href="workflow/lfs/lfs_administration.html">Git LFS configuration</a></li>
+<li><a href="administration/housekeeping.html">Housekeeping</a> Keep your Git repository tidy and fast.</li>
+<li><a href="pages/administration.html">GitLab Pages configuration</a> Configure GitLab Pages.</li>
+<li><a href="integration/elasticsearch.html">Elasticsearch</a> Enable Elasticsearch.</li>
+<li><a href="gitlab-geo/README.html">GitLab GEO</a> Configure GitLab GEO, a secondary read-only GitLab instance.</li>
+<li><a href="administration/monitoring/performance/introduction.html">GitLab Performance Monitoring</a> Configure GitLab and InfluxDB for measuring performance metrics.</li>
+<li><a href="administration/monitoring/performance/request_profiling.html">Request Profiling</a> Get a detailed profile on slow requests.</li>
+<li><a href="user/admin_area/monitoring/health_check.html">Monitoring uptime</a> Check the server status using the health check endpoint.</li>
+<li><a href="administration/troubleshooting/debug.html">Debugging Tips</a> Tips to debug problems when things go wrong</li>
+<li><a href="administration/troubleshooting/sidekiq.html">Sidekiq Troubleshooting</a> Debug when Sidekiq appears hung and is not processing jobs.</li>
+<li><a href="administration/high_availability/README.html">High Availability</a> Configure multiple servers for scaling or high availability.</li>
+<li><a href="administration/container_registry.html">Container Registry</a> Configure Docker Registry with GitLab.</li>
+<li><a href="administration/repository_storages.html">Multiple mountpoints for the repositories storage</a> Define multiple repository storage paths to distribute the storage load.</li>
+<li><a href="user/admin_area/settings/account_and_limit_settings.html#repository-size-limit">Repository restrictions</a> Define size restrictions for your repositories to limit the space they occupy in your storage device. Includes LFS objects.</li>
+</ul>
+<h2 id='contributor-documentation'>Contributor documentation <a class='anchor' href='README.html#contributor-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="development/README.html">Development</a> All styleguides and explanations how to contribute.</li>
+<li><a href="legal/README.html">Legal</a> Contributor license agreements.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

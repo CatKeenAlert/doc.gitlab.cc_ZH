@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Git LFS - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">Workflow</a></li>
+            
+          
+          <li class="breadcrumb">Git LFS</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#git-lfs">Git LFS</a>
+<ul>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#how-it-works">How it works</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#gitlab-server-configuration">GitLab server configuration</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#requirements">Requirements</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#known-limitations">Known limitations</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#using-git-lfs">Using Git LFS</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#error-repository-or-object-not-found">error: Repository or object not found</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#invalid-status-for-501">Invalid status for <url> : 501</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#getsockopt-connection-refused">getsockopt: connection refused</a>
+</li>
+<li>
+<a href="manage_large_binaries_with_git_lfs.html#credentials-are-always-required-when-pushing-an-object">Credentials are always required when pushing an object</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='git-lfs'>Git LFS <a class='anchor' href='manage_large_binaries_with_git_lfs.html#git-lfs' title='Permalink'></a></h1>
+<p>Managing large files such as audio, video and graphics files has always been one
+of the shortcomings of Git. The general recommendation is to not have Git repositories
+larger than 1GB to preserve performance.</p>
+
+<p>GitLab already supports <a href="http://docs.gitlab.com/ee/workflow/git_annex.html">managing large files with git annex</a>
+(EE only), however in certain environments it is not always convenient to use
+different commands to differentiate between the large files and regular ones.</p>
+
+<p>Git LFS makes this simpler for the end user by removing the requirement to
+learn new commands.</p>
+<h2 id='how-it-works'>How it works <a class='anchor' href='manage_large_binaries_with_git_lfs.html#how-it-works' title='Permalink'></a></h2>
+<p>Git LFS client talks with the GitLab server over HTTPS. It uses HTTP Basic Authentication
+to authorize client requests. Once the request is authorized, Git LFS client receives
+instructions from where to fetch or where to push the large file.</p>
+<h2 id='gitlab-server-configuration'>GitLab server configuration <a class='anchor' href='manage_large_binaries_with_git_lfs.html#gitlab-server-configuration' title='Permalink'></a></h2>
+<p>Documentation for GitLab instance administrators is under <a href="lfs_administration.html">LFS administration doc</a>.</p>
+<h2 id='requirements'>Requirements <a class='anchor' href='manage_large_binaries_with_git_lfs.html#requirements' title='Permalink'></a></h2>
+<ul>
+<li>Git LFS is supported in GitLab starting with version 8.2</li>
+<li><a href="https://git-lfs.github.com">Git LFS client</a> version 1.0.1 and up</li>
+</ul>
+<h2 id='known-limitations'>Known limitations <a class='anchor' href='manage_large_binaries_with_git_lfs.html#known-limitations' title='Permalink'></a></h2>
+<ul>
+<li>Git LFS v1 original API is not supported since it was deprecated early in LFS
+development</li>
+<li>When SSH is set as a remote, Git LFS objects still go through HTTPS</li>
+<li>Any Git LFS request will ask for HTTPS credentials to be provided so good Git
+credentials store is recommended</li>
+<li>Git LFS always assumes HTTPS so if you have GitLab server on HTTP you will have
+to add the URL to Git config manually (see #troubleshooting)</li>
+</ul>
+
+<blockquote>
+<p><strong>Note</strong>: With 8.12 GitLab added LFS support to SSH. The Git LFS communication
+ still goes over HTTP, but now the SSH client passes the correct credentials
+ to the Git LFS client, so no action is required by the user.</p>
+</blockquote>
+<h2 id='using-git-lfs'>Using Git LFS <a class='anchor' href='manage_large_binaries_with_git_lfs.html#using-git-lfs' title='Permalink'></a></h2>
+<p>Lets take a look at the workflow when you need to check large files into your Git
+repository with Git LFS. For example, if you want to upload a very large file and
+check it into your Git repository:</p>
+<pre class="highlight shell"><code>git clone git@gitlab.example.com:group/project.git
+git lfs install                       <span class="c"># initialize the Git LFS project project</span>
+git lfs track <span class="s2">"*.iso"</span>                 <span class="c"># select the file extensions that you want to treat as large files</span>
+</code></pre>
+<p>Once a certain file extension is marked for tracking as a LFS object you can use
+Git as usual without having to redo the command to track a file with the same extension:</p>
+<pre class="highlight shell"><code>cp ~/tmp/debian.iso ./                <span class="c"># copy a large file into the current directory</span>
+git add .                             <span class="c"># add the large file to the project</span>
+git commit -am <span class="s2">"Added Debian iso"</span>     <span class="c"># commit the file meta data</span>
+git push origin master                <span class="c"># sync the git repo and large file to the GitLab server</span>
+</code></pre>
+<p>Cloning the repository works the same as before. Git automatically detects the
+LFS-tracked files and clones them via HTTP. If you performed the git clone
+command with a SSH URL, you have to enter your GitLab credentials for HTTP
+authentication.</p>
+<pre class="highlight shell"><code>git clone git@gitlab.example.com:group/project.git
+</code></pre>
+<p>If you already cloned the repository and you want to get the latest LFS object
+that are on the remote repository, eg. from branch <code>master</code>:</p>
+<pre class="highlight shell"><code>git lfs fetch master
+</code></pre><h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='manage_large_binaries_with_git_lfs.html#troubleshooting' title='Permalink'></a></h2><h3 id='error-repository-or-object-not-found'>error: Repository or object not found <a class='anchor' href='manage_large_binaries_with_git_lfs.html#error-repository-or-object-not-found' title='Permalink'></a></h3>
+<p>There are a couple of reasons why this error can occur:</p>
+
+<ul>
+<li>You don&#39;t have permissions to access certain LFS object</li>
+</ul>
+
+<p>Check if you have permissions to push to the project or fetch from the project.</p>
+
+<ul>
+<li>Project is not allowed to access the LFS object</li>
+</ul>
+
+<p>LFS object you are trying to push to the project or fetch from the project is not
+available to the project anymore. Probably the object was removed from the server.</p>
+
+<ul>
+<li>Local git repository is using deprecated LFS API</li>
+</ul>
+<h3 id='invalid-status-for-501'>Invalid status for <url> : 501 <a class='anchor' href='manage_large_binaries_with_git_lfs.html#invalid-status-for-501' title='Permalink'></a></h3>
+<p>Git LFS will log the failures into a log file.
+To view this log file, while in project directory:</p>
+<pre class="highlight shell"><code>git lfs logs last
+</code></pre>
+<p>If the status <code>error 501</code> is shown, it is because:</p>
+
+<ul>
+<li><p>Git LFS support is not enabled on the GitLab server. Check with your GitLab
+administrator why Git LFS is not enabled on the server. See
+<a href="lfs_administration.html">LFS administration documentation</a> for instructions
+on how to enable LFS support.</p></li>
+<li><p>Git LFS client version is not supported by GitLab server. Check your Git LFS
+version with <code>git lfs version</code>. Check the Git config of the project for traces
+of deprecated API with <code>git lfs -l</code>. If <code>batch = false</code> is set in the config,
+remove the line and try to update your Git LFS client. Only version 1.0.1 and
+newer are supported.</p></li>
+</ul>
+<h3 id='getsockopt-connection-refused'>getsockopt: connection refused <a class='anchor' href='manage_large_binaries_with_git_lfs.html#getsockopt-connection-refused' title='Permalink'></a></h3>
+<p>If you push a LFS object to a project and you receive an error similar to:
+<code>Post &lt;URL&gt;/info/lfs/objects/batch: dial tcp IP: getsockopt: connection refused</code>,
+the LFS client is trying to reach GitLab through HTTPS. However, your GitLab
+instance is being served on HTTP.</p>
+
+<p>This behaviour is caused by Git LFS using HTTPS connections by default when a
+<code>lfsurl</code> is not set in the Git config.</p>
+
+<p>To prevent this from happening, set the lfs url in project Git config:</p>
+<pre class="highlight shell"><code>
+git config --add lfs.url <span class="s2">"http://gitlab.example.com/group/project.git/info/lfs"</span>
+</code></pre><h3 id='credentials-are-always-required-when-pushing-an-object'>Credentials are always required when pushing an object <a class='anchor' href='manage_large_binaries_with_git_lfs.html#credentials-are-always-required-when-pushing-an-object' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note</strong>: With 8.12 GitLab added LFS support to SSH. The Git LFS communication
+ still goes over HTTP, but now the SSH client passes the correct credentials
+ to the Git LFS client, so no action is required by the user.</p>
+</blockquote>
+
+<p>Given that Git LFS uses HTTP Basic Authentication to authenticate the user pushing
+the LFS object on every push for every object, user HTTPS credentials are required.</p>
+
+<p>By default, Git has support for remembering the credentials for each repository
+you use. This is described in <a href="https://git-scm.com/docs/gitcredentials">Git credentials man pages</a>.</p>
+
+<p>For example, you can tell Git to remember the password for a period of time in
+which you expect to push the objects:</p>
+<pre class="highlight shell"><code>git config --global credential.helper <span class="s1">'cache --timeout=3600'</span>
+</code></pre>
+<p>This will remember the credentials for an hour after which Git operations will
+require re-authentication.</p>
+
+<p>If you are using OS X you can use <code>osxkeychain</code> to store and encrypt your credentials.
+For Windows, you can use <code>wincred</code> or Microsoft&#39;s <a href="https://github.com/Microsoft/Git-Credential-Manager-for-Windows/releases">Git Credential Manager for Windows</a>.</p>
+
+<p>More details about various methods of storing the user credentials can be found
+on <a href="https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage">Git Credential Storage documentation</a>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/lfs/manage_large_binaries_with_git_lfs.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

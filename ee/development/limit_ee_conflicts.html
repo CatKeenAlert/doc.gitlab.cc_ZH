@@ -1,0 +1,437 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Limit conflicts with EE when developing on CE - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Limit conflicts with EE when developing on CE</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="limit_ee_conflicts.html#limit-conflicts-with-ee-when-developing-on-ce">Limit conflicts with EE when developing on CE</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#context">Context</a>
+</li>
+<li>
+<a href="limit_ee_conflicts.html#check-the-rake-ee_compat_check-in-your-merge-requests">Check the <code>rake ee_compat_check</code> in your merge requests</a>
+</li>
+<li>
+<a href="limit_ee_conflicts.html#possible-type-of-conflicts">Possible type of conflicts</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#controllers">Controllers</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#list-or-arrays-are-augmented-in-ee">List or arrays are augmented in EE</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#mitigations">Mitigations</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="limit_ee_conflicts.html#additional-condition-s-in-ee">Additional condition(s) in EE</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="limit_ee_conflicts.html#views">Views</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#additional-view-code-in-ee">Additional view code in EE</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#mitigations">Mitigations</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="limit_ee_conflicts.html#indentation-issue">Indentation issue</a>
+<ul>
+<li>
+<a href="limit_ee_conflicts.html#mitigations">Mitigations</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='limit-conflicts-with-ee-when-developing-on-ce'>Limit conflicts with EE when developing on CE <a class='anchor' href='limit_ee_conflicts.html#limit-conflicts-with-ee-when-developing-on-ce' title='Permalink'></a></h1>
+<p>This guide contains best-practices for avoiding conflicts between CE and EE.</p>
+<h2 id='context'>Context <a class='anchor' href='limit_ee_conflicts.html#context' title='Permalink'></a></h2>
+<p>Usually, GitLab Community Edition is merged into the Enterprise Edition once a
+week. During these merges, it&#39;s very common to get conflicts when some changes
+in CE do not apply cleanly to EE.</p>
+
+<p>There are a few things that can help you as a developer to:</p>
+
+<ul>
+<li>know when your merge request to CE will conflict when merged to EE</li>
+<li>avoid such conflicts in the first place</li>
+<li>ease future conflict resolutions if conflict is inevitable</li>
+</ul>
+<h2 id='check-the-rake-ee_compat_check-in-your-merge-requests'>Check the <code>rake ee_compat_check</code> in your merge requests <a class='anchor' href='limit_ee_conflicts.html#check-the-rake-ee_compat_check-in-your-merge-requests' title='Permalink'></a></h2>
+<p>For each commit (except on <code>master</code>), the <code>rake ee_compat_check</code> CI job tries to
+detect if the current branch&#39;s changes will conflict during the CE-&gt;EE merge.</p>
+
+<p>The job reports what files are conflicting and how to setup a merge request
+against EE. Here is roughly how it works:</p>
+
+<ol>
+<li>Generates the diff between your branch and current CE <code>master</code></li>
+<li>Tries to apply it to current EE <code>master</code></li>
+<li>If it applies cleanly, the job succeeds, otherwise...</li>
+<li>Detects a branch with the <code>-ee</code> suffix in EE</li>
+<li>If it exists, generate the diff between this branch and current EE <code>master</code></li>
+<li>Tries to apply it to current EE <code>master</code></li>
+<li>If it applies cleanly, the job succeeds</li>
+</ol>
+
+<p>In the case where the job fails, it means you should create a <code>&lt;ce_branch&gt;-ee</code>
+branch, push it to EE and open a merge request against EE <code>master</code>. At this
+point if you retry the failing job in your CE merge request, it should now pass.</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>This task is not a silver-bullet, its current goal is to bring awareness to
+developers that their work needs to be ported to EE.</li>
+<li>Community contributors shouldn&#39;t submit merge requests against EE, but
+reviewers should take actions by either creating such EE merge request or
+asking a GitLab developer to do it once the merge request is merged.</li>
+<li>If you branch is more than 500 commits behind <code>master</code>, the job will fail and
+you should rebase your branch upon latest <code>master</code>.</li>
+</ul>
+<h2 id='possible-type-of-conflicts'>Possible type of conflicts <a class='anchor' href='limit_ee_conflicts.html#possible-type-of-conflicts' title='Permalink'></a></h2><h3 id='controllers'>Controllers <a class='anchor' href='limit_ee_conflicts.html#controllers' title='Permalink'></a></h3><h4 id='list-or-arrays-are-augmented-in-ee'>List or arrays are augmented in EE <a class='anchor' href='limit_ee_conflicts.html#list-or-arrays-are-augmented-in-ee' title='Permalink'></a></h4>
+<p>In controllers, the most common type of conflict is with <code>before_action</code> that
+has a list of actions in CE but EE adds some actions to that list.</p>
+
+<p>The same problem often occurs for <code>params.require</code> / <code>params.permit</code> calls.</p>
+<h5 id='mitigations'>Mitigations <a class='anchor' href='limit_ee_conflicts.html#mitigations' title='Permalink'></a></h5>
+<p>Separate CE and EE actions/keywords. For instance for <code>params.require</code> in
+<code>ProjectsController</code>:</p>
+<pre class="highlight ruby"><code><span class="k">def</span> <span class="nf">project_params</span>
+  <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:project</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="n">project_params_ce</span><span class="p">)</span>
+  <span class="c1"># On EE, this is always:</span>
+  <span class="c1"># params.require(:project).permit(project_params_ce &lt;&lt; project_params_ee)</span>
+<span class="k">end</span>
+
+<span class="c1"># Always returns an array of symbols, created however best fits the use case.</span>
+<span class="c1"># It _should_ be sorted alphabetically.</span>
+<span class="k">def</span> <span class="nf">project_params_ce</span>
+  <span class="sx">%i[
+    description
+    name
+    path
+  ]</span>
+<span class="k">end</span>
+
+<span class="c1"># (On EE)</span>
+<span class="k">def</span> <span class="nf">project_params_ee</span>
+  <span class="sx">%i[
+    approvals_before_merge
+    approver_group_ids
+    approver_ids
+    ...
+  ]</span>
+<span class="k">end</span>
+</code></pre><h4 id='additional-condition-s-in-ee'>Additional condition(s) in EE <a class='anchor' href='limit_ee_conflicts.html#additional-condition-s-in-ee' title='Permalink'></a></h4>
+<p>For instance for LDAP:</p>
+<pre class="highlight diff"><code>    def destroy
+      @key = current_user.keys.find(params[:id])
+ -    @key.destroy
+ +    @key.destroy unless @key.is_a? LDAPKey
+
+      respond_to do |format|
+</code></pre>
+<p>Or for Geo:</p>
+<pre class="highlight diff"><code>def after_sign_out_path_for(resource)
+<span class="gd">-    current_application_settings.after_sign_out_path.presence || new_user_session_path
+</span><span class="gi">+    if Gitlab::Geo.secondary?
++      Gitlab::Geo.primary_node.oauth_logout_url(@geo_logout_state)
++    else
++      current_application_settings.after_sign_out_path.presence || new_user_session_path
++    end
+</span>end
+</code></pre>
+<p>Or even for audit log:</p>
+<pre class="highlight diff"><code>def approve_access_request
+<span class="gd">-    Members::ApproveAccessRequestService.new(membershipable, current_user, params).execute
+</span><span class="gi">+    member = Members::ApproveAccessRequestService.new(membershipable, current_user, params).execute
++
++    log_audit_event(member, action: :create)
+</span>
+  redirect_to polymorphic_url([membershipable, :members])
+end
+</code></pre><h3 id='views'>Views <a class='anchor' href='limit_ee_conflicts.html#views' title='Permalink'></a></h3><h4 id='additional-view-code-in-ee'>Additional view code in EE <a class='anchor' href='limit_ee_conflicts.html#additional-view-code-in-ee' title='Permalink'></a></h4>
+<p>A block of code added in CE conflicts because there is already another block
+at the same place in EE</p>
+<h5 id='mitigations'>Mitigations <a class='anchor' href='limit_ee_conflicts.html#mitigations' title='Permalink'></a></h5>
+<p>Blocks of code that are EE-specific should be moved to partials as much as
+possible to avoid conflicts with big chunks of HAML code that that are not fun
+to resolve when you add the indentation to the equation.</p>
+
+<p>For instance this kind of thing:</p>
+<pre class="highlight haml"><code><span class="p">-</span> <span class="k">if</span> <span class="n">can?</span><span class="p">(</span><span class="n">current_user</span><span class="p">,</span> <span class="ss">:"admin_</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">to_ability_name</span><span class="si">}</span><span class="ss">"</span><span class="p">,</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">project</span><span class="p">)</span>
+  <span class="p">-</span> <span class="n">has_due_date</span> <span class="o">=</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">has_attribute?</span><span class="p">(</span><span class="ss">:due_date</span><span class="p">)</span>
+  <span class="nt">%hr</span>
+  <span class="nc">.row</span>
+    <span class="nt">%div</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="n">has_due_date</span> <span class="p">?</span> <span class="s2">"col-lg-6"</span> <span class="p">:</span> <span class="s2">"col-sm-12"</span><span class="p">)</span> <span class="p">}</span>
+      <span class="nc">.form-group.issue-assignee</span>
+        <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:assignee_id</span><span class="p">,</span> <span class="s2">"Assignee"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span>
+        <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="s2">"col-lg-8"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="p">)</span> <span class="p">}</span>
+          <span class="nc">.issuable-form-select-holder</span>
+            <span class="p">-</span> <span class="k">if</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">assignee_id</span>
+              <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">hidden_field</span> <span class="ss">:assignee_id</span>
+            <span class="p">=</span> <span class="n">dropdown_tag</span><span class="p">(</span><span class="n">user_dropdown_label</span><span class="p">(</span><span class="n">issuable</span><span class="p">.</span><span class="nf">assignee_id</span><span class="p">,</span> <span class="s2">"Assignee"</span><span class="p">),</span> <span class="ss">options: </span><span class="p">{</span> <span class="ss">toggle_class: </span><span class="s2">"js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"</span><span class="p">,</span> <span class="ss">title: </span><span class="s2">"Select assignee"</span><span class="p">,</span> <span class="ss">filter: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">dropdown_class: </span><span class="s2">"dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit"</span><span class="p">,</span>
+              <span class="ss">placeholder: </span><span class="s2">"Search assignee"</span><span class="p">,</span> <span class="ss">data: </span><span class="p">{</span> <span class="ss">first_user: </span><span class="n">current_user</span><span class="p">.</span><span class="nf">try</span><span class="p">(</span><span class="ss">:username</span><span class="p">),</span> <span class="ss">null_user: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">current_user: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">project_id: </span><span class="n">project</span><span class="p">.</span><span class="nf">try</span><span class="p">(</span><span class="ss">:id</span><span class="p">),</span> <span class="ss">selected: </span><span class="n">issuable</span><span class="p">.</span><span class="nf">assignee_id</span><span class="p">,</span> <span class="ss">field_name: </span><span class="s2">"</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">model_name</span><span class="p">.</span><span class="nf">param_key</span><span class="si">}</span><span class="s2">[assignee_id]"</span><span class="p">,</span> <span class="ss">default_label: </span><span class="s2">"Assignee"</span><span class="p">}</span> <span class="p">})</span>
+      <span class="nc">.form-group.issue-milestone</span>
+        <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:milestone_id</span><span class="p">,</span> <span class="s2">"Milestone"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span>
+        <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="s2">"col-lg-8"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="p">)</span> <span class="p">}</span>
+          <span class="nc">.issuable-form-select-holder</span>
+            <span class="p">=</span> <span class="n">render</span> <span class="s2">"shared/issuable/milestone_dropdown"</span><span class="p">,</span> <span class="ss">selected: </span><span class="n">issuable</span><span class="p">.</span><span class="nf">milestone</span><span class="p">,</span> <span class="ss">name: </span><span class="s2">"</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">model_name</span><span class="p">.</span><span class="nf">param_key</span><span class="si">}</span><span class="s2">[milestone_id]"</span><span class="p">,</span> <span class="ss">show_any: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">show_upcoming: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">extra_class: </span><span class="s2">"js-issuable-form-dropdown js-dropdown-keep-input"</span><span class="p">,</span> <span class="ss">dropdown_title: </span><span class="s2">"Select milestone"</span>
+      <span class="nc">.form-group</span>
+        <span class="p">-</span> <span class="n">has_labels</span> <span class="o">=</span> <span class="vi">@labels</span> <span class="o">&amp;&amp;</span> <span class="vi">@labels</span><span class="p">.</span><span class="nf">any?</span>
+        <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:label_ids</span><span class="p">,</span> <span class="s2">"Labels"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">hidden_field</span> <span class="ss">:label_ids</span><span class="p">,</span> <span class="ss">multiple: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">value: </span><span class="s1">''</span>
+        <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="s2">"#{"</span><span class="n">col</span><span class="o">-</span><span class="n">lg</span><span class="o">-</span><span class="mi">8</span><span class="s2">" if has_due_date} #{'issuable-form-padding-top' if !has_labels}"</span> <span class="p">}</span>
+          <span class="nc">.issuable-form-select-holder</span>
+            <span class="p">=</span> <span class="n">render</span> <span class="s2">"shared/issuable/label_dropdown"</span><span class="p">,</span> <span class="ss">classes: </span><span class="p">[</span><span class="s2">"js-issuable-form-dropdown"</span><span class="p">],</span> <span class="ss">selected: </span><span class="n">issuable</span><span class="p">.</span><span class="nf">labels</span><span class="p">,</span> <span class="ss">data_options: </span><span class="p">{</span> <span class="ss">field_name: </span><span class="s2">"</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">model_name</span><span class="p">.</span><span class="nf">param_key</span><span class="si">}</span><span class="s2">[label_ids][]"</span><span class="p">,</span> <span class="ss">show_any: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">show_menu_above: </span><span class="s1">'true'</span> <span class="p">},</span> <span class="ss">dropdown_title: </span><span class="s2">"Select label"</span>
+
+      <span class="p">-</span> <span class="k">if</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="ss">:weight</span><span class="p">)</span>
+        <span class="nc">.form-group</span>
+          <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:label_ids</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span> <span class="k">do</span>
+            Weight
+          <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="s2">"col-lg-8"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="p">)</span> <span class="p">}</span>
+            <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">select</span> <span class="ss">:weight</span><span class="p">,</span> <span class="n">issues_weight_options</span><span class="p">(</span><span class="n">issuable</span><span class="p">.</span><span class="nf">weight</span><span class="p">,</span> <span class="ss">edit: </span><span class="kp">true</span><span class="p">),</span> <span class="p">{</span> <span class="ss">include_blank: </span><span class="kp">true</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="ss">class: </span><span class="s1">'select2 js-select2'</span><span class="p">,</span> <span class="ss">data: </span><span class="p">{</span> <span class="ss">placeholder: </span><span class="s2">"Select weight"</span> <span class="p">}}</span>
+
+    <span class="p">-</span> <span class="k">if</span> <span class="n">has_due_date</span>
+      <span class="nc">.col-lg-6</span>
+        <span class="nc">.form-group</span>
+          <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:due_date</span><span class="p">,</span> <span class="s2">"Due date"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label"</span>
+          <span class="nc">.col-sm-10</span>
+            <span class="nc">.issuable-form-select-holder</span>
+              <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:due_date</span><span class="p">,</span> <span class="ss">id: </span><span class="s2">"issuable-due-date"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"datepicker form-control"</span><span class="p">,</span> <span class="ss">placeholder: </span><span class="s2">"Select due date"</span>
+</code></pre>
+<p>could be simplified by using partials:</p>
+<pre class="highlight haml"><code><span class="p">=</span> <span class="n">render</span> <span class="s1">'metadata_form'</span><span class="p">,</span> <span class="ss">issuable: </span><span class="n">issuable</span>
+</code></pre>
+<p>and then the <code>_metadata_form.html.haml</code> could be as follows:</p>
+<pre class="highlight haml"><code><span class="p">-</span> <span class="k">return</span> <span class="k">unless</span> <span class="n">can?</span><span class="p">(</span><span class="n">current_user</span><span class="p">,</span> <span class="ss">:"admin_</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">to_ability_name</span><span class="si">}</span><span class="ss">"</span><span class="p">,</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">project</span><span class="p">)</span>
+
+<span class="p">-</span> <span class="n">has_due_date</span> <span class="o">=</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">has_attribute?</span><span class="p">(</span><span class="ss">:due_date</span><span class="p">)</span>
+<span class="nt">%hr</span>
+<span class="nc">.row</span>
+  <span class="nt">%div</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="n">has_due_date</span> <span class="p">?</span> <span class="s2">"col-lg-6"</span> <span class="p">:</span> <span class="s2">"col-sm-12"</span><span class="p">)</span> <span class="p">}</span>
+    <span class="nc">.form-group.issue-assignee</span>
+      <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:assignee_id</span><span class="p">,</span> <span class="s2">"Assignee"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span>
+      <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="s2">"col-lg-8"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="p">)</span> <span class="p">}</span>
+        <span class="nc">.issuable-form-select-holder</span>
+          <span class="p">-</span> <span class="k">if</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">assignee_id</span>
+            <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">hidden_field</span> <span class="ss">:assignee_id</span>
+          <span class="p">=</span> <span class="n">dropdown_tag</span><span class="p">(</span><span class="n">user_dropdown_label</span><span class="p">(</span><span class="n">issuable</span><span class="p">.</span><span class="nf">assignee_id</span><span class="p">,</span> <span class="s2">"Assignee"</span><span class="p">),</span> <span class="ss">options: </span><span class="p">{</span> <span class="ss">toggle_class: </span><span class="s2">"js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"</span><span class="p">,</span> <span class="ss">title: </span><span class="s2">"Select assignee"</span><span class="p">,</span> <span class="ss">filter: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">dropdown_class: </span><span class="s2">"dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit"</span><span class="p">,</span>
+            <span class="ss">placeholder: </span><span class="s2">"Search assignee"</span><span class="p">,</span> <span class="ss">data: </span><span class="p">{</span> <span class="ss">first_user: </span><span class="n">current_user</span><span class="p">.</span><span class="nf">try</span><span class="p">(</span><span class="ss">:username</span><span class="p">),</span> <span class="ss">null_user: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">current_user: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">project_id: </span><span class="n">project</span><span class="p">.</span><span class="nf">try</span><span class="p">(</span><span class="ss">:id</span><span class="p">),</span> <span class="ss">selected: </span><span class="n">issuable</span><span class="p">.</span><span class="nf">assignee_id</span><span class="p">,</span> <span class="ss">field_name: </span><span class="s2">"</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">model_name</span><span class="p">.</span><span class="nf">param_key</span><span class="si">}</span><span class="s2">[assignee_id]"</span><span class="p">,</span> <span class="ss">default_label: </span><span class="s2">"Assignee"</span><span class="p">}</span> <span class="p">})</span>
+    <span class="nc">.form-group.issue-milestone</span>
+      <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:milestone_id</span><span class="p">,</span> <span class="s2">"Milestone"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span>
+      <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="s2">"col-lg-8"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="p">)</span> <span class="p">}</span>
+        <span class="nc">.issuable-form-select-holder</span>
+          <span class="p">=</span> <span class="n">render</span> <span class="s2">"shared/issuable/milestone_dropdown"</span><span class="p">,</span> <span class="ss">selected: </span><span class="n">issuable</span><span class="p">.</span><span class="nf">milestone</span><span class="p">,</span> <span class="ss">name: </span><span class="s2">"</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">model_name</span><span class="p">.</span><span class="nf">param_key</span><span class="si">}</span><span class="s2">[milestone_id]"</span><span class="p">,</span> <span class="ss">show_any: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">show_upcoming: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">extra_class: </span><span class="s2">"js-issuable-form-dropdown js-dropdown-keep-input"</span><span class="p">,</span> <span class="ss">dropdown_title: </span><span class="s2">"Select milestone"</span>
+    <span class="nc">.form-group</span>
+      <span class="p">-</span> <span class="n">has_labels</span> <span class="o">=</span> <span class="vi">@labels</span> <span class="o">&amp;&amp;</span> <span class="vi">@labels</span><span class="p">.</span><span class="nf">any?</span>
+      <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:label_ids</span><span class="p">,</span> <span class="s2">"Labels"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span>
+      <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">hidden_field</span> <span class="ss">:label_ids</span><span class="p">,</span> <span class="ss">multiple: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">value: </span><span class="s1">''</span>
+      <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="s2">"#{"</span><span class="n">col</span><span class="o">-</span><span class="n">lg</span><span class="o">-</span><span class="mi">8</span><span class="s2">" if has_due_date} #{'issuable-form-padding-top' if !has_labels}"</span> <span class="p">}</span>
+        <span class="nc">.issuable-form-select-holder</span>
+          <span class="p">=</span> <span class="n">render</span> <span class="s2">"shared/issuable/label_dropdown"</span><span class="p">,</span> <span class="ss">classes: </span><span class="p">[</span><span class="s2">"js-issuable-form-dropdown"</span><span class="p">],</span> <span class="ss">selected: </span><span class="n">issuable</span><span class="p">.</span><span class="nf">labels</span><span class="p">,</span> <span class="ss">data_options: </span><span class="p">{</span> <span class="ss">field_name: </span><span class="s2">"</span><span class="si">#{</span><span class="n">issuable</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">model_name</span><span class="p">.</span><span class="nf">param_key</span><span class="si">}</span><span class="s2">[label_ids][]"</span><span class="p">,</span> <span class="ss">show_any: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">show_menu_above: </span><span class="s1">'true'</span> <span class="p">},</span> <span class="ss">dropdown_title: </span><span class="s2">"Select label"</span>
+
+    <span class="p">=</span> <span class="n">render</span> <span class="s1">'weight_form'</span><span class="p">,</span> <span class="ss">issuable: </span><span class="n">issuable</span><span class="p">,</span> <span class="ss">has_due_date: </span><span class="n">has_due_date</span>
+
+  <span class="p">-</span> <span class="k">if</span> <span class="n">has_due_date</span>
+    <span class="nc">.col-lg-6</span>
+      <span class="nc">.form-group</span>
+        <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:due_date</span><span class="p">,</span> <span class="s2">"Due date"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label"</span>
+        <span class="nc">.col-sm-10</span>
+          <span class="nc">.issuable-form-select-holder</span>
+            <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:due_date</span><span class="p">,</span> <span class="ss">id: </span><span class="s2">"issuable-due-date"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"datepicker form-control"</span><span class="p">,</span> <span class="ss">placeholder: </span><span class="s2">"Select due date"</span>
+</code></pre>
+<p>and then the <code>_weight_form.html.haml</code> could be as follows:</p>
+<pre class="highlight haml"><code><span class="p">-</span> <span class="k">return</span> <span class="k">unless</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="ss">:weight</span><span class="p">)</span>
+
+<span class="p">-</span> <span class="n">has_due_date</span> <span class="o">=</span> <span class="n">issuable</span><span class="p">.</span><span class="nf">has_attribute?</span><span class="p">(</span><span class="ss">:due_date</span><span class="p">)</span>
+
+<span class="nc">.form-group</span>
+  <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:label_ids</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"control-label </span><span class="si">#{</span><span class="s2">"col-lg-4"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="si">}</span><span class="s2">"</span> <span class="k">do</span>
+    Weight
+  <span class="nc">.col-sm-10</span><span class="p">{</span> <span class="ss">class: </span><span class="p">(</span><span class="s2">"col-lg-8"</span> <span class="k">if</span> <span class="n">has_due_date</span><span class="p">)</span> <span class="p">}</span>
+    <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">select</span> <span class="ss">:weight</span><span class="p">,</span> <span class="n">issues_weight_options</span><span class="p">(</span><span class="n">issuable</span><span class="p">.</span><span class="nf">weight</span><span class="p">,</span> <span class="ss">edit: </span><span class="kp">true</span><span class="p">),</span> <span class="p">{</span> <span class="ss">include_blank: </span><span class="kp">true</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="ss">class: </span><span class="s1">'select2 js-select2'</span><span class="p">,</span> <span class="ss">data: </span><span class="p">{</span> <span class="ss">placeholder: </span><span class="s2">"Select weight"</span> <span class="p">}}</span>
+</code></pre>
+<p>Note:</p>
+
+<ul>
+<li>The safeguards at the top allow to get rid of an unneccessary indentation level</li>
+<li>Here we only moved the &#39;Weight&#39; code to a partial since this is the only
+EE-specific code in that view, so it&#39;s the most likely to conflict, but you
+are encouraged to use partials even for code that&#39;s in CE to logically split
+big views into several smaller files.</li>
+</ul>
+<h4 id='indentation-issue'>Indentation issue <a class='anchor' href='limit_ee_conflicts.html#indentation-issue' title='Permalink'></a></h4>
+<p>Sometimes a code block is indented more or less in EE because there&#39;s an
+additional condition.</p>
+<h5 id='mitigations'>Mitigations <a class='anchor' href='limit_ee_conflicts.html#mitigations' title='Permalink'></a></h5>
+<p>Blocks of code that are EE-specific should be moved to partials as much as
+possible to avoid conflicts with big chunks of HAML code that that are not fun
+to resolve when you add the indentation in the equation.</p>
+
+<hr>
+
+<p><a href="README.html">Return to Development documentation</a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/development/limit_ee_conflicts.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

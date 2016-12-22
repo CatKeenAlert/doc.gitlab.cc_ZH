@@ -1,0 +1,406 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Container Registry - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Container Registry</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="container_registry.html#gitlab-container-registry">GitLab Container Registry</a>
+<ul>
+<li>
+<a href="container_registry.html#enable-the-container-registry-for-your-project">Enable the Container Registry for your project</a>
+</li>
+<li>
+<a href="container_registry.html#build-and-push-images">Build and push images</a>
+</li>
+<li>
+<a href="container_registry.html#use-images-from-gitlab-container-registry">Use images from GitLab Container Registry</a>
+</li>
+<li>
+<a href="container_registry.html#control-container-registry-from-within-gitlab">Control Container Registry from within GitLab</a>
+</li>
+<li>
+<a href="container_registry.html#build-and-push-images-using-gitlab-ci">Build and push images using GitLab CI</a>
+</li>
+<li>
+<a href="container_registry.html#limitations">Limitations</a>
+</li>
+<li>
+<a href="container_registry.html#troubleshooting-the-gitlab-container-registry">Troubleshooting the GitLab Container Registry</a>
+<ul>
+<li>
+<a href="container_registry.html#basic-troubleshooting">Basic Troubleshooting</a>
+</li>
+<li>
+<a href="container_registry.html#advanced-troubleshooting">Advanced Troubleshooting</a>
+<ul>
+<li>
+<a href="container_registry.html#unexpected-403-error-during-push">Unexpected 403 error during push</a>
+</li>
+<li>
+<a href="container_registry.html#mitmproxy">mitmproxy</a>
+</li>
+<li>
+<a href="container_registry.html#running-the-docker-daemon-with-a-proxy">Running the Docker daemon with a proxy</a>
+</li>
+<li>
+<a href="container_registry.html#running-the-docker-client">Running the Docker client</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-container-registry'>GitLab Container Registry <a class='anchor' href='container_registry.html#gitlab-container-registry' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/4040">Introduced</a> in GitLab 8.8.</p>
+</blockquote>
+
+<hr>
+
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Docker Registry manifest <code>v1</code> support was added in GitLab 8.9 to support Docker
+versions earlier than 1.10.</li>
+<li>This document is about the user guide. To learn how to enable GitLab Container
+Registry across your GitLab instance, visit the
+<a href="../../administration/container_registry.html">administrator documentation</a>.</li>
+<li>Starting from GitLab 8.12, if you have 2FA enabled in your account, you need
+to pass a personal access token instead of your password in order to login to
+GitLab&#39;s Container Registry.</li>
+</ul>
+</blockquote>
+
+<p>With the Docker Container Registry integrated into GitLab, every project can
+have its own space to store its Docker images.</p>
+
+<p>You can read more about Docker Registry at <a href="https://docs.docker.com/registry/introduction/">https://docs.docker.com/registry/introduction/</a>.</p>
+
+<hr>
+<h2 id='enable-the-container-registry-for-your-project'>Enable the Container Registry for your project <a class='anchor' href='container_registry.html#enable-the-container-registry-for-your-project' title='Permalink'></a></h2>
+<ol>
+<li><p>First, ask your system administrator to enable GitLab Container Registry
+following the <a href="../../administration/container_registry.html">administration documentation</a>.
+If you are using GitLab.com, this is enabled by default so you can start using
+the Registry immediately.</p></li>
+<li><p>Go to your project&#39;s settings and enable the <strong>Container Registry</strong> feature
+on your project. For new projects this might be enabled by default. For
+existing projects (prior GitLab 8.8), you will have to explicitly enable it.</p>
+
+<p><a target="_blank" href="img/container_registry_enable.png"><img src="img/container_registry_enable.png" title="" alt="Enable Container Registry"/></a></p></li>
+<li><p>Hit <strong>Save changes</strong> for the changes to take effect. You should now be able
+to see the <strong>Registry</strong> link in the project menu.</p>
+
+<p><a target="_blank" href="img/container_registry_tab.png"><img src="img/container_registry_tab.png" title="" alt="Container Registry tab"/></a></p></li>
+</ol>
+<h2 id='build-and-push-images'>Build and push images <a class='anchor' href='container_registry.html#build-and-push-images' title='Permalink'></a></h2>
+<p>If you visit the <strong>Registry</strong> link under your project&#39;s menu, you can see the
+explicit instructions to login to the Container Registry using your GitLab
+credentials.</p>
+
+<p>For example if the Registry&#39;s URL is <code>registry.example.com</code>, the you should be
+able to login with:</p>
+<pre class="highlight plaintext"><code>docker login registry.example.com
+</code></pre>
+<p>Building and publishing images should be a straightforward process. Just make
+sure that you are using the Registry URL with the namespace and project name
+that is hosted on GitLab:</p>
+<pre class="highlight plaintext"><code>docker build -t registry.example.com/group/project .
+docker push registry.example.com/group/project
+</code></pre>
+<p>Your image will be named after the following scheme:</p>
+<pre class="highlight plaintext"><code>&lt;registry URL&gt;/&lt;namespace&gt;/&lt;project&gt;
+</code></pre>
+<p>As such, the name of the image is unique, but you can differentiate the images
+using tags.</p>
+<h2 id='use-images-from-gitlab-container-registry'>Use images from GitLab Container Registry <a class='anchor' href='container_registry.html#use-images-from-gitlab-container-registry' title='Permalink'></a></h2>
+<p>To download and run a container from images hosted in GitLab Container Registry,
+use <code>docker run</code>:</p>
+<pre class="highlight plaintext"><code>docker run [options] registry.example.com/group/project [arguments]
+</code></pre>
+<p>For more information on running Docker containers, visit the
+<a href="https://docs.docker.com/engine/userguide/intro/">Docker documentation</a>.</p>
+<h2 id='control-container-registry-from-within-gitlab'>Control Container Registry from within GitLab <a class='anchor' href='container_registry.html#control-container-registry-from-within-gitlab' title='Permalink'></a></h2>
+<p>GitLab offers a simple Container Registry management panel. Go to your project
+and click <strong>Registry</strong> in the project menu.</p>
+
+<p>This view will show you all tags in your project and will easily allow you to
+delete them.</p>
+
+<p><a target="_blank" href="img/container_registry_panel.png"><img src="img/container_registry_panel.png" title="" alt="Container Registry panel"/></a></p>
+<h2 id='build-and-push-images-using-gitlab-ci'>Build and push images using GitLab CI <a class='anchor' href='container_registry.html#build-and-push-images-using-gitlab-ci' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+This feature requires GitLab 8.8 and GitLab Runner 1.2.</p>
+</blockquote>
+
+<p>Make sure that your GitLab Runner is configured to allow building Docker images by
+following the <a href="https://doc.gitlab.cc/ce/user/ci/docker/using_docker_build.html">Using Docker Build</a>
+and <a href="https://doc.gitlab.cc/ce/user/ci/docker/using_docker_build.html#using-the-gitlab-container-registry">Using the GitLab Container Registry documentation</a>.</p>
+<h2 id='limitations'>Limitations <a class='anchor' href='container_registry.html#limitations' title='Permalink'></a></h2>
+<p>In order to use a container image from your private project as an <code>image:</code> in
+your <code>.gitlab-ci.yml</code>, you have to follow the
+<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/configuration/advanced-configuration.md#using-a-private-docker-registry">Using a private Docker Registry</a>
+documentation. This workflow will be simplified in the future.</p>
+<h2 id='troubleshooting-the-gitlab-container-registry'>Troubleshooting the GitLab Container Registry <a class='anchor' href='container_registry.html#troubleshooting-the-gitlab-container-registry' title='Permalink'></a></h2><h3 id='basic-troubleshooting'>Basic Troubleshooting <a class='anchor' href='container_registry.html#basic-troubleshooting' title='Permalink'></a></h3>
+<ol>
+<li><p>Check to make sure that the system clock on your Docker client and GitLab server have
+been synchronized (e.g. via NTP).</p></li>
+<li><p>If you are using an S3-backed Registry, double check that the IAM
+permissions and the S3 credentials (including region) are correct. See <a href="https://docs.docker.com/registry/storage-drivers/s3/">the
+sample IAM policy</a>
+for more details.</p></li>
+<li><p>Check the Registry logs (e.g. <code>/var/log/gitlab/registry/current</code>) and the GitLab production logs
+for errors (e.g. <code>/var/log/gitlab/gitlab-rails/production.log</code>). You may be able to find clues
+there.</p></li>
+</ol>
+<h3 id='advanced-troubleshooting'>Advanced Troubleshooting <a class='anchor' href='container_registry.html#advanced-troubleshooting' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>NOTE:</strong> The following section is only recommended for experts.</p>
+</blockquote>
+
+<p>Sometimes it&#39;s not obvious what is wrong, and you may need to dive deeper into
+the communication between the Docker client and the Registry to find out
+what&#39;s wrong. We will use a concrete example in the past to illustrate how to
+diagnose a problem with the S3 setup.</p>
+<h4 id='unexpected-403-error-during-push'>Unexpected 403 error during push <a class='anchor' href='container_registry.html#unexpected-403-error-during-push' title='Permalink'></a></h4>
+<p>A user attempted to enable an S3-backed Registry. The <code>docker login</code> step went
+fine. However, when pushing an image, the output showed:</p>
+<pre class="highlight plaintext"><code>The push refers to a repository [s3-testing.myregistry.com:4567/root/docker-test]
+dc5e59c14160: Pushing [==================================================&gt;] 14.85 kB
+03c20c1a019a: Pushing [==================================================&gt;] 2.048 kB
+a08f14ef632e: Pushing [==================================================&gt;] 2.048 kB
+228950524c88: Pushing 2.048 kB
+6a8ecde4cc03: Pushing [==&gt;                                                ] 9.901 MB/205.7 MB
+5f70bf18a086: Pushing 1.024 kB
+737f40e80b7f: Waiting
+82b57dbc5385: Waiting
+19429b698a22: Waiting
+9436069b92a3: Waiting
+error parsing HTTP 403 response body: unexpected end of JSON input: ""
+</code></pre>
+<p>This error is ambiguous, as it&#39;s not clear whether the 403 is coming from the
+GitLab Rails application, the Docker Registry, or something else. In this
+case, since we know that since the login succeeded, we probably need to look
+at the communication between the client and the Registry.</p>
+
+<p>The REST API between the Docker client and Registry is <a href="https://docs.docker.com/registry/spec/api/">described
+here</a>. Normally, one would just
+use Wireshark or tcpdump to capture the traffic and see where things went
+wrong.  However, since all communication between Docker clients and servers
+are done over HTTPS, it&#39;s a bit difficult to decrypt the traffic quickly even
+if you know the private key. What can we do instead?</p>
+
+<p>One way would be to disable HTTPS by setting up an <a href="https://docs.docker.com/registry/insecure/">insecure
+Registry</a>. This could introduce a
+security hole and is only recommended for local testing. If you have a
+production system and can&#39;t or don&#39;t want to do this, there is another way:
+use mitmproxy, which stands for Man-in-the-Middle Proxy.</p>
+<h4 id='mitmproxy'>mitmproxy <a class='anchor' href='container_registry.html#mitmproxy' title='Permalink'></a></h4>
+<p><a href="https://mitmproxy.org/">mitmproxy</a> allows you to place a proxy between your
+client and server to inspect all traffic. One wrinkle is that your system
+needs to trust the mitmproxy SSL certificates for this to work.</p>
+
+<p>The following installation instructions assume you are running Ubuntu:</p>
+
+<ol>
+<li>Install mitmproxy (see <a href="http://docs.mitmproxy.org/en/stable/install.html">http://docs.mitmproxy.org/en/stable/install.html</a>)</li>
+<li>Run <code>mitmproxy --port 9000</code> to generate its certificates.
+Enter <kbd>CTRL</kbd>-<kbd>C</kbd> to quit.</li>
+<li><p>Install the certificate from <code>~/.mitmproxy</code> to your system:</p>
+<pre class="highlight shell"><code>sudo cp ~/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy-ca-cert.crt
+sudo update-ca-certificates
+</code></pre></li>
+</ol>
+
+<p>If successful, the output should indicate that a certificate was added:</p>
+<pre class="highlight shell"><code>Updating certificates <span class="k">in</span> /etc/ssl/certs... 1 added, 0 removed; <span class="k">done</span>.
+Running hooks <span class="k">in</span> /etc/ca-certificates/update.d....done.
+</code></pre>
+<p>To verify that the certificates are properly installed, run:</p>
+<pre class="highlight shell"><code>mitmproxy --port 9000
+</code></pre>
+<p>This will run mitmproxy on port <code>9000</code>. In another window, run:</p>
+<pre class="highlight shell"><code>curl --proxy http://localhost:9000 https://httpbin.org/status/200
+</code></pre>
+<p>If everything is setup correctly, you will see information on the mitmproxy window and
+no errors from the curl commands.</p>
+<h4 id='running-the-docker-daemon-with-a-proxy'>Running the Docker daemon with a proxy <a class='anchor' href='container_registry.html#running-the-docker-daemon-with-a-proxy' title='Permalink'></a></h4>
+<p>For Docker to connect through a proxy, you must start the Docker daemon with the
+proper environment variables. The easiest way is to shutdown Docker (e.g. <code>sudo initctl stop docker</code>)
+and then run Docker by hand. As root, run:</p>
+<pre class="highlight shell"><code><span class="nb">export </span><span class="nv">HTTP_PROXY</span><span class="o">=</span><span class="s2">"http://localhost:9000"</span>
+<span class="nb">export </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span><span class="s2">"https://localhost:9000"</span>
+docker daemon --debug
+</code></pre>
+<p>This will launch the Docker daemon and proxy all connections through mitmproxy.</p>
+<h4 id='running-the-docker-client'>Running the Docker client <a class='anchor' href='container_registry.html#running-the-docker-client' title='Permalink'></a></h4>
+<p>Now that we have mitmproxy and Docker running, we can attempt to login and push
+a container image. You may need to run as root to do this. For example:</p>
+<pre class="highlight shell"><code>docker login s3-testing.myregistry.com:4567
+docker push s3-testing.myregistry.com:4567/root/docker-test
+</code></pre>
+<p>In the example above, we see the following trace on the mitmproxy window:</p>
+
+<p><a target="_blank" href="img/mitmproxy-docker.png"><img src="img/mitmproxy-docker.png" title="" alt="mitmproxy output from Docker"/></a></p>
+
+<p>The above image shows:</p>
+
+<ul>
+<li>The initial PUT requests went through fine with a 201 status code.</li>
+<li>The 201 redirected the client to the S3 bucket.</li>
+<li>The HEAD request to the AWS bucket reported a 403 Unauthorized.</li>
+</ul>
+
+<p>What does this mean? This strongly suggests that the S3 user does not have the right
+<a href="http://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectHEAD.html">permissions to perform a HEAD request</a>.
+The solution: check the <a href="https://docs.docker.com/registry/storage-drivers/s3/">IAM permissions again</a>.
+Once the right permissions were set, the error will go away.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/user/project/container_registry.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

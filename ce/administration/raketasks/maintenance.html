@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Maintenance Rake Tasks - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Maintenance Rake Tasks</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="maintenance.html#maintenance-rake-tasks">Maintenance Rake Tasks</a>
+<ul>
+<li>
+<a href="maintenance.html#gather-information-about-gitlab-and-the-system-it-runs-on">Gather information about GitLab and the system it runs on</a>
+</li>
+<li>
+<a href="maintenance.html#check-gitlab-configuration">Check GitLab configuration</a>
+</li>
+<li>
+<a href="maintenance.html#rebuild-authorized_keys-file">Rebuild authorized_keys file</a>
+</li>
+<li>
+<a href="maintenance.html#clear-redis-cache">Clear redis cache</a>
+</li>
+<li>
+<a href="maintenance.html#precompile-the-assets">Precompile the assets</a>
+</li>
+<li>
+<a href="maintenance.html#tracking-deployments">Tracking Deployments</a>
+</li>
+<li>
+<a href="maintenance.html#create-or-repair-repository-hooks-symlink">Create or repair repository hooks symlink</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='maintenance-rake-tasks'>Maintenance Rake Tasks <a class='anchor' href='maintenance.html#maintenance-rake-tasks' title='Permalink'></a></h1><h2 id='gather-information-about-gitlab-and-the-system-it-runs-on'>Gather information about GitLab and the system it runs on <a class='anchor' href='maintenance.html#gather-information-about-gitlab-and-the-system-it-runs-on' title='Permalink'></a></h2>
+<p>This command gathers information about your GitLab installation and the System it runs on. These may be useful when asking for help or reporting issues.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:env:info
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>bundle exec rake gitlab:env:info RAILS_ENV=production
+</code></pre>
+<p>Example output:</p>
+<pre class="highlight plaintext"><code>System information
+System:           Debian 7.8
+Current User:     git
+Using RVM:        no
+Ruby Version:     2.1.5p273
+Gem Version:      2.4.3
+Bundler Version:  1.7.6
+Rake Version:     10.3.2
+Sidekiq Version:  2.17.8
+
+GitLab information
+Version:          7.7.1
+Revision:         41ab9e1
+Directory:        /home/git/gitlab
+DB Adapter:       postgresql
+URL:              https://gitlab.example.com
+HTTP Clone URL:   https://gitlab.example.com/some-project.git
+SSH Clone URL:    git@gitlab.example.com:some-project.git
+Using LDAP:       no
+Using Omniauth:   no
+
+GitLab Shell
+Version:          2.4.1
+Repositories:     /home/git/repositories/
+Hooks:            /home/git/gitlab-shell/hooks/
+Git:              /usr/bin/git
+</code></pre><h2 id='check-gitlab-configuration'>Check GitLab configuration <a class='anchor' href='maintenance.html#check-gitlab-configuration' title='Permalink'></a></h2>
+<p>Runs the following rake tasks:</p>
+
+<ul>
+<li><code>gitlab:gitlab_shell:check</code></li>
+<li><code>gitlab:sidekiq:check</code></li>
+<li><code>gitlab:app:check</code></li>
+</ul>
+
+<p>It will check that each component was setup according to the installation guide and suggest fixes for issues found.</p>
+
+<p>You may also have a look at our <a href="https://github.com/gitlabhq/gitlab-public-wiki/wiki/Trouble-Shooting-Guide">Trouble Shooting Guide</a>.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:check
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>bundle exec rake gitlab:check RAILS_ENV=production
+</code></pre>
+<p>NOTE: Use SANITIZE=true for gitlab:check if you want to omit project names from the output.</p>
+
+<p>Example output:</p>
+<pre class="highlight plaintext"><code>Checking Environment ...
+
+Git configured for git user? ... yes
+Has python2? ... yes
+python2 is supported version? ... yes
+
+Checking Environment ... Finished
+
+Checking GitLab Shell ...
+
+GitLab Shell version? ... OK (1.2.0)
+Repo base directory exists? ... yes
+Repo base directory is a symlink? ... no
+Repo base owned by git:git? ... yes
+Repo base access is drwxrws---? ... yes
+post-receive hook up-to-date? ... yes
+post-receive hooks in repos are links: ... yes
+
+Checking GitLab Shell ... Finished
+
+Checking Sidekiq ...
+
+Running? ... yes
+
+Checking Sidekiq ... Finished
+
+Checking GitLab ...
+
+Database config exists? ... yes
+Database is SQLite ... no
+All migrations up? ... yes
+GitLab config exists? ... yes
+GitLab config outdated? ... no
+Log directory writable? ... yes
+Tmp directory writable? ... yes
+Init script exists? ... yes
+Init script up-to-date? ... yes
+Redis version &gt;= 2.0.0? ... yes
+
+Checking GitLab ... Finished
+</code></pre><h2 id='rebuild-authorized_keys-file'>Rebuild authorized_keys file <a class='anchor' href='maintenance.html#rebuild-authorized_keys-file' title='Permalink'></a></h2>
+<p>In some case it is necessary to rebuild the <code>authorized_keys</code> file.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:shell:setup
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:shell:setup RAILS_ENV=production
+</code></pre><pre class="highlight plaintext"><code>This will rebuild an authorized_keys file.
+You will lose any data stored in authorized_keys file.
+Do you want to continue (yes/no)? yes
+</code></pre><h2 id='clear-redis-cache'>Clear redis cache <a class='anchor' href='maintenance.html#clear-redis-cache' title='Permalink'></a></h2>
+<p>If for some reason the dashboard shows wrong information you might want to
+clear Redis&#39; cache.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake cache:clear
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>cd /home/git/gitlab
+sudo -u git -H bundle exec rake cache:clear RAILS_ENV=production
+</code></pre><h2 id='precompile-the-assets'>Precompile the assets <a class='anchor' href='maintenance.html#precompile-the-assets' title='Permalink'></a></h2>
+<p>Sometimes during version upgrades you might end up with some wrong CSS or
+missing some icons. In that case, try to precompile the assets again.</p>
+
+<p>Note that this only applies to source installations and does NOT apply to
+Omnibus packages.</p>
+
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>cd /home/git/gitlab
+sudo -u git -H bundle exec rake assets:precompile RAILS_ENV=production
+</code></pre>
+<p>For omnibus versions, the unoptimized assets (JavaScript, CSS) are frozen at
+the release of upstream GitLab. The omnibus version includes optimized versions
+of those assets. Unless you are modifying the JavaScript / CSS code on your
+production machine after installing the package, there should be no reason to redo
+rake assets:precompile on the production machine. If you suspect that assets
+have been corrupted, you should reinstall the omnibus package.</p>
+<h2 id='tracking-deployments'>Tracking Deployments <a class='anchor' href='maintenance.html#tracking-deployments' title='Permalink'></a></h2>
+<p>GitLab provides a Rake task that lets you track deployments in GitLab
+Performance Monitoring. This Rake task simply stores the current GitLab version
+in the GitLab Performance Monitoring database.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:track_deployment
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:track_deployment RAILS_ENV=production
+</code></pre><h2 id='create-or-repair-repository-hooks-symlink'>Create or repair repository hooks symlink <a class='anchor' href='maintenance.html#create-or-repair-repository-hooks-symlink' title='Permalink'></a></h2>
+<p>If the GitLab shell hooks directory location changes or another circumstance
+leads to the hooks symlink becoming missing or invalid, run this Rake task
+to create or repair the symlinks.</p>
+
+<p><strong>Omnibus Installation</strong></p>
+<pre class="highlight plaintext"><code>sudo gitlab-rake gitlab:shell:create_hooks
+</code></pre>
+<p><strong>Source Installation</strong></p>
+<pre class="highlight plaintext"><code>cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:shell:create_hooks RAILS_ENV=production
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/raketasks/maintenance.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

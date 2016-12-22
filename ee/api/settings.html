@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Application settings - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Application settings</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="settings.html#application-settings">Application settings</a>
+<ul>
+<li>
+<a href="settings.html#get-current-application-settings">Get current application settings</a>
+</li>
+<li>
+<a href="settings.html#change-application-settings">Change application settings</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='application-settings'>Application settings <a class='anchor' href='settings.html#application-settings' title='Permalink'></a></h1>
+<p>These API calls allow you to read and modify GitLab instance application
+settings as appear in <code>/admin/application_settings</code>. You have to be an
+administrator in order to perform this action.</p>
+<h2 id='get-current-application-settings'>Get current application settings <a class='anchor' href='settings.html#get-current-application-settings' title='Permalink'></a></h2>
+<p>List the current application settings of the GitLab instance.</p>
+<pre class="highlight plaintext"><code>GET /application/settings
+</code></pre><pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/application/settings
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="s2">"default_projects_limit"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"signup_enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"default_branch_protection"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"restricted_visibility_levels"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+   </span><span class="s2">"signin_enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"after_sign_out_path"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"max_attachment_size"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"user_oauth_applications"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"updated_at"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-04T15:44:55.176Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"session_expire_delay"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">10080</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"home_page_url"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"default_snippet_visibility"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"domain_whitelist"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+   </span><span class="s2">"domain_blacklist_enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"domain_blacklist"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+   </span><span class="s2">"created_at"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-04T15:44:55.176Z"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"default_project_visibility"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"gravatar_enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"sign_in_text"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"container_registry_token_expire_delay"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"repository_storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"repository_storages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"default"</span><span class="p">],</span><span class="w">
+   </span><span class="s2">"koding_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"koding_url"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='change-application-settings'>Change application settings <a class='anchor' href='settings.html#change-application-settings' title='Permalink'></a></h2><pre class="highlight plaintext"><code>PUT /application/settings
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th style="text-align: center">Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>default_projects_limit</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>Project limit per user. Default is <code>10</code></td>
+</tr>
+<tr>
+<td><code>signup_enabled</code></td>
+<td>boolean</td>
+<td style="text-align: center">no</td>
+<td>Enable registration. Default is <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>signin_enabled</code></td>
+<td>boolean</td>
+<td style="text-align: center">no</td>
+<td>Enable login via a GitLab account. Default is <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>gravatar_enabled</code></td>
+<td>boolean</td>
+<td style="text-align: center">no</td>
+<td>Enable Gravatar</td>
+</tr>
+<tr>
+<td><code>sign_in_text</code></td>
+<td>string</td>
+<td style="text-align: center">no</td>
+<td>Text on login page</td>
+</tr>
+<tr>
+<td><code>home_page_url</code></td>
+<td>string</td>
+<td style="text-align: center">no</td>
+<td>Redirect to this URL when not logged in</td>
+</tr>
+<tr>
+<td><code>default_branch_protection</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>Determine if developers can push to master. Can take <code>0</code> <em>(not protected, both developers and masters can push new commits, force push or delete the branch)</em>, <code>1</code> <em>(partially protected, developers can push new commits, but cannot force push or delete the branch, masters can do anything)</em> or <code>2</code> <em>(fully protected, developers cannot push new commits, force push or delete the branch, masters can do anything)</em> as a parameter. Default is <code>2</code>.</td>
+</tr>
+<tr>
+<td><code>restricted_visibility_levels</code></td>
+<td>array of integers</td>
+<td style="text-align: center">no</td>
+<td>Selected levels cannot be used by non-admin users for projects or snippets. Can take <code>0</code> <em>(Private)</em>, <code>1</code> <em>(Internal)</em> and <code>2</code> <em>(Public)</em> as a parameter. Default is null which means there is no restriction.</td>
+</tr>
+<tr>
+<td><code>max_attachment_size</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>Limit attachment size in MB</td>
+</tr>
+<tr>
+<td><code>session_expire_delay</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>Session duration in minutes. GitLab restart is required to apply changes</td>
+</tr>
+<tr>
+<td><code>default_project_visibility</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>What visibility level new projects receive. Can take <code>0</code> <em>(Private)</em>, <code>1</code> <em>(Internal)</em> and <code>2</code> <em>(Public)</em> as a parameter. Default is <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>default_snippet_visibility</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>What visibility level new snippets receive. Can take <code>0</code> <em>(Private)</em>, <code>1</code> <em>(Internal)</em> and <code>2</code> <em>(Public)</em> as a parameter. Default is <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>domain_whitelist</code></td>
+<td>array of strings</td>
+<td style="text-align: center">no</td>
+<td>Force people to use only corporate emails for sign-up. Default is null, meaning there is no restriction.</td>
+</tr>
+<tr>
+<td><code>domain_blacklist_enabled</code></td>
+<td>boolean</td>
+<td style="text-align: center">no</td>
+<td>Enable/disable the <code>domain_blacklist</code></td>
+</tr>
+<tr>
+<td><code>domain_blacklist</code></td>
+<td>array of strings</td>
+<td style="text-align: center">yes (if <code>domain_blacklist_enabled</code> is <code>true</code>)</td>
+<td>People trying to sign-up with emails from this domain will not be allowed to do so.</td>
+</tr>
+<tr>
+<td><code>user_oauth_applications</code></td>
+<td>boolean</td>
+<td style="text-align: center">no</td>
+<td>Allow users to register any application to use GitLab as an OAuth provider</td>
+</tr>
+<tr>
+<td><code>after_sign_out_path</code></td>
+<td>string</td>
+<td style="text-align: center">no</td>
+<td>Where to redirect users after logout</td>
+</tr>
+<tr>
+<td><code>container_registry_token_expire_delay</code></td>
+<td>integer</td>
+<td style="text-align: center">no</td>
+<td>Container Registry token duration in minutes</td>
+</tr>
+<tr>
+<td><code>repository_storages</code></td>
+<td>array of strings</td>
+<td style="text-align: center">no</td>
+<td>A list of names of enabled storage paths, taken from <code>gitlab.yml</code>. New projects will be created in one of these stores, chosen at random.</td>
+</tr>
+<tr>
+<td><code>repository_storage</code></td>
+<td>string</td>
+<td style="text-align: center">no</td>
+<td>The first entry in <code>repository_storages</code>. Deprecated, but retained for compatibility reasons</td>
+</tr>
+<tr>
+<td><code>enabled_git_access_protocol</code></td>
+<td>string</td>
+<td style="text-align: center">no</td>
+<td>Enabled protocols for Git access. Allowed values are: <code>ssh</code>, <code>http</code>, and <code>nil</code> to allow both protocols.</td>
+</tr>
+<tr>
+<td><code>koding_enabled</code></td>
+<td>boolean</td>
+<td style="text-align: center">no</td>
+<td>Enable Koding integration. Default is <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>koding_url</code></td>
+<td>string</td>
+<td style="text-align: center">yes (if <code>koding_enabled</code> is <code>true</code>)</td>
+<td>The Koding instance URL for integration.</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request PUT --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/application/settings?signup_enabled<span class="o">=</span><span class="nb">false</span>&amp;default_project_visibility<span class="o">=</span>1
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_projects_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"signup_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"signin_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"gravatar_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sign_in_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-06-12T15:51:55.432Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-06-30T13:22:42.210Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"home_page_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_branch_protection"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"restricted_visibility_levels"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"max_attachment_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"session_expire_delay"</span><span class="p">:</span><span class="w"> </span><span class="mi">10080</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_project_visibility"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_snippet_visibility"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"domain_whitelist"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"domain_blacklist_enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"domain_blacklist"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"user_oauth_applications"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"after_sign_out_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"container_registry_token_expire_delay"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"repository_storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"koding_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"koding_url"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/api/settings.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

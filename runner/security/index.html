@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Security of running jobs - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Security of running jobs</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="index.html#security-of-running-jobs">Security of running jobs</a>
+<ul>
+<li>
+<a href="index.html#usage-of-shell-executor">Usage of Shell executor</a>
+</li>
+<li>
+<a href="index.html#usage-of-docker-executor">Usage of Docker executor</a>
+</li>
+<li>
+<a href="index.html#usage-of-private-docker-images-with-if-not-present-pull-policy">Usage of private Docker images with <code>if-not-present</code> pull policy</a>
+</li>
+<li>
+<a href="index.html#systems-with-docker-installed">Systems with Docker installed</a>
+</li>
+<li>
+<a href="index.html#usage-of-ssh-executor">Usage of SSH executor</a>
+</li>
+<li>
+<a href="index.html#usage-of-parallels-executor">Usage of Parallels executor</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='security-of-running-jobs'>Security of running jobs <a class='anchor' href='index.html#security-of-running-jobs' title='Permalink'></a></h1>
+<p>When using GitLab Runner you should be aware of potential security implications
+when running your jobs.</p>
+<h2 id='usage-of-shell-executor'>Usage of Shell executor <a class='anchor' href='index.html#usage-of-shell-executor' title='Permalink'></a></h2>
+<p><strong>Generally it&#39;s unsafe to run tests with <code>shell</code> executors.</strong> The jobs are run
+with user&#39;s permissions (gitlab-ci-multi-runner&#39;s) and can steal code from other
+projects that are run on this server. Use only it for running the trusted builds.</p>
+<h2 id='usage-of-docker-executor'>Usage of Docker executor <a class='anchor' href='index.html#usage-of-docker-executor' title='Permalink'></a></h2>
+<p><strong>Docker can be considered safe when run in non-privileged mode.</strong> To make such
+setup more secure it&#39;s advised to run jobs as user (non-root) in Docker containers
+with disabled sudo or dropped <code>SETUID</code> and <code>SETGID</code> capabilities.</p>
+
+<p>On the other hand there&#39;s privileged mode which enables full access to host system,
+permission to mount and unmount volumes and run nested containers. It&#39;s not advised
+to run containers in privileged mode.</p>
+
+<p>More granular permissions can be configured in non-privileged mode via the
+<code>cap_add</code>/<code>cap_drop</code> settings.</p>
+<h2 id='usage-of-private-docker-images-with-if-not-present-pull-policy'>Usage of private Docker images with <code>if-not-present</code> pull policy <a class='anchor' href='index.html#usage-of-private-docker-images-with-if-not-present-pull-policy' title='Permalink'></a></h2>
+<p>When using the private Docker images support described in
+<a href="../configuration/advanced-configuration.html#using-a-private-container-registry">advanced configuration: using a private container registry</a>
+you should use <code>always</code> as the <code>pull_policy</code> value. Especially you should
+use <code>always</code> pull policy if you are hosting a public, shared Runner with the
+Docker executor.</p>
+
+<p>Let&#39;s consider such example, when pull policy is set to <code>if-not-present</code>:</p>
+
+<ol>
+<li>User A has a private image at <code>registry.example.com/image/name</code>.</li>
+<li>User A starts a build on a shared runner: The build receives registry
+credentials and pulls the image after authorization in registry.</li>
+<li>Image is stored on shared runner&#39;s host.</li>
+<li>User B doesn&#39;t have access to the private image at registry.example.com/image/name.</li>
+<li>User B starts a build which is using this image on the same shared runner
+as User A: Runner find a local version of the image and uses it <strong>even if
+the image could not be pulled because of missing credentials</strong>.</li>
+</ol>
+
+<p>Therefore, if you host a Runner that can be used by different users and
+different projects (with mixed private, and public access levels) you should
+never use <code>if-not-present</code> as the pull policy value, but use:</p>
+
+<ul>
+<li><code>never</code> - if you want to limit users to use only image pre-downloaded by you,</li>
+<li><code>always</code> - if you want to give users possibility to download any image from
+any registry.</li>
+</ul>
+
+<p>The <code>if-not-present</code> pull policy should be used <strong>only</strong> for specific Runners
+used by trusted builds and users.</p>
+
+<p>Read the <a href="../executors/docker.html#how-pull-policies-work">pull policies documentation</a>
+for more information.</p>
+<h2 id='systems-with-docker-installed'>Systems with Docker installed <a class='anchor' href='index.html#systems-with-docker-installed' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+This applies to installations below 0.5.0 or one&#39;s that were upgraded to newer version.</p>
+</blockquote>
+
+<p>When installing package on Linux systems with Docker installed, <code>gitlab-ci-multi-runner</code>
+will create user that will have permission to access <code>Docker</code> daemon. This makes
+the jobs run with <code>shell</code> executor able to access <code>docker</code> with full permissions
+and potentially allows root access to the server.</p>
+<h2 id='usage-of-ssh-executor'>Usage of SSH executor <a class='anchor' href='index.html#usage-of-ssh-executor' title='Permalink'></a></h2>
+<p><strong>SSH executors are susceptible to MITM attack (man-in-the-middle)</strong>, because of
+missing <code>StrictHostKeyChecking</code> option. This will be fixed in one of the future
+releases.</p>
+<h2 id='usage-of-parallels-executor'>Usage of Parallels executor <a class='anchor' href='index.html#usage-of-parallels-executor' title='Permalink'></a></h2>
+<p><strong>Parallels executor is the safest possible option</strong>, because it uses full system
+virtualization and with VM machines that are configured to run in isolated mode
+it blocks access to all peripherals and shared folders.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/security/index.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

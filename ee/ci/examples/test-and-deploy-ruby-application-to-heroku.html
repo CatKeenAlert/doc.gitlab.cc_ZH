@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">CI Examples</a></li>
+            
+          
+          <li class="breadcrumb">Current page</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="test-and-deploy-ruby-application-to-heroku.html#test-and-deploy-a-ruby-application">Test and Deploy a ruby application</a>
+<ul>
+<li>
+<a href="test-and-deploy-ruby-application-to-heroku.html#configure-project">Configure project</a>
+</li>
+<li>
+<a href="test-and-deploy-ruby-application-to-heroku.html#store-api-keys">Store API keys</a>
+</li>
+<li>
+<a href="test-and-deploy-ruby-application-to-heroku.html#create-heroku-application">Create Heroku application</a>
+</li>
+<li>
+<a href="test-and-deploy-ruby-application-to-heroku.html#create-runner">Create runner</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='test-and-deploy-a-ruby-application'>Test and Deploy a ruby application <a class='anchor' href='test-and-deploy-ruby-application-to-heroku.html#test-and-deploy-a-ruby-application' title='Permalink'></a></h2>
+<p>This example will guide you how to run tests in your Ruby on Rails application and deploy it automatically as Heroku application.</p>
+
+<p>You can checkout the example <a href="https://gitlab.com/ayufan/ruby-getting-started">source</a> and check <a href="https://gitlab.com/ayufan/ruby-getting-started/builds?scope=all">CI status</a>.</p>
+<h3 id='configure-project'>Configure project <a class='anchor' href='test-and-deploy-ruby-application-to-heroku.html#configure-project' title='Permalink'></a></h3>
+<p>This is what the <code>.gitlab-ci.yml</code> file looks like for this project:</p>
+<pre class="highlight yaml"><code><span class="na">test</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">apt-get update -qy</span>
+  <span class="pi">-</span> <span class="s">apt-get install -y nodejs</span>
+  <span class="pi">-</span> <span class="s">bundle install --path /cache</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake db:create RAILS_ENV=test</span>
+  <span class="pi">-</span> <span class="s">bundle exec rake test</span>
+
+<span class="na">staging</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">gem install dpl</span>
+  <span class="pi">-</span> <span class="s">dpl --provider=heroku --app=gitlab-ci-ruby-test-staging --api-key=$HEROKU_STAGING_API_KEY</span>
+  <span class="na">only</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">master</span>
+
+<span class="na">production</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">deploy</span>
+  <span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">gem install dpl</span>
+  <span class="pi">-</span> <span class="s">dpl --provider=heroku --app=gitlab-ci-ruby-test-prod --api-key=$HEROKU_PRODUCTION_API_KEY</span>
+  <span class="na">only</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">tags</span>
+</code></pre>
+<p>This project has three jobs:</p>
+
+<ol>
+<li><code>test</code> - used to test Rails application,</li>
+<li><code>staging</code> - used to automatically deploy staging environment every push to <code>master</code> branch</li>
+<li><code>production</code> - used to automatically deploy production environmnet for every created tag</li>
+</ol>
+<h3 id='store-api-keys'>Store API keys <a class='anchor' href='test-and-deploy-ruby-application-to-heroku.html#store-api-keys' title='Permalink'></a></h3>
+<p>You&#39;ll need to create two variables in <code>Project &gt; Variables</code>:</p>
+
+<ol>
+<li><code>HEROKU_STAGING_API_KEY</code> - Heroku API key used to deploy staging app,</li>
+<li><code>HEROKU_PRODUCTION_API_KEY</code> - Heroku API key used to deploy production app.</li>
+</ol>
+
+<p>Find your Heroku API key in <a href="https://dashboard.heroku.com/account">Manage Account</a>.</p>
+<h3 id='create-heroku-application'>Create Heroku application <a class='anchor' href='test-and-deploy-ruby-application-to-heroku.html#create-heroku-application' title='Permalink'></a></h3>
+<p>For each of your environments, you&#39;ll need to create a new Heroku application.
+You can do this through the <a href="https://dashboard.heroku.com/">Dashboard</a>.</p>
+<h3 id='create-runner'>Create runner <a class='anchor' href='test-and-deploy-ruby-application-to-heroku.html#create-runner' title='Permalink'></a></h3>
+<p>First install <a href="https://docs.docker.com/installation/">Docker Engine</a>.
+To build this project you also need to have <a href="https://about.gitlab.com/gitlab-ci/#gitlab-runner">GitLab Runner</a>.
+You can use public runners available on <code>gitlab.com/ci</code>, but you can register your own:</p>
+<pre class="highlight plaintext"><code>gitlab-ci-multi-runner register \
+  --non-interactive \
+  --url "https://gitlab.com/ci/" \
+  --registration-token "PROJECT_REGISTRATION_TOKEN" \
+  --description "ruby-2.2" \
+  --executor "docker" \
+  --docker-image ruby:2.2 \
+  --docker-postgres latest
+</code></pre>
+<p>With the command above, you create a runner that uses <a href="https://hub.docker.com/r/_/ruby/">ruby:2.2</a> image and uses <a href="https://hub.docker.com/r/_/postgres/">postgres</a> database.</p>
+
+<p>To access PostgreSQL database you need to connect to <code>host: postgres</code> as user <code>postgres</code> without password.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/examples/test-and-deploy-ruby-application-to-heroku.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

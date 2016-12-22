@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Issue board - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Issue board</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="issue_board.html#issue-board">Issue board</a>
+<ul>
+<li>
+<a href="issue_board.html#overview">Overview</a>
+</li>
+<li>
+<a href="issue_board.html#first-time-using-the-issue-board">First time using the Issue Board</a>
+</li>
+<li>
+<a href="issue_board.html#creating-a-new-list">Creating a new list</a>
+</li>
+<li>
+<a href="issue_board.html#deleting-a-list">Deleting a list</a>
+</li>
+<li>
+<a href="issue_board.html#searching-issues-in-the-backlog-list">Searching issues in the Backlog list</a>
+</li>
+<li>
+<a href="issue_board.html#filtering-issues">Filtering issues</a>
+</li>
+<li>
+<a href="issue_board.html#creating-workflows">Creating workflows</a>
+</li>
+<li>
+<a href="issue_board.html#permissions">Permissions</a>
+</li>
+<li>
+<a href="issue_board.html#tips">Tips</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='issue-board'>Issue board <a class='anchor' href='issue_board.html#issue-board' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5554">Introduced</a> in GitLab 8.11.</p>
+</blockquote>
+
+<p>The GitLab Issue Board is a software project management tool used to plan,
+organize, and visualize a workflow for a feature or product release.
+It can be seen like a light version of a <a href="https://en.wikipedia.org/wiki/Kanban_(development)">Kanban</a> or a <a href="https://en.wikipedia.org/wiki/Scrum_(software_development)">Scrum</a> board.</p>
+
+<p>Other interesting links:</p>
+
+<ul>
+<li><a href="https://about.gitlab.com/solutions/issueboard">GitLab Issue Board landing page on about.gitlab.com</a></li>
+<li><a href="https://www.youtube.com/watch?v=UWsJ8tkHAa8">YouTube video introduction to Issue Boards</a></li>
+</ul>
+<h2 id='overview'>Overview <a class='anchor' href='issue_board.html#overview' title='Permalink'></a></h2>
+<p>The Issue Board builds on GitLab&#39;s existing issue tracking functionality and
+leverages the power of <a href="labels.html">labels</a> by utilizing them as lists of the scrum board.</p>
+
+<p>With the Issue Board you can have a different view of your issues while also
+maintaining the same filtering and sorting abilities you see across the
+issue tracker.</p>
+
+<p>Below is a table of the definitions used for GitLab&#39;s Issue Board.</p>
+
+<table><thead>
+<tr>
+<th>What we call it</th>
+<th>What it means</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Issue Board</strong></td>
+<td>It represents a different view for your issues. It can have multiple lists with each list consisting of issues represented by cards.</td>
+</tr>
+<tr>
+<td><strong>List</strong></td>
+<td>Each label that exists in the issue tracker can have its own dedicated list. Every list is named after the label it is based on and is represented by a column which contains all the issues associated with that label. You can think of a list like the results you get when you filter the issues by a label in your issue tracker.</td>
+</tr>
+<tr>
+<td><strong>Card</strong></td>
+<td>Every card represents an issue and it is shown under the list for which it has a label. The information you can see on a card consists of the issue number, the issue title, the assignee and the labels associated with it. You can drag cards around from one list to another. Issues inside lists are <a href="labels.html#prioritize-labels">ordered by priority</a>.</td>
+</tr>
+</tbody></table>
+
+<p>There are three types of lists, the ones you create based on your labels, and
+two default:</p>
+
+<ul>
+<li><strong>Backlog</strong> (default): shows all issues that do not fall in one of the other lists. Always appears on the very left.</li>
+<li><strong>Done</strong> (default): shows all closed issues. Always appears on the very right.
+Label list: a list based on a label. It shows all issues with that label.</li>
+<li>Label list: a list based on a label. It shows all opened issues with that label.</li>
+</ul>
+
+<p><a target="_blank" href="img/issue_board.png"><img src="img/issue_board.png" title="" alt="GitLab Issue Board"/></a></p>
+
+<hr>
+
+<p>In short, here&#39;s a list of actions you can take in an Issue Board:</p>
+
+<ul>
+<li><a href="issue_board.html#creating-a-new-list">Create a new list</a>.</li>
+<li><a href="issue_board.html#deleting-a-list">Delete an existing list</a>.</li>
+<li>Drag issues between lists.</li>
+<li>Drag and reorder the lists themselves.</li>
+<li>Change issue labels on-the-fly while dragging issues between lists.</li>
+<li>Close an issue if you drag it to the <strong>Done</strong> list.</li>
+<li>Create a new list from a non-existing label by <a href="issue_board.html#creating-a-new-list">creating the label on-the-fly</a>
+within the Issue Board.</li>
+<li><a href="issue_board.html#filtering-issues">Filter issues</a> that appear across your Issue Board.</li>
+</ul>
+
+<p>If you are not able to perform one or more of the things above, make sure you
+have the right <a href="issue_board.html#permissions">permissions</a>.</p>
+<h2 id='first-time-using-the-issue-board'>First time using the Issue Board <a class='anchor' href='issue_board.html#first-time-using-the-issue-board' title='Permalink'></a></h2>
+<p>The first time you navigate to your Issue Board, you will be presented with the
+two default lists (<strong>Backlog</strong> and <strong>Done</strong>) and a welcoming message that gives
+you two options. You can either create a predefined set of labels and create
+their corresponding lists to the Issue Board or opt-out and use your own lists.</p>
+
+<p><a target="_blank" href="img/issue_board_welcome_message.png"><img src="img/issue_board_welcome_message.png" title="" alt="Issue Board welcome message"/></a></p>
+
+<p>If you choose to use and create the predefined lists, they will appear as empty
+because the labels associated to them will not exist up until that moment,
+which means the system has no way of populating them automatically. That&#39;s of
+course if the predefined labels don&#39;t already exist. If any of them does exist,
+the list will be created and filled with the issues that have that label.</p>
+<h2 id='creating-a-new-list'>Creating a new list <a class='anchor' href='issue_board.html#creating-a-new-list' title='Permalink'></a></h2>
+<p>Create a new list by clicking on the <strong>Create new list</strong> button at the upper
+right corner of the Issue Board.</p>
+
+<p><a target="_blank" href="img/issue_board_add_list.png"><img src="img/issue_board_add_list.png" title="" alt="Issue Board welcome message"/></a></p>
+
+<p>Simply choose the label to create the list from. The new list will be inserted
+at the end of the lists, before <strong>Done</strong>. Moving and reordering lists is as
+easy as dragging them around.</p>
+
+<p>To create a list for a label that doesn&#39;t yet exist, simply create the label by
+choosing <strong>Create new label</strong>. The label will be created on-the-fly and it will
+be immediately added to the dropdown. You can now choose it to create a list.</p>
+<h2 id='deleting-a-list'>Deleting a list <a class='anchor' href='issue_board.html#deleting-a-list' title='Permalink'></a></h2>
+<p>To delete a list from the Issue Board use the small trash icon that is present
+in the list&#39;s heading. A confirmation dialog will appear for you to confirm.</p>
+
+<p>Deleting a list doesn&#39;t have any effect in issues and labels, it&#39;s just the
+list view that is removed. You can always add it back later if you need.</p>
+<h2 id='searching-issues-in-the-backlog-list'>Searching issues in the Backlog list <a class='anchor' href='issue_board.html#searching-issues-in-the-backlog-list' title='Permalink'></a></h2>
+<p>The very first time you start using the Issue Board, it is very likely your
+issue tracker is already populated with labels and issues. In that case,
+<strong>Backlog</strong> will have all the issues that don&#39;t belong to another list, and
+<strong>Done</strong> will have all the closed ones.</p>
+
+<p>For performance and visibility reasons, each list shows the first 20 issues
+by default. If you have more than 20, you have to start scrolling down for the
+next 20 issues to appear. This can be cumbersome if your issue tracker hosts
+hundreds of issues, and for that reason it is easier to search for issues to
+move from <strong>Backlog</strong> to another list.</p>
+
+<p>Start typing in the search bar under the <strong>Backlog</strong> list and the relevant
+issues will appear.</p>
+
+<p><a target="_blank" href="img/issue_board_search_backlog.png"><img src="img/issue_board_search_backlog.png" title="" alt="Issue Board search Backlog"/></a></p>
+<h2 id='filtering-issues'>Filtering issues <a class='anchor' href='issue_board.html#filtering-issues' title='Permalink'></a></h2>
+<p>You should be able to use the filters on top of your Issue Board to show only
+the results you want. This is similar to the filtering used in the issue tracker
+since the metadata from the issues and labels are re-used in the Issue Board.</p>
+
+<p>You can filter by author, assignee, milestone and label.</p>
+<h2 id='creating-workflows'>Creating workflows <a class='anchor' href='issue_board.html#creating-workflows' title='Permalink'></a></h2>
+<p>By reordering your lists, you can create workflows. As lists in Issue Boards are
+based on labels, it works out of the box with your existing issues. So if you&#39;ve
+already labeled things with &#39;Backend&#39; and &#39;Frontend&#39;, the issue will appear in
+the lists as you create them. In addition, this means you can easily move
+something between lists by changing a label.</p>
+
+<p>A typical workflow of using the Issue Board would be:</p>
+
+<ol>
+<li>You have <a href="labels.html#create-new-labels">created</a> and <a href="labels.html#prioritize-labels">prioritized</a> labels
+so that you can easily categorize your issues.</li>
+<li>You have a bunch of issues (ideally labeled).</li>
+<li>You visit the Issue Board and start <a href="issue_board.html#creating-a-new-list">creating lists</a> to
+create a workflow.</li>
+<li>You move issues around in lists so that your team knows who should be working
+on what issue.</li>
+<li>When the work by one team is done, the issue can be dragged to the next list
+so someone else can pick up.</li>
+<li>When the issue is finally resolved, the issue is moved to the <strong>Done</strong> list
+and gets automatically closed.</li>
+</ol>
+
+<p>For instance you can create a list based on the label of &#39;Frontend&#39; and one for
+&#39;Backend&#39;. A designer can start working on an issue by dragging it from
+<strong>Backlog</strong> to &#39;Frontend&#39;. That way, everyone knows that this issue is now being
+worked on by the designers. Then, once they&#39;re done, all they have to do is
+drag it over to the next list, &#39;Backend&#39;, where a backend developer can
+eventually pick it up. Once they’re done, they move it to <strong>Done</strong>, to close the
+issue.</p>
+
+<p>This process can be seen clearly when visiting an issue since with every move
+to another list the label changes and a system not is recorded.</p>
+
+<p><a target="_blank" href="img/issue_board_system_notes.png"><img src="img/issue_board_system_notes.png" title="" alt="Issue Board system notes"/></a></p>
+<h2 id='permissions'>Permissions <a class='anchor' href='issue_board.html#permissions' title='Permalink'></a></h2>
+<p><a href="../permissions.html">Developers and up</a> can use all the functionality of the
+Issue Board, that is create/delete lists and drag issues around.</p>
+<h2 id='tips'>Tips <a class='anchor' href='issue_board.html#tips' title='Permalink'></a></h2>
+<p>A few things to remember:</p>
+
+<ul>
+<li>The label that corresponds to a list is hidden for issues under that list.</li>
+<li>Moving an issue between lists removes the label from the list it came from
+and adds the label from the list it goes to.</li>
+<li>When moving a card to <strong>Done</strong>, the label of the list it came from is removed
+and the issue gets closed.</li>
+<li>An issue can exist in multiple lists if it has more than one label.</li>
+<li>Lists are populated with issues automatically if the issues are labeled.</li>
+<li>Clicking on the issue title inside a card will take you to that issue.</li>
+<li>Clicking on a label inside a card will quickly filter the entire Issue Board
+and show only the issues from all lists that have that label.</li>
+<li>Issues inside lists are <a href="labels.html#prioritize-labels">ordered by priority</a>.</li>
+<li>For performance and visibility reasons, each list shows the first 20 issues
+by default. If you have more than 20 issues start scrolling down and the next
+20 will appear.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/issue_board.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

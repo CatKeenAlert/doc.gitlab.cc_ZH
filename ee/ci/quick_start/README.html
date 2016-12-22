@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Quick Start - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Quick Start</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#quick-start">Quick Start</a>
+<ul>
+<li>
+<a href="README.html#creating-a-gitlab-ci-yml-file">Creating a <code>.gitlab-ci.yml</code> file</a>
+<ul>
+<li>
+<a href="README.html#what-is-gitlab-ci-yml">What is <code>.gitlab-ci.yml</code></a>
+</li>
+<li>
+<a href="README.html#creating-a-simple-gitlab-ci-yml-file">Creating a simple <code>.gitlab-ci.yml</code> file</a>
+</li>
+<li>
+<a href="README.html#push-gitlab-ci-yml-to-gitlab">Push <code>.gitlab-ci.yml</code> to GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#configuring-a-runner">Configuring a Runner</a>
+<ul>
+<li>
+<a href="README.html#shared-runners">Shared Runners</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#seeing-the-status-of-your-pipeline-and-builds">Seeing the status of your pipeline and builds</a>
+</li>
+<li>
+<a href="README.html#enabling-build-emails">Enabling build emails</a>
+</li>
+<li>
+<a href="README.html#examples">Examples</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='quick-start'>Quick Start <a class='anchor' href='README.html#quick-start' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong> Starting from version 8.0, GitLab <a href="https://about.gitlab.com/gitlab-ci/">Continuous Integration</a> (CI)
+is fully integrated into GitLab itself and is <a href="../enable_or_disable_ci.html">enabled</a> by default on all
+projects.</p>
+</blockquote>
+
+<p>GitLab offers a <a href="https://about.gitlab.com/gitlab-ci/">continuous integration</a> service. If you
+<a href="../yaml/README.html">add a <code>.gitlab-ci.yml</code> file</a> to the root directory of your repository,
+and configure your GitLab project to use a <a href="../runners/README.html">Runner</a>, then each merge request or
+push triggers your CI <a href="../pipelines.html">pipeline</a>.</p>
+
+<p>The <code>.gitlab-ci.yml</code> file tells the GitLab runner what to do. By default it runs
+a pipeline with three <a href="../yaml/README.html#stages">stages</a>: <code>build</code>, <code>test</code>, and <code>deploy</code>. You don&#39;t need to
+use all three stages; stages with no jobs are simply ignored.</p>
+
+<p>If everything runs OK (no non-zero return values), you&#39;ll get a nice green
+checkmark associated with the pushed commit or merge request. This makes it
+easy to see whether a merge request caused any of the tests to fail before
+you even look at the code.</p>
+
+<p>Most projects use GitLab&#39;s CI service to run the test suite so that
+developers get immediate feedback if they broke something.</p>
+
+<p>There&#39;s a growing trend to use continuous delivery and continuous deployment to
+automatically deploy tested code to staging and production environments.</p>
+
+<p>So in brief, the steps needed to have a working CI can be summed up to:</p>
+
+<ol>
+<li>Add <code>.gitlab-ci.yml</code> to the root directory of your repository</li>
+<li>Configure a Runner</li>
+</ol>
+
+<p>From there on, on every push to your Git repository, the Runner will
+automagically start the pipeline and the pipeline will appear under the
+project&#39;s <code>/pipelines</code> page.</p>
+
+<hr>
+
+<p>This guide assumes that you:</p>
+
+<ul>
+<li>have a working GitLab instance of version 8.0 or higher or are using
+<a href="https://gitlab.com">GitLab.com</a></li>
+<li>have a project in GitLab that you would like to use CI for</li>
+</ul>
+
+<p>Let&#39;s break it down to pieces and work on solving the GitLab CI puzzle.</p>
+<h2 id='creating-a-gitlab-ci-yml-file'>Creating a <code>.gitlab-ci.yml</code> file <a class='anchor' href='README.html#creating-a-gitlab-ci-yml-file' title='Permalink'></a></h2>
+<p>Before you create <code>.gitlab-ci.yml</code> let&#39;s first explain in brief what this is
+all about.</p>
+<h3 id='what-is-gitlab-ci-yml'>What is <code>.gitlab-ci.yml</code> <a class='anchor' href='README.html#what-is-gitlab-ci-yml' title='Permalink'></a></h3>
+<p>The <code>.gitlab-ci.yml</code> file is where you configure what CI does with your project.
+It lives in the root of your repository.</p>
+
+<p>On any push to your repository, GitLab will look for the <code>.gitlab-ci.yml</code>
+file and start builds on <em>Runners</em> according to the contents of the file,
+for that commit.</p>
+
+<p>Because <code>.gitlab-ci.yml</code> is in the repository and is version controlled, old
+versions still build successfully, forks can easily make use of CI, branches can
+have different pipelines and jobs, and you have a single source of truth for CI.
+You can read more about the reasons why we are using <code>.gitlab-ci.yml</code> <a href="https://about.gitlab.com/2015/05/06/why-were-replacing-gitlab-ci-jobs-with-gitlab-ci-dot-yml/">in our
+blog about it</a>.</p>
+
+<p><strong>Note:</strong> <code>.gitlab-ci.yml</code> is a <a href="https://en.wikipedia.org/wiki/YAML">YAML</a> file
+so you have to pay extra attention to indentation. Always use spaces, not tabs.</p>
+<h3 id='creating-a-simple-gitlab-ci-yml-file'>Creating a simple <code>.gitlab-ci.yml</code> file <a class='anchor' href='README.html#creating-a-simple-gitlab-ci-yml-file' title='Permalink'></a></h3>
+<p>You need to create a file named <code>.gitlab-ci.yml</code> in the root directory of your
+repository. Below is an example for a Ruby on Rails project.</p>
+<pre class="highlight yaml"><code><span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">apt-get update -qq &amp;&amp; apt-get install -y -qq sqlite3 libsqlite3-dev nodejs</span>
+  <span class="pi">-</span> <span class="s">ruby -v</span>
+  <span class="pi">-</span> <span class="s">which ruby</span>
+  <span class="pi">-</span> <span class="s">gem install bundler --no-ri --no-rdoc</span>
+  <span class="pi">-</span> <span class="s">bundle install --jobs $(nproc)  "${FLAGS[@]}"</span>
+
+<span class="na">rspec</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">bundle exec rspec</span>
+
+<span class="na">rubocop</span><span class="pi">:</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">bundle exec rubocop</span>
+</code></pre>
+<p>This is the simplest possible build configuration that will work for most Ruby
+applications:</p>
+
+<ol>
+<li>Define two jobs <code>rspec</code> and <code>rubocop</code> (the names are arbitrary) with
+different commands to be executed.</li>
+<li>Before every job, the commands defined by <code>before_script</code> are executed.</li>
+</ol>
+
+<p>The <code>.gitlab-ci.yml</code> file defines sets of jobs with constraints of how and when
+they should be run. The jobs are defined as top-level elements with a name (in
+our case <code>rspec</code> and <code>rubocop</code>) and always have to contain the <code>script</code> keyword.
+Jobs are used to create builds, which are then picked by
+<a href="../runners/README.html">Runners</a> and executed within the environment of the Runner.</p>
+
+<p>What is important is that each job is run independently from each other.</p>
+
+<p>If you want to check whether your <code>.gitlab-ci.yml</code> file is valid, there is a
+Lint tool under the page <code>/ci/lint</code> of your GitLab instance. You can also find
+a &quot;CI Lint&quot; button to go to this page under <strong>Pipelines &gt; Pipelines</strong> and
+<strong>Pipelines &gt; Builds</strong> in your project.</p>
+
+<p>For more information and a complete <code>.gitlab-ci.yml</code> syntax, please read
+<a href="../yaml/README.html">the documentation on .gitlab-ci.yml</a>.</p>
+<h3 id='push-gitlab-ci-yml-to-gitlab'>Push <code>.gitlab-ci.yml</code> to GitLab <a class='anchor' href='README.html#push-gitlab-ci-yml-to-gitlab' title='Permalink'></a></h3>
+<p>Once you&#39;ve created <code>.gitlab-ci.yml</code>, you should add it to your git repository
+and push it to GitLab.</p>
+<pre class="highlight shell"><code>git add .gitlab-ci.yml
+git commit -m <span class="s2">"Add .gitlab-ci.yml"</span>
+git push origin master
+</code></pre>
+<p>Now if you go to the <strong>Pipelines</strong> page you will see that the pipeline is
+pending.</p>
+
+<p>You can also go to the <strong>Commits</strong> page and notice the little clock icon next
+to the commit SHA.</p>
+
+<p><a target="_blank" href="img/new_commit.png"><img src="img/new_commit.png" title="" alt="New commit pending"/></a></p>
+
+<p>Clicking on the clock icon you will be directed to the builds page for that
+specific commit.</p>
+
+<p><a target="_blank" href="img/single_commit_status_pending.png"><img src="img/single_commit_status_pending.png" title="" alt="Single commit builds page"/></a></p>
+
+<p>Notice that there are two jobs pending which are named after what we wrote in
+<code>.gitlab-ci.yml</code>. The red triangle indicates that there is no Runner configured
+yet for these builds.</p>
+
+<p>The next step is to configure a Runner so that it picks the pending builds.</p>
+<h2 id='configuring-a-runner'>Configuring a Runner <a class='anchor' href='README.html#configuring-a-runner' title='Permalink'></a></h2>
+<p>In GitLab, Runners run the builds that you define in <code>.gitlab-ci.yml</code>. A Runner
+can be a virtual machine, a VPS, a bare-metal machine, a docker container or
+even a cluster of containers. GitLab and the Runners communicate through an API,
+so the only requirement is that the Runner&#39;s machine has Internet access.</p>
+
+<p>A Runner can be specific to a certain project or serve multiple projects in
+GitLab. If it serves all projects it&#39;s called a <em>Shared Runner</em>.</p>
+
+<p>Find more information about different Runners in the
+<a href="../runners/README.html">Runners</a> documentation.</p>
+
+<p>You can find whether any Runners are assigned to your project by going to
+<strong>Settings &gt; Runners</strong>. Setting up a Runner is easy and straightforward. The
+official Runner supported by GitLab is written in Go and can be found at
+<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner">https://gitlab.com/gitlab-org/gitlab-ci-multi-runner</a>.</p>
+
+<p>In order to have a functional Runner you need to follow two steps:</p>
+
+<ol>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/tree/master#install-gitlab-runner">Install it</a></li>
+<li><a href="../runners/README.html#registering-a-specific-runner">Configure it</a></li>
+</ol>
+
+<p>Follow the links above to set up your own Runner or use a Shared Runner as
+described in the next section.</p>
+
+<p>For other types of unofficial Runners written in other languages, see the
+<a href="https://about.gitlab.com/gitlab-ci/#gitlab-runner">instructions for the various GitLab Runners</a>.</p>
+
+<p>Once the Runner has been set up, you should see it on the Runners page of your
+project, following <strong>Settings &gt; Runners</strong>.</p>
+
+<p><a target="_blank" href="img/runners_activated.png"><img src="img/runners_activated.png" title="" alt="Activated runners"/></a></p>
+<h3 id='shared-runners'>Shared Runners <a class='anchor' href='README.html#shared-runners' title='Permalink'></a></h3>
+<p>If you use <a href="https://gitlab.com/">GitLab.com</a> you can use <strong>Shared Runners</strong>
+provided by GitLab Inc.</p>
+
+<p>These are special virtual machines that run on GitLab&#39;s infrastructure and can
+build any project.</p>
+
+<p>To enable <strong>Shared Runners</strong> you have to go to your project&#39;s
+<strong>Settings &gt; Runners</strong> and click <strong>Enable shared runners</strong>.</p>
+
+<p><a href="../runners/README.html">Read more on Shared Runners</a>.</p>
+<h2 id='seeing-the-status-of-your-pipeline-and-builds'>Seeing the status of your pipeline and builds <a class='anchor' href='README.html#seeing-the-status-of-your-pipeline-and-builds' title='Permalink'></a></h2>
+<p>After configuring the Runner successfully, you should see the status of your
+last commit change from <em>pending</em> to either <em>running</em>, <em>success</em> or <em>failed</em>.</p>
+
+<p>You can view all pipelines by going to the <strong>Pipelines</strong> page in your project.</p>
+
+<p><a target="_blank" href="img/pipelines_status.png"><img src="img/pipelines_status.png" title="" alt="Commit status"/></a></p>
+
+<p>Or you can view all builds, by going to the <strong>Pipelines &gt; Builds</strong> page.</p>
+
+<p><a target="_blank" href="img/builds_status.png"><img src="img/builds_status.png" title="" alt="Commit status"/></a></p>
+
+<p>By clicking on a Build ID, you will be able to see the log of that build.
+This is important to diagnose why a build failed or acted differently than
+you expected.</p>
+
+<p><a target="_blank" href="img/build_log.png"><img src="img/build_log.png" title="" alt="Build log"/></a></p>
+
+<p>You are also able to view the status of any commit in the various pages in
+GitLab, such as <strong>Commits</strong> and <strong>Merge Requests</strong>.</p>
+<h2 id='enabling-build-emails'>Enabling build emails <a class='anchor' href='README.html#enabling-build-emails' title='Permalink'></a></h2>
+<p>If you want to receive e-mail notifications about the result status of the
+builds, you should explicitly enable the <strong>Builds Emails</strong> service under your
+project&#39;s settings.</p>
+
+<p>For more information read the
+<a href="../../project_services/builds_emails.html">Builds emails service documentation</a>.</p>
+<h2 id='examples'>Examples <a class='anchor' href='README.html#examples' title='Permalink'></a></h2>
+<p>Visit the <a href="../examples/README.html">examples README</a> to see a list of examples using GitLab
+CI with various languages.</p>
+
+<p>Awesome! You started using CI in GitLab!</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/quick_start/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

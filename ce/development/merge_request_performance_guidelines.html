@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Merge Request Performance Guidelines - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Merge Request Performance Guidelines</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="merge_request_performance_guidelines.html#merge-request-performance-guidelines">Merge Request Performance Guidelines</a>
+<ul>
+<li>
+<a href="merge_request_performance_guidelines.html#impact-analysis">Impact Analysis</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#performance-review">Performance Review</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#query-counts">Query Counts</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#executing-queries-in-loops">Executing Queries in Loops</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#eager-loading">Eager Loading</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#memory-usage">Memory Usage</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#lazy-rendering-of-ui-elements">Lazy Rendering of UI Elements</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#instrumenting-new-code">Instrumenting New Code</a>
+</li>
+<li>
+<a href="merge_request_performance_guidelines.html#use-of-caching">Use of Caching</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='merge-request-performance-guidelines'>Merge Request Performance Guidelines <a class='anchor' href='merge_request_performance_guidelines.html#merge-request-performance-guidelines' title='Permalink'></a></h1>
+<p>To ensure a merge request does not negatively impact performance of GitLab
+<em>every</em> merge request <strong>must</strong> adhere to the guidelines outlined in this
+document. There are no exceptions to this rule unless specifically discussed
+with and agreed upon by merge request endbosses and performance specialists.</p>
+
+<p>To measure the impact of a merge request you can use
+<a href="profiling.html#sherlock">Sherlock</a>. It&#39;s also highly recommended that you read
+the following guides:</p>
+
+<ul>
+<li><a href="performance.html">Performance Guidelines</a></li>
+<li><a href="what_requires_downtime.html">What requires downtime?</a></li>
+</ul>
+<h2 id='impact-analysis'>Impact Analysis <a class='anchor' href='merge_request_performance_guidelines.html#impact-analysis' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> think about the impact your merge request may have on performance
+and those maintaining a GitLab setup.</p>
+
+<p>Any change submitted can have an impact not only on the application itself but
+also those maintaining it and those keeping it up and running (e.g. production
+engineers). As a result you should think carefully about the impact of your
+merge request on not only the application but also on the people keeping it up
+and running.</p>
+
+<p>Can the queries used potentially take down any critical services and result in
+engineers being woken up in the night? Can a malicious user abuse the code to
+take down a GitLab instance? Will my changes simply make loading a certain page
+slower? Will execution time grow exponentially given enough load or data in the
+database?</p>
+
+<p>These are all questions one should ask themselves before submitting a merge
+request. It may sometimes be difficult to assess the impact, in which case you
+should ask a performance specialist to review your code. See the &quot;Reviewing&quot;
+section below for more information.</p>
+<h2 id='performance-review'>Performance Review <a class='anchor' href='merge_request_performance_guidelines.html#performance-review' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> ask performance specialists to review your code if you&#39;re not sure
+about the impact.</p>
+
+<p>Sometimes it&#39;s hard to assess the impact of a merge request. In this case you
+should ask one of the merge request (mini) endbosses to review your changes. You
+can find a list of these endbosses at <a href="https://about.gitlab.com/team/">https://about.gitlab.com/team/</a>. An
+endboss in turn can request a performance specialist to review the changes.</p>
+<h2 id='query-counts'>Query Counts <a class='anchor' href='merge_request_performance_guidelines.html#query-counts' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> a merge request <strong>should not</strong> increase the number of executed SQL
+queries unless absolutely necessary.</p>
+
+<p>The number of queries executed by the code modified or added by a merge request
+must not increase unless absolutely necessary. When building features it&#39;s
+entirely possible you will need some extra queries, but you should try to keep
+this at a minimum.</p>
+
+<p>As an example, say you introduce a feature that updates a number of database
+rows with the same value. It may be very tempting (and easy) to write this using
+the following pseudo code:</p>
+<pre class="highlight ruby"><code><span class="n">objects_to_update</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">object</span><span class="o">|</span>
+  <span class="n">object</span><span class="p">.</span><span class="nf">some_field</span> <span class="o">=</span> <span class="n">some_value</span>
+  <span class="n">object</span><span class="p">.</span><span class="nf">save</span>
+<span class="k">end</span>
+</code></pre>
+<p>This will end up running one query for every object to update. This code can
+easily overload a database given enough rows to update or many instances of this
+code running in parallel. This particular problem is known as the
+<a href="http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations">&quot;N+1 query problem&quot;</a>.</p>
+
+<p>In this particular case the workaround is fairly easy:</p>
+<pre class="highlight ruby"><code><span class="n">objects_to_update</span><span class="p">.</span><span class="nf">update_all</span><span class="p">(</span><span class="ss">some_field: </span><span class="n">some_value</span><span class="p">)</span>
+</code></pre>
+<p>This uses ActiveRecord&#39;s <code>update_all</code> method to update all rows in a single
+query. This in turn makes it much harder for this code to overload a database.</p>
+<h2 id='executing-queries-in-loops'>Executing Queries in Loops <a class='anchor' href='merge_request_performance_guidelines.html#executing-queries-in-loops' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> SQL queries <strong>must not</strong> be executed in a loop unless absolutely
+necessary.</p>
+
+<p>Executing SQL queries in a loop can result in many queries being executed
+depending on the number of iterations in a loop. This may work fine for a
+development environment with little data, but in a production environment this
+can quickly spiral out of control.</p>
+
+<p>There are some cases where this may be needed. If this is the case this should
+be clearly mentioned in the merge request description.</p>
+<h2 id='eager-loading'>Eager Loading <a class='anchor' href='merge_request_performance_guidelines.html#eager-loading' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> always eager load associations when retrieving more than one row.</p>
+
+<p>When retrieving multiple database records for which you need to use any
+associations you <strong>must</strong> eager load these associations. For example, if you&#39;re
+retrieving a list of blog posts and you want to display their authors you
+<strong>must</strong> eager load the author associations.</p>
+
+<p>In other words, instead of this:</p>
+<pre class="highlight ruby"><code><span class="no">Post</span><span class="p">.</span><span class="nf">all</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">post</span><span class="p">.</span><span class="nf">author</span><span class="p">.</span><span class="nf">name</span>
+<span class="k">end</span>
+</code></pre>
+<p>You should use this:</p>
+<pre class="highlight ruby"><code><span class="no">Post</span><span class="p">.</span><span class="nf">all</span><span class="p">.</span><span class="nf">includes</span><span class="p">(</span><span class="ss">:author</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">post</span><span class="p">.</span><span class="nf">author</span><span class="p">.</span><span class="nf">name</span>
+<span class="k">end</span>
+</code></pre><h2 id='memory-usage'>Memory Usage <a class='anchor' href='merge_request_performance_guidelines.html#memory-usage' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> merge requests <strong>must not</strong> increase memory usage unless absolutely
+necessary.</p>
+
+<p>A merge request must not increase the memory usage of GitLab by more than the
+absolute bare minimum required by the code. This means that if you have to parse
+some large document (e.g. an HTML document) it&#39;s best to parse it as a stream
+whenever possible, instead of loading the entire input into memory. Sometimes
+this isn&#39;t possible, in that case this should be stated explicitly in the merge
+request.</p>
+<h2 id='lazy-rendering-of-ui-elements'>Lazy Rendering of UI Elements <a class='anchor' href='merge_request_performance_guidelines.html#lazy-rendering-of-ui-elements' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> only render UI elements when they&#39;re actually needed.</p>
+
+<p>Certain UI elements may not always be needed. For example, when hovering over a
+diff line there&#39;s a small icon displayed that can be used to create a new
+comment. Instead of always rendering these kind of elements they should only be
+rendered when actually needed. This ensures we don&#39;t spend time generating
+Haml/HTML when it&#39;s not going to be used.</p>
+<h2 id='instrumenting-new-code'>Instrumenting New Code <a class='anchor' href='merge_request_performance_guidelines.html#instrumenting-new-code' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> always add instrumentation for new classes, modules, and methods.</p>
+
+<p>Newly added classes, modules, and methods must be instrumented. This ensures
+we can track the performance of this code over time.</p>
+
+<p>For more information see <a href="instrumentation.html">Instrumentation</a>. This guide
+describes how to add instrumentation and where to add it.</p>
+<h2 id='use-of-caching'>Use of Caching <a class='anchor' href='merge_request_performance_guidelines.html#use-of-caching' title='Permalink'></a></h2>
+<p><strong>Summary:</strong> cache data in memory or in Redis when it&#39;s needed multiple times in
+a transaction or has to be kept around for a certain time period.</p>
+
+<p>Sometimes certain bits of data have to be re-used in different places during a
+transaction. In these cases this data should be cached in memory to remove the
+need for running complex operations to fetch the data. You should use Redis if
+data should be cached for a certain time period instead of the duration of the
+transaction.</p>
+
+<p>For example, say you process multiple snippets of text containiner username
+mentions (e.g. <code>Hello @alice</code> and <code>How are you doing @alice?</code>). By caching the
+user objects for every username we can remove the need for running the same
+query for every mention of <code>@alice</code>.</p>
+
+<p>Caching data per transaction can be done using
+<a href="https://github.com/steveklabnik/request_store">RequestStore</a>. Caching data in
+Redis can be done using <a href="http://guides.rubyonrails.org/caching_with_rails.html">Rails&#39; caching
+system</a>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/merge_request_performance_guidelines.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

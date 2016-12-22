@@ -1,0 +1,489 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>LDAP - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Authentication and Authorization</a></li>
+            
+          
+          <li class="breadcrumb">LDAP</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="ldap.html#ldap">LDAP</a>
+<ul>
+<li>
+<a href="ldap.html#gitlab-ee">GitLab EE</a>
+</li>
+<li>
+<a href="ldap.html#security">Security</a>
+<ul>
+<li>
+<a href="ldap.html#user-deletion">User deletion</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="ldap.html#configuration">Configuration</a>
+</li>
+<li>
+<a href="ldap.html#using-an-ldap-filter-to-limit-access-to-your-gitlab-server">Using an LDAP filter to limit access to your GitLab server</a>
+</li>
+<li>
+<a href="ldap.html#enabling-ldap-sign-in-for-existing-gitlab-users">Enabling LDAP sign-in for existing GitLab users</a>
+</li>
+<li>
+<a href="ldap.html#limitations">Limitations</a>
+<ul>
+<li>
+<a href="ldap.html#tls-client-authentication">TLS Client Authentication</a>
+</li>
+<li>
+<a href="ldap.html#tls-server-authentication">TLS Server Authentication</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="ldap.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="ldap.html#debug-ldap-user-filter-with-ldapsearch">Debug LDAP user filter with ldapsearch</a>
+</li>
+<li>
+<a href="ldap.html#invalid-credentials-when-logging-in">Invalid credentials when logging in</a>
+</li>
+<li>
+<a href="ldap.html#connection-refused">Connection Refused</a>
+</li>
+<li>
+<a href="ldap.html#login-with-valid-credentials-rejected">Login with valid credentials rejected</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='ldap'>LDAP <a class='anchor' href='ldap.html#ldap' title='Permalink'></a></h1>
+<p>GitLab integrates with LDAP to support user authentication.
+This integration works with most LDAP-compliant directory
+servers, including Microsoft Active Directory, Apple Open Directory, Open LDAP,
+and 389 Server. GitLab EE includes enhanced integration, including group
+membership syncing.</p>
+<h2 id='gitlab-ee'>GitLab EE <a class='anchor' href='ldap.html#gitlab-ee' title='Permalink'></a></h2>
+<p>The information on this page is relevent for both GitLab CE and EE. For more
+details about EE-specific LDAP features, see <a href="ldap-ee.html">LDAP EE Documentation</a>.</p>
+<h2 id='security'>Security <a class='anchor' href='ldap.html#security' title='Permalink'></a></h2>
+<p>GitLab assumes that LDAP users are not able to change their LDAP &#39;mail&#39;, &#39;email&#39;
+or &#39;userPrincipalName&#39; attribute. An LDAP user who is allowed to change their
+email on the LDAP server can potentially
+<a href="ldap.html#enabling-ldap-sign-in-for-existing-gitlab-users">take over any account</a>
+on your GitLab server.</p>
+
+<p>We recommend against using LDAP integration if your LDAP users are
+allowed to change their &#39;mail&#39;, &#39;email&#39; or &#39;userPrincipalName&#39;  attribute on
+the LDAP server.</p>
+<h3 id='user-deletion'>User deletion <a class='anchor' href='ldap.html#user-deletion' title='Permalink'></a></h3>
+<p>If a user is deleted from the LDAP server, they will be blocked in GitLab, as
+well. Users will be immediately blocked from logging in. However, there is an
+LDAP check cache time (sync time) of one hour (see note). This means users that
+are already logged in or are using Git over SSH will still be able to access
+GitLab for up to one hour. Manually block the user in the GitLab Admin area to
+immediately block all access.</p>
+
+<blockquote>
+<p><strong>Note</strong>: GitLab EE supports a configurable sync time, with a default
+of one hour.</p>
+</blockquote>
+<h2 id='configuration'>Configuration <a class='anchor' href='ldap.html#configuration' title='Permalink'></a></h2>
+<p>To enable LDAP integration you need to add your LDAP server settings in
+<code>/etc/gitlab/gitlab.rb</code> or <code>/home/git/gitlab/config/gitlab.yml</code>.</p>
+
+<p>There is a Rake task to check LDAP configuration. After configuring LDAP
+using the documentation below, see <a href="../raketasks/check.html#ldap-check">LDAP check Rake task</a>
+for information on the LDAP check Rake task.</p>
+
+<blockquote>
+<p><strong>Note</strong>: In GitLab EE, you can configure multiple LDAP servers to connect to
+one GitLab server.</p>
+</blockquote>
+
+<p>Prior to version 7.4, GitLab used a different syntax for configuring
+LDAP integration. The old LDAP integration syntax still works but may be
+removed in a future version. If your <code>gitlab.rb</code> or <code>gitlab.yml</code> file contains
+LDAP settings in both the old syntax and the new syntax, only the <strong>old</strong>
+syntax will be used by GitLab.</p>
+
+<p>The configuration inside <code>gitlab_rails[&#39;ldap_servers&#39;]</code> below is sensitive to
+incorrect indentation. Be sure to retain the indentation given in the example.
+Copy/paste can sometimes cause problems.</p>
+
+<blockquote>
+<p><strong>Note:</strong> The <code>method</code> value <code>ssl</code> corresponds to &#39;Simple TLS&#39; in the LDAP
+  library. <code>tls</code> corresponds to StartTLS, not to be confused with regular TLS.
+  Normally, if you specify <code>ssl</code> is will be on port 636 while <code>tls</code> (StartTLS)
+  would be on port 389. <code>plain</code> also operates on port 389.</p>
+</blockquote>
+
+<p><strong>Omnibus configuration</strong></p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span> <span class="c1"># remember to close this block with 'EOS' below</span><span class="sh">
+main: # 'main' is the GitLab 'provider ID' of this LDAP server
+  ## label
+  #
+  # A human-friendly name for your LDAP server. It is OK to change the label later,
+  # for instance if you find out it is too large to fit on the web page.
+  #
+  # Example: 'Paris' or 'Acme, Ltd.'
+  label: 'LDAP'
+
+  host: '_your_ldap_server'
+  port: 389
+  uid: 'sAMAccountName'
+  method: 'plain' # "tls" or "ssl" or "plain"
+  bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
+  password: '_the_password_of_the_bind_user'
+
+  # Set a timeout, in seconds, for LDAP queries. This helps avoid blocking
+  # a request if the LDAP server becomes unresponsive.
+  # A value of 0 means there is no timeout.
+  timeout: 10
+
+  # This setting specifies if LDAP server is Active Directory LDAP server.
+  # For non AD servers it skips the AD specific queries.
+  # If your LDAP server is not AD, set this to false.
+  active_directory: true
+
+  # If allow_username_or_email_login is enabled, GitLab will ignore everything
+  # after the first '@' in the LDAP username submitted by the user on login.
+  #
+  # Example:
+  # - the user enters 'jane.doe@example.com' and 'p@ssw0rd' as LDAP credentials;
+  # - GitLab queries the LDAP server with 'jane.doe' and 'p@ssw0rd'.
+  #
+  # If you are using "uid: 'userPrincipalName'" on ActiveDirectory you need to
+  # disable this setting, because the userPrincipalName contains an '@'.
+  allow_username_or_email_login: false
+
+  # To maintain tight control over the number of active users on your GitLab installation,
+  # enable this setting to keep new users blocked until they have been cleared by the admin
+  # (default: false).
+  block_auto_created_users: false
+
+  # Base where we can search for users
+  #
+  #   Ex. ou=People,dc=gitlab,dc=example
+  #
+  base: ''
+
+  # Filter LDAP users
+  #
+  #   Format: RFC 4515 https://tools.ietf.org/search/rfc4515
+  #   Ex. (employeeType=developer)
+  #
+  #   Note: GitLab does not support omniauth-ldap's custom filter syntax.
+  #
+  user_filter: ''
+
+  # LDAP attributes that GitLab will use to create an account for the LDAP user.
+  # The specified attribute can either be the attribute name as a string (e.g. 'mail'),
+  # or an array of attribute names to try in order (e.g. ['mail', 'email']).
+  # Note that the user's LDAP login will always be the attribute specified as `uid` above.
+  attributes:
+    # The username will be used in paths for the user's own projects
+    # (like `gitlab.example.com/username/project`) and when mentioning
+    # them in issues, merge request and comments (like `@username`).
+    # If the attribute specified for `username` contains an email address,
+    # the GitLab username will be the part of the email address before the '@'.
+    username: ['uid', 'userid', 'sAMAccountName']
+    email:    ['mail', 'email', 'userPrincipalName']
+
+    # If no full name could be found at the attribute specified for `name`,
+    # the full name is determined using the attributes specified for
+    # `first_name` and `last_name`.
+    name:       'cn'
+    first_name: 'givenName'
+    last_name:  'sn'
+
+  ## EE only
+
+  # Base where we can search for groups
+  #
+  #   Ex. ou=groups,dc=gitlab,dc=example
+  #
+  group_base: ''
+
+  # The CN of a group containing GitLab administrators
+  #
+  #   Ex. administrators
+  #
+  #   Note: Not `cn=administrators` or the full DN
+  #
+  admin_group: ''
+
+  # An array of CNs of groups containing users that should be considered external
+  #
+  #   Ex. ['interns', 'contractors']
+  #
+  #   Note: Not `cn=interns` or the full DN
+  #
+  external_groups: []
+
+  # The LDAP attribute containing a user's public SSH key
+  #
+  #   Ex. ssh_public_key
+  #
+  sync_ssh_keys: false
+
+# GitLab EE only: add more LDAP servers
+# Choose an ID made of a-z and 0-9 . This ID will be stored in the database
+# so that GitLab can remember which LDAP server a user belongs to.
+# uswest2:
+#   label:
+#   host:
+#   ....
+</span><span class="no">EOS</span>
+</code></pre>
+<p><strong>Source configuration</strong></p>
+
+<p>Use the same format as <code>gitlab_rails[&#39;ldap_servers&#39;]</code> for the contents under
+<code>servers:</code> in the example below:</p>
+<pre class="highlight plaintext"><code>production:
+  # snip...
+  ldap:
+    enabled: false
+    servers:
+      main: # 'main' is the GitLab 'provider ID' of this LDAP server
+        ## label
+        #
+        # A human-friendly name for your LDAP server. It is OK to change the label later,
+        # for instance if you find out it is too large to fit on the web page.
+        #
+        # Example: 'Paris' or 'Acme, Ltd.'
+        label: 'LDAP'
+        # snip...
+</code></pre><h2 id='using-an-ldap-filter-to-limit-access-to-your-gitlab-server'>Using an LDAP filter to limit access to your GitLab server <a class='anchor' href='ldap.html#using-an-ldap-filter-to-limit-access-to-your-gitlab-server' title='Permalink'></a></h2>
+<p>If you want to limit all GitLab access to a subset of the LDAP users on your
+LDAP server, the first step should be to narrow the configured <code>base</code>. However,
+it is sometimes necessary to filter users further. In this case, you can set up
+an LDAP user filter. The filter must comply with
+<a href="https://tools.ietf.org/search/rfc4515">RFC 4515</a>.</p>
+
+<p><strong>Omnibus configuration</strong></p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="sh">
+main:
+  # snip...
+  user_filter: '(employeeType=developer)'
+</span><span class="no">EOS</span>
+</code></pre>
+<p><strong>Source configuration</strong></p>
+<pre class="highlight yaml"><code><span class="na">production</span><span class="pi">:</span>
+  <span class="na">ldap</span><span class="pi">:</span>
+    <span class="na">servers</span><span class="pi">:</span>
+      <span class="na">main</span><span class="pi">:</span>
+        <span class="c1"># snip...</span>
+        <span class="na">user_filter</span><span class="pi">:</span> <span class="s1">'</span><span class="s">(employeeType=developer)'</span>
+</code></pre>
+<p>Tip: If you want to limit access to the nested members of an Active Directory
+group you can use the following syntax:</p>
+<pre class="highlight plaintext"><code>(memberOf:1.2.840.113556.1.4.1941:=CN=My Group,DC=Example,DC=com)
+</code></pre>
+<p>Please note that GitLab does not support the custom filter syntax used by
+omniauth-ldap.</p>
+<h2 id='enabling-ldap-sign-in-for-existing-gitlab-users'>Enabling LDAP sign-in for existing GitLab users <a class='anchor' href='ldap.html#enabling-ldap-sign-in-for-existing-gitlab-users' title='Permalink'></a></h2>
+<p>When a user signs in to GitLab with LDAP for the first time, and their LDAP
+email address is the primary email address of an existing GitLab user, then
+the LDAP DN will be associated with the existing user. If the LDAP email
+attribute is not found in GitLab&#39;s database, a new user is created.</p>
+
+<p>In other words, if an existing GitLab user wants to enable LDAP sign-in for
+themselves, they should check that their GitLab email address matches their
+LDAP email address, and then sign into GitLab via their LDAP credentials.</p>
+<h2 id='limitations'>Limitations <a class='anchor' href='ldap.html#limitations' title='Permalink'></a></h2><h3 id='tls-client-authentication'>TLS Client Authentication <a class='anchor' href='ldap.html#tls-client-authentication' title='Permalink'></a></h3>
+<p>Not implemented by <code>Net::LDAP</code>.
+You should disable anonymous LDAP authentication and enable simple or SASL
+authentication. The TLS client authentication setting in your LDAP server cannot
+be mandatory and clients cannot be authenticated with the TLS protocol.</p>
+<h3 id='tls-server-authentication'>TLS Server Authentication <a class='anchor' href='ldap.html#tls-server-authentication' title='Permalink'></a></h3>
+<p>Not supported by GitLab&#39;s configuration options.
+When setting <code>method: ssl</code>, the underlying authentication method used by
+<code>omniauth-ldap</code> is <code>simple_tls</code>.  This method establishes TLS encryption with
+the LDAP server before any LDAP-protocol data is exchanged but no validation of
+the LDAP server&#39;s SSL certificate is performed.</p>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='ldap.html#troubleshooting' title='Permalink'></a></h2><h3 id='debug-ldap-user-filter-with-ldapsearch'>Debug LDAP user filter with ldapsearch <a class='anchor' href='ldap.html#debug-ldap-user-filter-with-ldapsearch' title='Permalink'></a></h3>
+<p>This example uses ldapsearch and assumes you are using ActiveDirectory. The
+following query returns the login names of the users that will be allowed to
+log in to GitLab if you configure your own user_filter.</p>
+<pre class="highlight plaintext"><code>ldapsearch -H ldaps://$host:$port -D "$bind_dn" -y bind_dn_password.txt  -b "$base" "$user_filter" sAMAccountName
+</code></pre>
+<ul>
+<li>Variables beginning with a <code>$</code> refer to a variable from the LDAP section of
+your configuration file.</li>
+<li>Replace ldaps:// with ldap:// if you are using the plain authentication method.
+Port <code>389</code> is the default <code>ldap://</code> port and <code>636</code> is the default <code>ldaps://</code>
+port.</li>
+<li>We are assuming the password for the bind_dn user is in bind_dn_password.txt.</li>
+</ul>
+<h3 id='invalid-credentials-when-logging-in'>Invalid credentials when logging in <a class='anchor' href='ldap.html#invalid-credentials-when-logging-in' title='Permalink'></a></h3>
+<ul>
+<li>Make sure the user you are binding with has enough permissions to read the user&#39;s
+tree and traverse it.</li>
+<li>Check that the <code>user_filter</code> is not blocking otherwise valid users.</li>
+<li><p>Run the following check command to make sure that the LDAP settings are
+correct and GitLab can see your users:</p>
+<pre class="highlight shell"><code><span class="c"># For Omnibus installations</span>
+sudo gitlab-rake gitlab:ldap:check
+
+<span class="c"># For installations from source</span>
+sudo -u git -H bundle <span class="nb">exec </span>rake gitlab:ldap:check <span class="nv">RAILS_ENV</span><span class="o">=</span>production
+</code></pre></li>
+</ul>
+<h3 id='connection-refused'>Connection Refused <a class='anchor' href='ldap.html#connection-refused' title='Permalink'></a></h3>
+<p>If you are getting &#39;Connection Refused&#39; errors when trying to connect to the
+LDAP server please double-check the LDAP <code>port</code> and <code>method</code> settings used by
+GitLab. Common combinations are <code>method: &#39;plain&#39;</code> and <code>port: 389</code>, OR
+<code>method: &#39;ssl&#39;</code> and <code>port: 636</code>.</p>
+<h3 id='login-with-valid-credentials-rejected'>Login with valid credentials rejected <a class='anchor' href='ldap.html#login-with-valid-credentials-rejected' title='Permalink'></a></h3>
+<p>If there is an unexpected error while authenticating the user with the LDAP
+backend, the login is rejected and details about the error are logged to
+<code>production.log</code>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/auth/ldap.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Koding & GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Koding & GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="koding.html#koding-gitlab">Koding & GitLab</a>
+<ul>
+<li>
+<a href="koding.html#enable-integration">Enable Integration</a>
+</li>
+<li>
+<a href="koding.html#set-up-koding-on-projects">Set up Koding on Projects</a>
+</li>
+<li>
+<a href="koding.html#run-a-project-on-koding">Run a project on Koding</a>
+</li>
+<li>
+<a href="koding.html#try-a-merge-request-on-ide">Try a Merge Request on IDE</a>
+</li>
+<li>
+<a href="koding.html#open-gitlab-from-koding">Open GitLab from Koding</a>
+</li>
+<li>
+<a href="koding.html#other-links">Other links</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='koding-amp-gitlab'>Koding &amp; GitLab <a class='anchor' href='koding.html#koding-amp-gitlab' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5909">Introduced</a> in GitLab 8.11.</p>
+</blockquote>
+
+<p>This document will guide you through using Koding integration on GitLab in
+detail. For configuring and installing please follow the
+<a href="../../administration/integration/koding.html">administrator guide</a>.</p>
+
+<p>You can use Koding integration to run and develop your projects on GitLab. This
+will allow you and the users to test your project without leaving the browser.
+Koding handles projects as stacks which are basic recipes to define your
+environment for your project. With this integration you can automatically
+create a proper stack template for your projects. Currently auto-generated
+stack templates are designed to work with AWS which requires a valid AWS
+credential to be able to use these stacks. You can find more information about
+stacks and the other providers that you can use on Koding following the
+<a href="https://www.koding.com/docs">Koding documentation</a>.</p>
+<h2 id='enable-integration'>Enable Integration <a class='anchor' href='koding.html#enable-integration' title='Permalink'></a></h2>
+<p>You can enable Koding integration by providing the running Koding instance URL
+in Application Settings under <strong>Admin area &gt; Settings</strong> (<code>/admin/application_settings</code>).</p>
+
+<p><a target="_blank" href="img/koding_enable-koding.png"><img src="img/koding_enable-koding.png" title="" alt="Enable Koding"/></a></p>
+
+<p>Once enabled you will see <code>Koding</code> link on your sidebar which leads you to
+Koding Landing page.</p>
+
+<p><a target="_blank" href="img/koding_landing.png"><img src="img/koding_landing.png" title="" alt="Koding Landing"/></a></p>
+
+<p>You can navigate to running Koding instance from here. For more information and
+details about configuring the integration, please follow the
+<a href="../../administration/integration/koding.html">administrator guide</a>.</p>
+<h2 id='set-up-koding-on-projects'>Set up Koding on Projects <a class='anchor' href='koding.html#set-up-koding-on-projects' title='Permalink'></a></h2>
+<p>Once it&#39;s enabled, you will see some integration buttons on Project pages,
+Merge Requests etc. To get started working on a specific project you first need
+to create a <code>.koding.yml</code> file under your project root. You can easily do that
+by using <code>Set Up Koding</code> button which will be visible on every project&#39;s
+landing page;</p>
+
+<p><a target="_blank" href="img/koding_set-up-ide.png"><img src="img/koding_set-up-ide.png" title="" alt="Set Up Koding"/></a></p>
+
+<p>Once you click this will open a New File page on GitLab with auto-generated
+<code>.koding.yml</code> content based on your server and repository configuration.</p>
+
+<p><a target="_blank" href="img/koding_commit-koding.yml.png"><img src="img/koding_commit-koding.yml.png" title="" alt="Commit .koding.yml"/></a></p>
+<h2 id='run-a-project-on-koding'>Run a project on Koding <a class='anchor' href='koding.html#run-a-project-on-koding' title='Permalink'></a></h2>
+<p>If there is <code>.koding.yml</code> exists in your project root, you will see
+<code>Run in IDE (Koding)</code> button in your project landing page. You can initiate the
+process from here.</p>
+
+<p><a target="_blank" href="img/koding_run-in-ide.png"><img src="img/koding_run-in-ide.png" title="" alt="Run on Koding"/></a></p>
+
+<p>This will open Koding defined in the settings in a new window and will start
+importing the project&#39;s stack file.</p>
+
+<p><a target="_blank" href="img/koding_stack-import.png"><img src="img/koding_stack-import.png" title="" alt="Import Stack"/></a></p>
+
+<p>You should see the details of your repository imported into your Koding
+instance. Once it&#39;s completed it will lead you to the Stack Editor and from
+there you can start using your new stack integrated with your project on your
+GitLab instance. For details about what&#39;s next you can follow
+<a href="https://www.koding.com/docs/creating-an-aws-stack">this guide</a> from step 8.</p>
+
+<p>Once stack initialized you will see the <code>README.md</code> content from your project
+in <code>Stack Build</code> wizard, this wizard will let you build the stack and import
+your project into it. <strong>Once it&#39;s completed it will automatically open the
+related vm instead of importing from scratch</strong>.</p>
+
+<p><a target="_blank" href="img/koding_start-build.png"><img src="img/koding_start-build.png" title="" alt="Stack Building"/></a></p>
+
+<p>This will take time depending on the required environment.</p>
+
+<p><a target="_blank" href="img/koding_build-in-progress.png"><img src="img/koding_build-in-progress.png" title="" alt="Stack Building in Progress"/></a></p>
+
+<p>It usually takes ~4 min. to make it ready with a <code>t2.nano</code> instance on given
+AWS region. (<code>t2.nano</code> is default vm type on auto-generated stack template
+which can be manually changed).</p>
+
+<p><a target="_blank" href="img/koding_build-success.png"><img src="img/koding_build-success.png" title="" alt="Stack Building Success"/></a></p>
+
+<p>You can check out the <code>Build Logs</code> from this success modal as well.</p>
+
+<p><a target="_blank" href="img/koding_build-logs.png"><img src="img/koding_build-logs.png" title="" alt="Stack Build Logs"/></a></p>
+
+<p>You can now <code>Start Coding</code>!</p>
+
+<p><a target="_blank" href="img/koding_edit-on-ide.png"><img src="img/koding_edit-on-ide.png" title="" alt="Edit On IDE"/></a></p>
+<h2 id='try-a-merge-request-on-ide'>Try a Merge Request on IDE <a class='anchor' href='koding.html#try-a-merge-request-on-ide' title='Permalink'></a></h2>
+<p>It&#39;s also possible to try a change on IDE before merging it. This flow only
+enabled if the target project has <code>.koding.yml</code> in it&#39;s target branch. You
+should see the alternative version of <code>Run in IDE (Koding)</code> button in merge
+request pages as well;</p>
+
+<p><a target="_blank" href="img/koding_run-mr-in-ide.png"><img src="img/koding_run-mr-in-ide.png" title="" alt="Run in IDE on MR"/></a></p>
+
+<p>This will again take you to Koding with proper arguments passed, which will
+allow Koding to modify the stack template provided by target branch. You can
+see the difference;</p>
+
+<p><a target="_blank" href="img/koding_different-stack-on-mr-try.png"><img src="img/koding_different-stack-on-mr-try.png" title="" alt="Different Branch for MR"/></a></p>
+
+<p>The flow for the branch stack is also same with the regular project flow.</p>
+<h2 id='open-gitlab-from-koding'>Open GitLab from Koding <a class='anchor' href='koding.html#open-gitlab-from-koding' title='Permalink'></a></h2>
+<p>Since stacks generated with import flow defined in previous steps, they have
+information about the repository they are belonging to. By using this
+information you can access to related GitLab page from stacks on your sidebar
+on Koding.</p>
+
+<p><a target="_blank" href="img/koding_open-gitlab-from-koding.png"><img src="img/koding_open-gitlab-from-koding.png" title="" alt="Open GitLab from Koding"/></a></p>
+<h2 id='other-links'>Other links <a class='anchor' href='koding.html#other-links' title='Permalink'></a></h2>
+<ul>
+<li><a href="https://youtu.be/3wei5yv_Ye8">YouTube video on GitLab + Koding workflow</a></li>
+<li><a href="https://www.koding.com/docs">Koding documentation</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/koding.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

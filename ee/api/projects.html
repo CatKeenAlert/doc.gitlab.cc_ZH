@@ -1,0 +1,2442 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Projects - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Projects</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="projects.html#projects">Projects</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="projects.html#project-visibility-level">Project visibility level</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#list-projects">List projects</a>
+<ul>
+<li>
+<a href="projects.html#list-owned-projects">List owned projects</a>
+</li>
+<li>
+<a href="projects.html#list-starred-projects">List starred projects</a>
+</li>
+<li>
+<a href="projects.html#list-all-projects">List ALL projects</a>
+</li>
+<li>
+<a href="projects.html#get-single-project">Get single project</a>
+</li>
+<li>
+<a href="projects.html#get-project-events">Get project events</a>
+</li>
+<li>
+<a href="projects.html#create-project">Create project</a>
+</li>
+<li>
+<a href="projects.html#create-project-for-user">Create project for user</a>
+</li>
+<li>
+<a href="projects.html#edit-project">Edit project</a>
+</li>
+<li>
+<a href="projects.html#fork-project">Fork project</a>
+</li>
+<li>
+<a href="projects.html#star-a-project">Star a project</a>
+</li>
+<li>
+<a href="projects.html#unstar-a-project">Unstar a project</a>
+</li>
+<li>
+<a href="projects.html#archive-a-project">Archive a project</a>
+</li>
+<li>
+<a href="projects.html#unarchive-a-project">Unarchive a project</a>
+</li>
+<li>
+<a href="projects.html#remove-project">Remove project</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#uploads">Uploads</a>
+<ul>
+<li>
+<a href="projects.html#upload-a-file">Upload a file</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#project-members">Project members</a>
+<ul>
+<li>
+<a href="projects.html#share-project-with-group">Share project with group</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#hooks">Hooks</a>
+<ul>
+<li>
+<a href="projects.html#list-project-hooks">List project hooks</a>
+</li>
+<li>
+<a href="projects.html#get-project-hook">Get project hook</a>
+</li>
+<li>
+<a href="projects.html#add-project-hook">Add project hook</a>
+</li>
+<li>
+<a href="projects.html#edit-project-hook">Edit project hook</a>
+</li>
+<li>
+<a href="projects.html#delete-project-hook">Delete project hook</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#branches">Branches</a>
+<ul>
+<li>
+<a href="projects.html#list-branches">List branches</a>
+</li>
+<li>
+<a href="projects.html#single-branch">Single branch</a>
+</li>
+<li>
+<a href="projects.html#protect-single-branch">Protect single branch</a>
+</li>
+<li>
+<a href="projects.html#unprotect-single-branch">Unprotect single branch</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#admin-fork-relation">Admin fork relation</a>
+<ul>
+<li>
+<a href="projects.html#create-a-forked-from-to-relation-between-existing-projects">Create a forked from/to relation between existing projects.</a>
+</li>
+<li>
+<a href="projects.html#delete-an-existing-forked-from-relationship">Delete an existing forked from relationship</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="projects.html#search-for-projects-by-name">Search for projects by name</a>
+</li>
+<li>
+<a href="projects.html#push-rules-ee-only">Push Rules (EE only)</a>
+<ul>
+<li>
+<a href="projects.html#show-project-push-rules">Show project push rules</a>
+</li>
+<li>
+<a href="projects.html#add-project-push-rule">Add project push rule</a>
+</li>
+<li>
+<a href="projects.html#edit-project-push-rule">Edit project push rule</a>
+</li>
+<li>
+<a href="projects.html#delete-project-push-rule">Delete project push rule</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='projects'>Projects <a class='anchor' href='projects.html#projects' title='Permalink'></a></h1><h3 id='project-visibility-level'>Project visibility level <a class='anchor' href='projects.html#project-visibility-level' title='Permalink'></a></h3>
+<p>Project in GitLab has be either private, internal or public.
+You can determine it by <code>visibility_level</code> field in project.</p>
+
+<p>Constants for project visibility levels are next:</p>
+
+<ul>
+<li><p>Private. <code>visibility_level</code> is <code>0</code>.
+Project access must be granted explicitly for each user.</p></li>
+<li><p>Internal. <code>visibility_level</code> is <code>10</code>.
+The project can be cloned by any logged in user.</p></li>
+<li><p>Public. <code>visibility_level</code> is <code>20</code>.
+The project can be cloned without any authentication.</p></li>
+</ul>
+<h2 id='list-projects'>List projects <a class='anchor' href='projects.html#list-projects' title='Permalink'></a></h2>
+<p>Get a list of projects for which the authenticated user is a member.</p>
+<pre class="highlight plaintext"><code>GET /projects
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>archived</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Limit by archived status</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit by visibility <code>public</code>, <code>internal</code>, or <code>private</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects ordered by <code>id</code>, <code>name</code>, <code>path</code>, <code>created_at</code>, <code>updated_at</code>, or <code>last_activity_at</code> fields. Default is <code>created_at</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects sorted in <code>asc</code> or <code>desc</code> order. Default is <code>desc</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return list of authorized projects matching the search criteria</td>
+</tr>
+<tr>
+<td><code>simple</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Return only the ID, URL, name, and path of each project</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-client.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-client.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"disapora client"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/4/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8547b1dc37721d05889db52fa2f02"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:brightbox/puppet.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/brightbox/puppet.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/brightbox/puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"puppet"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brightbox"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brightbox / Puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"brightbox/puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brightbox"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"brightbox"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8547b1dc37721d05889db52fa2f02"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>Get a list of projects which the authenticated user can see.</p>
+<pre class="highlight plaintext"><code>GET /projects/visible
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>archived</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Limit by archived status</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit by visibility <code>public</code>, <code>internal</code>, or <code>private</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects ordered by <code>id</code>, <code>name</code>, <code>path</code>, <code>created_at</code>, <code>updated_at</code>, or <code>last_activity_at</code> fields. Default is <code>created_at</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects sorted in <code>asc</code> or <code>desc</code> order. Default is <code>desc</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return list of authorized projects matching the search criteria</td>
+</tr>
+<tr>
+<td><code>simple</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Return only the ID, URL, name, and path of each project</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-client.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-client.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"disapora client"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/4/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8547b1dc37721d05889db52fa2f02"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:brightbox/puppet.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/brightbox/puppet.git"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/brightbox/puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"puppet"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brightbox"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brightbox / Puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"brightbox/puppet"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brightbox"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"brightbox"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8547b1dc37721d05889db52fa2f02"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre><h3 id='list-owned-projects'>List owned projects <a class='anchor' href='projects.html#list-owned-projects' title='Permalink'></a></h3>
+<p>Get a list of projects which are owned by the authenticated user.</p>
+<pre class="highlight plaintext"><code>GET /projects/owned
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>archived</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Limit by archived status</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit by visibility <code>public</code>, <code>internal</code>, or <code>private</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects ordered by <code>id</code>, <code>name</code>, <code>path</code>, <code>created_at</code>, <code>updated_at</code>, or <code>last_activity_at</code> fields. Default is <code>created_at</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects sorted in <code>asc</code> or <code>desc</code> order. Default is <code>desc</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return list of authorized projects matching the search criteria</td>
+</tr>
+</tbody></table>
+<h3 id='list-starred-projects'>List starred projects <a class='anchor' href='projects.html#list-starred-projects' title='Permalink'></a></h3>
+<p>Get a list of projects which are starred by the authenticated user.</p>
+<pre class="highlight plaintext"><code>GET /projects/starred
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>archived</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Limit by archived status</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit by visibility <code>public</code>, <code>internal</code>, or <code>private</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects ordered by <code>id</code>, <code>name</code>, <code>path</code>, <code>created_at</code>, <code>updated_at</code>, or <code>last_activity_at</code> fields. Default is <code>created_at</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects sorted in <code>asc</code> or <code>desc</code> order. Default is <code>desc</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return list of authorized projects matching the search criteria</td>
+</tr>
+</tbody></table>
+<h3 id='list-all-projects'>List ALL projects <a class='anchor' href='projects.html#list-all-projects' title='Permalink'></a></h3>
+<p>Get a list of all GitLab projects (admin only).</p>
+<pre class="highlight plaintext"><code>GET /projects/all
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>archived</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Limit by archived status</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit by visibility <code>public</code>, <code>internal</code>, or <code>private</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects ordered by <code>id</code>, <code>name</code>, <code>path</code>, <code>created_at</code>, <code>updated_at</code>, or <code>last_activity_at</code> fields. Default is <code>created_at</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return projects sorted in <code>asc</code> or <code>desc</code> order. Default is <code>desc</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return list of authorized projects matching the search criteria</td>
+</tr>
+</tbody></table>
+<h3 id='get-single-project'>Get single project <a class='anchor' href='projects.html#get-single-project' title='Permalink'></a></h3>
+<p>Get a specific project, identified by project ID or NAMESPACE/PROJECT_NAME, which is owned by the authenticated user.
+If using namespaced projects call make sure that the NAMESPACE/PROJECT_NAME is URL-encoded, eg. <code>/api/v3/projects/diaspora%2Fdiaspora</code> (where <code>/</code> is represented by <code>%2F</code>).</p>
+<pre class="highlight plaintext"><code>GET /projects/:id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID or NAMESPACE/PROJECT_NAME of the project</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"disapora project"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/3/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8bc4a7a29eb76ea83cf79e4908c2b"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"group_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Twitter"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"group_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gitlab Org"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"repository_storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='get-project-events'>Get project events <a class='anchor' href='projects.html#get-project-events' title='Permalink'></a></h3>
+<p>Get the events for the specified project.
+Sorted from newest to oldest</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/events
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID or NAMESPACE/PROJECT_NAME of the project</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"closed"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">830</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public project search field"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"opened"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50d4420237a9de7be1304607147aec22e4a14af7"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c5feabde2d8cd023215af4d2ceeb7a64839fc428"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refs/heads/master"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"repository"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitlabhq"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@dev.gitlab.org:gitlab/gitlabhq.git"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GitLab: self hosted Git management software. </span><span class="se">\r\n</span><span class="s2">Distributed under the MIT License."</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"homepage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dev.gitlab.org/gitlab/gitlabhq"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"commits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c5feabde2d8cd023215af4d2ceeb7a64839fc428"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add simple search to projects in public area"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-05-13T18:18:08+00:00"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dev.gitlab.org/gitlab/gitlabhq/commit/c5feabde2d8cd023215af4d2ceeb7a64839fc428"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dmitriy.zaporozhets@gmail.com"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"total_commits_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"closed"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">840</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Finish &amp; merge Code search PR"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"action_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commented on"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1312</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Note"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"author_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"target_title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T10:33:58.089Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1312</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What an awesome day!"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-04T10:33:56.698Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"system"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"upvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"downvote"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"noteable_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">377</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"noteable_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dmitriy Zaporozhets"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/uploads/user/avatar/1/fox_avatar.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/root"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"author_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre><h3 id='create-project'>Create project <a class='anchor' href='projects.html#create-project' title='Permalink'></a></h3>
+<p>Creates a new project owned by the authenticated user.</p>
+<pre class="highlight plaintext"><code>POST /projects
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the new project</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>no</td>
+<td>Custom repository name for new project. By default generated based on name</td>
+</tr>
+<tr>
+<td><code>namespace_id</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Namespace for the new project (defaults to the current user&#39;s namespace)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>no</td>
+<td>Short project description</td>
+</tr>
+<tr>
+<td><code>issues_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable issues for this project</td>
+</tr>
+<tr>
+<td><code>merge_requests_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable merge requests for this project</td>
+</tr>
+<tr>
+<td><code>builds_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable builds for this project</td>
+</tr>
+<tr>
+<td><code>wiki_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable wiki for this project</td>
+</tr>
+<tr>
+<td><code>snippets_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable snippets for this project</td>
+</tr>
+<tr>
+<td><code>container_registry_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable container registry for this project</td>
+</tr>
+<tr>
+<td><code>shared_runners_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable shared runners for this project</td>
+</tr>
+<tr>
+<td><code>public</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>If <code>true</code>, the same as setting <code>visibility_level</code> to 20</td>
+</tr>
+<tr>
+<td><code>visibility_level</code></td>
+<td>integer</td>
+<td>no</td>
+<td>See <a href="projects.html#project-visibility-level">project visibility level</a></td>
+</tr>
+<tr>
+<td><code>import_url</code></td>
+<td>string</td>
+<td>no</td>
+<td>URL to import repository from</td>
+</tr>
+<tr>
+<td><code>public_builds</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>If <code>true</code>, builds can be viewed by non-project-members</td>
+</tr>
+<tr>
+<td><code>repository_storage</code></td>
+<td>string</td>
+<td>no</td>
+<td>Which storage shard the repository is on. Available only to admins</td>
+</tr>
+<tr>
+<td><code>only_allow_merge_if_build_succeeds</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Set whether merge requests can only be merged with successful builds</td>
+</tr>
+<tr>
+<td><code>only_allow_merge_if_all_discussions_are_resolved</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Set whether merge requests can only be merged when all the discussions are resolved</td>
+</tr>
+<tr>
+<td><code>lfs_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable LFS</td>
+</tr>
+<tr>
+<td><code>request_access_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Allow users to request member access</td>
+</tr>
+</tbody></table>
+<h3 id='create-project-for-user'>Create project for user <a class='anchor' href='projects.html#create-project-for-user' title='Permalink'></a></h3>
+<p>Creates a new project owned by the specified user. Available only for admins.</p>
+<pre class="highlight plaintext"><code>POST /projects/user/:user_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>user_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The user ID of the project owner</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the new project</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>no</td>
+<td>Custom repository name for new project. By default generated based on name</td>
+</tr>
+<tr>
+<td><code>namespace_id</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Namespace for the new project (defaults to the current user&#39;s namespace)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>no</td>
+<td>Short project description</td>
+</tr>
+<tr>
+<td><code>issues_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable issues for this project</td>
+</tr>
+<tr>
+<td><code>merge_requests_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable merge requests for this project</td>
+</tr>
+<tr>
+<td><code>builds_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable builds for this project</td>
+</tr>
+<tr>
+<td><code>wiki_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable wiki for this project</td>
+</tr>
+<tr>
+<td><code>snippets_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable snippets for this project</td>
+</tr>
+<tr>
+<td><code>container_registry_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable container registry for this project</td>
+</tr>
+<tr>
+<td><code>shared_runners_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable shared runners for this project</td>
+</tr>
+<tr>
+<td><code>public</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>If <code>true</code>, the same as setting <code>visibility_level</code> to 20</td>
+</tr>
+<tr>
+<td><code>visibility_level</code></td>
+<td>integer</td>
+<td>no</td>
+<td>See <a href="projects.html#project-visibility-level">project visibility level</a></td>
+</tr>
+<tr>
+<td><code>import_url</code></td>
+<td>string</td>
+<td>no</td>
+<td>URL to import repository from</td>
+</tr>
+<tr>
+<td><code>public_builds</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>If <code>true</code>, builds can be viewed by non-project-members</td>
+</tr>
+<tr>
+<td><code>repository_storage</code></td>
+<td>string</td>
+<td>no</td>
+<td>Which storage shard the repository is on. Available only to admins</td>
+</tr>
+<tr>
+<td><code>only_allow_merge_if_build_succeeds</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Set whether merge requests can only be merged with successful builds</td>
+</tr>
+<tr>
+<td><code>only_allow_merge_if_all_discussions_are_resolved</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Set whether merge requests can only be merged when all the discussions are resolved</td>
+</tr>
+<tr>
+<td><code>lfs_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable LFS</td>
+</tr>
+<tr>
+<td><code>request_access_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Allow users to request member access</td>
+</tr>
+</tbody></table>
+<h3 id='edit-project'>Edit project <a class='anchor' href='projects.html#edit-project' title='Permalink'></a></h3>
+<p>Updates an existing project</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID or NAMESPACE/PROJECT_NAME of the project</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the project</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>no</td>
+<td>Custom repository name for the project. By default generated based on name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>no</td>
+<td>Short project description</td>
+</tr>
+<tr>
+<td><code>issues_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable issues for this project</td>
+</tr>
+<tr>
+<td><code>merge_requests_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable merge requests for this project</td>
+</tr>
+<tr>
+<td><code>builds_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable builds for this project</td>
+</tr>
+<tr>
+<td><code>wiki_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable wiki for this project</td>
+</tr>
+<tr>
+<td><code>snippets_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable snippets for this project</td>
+</tr>
+<tr>
+<td><code>container_registry_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable container registry for this project</td>
+</tr>
+<tr>
+<td><code>shared_runners_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable shared runners for this project</td>
+</tr>
+<tr>
+<td><code>public</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>If <code>true</code>, the same as setting <code>visibility_level</code> to 20</td>
+</tr>
+<tr>
+<td><code>visibility_level</code></td>
+<td>integer</td>
+<td>no</td>
+<td>See <a href="projects.html#project-visibility-level">project visibility level</a></td>
+</tr>
+<tr>
+<td><code>import_url</code></td>
+<td>string</td>
+<td>no</td>
+<td>URL to import repository from</td>
+</tr>
+<tr>
+<td><code>public_builds</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>If <code>true</code>, builds can be viewed by non-project-members</td>
+</tr>
+<tr>
+<td><code>repository_storage</code></td>
+<td>string</td>
+<td>no</td>
+<td>Change the storage shard for the repository. Available only to admins</td>
+</tr>
+<tr>
+<td><code>only_allow_merge_if_build_succeeds</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Set whether merge requests can only be merged with successful builds</td>
+</tr>
+<tr>
+<td><code>only_allow_merge_if_all_discussions_are_resolved</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Set whether merge requests can only be merged when all the discussions are resolved</td>
+</tr>
+<tr>
+<td><code>lfs_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable LFS</td>
+</tr>
+<tr>
+<td><code>request_access_enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Allow users to request member access</td>
+</tr>
+</tbody></table>
+
+<p>On success, method returns 200 with the updated project. If parameters are
+invalid, 400 is returned.</p>
+<h3 id='fork-project'>Fork project <a class='anchor' href='projects.html#fork-project' title='Permalink'></a></h3>
+<p>Forks a project into the user namespace of the authenticated user or the one provided.</p>
+<pre class="highlight plaintext"><code>POST /projects/fork/:id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID or NAMESPACE/PROJECT_NAME of the project</td>
+</tr>
+<tr>
+<td><code>namespace</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID or path of the namespace that the project will be forked to</td>
+</tr>
+</tbody></table>
+<h3 id='star-a-project'>Star a project <a class='anchor' href='projects.html#star-a-project' title='Permalink'></a></h3>
+<p>Stars a given project. Returns status code <code>201</code> and the project on success and
+<code>304</code> if the project is already starred.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/star
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID or NAMESPACE/PROJECT_NAME of the project</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects/5/star"</span>
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"disapora project"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/3/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='unstar-a-project'>Unstar a project <a class='anchor' href='projects.html#unstar-a-project' title='Permalink'></a></h3>
+<p>Unstars a given project. Returns status code <code>200</code> and the project on success
+and <code>304</code> if the project is not starred.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/star
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request DELETE --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects/5/star"</span>
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"disapora project"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/3/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='archive-a-project'>Archive a project <a class='anchor' href='projects.html#archive-a-project' title='Permalink'></a></h3>
+<p>Archives the project if the user is either admin or the project owner of this project. This action is
+idempotent, thus archiving an already archived project will not change the project.</p>
+
+<p>Status code 201 with the project as body is given when successful, in case the user doesn&#39;t
+have the proper access rights, code 403 is returned. Status 404 is returned if the project
+doesn&#39;t exist, or is hidden to the user.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/archive
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects/5/archive"</span>
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"disapora project"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/3/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8bc4a7a29eb76ea83cf79e4908c2b"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='unarchive-a-project'>Unarchive a project <a class='anchor' href='projects.html#unarchive-a-project' title='Permalink'></a></h3>
+<p>Unarchives the project if the user is either admin or the project owner of this project. This action is
+idempotent, thus unarchiving an non-archived project will not change the project.</p>
+
+<p>Status code 201 with the project as body is given when successful, in case the user doesn&#39;t
+have the proper access rights, code 403 is returned. Status 404 is returned if the project
+doesn&#39;t exist, or is hidden to the user.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/unarchive
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl --request POST --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects/5/unarchive"</span>
+</code></pre>
+<p>Example response:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"visibility_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ssh_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"git@example.com:diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"http_url_to_repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site.git"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"web_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"tag_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"example"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"disapora project"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora / Diaspora Project Site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path_with_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora/diaspora-project-site"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"issues_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"merge_requests_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"builds_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"wiki_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"snippets_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"container_registry_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_activity_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"creator_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diaspora"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-30T13:46:02Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"project_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"group_access"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"access_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notification_level"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/uploads/project/avatar/3/uploads/avatar.png"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_runners_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"star_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"runners_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b8bc4a7a29eb76ea83cf79e4908c2b"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"public_builds"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"shared_with_groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_build_succeeds"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"only_allow_merge_if_all_discussions_are_resolved"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"request_access_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='remove-project'>Remove project <a class='anchor' href='projects.html#remove-project' title='Permalink'></a></h3>
+<p>Removes a project including all associated resources (issues, merge requests etc.)</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<h2 id='uploads'>Uploads <a class='anchor' href='projects.html#uploads' title='Permalink'></a></h2><h3 id='upload-a-file'>Upload a file <a class='anchor' href='projects.html#upload-a-file' title='Permalink'></a></h3>
+<p>Uploads a file to the specified project to be used in an issue or merge request description, or a comment.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/uploads
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The file to be uploaded</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"alt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dk"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/uploads/66dbcd21ec5d24ed6ea225176098d52b/dk.png"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"markdown"</span><span class="p">:</span><span class="w"> </span><span class="s2">"![dk](/uploads/66dbcd21ec5d24ed6ea225176098d52b/dk.png)"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Note</strong>: The returned <code>url</code> is relative to the project path.
+In Markdown contexts, the link is automatically expanded when the format in <code>markdown</code> is used.</p>
+<h2 id='project-members'>Project members <a class='anchor' href='projects.html#project-members' title='Permalink'></a></h2>
+<p>Please consult the <a href="members.html">Project Members</a> documentation.</p>
+<h3 id='share-project-with-group'>Share project with group <a class='anchor' href='projects.html#share-project-with-group' title='Permalink'></a></h3>
+<p>Allow to share project with group.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/share
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the group to share with</td>
+</tr>
+<tr>
+<td><code>group_access</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The permissions level to grant the group</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>string</td>
+<td>no</td>
+<td>Share expiration date in ISO 8601 format: 2016-09-26</td>
+</tr>
+</tbody></table>
+<h2 id='hooks'>Hooks <a class='anchor' href='projects.html#hooks' title='Permalink'></a></h2>
+<p>Also called Project Hooks and Webhooks.
+These are different for <a href="system_hooks.html">System Hooks</a> that are system wide.</p>
+<h3 id='list-project-hooks'>List project hooks <a class='anchor' href='projects.html#list-project-hooks' title='Permalink'></a></h3>
+<p>Get a list of project hooks.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/hooks
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<h3 id='get-project-hook'>Get project hook <a class='anchor' href='projects.html#get-project-hook' title='Permalink'></a></h3>
+<p>Get a specific hook for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/hooks/:hook_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>hook_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a project hook</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com/hook"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"push_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"issues_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"merge_requests_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"tag_push_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"note_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"build_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"pipeline_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"wiki_page_events"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"enable_ssl_verification"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-12T17:04:47Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='add-project-hook'>Add project hook <a class='anchor' href='projects.html#add-project-hook' title='Permalink'></a></h3>
+<p>Adds a hook to a specified project.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/hooks
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The hook URL</td>
+</tr>
+<tr>
+<td><code>push_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on push events</td>
+</tr>
+<tr>
+<td><code>issues_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on issues events</td>
+</tr>
+<tr>
+<td><code>merge_requests_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on merge requests events</td>
+</tr>
+<tr>
+<td><code>tag_push_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on tag push events</td>
+</tr>
+<tr>
+<td><code>note_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on note events</td>
+</tr>
+<tr>
+<td><code>build_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on build events</td>
+</tr>
+<tr>
+<td><code>pipeline_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on pipeline events</td>
+</tr>
+<tr>
+<td><code>wiki_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on wiki events</td>
+</tr>
+<tr>
+<td><code>enable_ssl_verification</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Do SSL verification when triggering the hook</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>no</td>
+<td>Secret token to validate received payloads; this will not be returned in the response</td>
+</tr>
+</tbody></table>
+<h3 id='edit-project-hook'>Edit project hook <a class='anchor' href='projects.html#edit-project-hook' title='Permalink'></a></h3>
+<p>Edits a hook for a specified project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/hooks/:hook_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>hook_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project hook</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The hook URL</td>
+</tr>
+<tr>
+<td><code>push_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on push events</td>
+</tr>
+<tr>
+<td><code>issues_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on issues events</td>
+</tr>
+<tr>
+<td><code>merge_requests_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on merge requests events</td>
+</tr>
+<tr>
+<td><code>tag_push_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on tag push events</td>
+</tr>
+<tr>
+<td><code>note_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on note events</td>
+</tr>
+<tr>
+<td><code>build_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on build events</td>
+</tr>
+<tr>
+<td><code>pipeline_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on pipeline events</td>
+</tr>
+<tr>
+<td><code>wiki_events</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Trigger hook on wiki events</td>
+</tr>
+<tr>
+<td><code>enable_ssl_verification</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Do SSL verification when triggering the hook</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>string</td>
+<td>no</td>
+<td>Secret token to validate received payloads; this will not be returned in the response</td>
+</tr>
+</tbody></table>
+<h3 id='delete-project-hook'>Delete project hook <a class='anchor' href='projects.html#delete-project-hook' title='Permalink'></a></h3>
+<p>Removes a hook from a project. This is an idempotent method and can be called multiple times.
+Either the hook is available or not.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/hooks/:hook_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>hook_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project hook</td>
+</tr>
+</tbody></table>
+
+<p>Note the JSON response differs if the hook is available or not. If the project hook
+is available before it is returned in the JSON response or an empty response is returned.</p>
+<h2 id='branches'>Branches <a class='anchor' href='projects.html#branches' title='Permalink'></a></h2>
+<p>For more information please consult the <a href="branches.html">Branches</a> documentation.</p>
+<h3 id='list-branches'>List branches <a class='anchor' href='projects.html#list-branches' title='Permalink'></a></h3>
+<p>Lists all branches of a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/repository/branches
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"async"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a2b702edecdf41f07b42653eb1abe30ce98b9fca"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parent_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"3f94fc7c85061973edc9906ae170cc269b07ca55"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"give Caolan credit where it's due (up top)"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jeremy Ashkenas"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jashkenas@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"authored_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2010-12-08T21:28:50+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committer_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jeremy Ashkenas"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committer_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jashkenas@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committed_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2010-12-08T21:28:50+00:00"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"developers_can_push"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"developers_can_merge"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gh-pages"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101c10a60019fe870d21868835f65c25d64968fc"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parent_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"9c15d2e26945a665131af5d7b6d30a06ba338aaa"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Underscore.js 1.5.2"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jeremy Ashkenas"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jashkenas@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"authored_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-07T12:58:21+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committer_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jeremy Ashkenas"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committer_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jashkenas@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"committed_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-09-07T12:58:21+00:00"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"developers_can_push"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"developers_can_merge"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre><h3 id='single-branch'>Single branch <a class='anchor' href='projects.html#single-branch' title='Permalink'></a></h3>
+<p>A specific branch of a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/repository/branches/:branch
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch</td>
+</tr>
+<tr>
+<td><code>developers_can_push</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Flag if developers can push to the branch</td>
+</tr>
+<tr>
+<td><code>developers_can_merge</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Flag if developers can merge to the branch</td>
+</tr>
+</tbody></table>
+<h3 id='protect-single-branch'>Protect single branch <a class='anchor' href='projects.html#protect-single-branch' title='Permalink'></a></h3>
+<p>Protects a single branch of a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/repository/branches/:branch/protect
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch</td>
+</tr>
+</tbody></table>
+<h3 id='unprotect-single-branch'>Unprotect single branch <a class='anchor' href='projects.html#unprotect-single-branch' title='Permalink'></a></h3>
+<p>Unprotects a single branch of a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/repository/branches/:branch/unprotect
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch</td>
+</tr>
+</tbody></table>
+<h2 id='admin-fork-relation'>Admin fork relation <a class='anchor' href='projects.html#admin-fork-relation' title='Permalink'></a></h2>
+<p>Allows modification of the forked relationship between existing projects. Available only for admins.</p>
+<h3 id='create-a-forked-from-to-relation-between-existing-projects'>Create a forked from/to relation between existing projects. <a class='anchor' href='projects.html#create-a-forked-from-to-relation-between-existing-projects' title='Permalink'></a></h3><pre class="highlight plaintext"><code>POST /projects/:id/fork/:forked_from_id
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+<tr>
+<td><code>forked_from_id</code></td>
+<td>ID</td>
+<td>yes</td>
+<td>The ID of the project that was forked from</td>
+</tr>
+</tbody></table>
+<h3 id='delete-an-existing-forked-from-relationship'>Delete an existing forked from relationship <a class='anchor' href='projects.html#delete-an-existing-forked-from-relationship' title='Permalink'></a></h3><pre class="highlight plaintext"><code>DELETE /projects/:id/fork
+</code></pre>
+<p>Parameter:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer/string</td>
+<td>yes</td>
+<td>The ID of the project or NAMESPACE/PROJECT_NAME</td>
+</tr>
+</tbody></table>
+<h2 id='search-for-projects-by-name'>Search for projects by name <a class='anchor' href='projects.html#search-for-projects-by-name' title='Permalink'></a></h2>
+<p>Search for projects by name which are accessible to the authenticated user.</p>
+<pre class="highlight plaintext"><code>GET /projects/search/:query
+</code></pre>
+<p>Parameters:</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>yes</td>
+<td>A string contained in the project name</td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return requests ordered by <code>id</code>, <code>name</code>, <code>created_at</code> or <code>last_activity_at</code> fields</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return requests sorted in <code>asc</code> or <code>desc</code> order</td>
+</tr>
+</tbody></table>
+<h2 id='push-rules-ee-only'>Push Rules (EE only) <a class='anchor' href='projects.html#push-rules-ee-only' title='Permalink'></a></h2><h3 id='show-project-push-rules'>Show project push rules <a class='anchor' href='projects.html#show-project-push-rules' title='Permalink'></a></h3>
+<p>Get a project push rule.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/push_rule
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+</ul>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"commit_message_regex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fixes </span><span class="se">\d</span><span class="s2"> +</span><span class="se">\"</span><span class="s2">,
+  "</span><span class="err">deny_delete_tag</span><span class="s2">": false,
+  "</span><span class="err">created_at</span><span class="s2">": "</span><span class="mi">2012-10-12</span><span class="err">T</span><span class="mi">17</span><span class="p">:</span><span class="mi">04</span><span class="p">:</span><span class="mi">47</span><span class="err">Z</span><span class="s2">"
+}
+</span></code></pre><h3 id='add-project-push-rule'>Add project push rule <a class='anchor' href='projects.html#add-project-push-rule' title='Permalink'></a></h3>
+<p>Adds a push rule to a specified project.</p>
+<pre class="highlight plaintext"><code>POST /projects/:id/push_rule
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>deny_delete_tag</code> - Do not allow users to remove git tags with git push</li>
+<li><code>commit_message_regex</code> - Commit message regex</li>
+</ul>
+<h3 id='edit-project-push-rule'>Edit project push rule <a class='anchor' href='projects.html#edit-project-push-rule' title='Permalink'></a></h3>
+<p>Edits a push rule for a specified project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/push_rule
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+<li><code>deny_delete_tag</code> - Do not allow users to remove git tags with git push</li>
+<li><code>commit_message_regex</code> - Commit message regex</li>
+</ul>
+<h3 id='delete-project-push-rule'>Delete project push rule <a class='anchor' href='projects.html#delete-project-push-rule' title='Permalink'></a></h3>
+<p>Removes a push rule from a project. This is an idempotent method and can be called multiple times.
+Either the push rule is available or not.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/push_rule
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>id</code> (required) - The ID of a project</li>
+</ul>
+
+<p>Note the JSON response differs if the push rule is available or not. If the project push rule
+is available before it is returned in the JSON response or an empty response is returned.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/api/projects.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

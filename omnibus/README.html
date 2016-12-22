@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Omnibus GitLab documentation - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../assets/stylesheets/highlight-v4.css">
+  <script async src="../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../index.html">
+    <img src="../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+          <li class="breadcrumb">Omnibus GitLab documentation</li>
+        </ul>
+      
+      <h1 id='omnibus-gitlab-documentation'>Omnibus GitLab documentation <a class='anchor' href='README.html#omnibus-gitlab-documentation' title='Permalink'></a></h1>
+<p>Omnibus GitLab是集成了GitLab及GitLab所需的服务、依赖的一键安装包，开发者可以不用费劲的折腾各种环境、依赖、配置等，轻松的安装GitLab到流行的linux发行版系统上。</p>
+<h2 id='installation'>Installation 安装说明 <a class='anchor' href='README.html#installation' title='Permalink'></a></h2>
+<ul>
+<li><a href="http://www.gitlab.cc/downloads/">安装包下载页面</a> 下载页面已经针对国内网络环境进行优化，镜像源由<a href="https://mirrors.tuna.tsinghua.edu.cn/help/gitlab-ce/">TUNA</a>提供。</li>
+<li><a href="../ce/install/requirements.html">安装需求</a></li>
+<li><a href="gitlab-ci/README.html">GitLab CI</a> 设置Omnibus GitLab 包里面自带的GitLab CI。</li>
+<li><a href="gitlab-mattermost/README.html">GitLab Mattermost</a> 设置Omnibus GitLab 包里面自带的Mattermost（Slack的代替品，团队即时通信服务，即IM）应用。</li>
+<li><a href="docker/README.html">Docker</a> 在Docker容器上运行GitLab.</li>
+</ul>
+<h2 id='maintenance'>Maintenance 日常维护 <a class='anchor' href='README.html#maintenance' title='Permalink'></a></h2>
+<ul>
+<li><a href="maintenance/README.html#get-service-status">查看服务状态</a></li>
+<li><a href="maintenance/README.html#starting-and-stopping">启动、停止服务</a></li>
+<li><a href="maintenance/README.html#invoking-rake-tasks">调用Rake任务</a></li>
+<li><a href="maintenance/README.html#starting-a-rails-console-session">启动Rails控制台会话</a></li>
+</ul>
+<h2 id='configuring'>Configuring 参数配置 <a class='anchor' href='README.html#configuring' title='Permalink'></a></h2>
+<ul>
+<li><a href="settings/configuration.html#configuring-the-external-url-for-gitlab">配置external url</a> 配置GitLab显示的远程仓库的<a href="mailto:git@">git@</a>...和http(s)//...中的域名。</li>
+<li><a href="settings/configuration.html#configuring-a-relative-url-for-gitlab">设置GitLab使用子路径访问 (实验性)</a> 如实现使用&#39;http://.../gitlab&#39;这样的路径访问GitLab。</li>
+<li><a href="settings/configuration.html#storing-git-data-in-an-alternative-directory">设置存储git仓库数据的备用目录</a></li>
+<li><a href="settings/configuration.html#changing-the-name-of-the-git-user-group">修改默认的git用户组和用户名</a></li>
+<li><a href="settings/configuration.html#specify-numeric-user-and-group-identifiers">指定用户和组的UID,GID</a></li>
+<li><a href="settings/configuration.html#only-start-omnibus-gitlab-services-after-a-given-filesystem-is-mounted">设置GitLab延迟启动</a></li>
+<li><a href="settings/configuration.html#disable-user-and-group-account-management">禁用管理用户和组账户的功能</a></li>
+<li><a href="settings/configuration.html#disable-storage-directories-management">禁用管理存储目录的功能</a></li>
+<li><a href="https://doc.gitlab.cc/omnibus/doc/settings/configuration.html#configuring-rake-attack">配置GitLab基础防护</a></li>
+<li><a href="settings/smtp.html">SMTP 邮箱配置</a></li>
+<li><a href="settings/nginx.html">NGINX 配置</a></li>
+<li><a href="settings/ldap.html">LDAP 配置</a></li>
+<li><a href="settings/unicorn.html">Unicorn 配置</a></li>
+<li><a href="settings/redis.html">Redis 配置</a></li>
+<li><a href="settings/logs.html">Logs 日志相关</a></li>
+<li><a href="settings/database.html">Database 数据库配置</a></li>
+<li><a href="../ce/incoming_email/README.html">Reply by email(允许用户通过回复预设的邮件来评论issue和合并请求)</a></li>
+<li><a href="settings/environment-variables.html">环境变量</a></li>
+<li><a href="settings/gitlab.yml.html">gitlab.yml</a></li>
+<li><a href="settings/backups.html">Backups 备份还原</a></li>
+<li><a href="../ee/pages/administration.html">Pages (仅适用于EE企业版)</a></li>
+</ul>
+<h2 id='updating'>Updating 版本升级 <a class='anchor' href='README.html#updating' title='Permalink'></a></h2>
+<ul>
+<li><a href="update/README.html#from-community-edition-to-enterprise-edition">CE社区版升级到EE企业版</a></li>
+<li><a href="update/README.html#updating-from-gitlab-66-and-higher-to-710-or-newer">从GitLab 6.6及更高版本升级到7.10或最新版本的注意事项</a></li>
+<li><a href="update/README.html#updating-from-gitlab-66-and-higher-to-the-latest-version">升级GitLab到最新版本</a></li>
+<li><a href="update/README.html#updating-from-gitlab-660pre1-to-664">从GitLab 6.6.0.pre1升级到6.6.4</a></li>
+<li><a href="update/README.html#reverting-to-gitlab-66x-or-later">GitLab如何降级</a></li>
+<li><a href="update/README.html#upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-in-place">使用备份把非Omnibus版本(如源码安装的GitLab)升级为Omnibus版</a></li>
+<li><a href="update/README.html#upgrading-from-non-omnibus-postgresql-to-an-omnibus-installation-in-place">Omnibus使用外部的PostgreSQL</a></li>
+<li><a href="update/README.html#upgrading-from-non-omnibus-mysql-to-an-omnibus-installation-version-68">Omnibus使用外部的Mysql (6.8+以上的版本)</a></li>
+<li><a href="update/README.html#rpm-package-is-already-installed-error">RPM 报错: &#39;package is already installed&#39; </a></li>
+<li><a href="update/README.html#updating-from-gitlab-ci-version-prior-to-540-to-the-latest-version">从GitLab CI 5.4.0之前的版本升级到最新版</a></li>
+</ul>
+<h2 id='package-information'>Package information 封装信息 <a class='anchor' href='README.html#package-information' title='Permalink'></a></h2>
+<ul>
+<li><a href="package-information/index.html#README.html#checking-the-versions-of-bundled-software">查看内置软件的版本</a></li>
+</ul>
+<h2 id='troubleshooting'>Troubleshooting 故障排查 <a class='anchor' href='README.html#troubleshooting' title='Permalink'></a></h2>
+<ul>
+<li><a href="common_installation_problems/README.html#hash-sum-mismatch-when-installing-packages">下载包的时候提示&quot;Hash Sum mismatch&quot;</a></li>
+<li><a href="common_installation_problems/README.html#apt-error-the-requested-url-returned-error-403">Apt报错: &#39;The requested URL returned error: 403&#39;</a>.</li>
+<li><a href="common_installation_problems/README.html#gitlab-is-unreachable-in-my-browser">使用浏览器无法访问GitLab页面</a>.</li>
+<li><a href="common_installation_problems/README.html#gitlab-ci-shows-gitlab-login-page">GitLab CI显示的是GitLab登录页面(不适用于8.x及之后版本)</a>.</li>
+<li><a href="common_installation_problems/README.html#emails-are-not-being-delivered">邮件无法发送</a>.</li>
+<li><a href="common_installation_problems/README.html#reconfigure-freezes-at-ruby_blocksupervise_redis_sleep-action-run">Reconfigure的时候在ruby_block[supervise_redis_sleep] action run停止运行</a>.</li>
+<li><a href="common_installation_problems/README.html#tcp-ports-for-gitlab-services-are-already-taken">GitLab TCP端口被占用</a>.</li>
+<li><a href="common_installation_problems/README.html#git-ssh-access-stops-working-on-selinux-enabled-systems">在启用了SELinux的系统上无法使用Git SSH访问GitLab</a>.</li>
+<li><a href="common_installation_problems/README.html#postgres-error-fatal-could-not-create-shared-memory-segment-cannot-allocate-memory">Postgres报错 &#39;FATAL:  could not create shared memory segment: Cannot allocate memory&#39;</a>.</li>
+<li><a href="common_installation_problems/README.html#reconfigure-complains-about-the-glibc-version">Reconfigure的时候关于GLIBC版本的报错</a>.</li>
+<li><a href="common_installation_problems/README.html#reconfigure-fails-to-create-the-git-user">Reconfigure报错&quot;fails to create the git user&quot;</a>.</li>
+<li><a href="common_installation_problems/README.html#failed-to-modify-kernel-parameters-with-sysctl">使用sysctl修改内核参数失败 </a>.</li>
+<li><a href="common_installation_problems/README.html#i-am-unable-to-install-omnibus-gitlab-without-root-access">无法使用非root用户安装Omnibus GitLab</a>.</li>
+<li><a href="common_installation_problems/README.html#gitlab-rake-assetsprecompile-fails-with-permission-denied">gitlab-rake assets:precompile 报错提示 &#39;Permission denied&#39;</a>.</li>
+<li><a href="common_installation_problems/README.html#short-read-or-oom-loading-db-error">&#39;Short read or OOM loading DB&#39; 报错</a>.</li>
+<li><a href="settings/database.html#using-a-non-packaged-postgresql-database-management-server">&#39;pg_dump: aborting because of server version mismatch&#39;报错</a></li>
+<li><a href="common_installation_problems/README.html#errnoenomem-cannot-allocate-memory-during-backup-or-upgrade">&#39;Errno::ENOMEM: Cannot allocate memory&#39; during backup or upgrade</a></li>
+<li><a href="common_installation_problems/README.html#nginx-error-could-not-build-server_names_hash-you-should-increase-server_names_hash_bucket_size">NGINX error: &#39;could not build server_names_hash&#39;</a></li>
+<li><a href="common_installation_problems/README.html#reconfigure-fails-due-to-root-cannot-chown-with-nfs-root_squash">Reconfigure fails due to &quot;&#39;root&#39; cannot chown&quot; with NFS root_squash</a></li>
+</ul>
+<h2 id='omnibus-gitlab-developer-documentation'>Omnibus GitLab developer documentation 开发文档 <a class='anchor' href='README.html#omnibus-gitlab-developer-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="development/README.html">搭建开发环境</a></li>
+<li><a href="development/README.html">Development Setup</a></li>
+<li><a href="development/creating-patches.html">Creating patches</a></li>
+<li><a href="release/README.html">发布流程</a></li>
+<li><a href="build/README.html">构建自己的安装包</a></li>
+<li><a href="build/README.html#building-a-package-from-a-custom-branch">从一个自定义的分支构建安装包</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

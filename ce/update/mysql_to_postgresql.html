@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Migrating GitLab from MySQL to Postgres - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Updating GitLab</a></li>
+            
+          
+          <li class="breadcrumb">Migrating GitLab from MySQL to Postgres</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="mysql_to_postgresql.html#migrating-gitlab-from-mysql-to-postgres">Migrating GitLab from MySQL to Postgres</a>
+<ul>
+<li>
+<a href="mysql_to_postgresql.html#export-from-mysql-and-import-into-postgres">Export from MySQL and import into Postgres</a>
+</li>
+<li>
+<a href="mysql_to_postgresql.html#converting-a-gitlab-backup-file-from-mysql-to-postgres">Converting a GitLab backup file from MySQL to Postgres</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='migrating-gitlab-from-mysql-to-postgres'>Migrating GitLab from MySQL to Postgres <a class='anchor' href='mysql_to_postgresql.html#migrating-gitlab-from-mysql-to-postgres' title='Permalink'></a></h1>
+<p><em>Make sure you view this <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/update/mysql_to_postgresql.md#migrating-gitlab-from-mysql-to-postgres">guide from the <code>master</code> branch</a> for the most up to date instructions.</em></p>
+
+<p>If you are replacing MySQL with Postgres while keeping GitLab on the same server all you need to do is to export from MySQL, convert the resulting SQL file, and import it into Postgres. If you are also moving GitLab to another server, or if you are switching to omnibus-gitlab, you may want to use a GitLab backup file. The second part of this documents explains the procedure to do this.</p>
+<h2 id='export-from-mysql-and-import-into-postgres'>Export from MySQL and import into Postgres <a class='anchor' href='mysql_to_postgresql.html#export-from-mysql-and-import-into-postgres' title='Permalink'></a></h2>
+<p>Use this if you are keeping GitLab on the same server.</p>
+<pre class="highlight plaintext"><code>sudo service gitlab stop
+
+# Update /home/git/gitlab/config/database.yml
+
+git clone https://github.com/gitlabhq/mysql-postgresql-converter.git -b gitlab
+cd mysql-postgresql-converter
+mysqldump --compatible=postgresql --default-character-set=utf8 -r gitlabhq_production.mysql -u root gitlabhq_production -p
+python db_converter.py gitlabhq_production.mysql gitlabhq_production.psql
+ed -s gitlabhq_production.psql &lt; move_drop_indexes.ed
+
+# Import the database dump as the application database user
+sudo -u git psql -f gitlabhq_production.psql -d gitlabhq_production
+
+# Install gems for PostgreSQL (note: the line below states '--without ... mysql')
+sudo -u git -H bundle install --without development test mysql --deployment
+
+sudo service gitlab start
+</code></pre><h2 id='converting-a-gitlab-backup-file-from-mysql-to-postgres'>Converting a GitLab backup file from MySQL to Postgres <a class='anchor' href='mysql_to_postgresql.html#converting-a-gitlab-backup-file-from-mysql-to-postgres' title='Permalink'></a></h2>
+<p><strong>Note:</strong> Please make sure to have Python 2.7.x (or higher) installed.</p>
+
+<p>GitLab backup files (<code>&lt;timestamp&gt;_gitlab_backup.tar</code>) contain a SQL dump. Using the lanyrd database converter we can replace a MySQL database dump inside the tar file with a Postgres database dump. This can be useful if you are moving to another server.</p>
+<pre class="highlight plaintext"><code># Stop GitLab
+sudo service gitlab stop
+
+# Create the backup
+cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:backup:create RAILS_ENV=production
+
+# Note the filename of the backup that was created. We will call it
+# TIMESTAMP_gitlab_backup.tar below.
+
+# Move the backup file we will convert to its own directory
+sudo -u git -H mkdir -p tmp/backups/postgresql
+sudo -u git -H mv tmp/backups/TIMESTAMP_gitlab_backup.tar tmp/backups/postgresql/
+
+# Create a separate database dump with PostgreSQL compatibility
+cd tmp/backups/postgresql
+sudo -u git -H mysqldump --compatible=postgresql --default-character-set=utf8 -r gitlabhq_production.mysql -u root gitlabhq_production -p
+
+# Clone the database converter
+sudo -u git -H git clone https://github.com/gitlabhq/mysql-postgresql-converter.git -b gitlab
+
+# Convert gitlabhq_production.mysql
+sudo -u git -H mkdir db
+sudo -u git -H python mysql-postgresql-converter/db_converter.py gitlabhq_production.mysql db/database.sql
+sudo -u git -H ed -s db/database.sql &lt; mysql-postgresql-converter/move_drop_indexes.ed
+
+# Compress database backup
+# Warning: If you have Gitlab 7.12.0 or older skip this step and import the database.sql directly into the backup with:
+# sudo -u git -H tar rf TIMESTAMP_gitlab_backup.tar db/database.sql
+# The compressed databasedump is not supported at 7.12.0 and older.
+sudo -u git -H gzip db/database.sql
+
+# Replace the MySQL dump in TIMESTAMP_gitlab_backup.tar.
+
+# Warning: if you forget to replace TIMESTAMP below, tar will create a new file
+# 'TIMESTAMP_gitlab_backup.tar' without giving an error.
+
+sudo -u git -H tar rf TIMESTAMP_gitlab_backup.tar db/database.sql.gz
+
+# Done! TIMESTAMP_gitlab_backup.tar can now be restored into a Postgres GitLab
+# installation.
+# See https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md for more information about backups.
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/update/mysql_to_postgresql.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

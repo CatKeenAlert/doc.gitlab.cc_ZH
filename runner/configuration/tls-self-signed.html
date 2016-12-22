@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>The self-signed certificates or custom Certification Authorities - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Configuring GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">The self-signed certificates or custom Certification Authorities</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="tls-self-signed.html#the-self-signed-certificates-or-custom-certification-authorities">The self-signed certificates or custom Certification Authorities</a>
+<ul>
+<li>
+<a href="tls-self-signed.html#supported-options-for-self-signed-certificates">Supported options for self-signed certificates</a>
+</li>
+<li>
+<a href="tls-self-signed.html#git-cloning">Git cloning</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='the-self-signed-certificates-or-custom-certification-authorities'>The self-signed certificates or custom Certification Authorities <a class='anchor' href='tls-self-signed.html#the-self-signed-certificates-or-custom-certification-authorities' title='Permalink'></a></h1>
+<p>Since version 0.7.0 the GitLab Runner allows you to configure certificates that
+are used to verify TLS peer when connecting to the GitLab server.</p>
+
+<p><strong>This allows to solve the <code>x509: certificate signed by unknown authority</code> problem when registering runner.</strong></p>
+<h2 id='supported-options-for-self-signed-certificates'>Supported options for self-signed certificates <a class='anchor' href='tls-self-signed.html#supported-options-for-self-signed-certificates' title='Permalink'></a></h2>
+<p>GitLab Runner provides these options:</p>
+
+<ol>
+<li><p><strong>Default</strong>: GitLab Runner reads system certificate store and verifies the GitLab server against the CA&#39;s stored in system.</p></li>
+<li><p>GitLab Runner reads the PEM (<strong>DER format is not supported</strong>) certificate from predefined file:</p>
+<pre class="highlight plaintext"><code>- `/etc/gitlab-runner/certs/hostname.crt` on *nix systems when gitlab-runner is executed as root.
+- `~/.gitlab-runner/certs/hostname.crt` on *nix systems when gitlab-runner is executed as non-root,
+- `./certs/hostname.crt` on other systems.
+
+If the address of your server is: `https://my.gitlab.server.com:8443/`.
+Create the certificate file at: `/etc/gitlab-runner/certs/my.gitlab.server.com.crt`.
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> You may need to concatenate the intermediate and server certificate
+  for the chain to be properly identified.</p>
+</blockquote></li>
+<li><p>GitLab Runner exposes <code>tls-ca-file</code> option during registration and in <a href="advanced-configuration.html"><code>config.toml</code></a>
+which allows you to specify custom file with certificates. This file will be read every time when runner tries to
+access the GitLab server.</p></li>
+</ol>
+<h2 id='git-cloning'>Git cloning <a class='anchor' href='tls-self-signed.html#git-cloning' title='Permalink'></a></h2>
+<p>The runner injects missing certificates to build CA chain to build containers.
+This allows the <code>git clone</code> and <code>artifacts</code> to work with servers that do not use publicly trusted certificates.</p>
+
+<p>This approach is secure, but makes the runner a single point of trust.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/configuration/tls-self-signed.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Repository checks - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Repository checks</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="repository_checks.html#repository-checks">Repository checks</a>
+<ul>
+<li>
+<a href="repository_checks.html#periodic-checks">Periodic checks</a>
+</li>
+<li>
+<a href="repository_checks.html#disabling-periodic-checks">Disabling periodic checks</a>
+</li>
+<li>
+<a href="repository_checks.html#what-to-do-if-a-check-failed">What to do if a check failed</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='repository-checks'>Repository checks <a class='anchor' href='repository_checks.html#repository-checks' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/3232" title="Auto git fsck">Introduced</a> in GitLab 8.7. It is OFF by default because it still
+causes too many false alarms.</p>
+</blockquote>
+
+<p>Git has a built-in mechanism, <a href="https://www.kernel.org/pub/software/scm/git/docs/git-fsck.html" title="git fsck documentation">git fsck</a>, to verify the
+integrity of all data committed to a repository. GitLab administrators
+can trigger such a check for a project via the project page under the
+admin panel. The checks run asynchronously so it may take a few minutes
+before the check result is visible on the project admin page. If the
+checks failed you can see their output on the admin log page under
+&#39;repocheck.log&#39;.</p>
+<h2 id='periodic-checks'>Periodic checks <a class='anchor' href='repository_checks.html#periodic-checks' title='Permalink'></a></h2>
+<p>GitLab periodically runs a repository check on all project repositories and
+wiki repositories in order to detect data corruption problems. A
+project will be checked no more than once per week. If any projects
+fail their repository checks all GitLab administrators will receive an email
+notification of the situation. This notification is sent out no more
+than once a day.</p>
+<h2 id='disabling-periodic-checks'>Disabling periodic checks <a class='anchor' href='repository_checks.html#disabling-periodic-checks' title='Permalink'></a></h2>
+<p>You can disable the periodic checks on the &#39;Settings&#39; page of the admin
+panel.</p>
+<h2 id='what-to-do-if-a-check-failed'>What to do if a check failed <a class='anchor' href='repository_checks.html#what-to-do-if-a-check-failed' title='Permalink'></a></h2>
+<p>If the repository check fails for some repository you should look up the error
+in repocheck.log (in the admin panel or on disk; see
+<code>/var/log/gitlab/gitlab-rails</code> for Omnibus installations or
+<code>/home/git/gitlab/log</code> for installations from source). Once you have
+resolved the issue use the admin panel to trigger a new repository check on
+the project. This will clear the &#39;check failed&#39; state.</p>
+
+<p>If for some reason the periodic repository check caused a lot of false
+alarms you can choose to clear ALL repository check states from the
+&#39;Settings&#39; page of the admin panel.</p>
+
+<hr>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/repository_checks.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

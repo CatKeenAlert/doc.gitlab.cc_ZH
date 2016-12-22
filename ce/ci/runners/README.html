@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Runners - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI 中文文档</a></li>
+            
+          
+          <li class="breadcrumb">Runners</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#runners">Runners</a>
+<ul>
+<li>
+<a href="README.html#shared-vs-specific-runners">Shared vs. Specific Runners</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#creating-and-registering-a-runner">Creating and Registering a Runner</a>
+<ul>
+<li>
+<a href="README.html#registering-a-shared-runner">Registering a Shared Runner</a>
+</li>
+<li>
+<a href="README.html#registering-a-specific-runner">Registering a Specific Runner</a>
+<ul>
+<li>
+<a href="README.html#registering-a-specific-runner-with-a-project-registration-token">Registering a Specific Runner with a Project Registration token</a>
+</li>
+<li>
+<a href="README.html#lock-a-specific-runner-from-being-enabled-for-other-projects">Lock a specific runner from being enabled for other projects</a>
+</li>
+<li>
+<a href="README.html#making-an-existing-shared-runner-specific">Making an existing Shared Runner Specific</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#using-shared-runners-effectively">Using Shared Runners Effectively</a>
+<ul>
+<li>
+<a href="README.html#use-tags">Use Tags</a>
+</li>
+<li>
+<a href="README.html#prevent-runner-with-tags-from-picking-jobs-without-tags">Prevent runner with tags from picking jobs without tags</a>
+</li>
+<li>
+<a href="README.html#be-careful-with-sensitive-information">Be careful with sensitive information</a>
+</li>
+<li>
+<a href="README.html#forks">Forks</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#attack-vectors-in-runners">Attack vectors in Runners</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='runners'>Runners <a class='anchor' href='README.html#runners' title='Permalink'></a></h1>
+<p>In GitLab CI, Runners run your <a href="../yaml/README.html">yaml</a>.
+A runner is an isolated (virtual) machine that picks up builds
+through the coordinator API of GitLab CI.</p>
+
+<p>A runner can be specific to a certain project or serve any project
+in GitLab CI. A runner that serves all projects is called a shared runner.</p>
+
+<p>Ideally, GitLab Runner should not be installed on the same machine as GitLab.
+Read the <a href="../../install/requirements.html#gitlab-runner">requirements documentation</a>
+for more information.</p>
+<h2 id='shared-vs-specific-runners'>Shared vs. Specific Runners <a class='anchor' href='README.html#shared-vs-specific-runners' title='Permalink'></a></h2>
+<p>A runner that is specific only runs for the specified project. A shared runner
+can run jobs for every project that has enabled the option
+<code>Allow shared runners</code>.</p>
+
+<p><strong>Shared runners</strong> are useful for jobs that have similar requirements,
+between multiple projects. Rather than having multiple runners idling for
+many projects, you can have a single or a small number of runners that handle
+multiple projects. This makes it easier to maintain and update runners.</p>
+
+<p><strong>Specific runners</strong> are useful for jobs that have special requirements or for
+projects with a specific demand. If a job has certain requirements, you can set
+up the specific runner with this in mind, while not having to do this for all
+runners. For example, if you want to deploy a certain project, you can setup
+a specific runner to have the right credentials for this.</p>
+
+<p>Projects with high demand of CI activity can also benefit from using specific runners.
+By having dedicated runners you are guaranteed that the runner is not being held
+up by another project&#39;s jobs.</p>
+
+<p>You can set up a specific runner to be used by multiple projects. The difference
+with a shared runner is that you have to enable each project explicitly for
+the runner to be able to run its jobs.</p>
+
+<p>Specific runners do not get shared with forked projects automatically.
+A fork does copy the CI settings (jobs, allow shared, etc) of the cloned repository.</p>
+<h1 id='creating-and-registering-a-runner'>Creating and Registering a Runner <a class='anchor' href='README.html#creating-and-registering-a-runner' title='Permalink'></a></h1>
+<p>There are several ways to create a runner. Only after creation, upon
+registration its status as Shared or Specific is determined.</p>
+
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/#installation">See the documentation for</a>
+the different methods of installing a Runner instance.</p>
+
+<p>After installing the runner, you can either register it as <code>Shared</code> or as <code>Specific</code>.
+You can only register a Shared Runner if you have admin access to the GitLab instance.</p>
+<h2 id='registering-a-shared-runner'>Registering a Shared Runner <a class='anchor' href='README.html#registering-a-shared-runner' title='Permalink'></a></h2>
+<p>You can only register a shared runner if you are an admin on the linked
+GitLab instance.</p>
+
+<p>Grab the shared-runner token on the <code>admin/runners</code> page of your GitLab CI
+instance.</p>
+
+<p><a target="_blank" href="shared_runner.png"><img src="shared_runner.png" title="" alt="shared token"/></a></p>
+
+<p>Now simply register the runner as any runner:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ci-multi-runner register
+</code></pre>
+<p>Shared runners are enabled by default as of GitLab 8.2, but can be disabled with the
+<code>DISABLE SHARED RUNNERS</code> button. Previous versions of GitLab defaulted shared runners to
+disabled.</p>
+<h2 id='registering-a-specific-runner'>Registering a Specific Runner <a class='anchor' href='README.html#registering-a-specific-runner' title='Permalink'></a></h2>
+<p>Registering a specific can be done in two ways:</p>
+
+<ol>
+<li>Creating a runner with the project registration token</li>
+<li>Converting a shared runner into a specific runner (one-way, admin only)</li>
+</ol>
+
+<p>There are several ways to create a runner instance. The steps below only
+concern registering the runner on GitLab CI.</p>
+<h3 id='registering-a-specific-runner-with-a-project-registration-token'>Registering a Specific Runner with a Project Registration token <a class='anchor' href='README.html#registering-a-specific-runner-with-a-project-registration-token' title='Permalink'></a></h3>
+<p>To create a specific runner without having admin rights to the GitLab instance,
+visit the project you want to make the runner work for in GitLab CI.</p>
+
+<p>Click on the runner tab and use the registration token you find there to
+setup a specific runner for this project.</p>
+
+<p><a target="_blank" href="project_specific.png"><img src="project_specific.png" title="" alt="project runners in GitLab CI"/></a></p>
+
+<p>To register the runner, run the command below and follow instructions:</p>
+<pre class="highlight plaintext"><code>sudo gitlab-ci-multi-runner register
+</code></pre><h3 id='lock-a-specific-runner-from-being-enabled-for-other-projects'>Lock a specific runner from being enabled for other projects <a class='anchor' href='README.html#lock-a-specific-runner-from-being-enabled-for-other-projects' title='Permalink'></a></h3>
+<p>You can configure a runner to assign it exclusively to a project. When a
+runner is locked this way, it can no longer be enabled for other projects.
+This setting is available on each runner in <em>Project Settings</em> &gt; <em>Runners</em>.</p>
+<h3 id='making-an-existing-shared-runner-specific'>Making an existing Shared Runner Specific <a class='anchor' href='README.html#making-an-existing-shared-runner-specific' title='Permalink'></a></h3>
+<p>If you are an admin on your GitLab instance,
+you can make any shared runner a specific runner, <em>but you can not
+make a specific runner a shared runner</em>.</p>
+
+<p>To make a shared runner specific, go to the runner page (<code>/admin/runners</code>)
+and find your runner. Add any projects on the left to make this runner
+run exclusively for these projects, therefore making it a specific runner.</p>
+
+<p><a target="_blank" href="shared_to_specific_admin.png"><img src="shared_to_specific_admin.png" title="" alt="making a shared runner specific"/></a></p>
+<h2 id='using-shared-runners-effectively'>Using Shared Runners Effectively <a class='anchor' href='README.html#using-shared-runners-effectively' title='Permalink'></a></h2>
+<p>If you are planning to use shared runners, there are several things you
+should keep in mind.</p>
+<h3 id='use-tags'>Use Tags <a class='anchor' href='README.html#use-tags' title='Permalink'></a></h3>
+<p>You must setup a runner to be able to run all the different types of jobs
+that it may encounter on the projects it&#39;s shared over. This would be
+problematic for large amounts of projects, if it wasn&#39;t for tags.</p>
+
+<p>By tagging a Runner for the types of jobs it can handle, you can make sure
+shared runners will only run the jobs they are equipped to run.</p>
+
+<p>For instance, at GitLab we have runners tagged with &quot;rails&quot; if they contain
+the appropriate dependencies to run Rails test suites.</p>
+<h3 id='prevent-runner-with-tags-from-picking-jobs-without-tags'>Prevent runner with tags from picking jobs without tags <a class='anchor' href='README.html#prevent-runner-with-tags-from-picking-jobs-without-tags' title='Permalink'></a></h3>
+<p>You can configure a runner to prevent it from picking jobs with tags when
+the runner does not have tags assigned. This setting is available on each
+runner in <em>Project Settings</em> &gt; <em>Runners</em>.</p>
+<h3 id='be-careful-with-sensitive-information'>Be careful with sensitive information <a class='anchor' href='README.html#be-careful-with-sensitive-information' title='Permalink'></a></h3>
+<p>If you can run a build on a runner, you can get access to any code it runs
+and get the token of the runner. With shared runners, this means that anyone
+that runs jobs on the runner, can access anyone else&#39;s code that runs on the runner.</p>
+
+<p>In addition, because you can get access to the runner token, it is possible
+to create a clone of a runner and submit false builds, for example.</p>
+
+<p>The above is easily avoided by restricting the usage of shared runners
+on large public GitLab instances and controlling access to your GitLab instance.</p>
+<h3 id='forks'>Forks <a class='anchor' href='README.html#forks' title='Permalink'></a></h3>
+<p>Whenever a project is forked, it copies the settings of the jobs that relate
+to it. This means that if you have shared runners setup for a project and
+someone forks that project, the shared runners will also serve jobs of this
+project.</p>
+<h2 id='attack-vectors-in-runners'>Attack vectors in Runners <a class='anchor' href='README.html#attack-vectors-in-runners' title='Permalink'></a></h2>
+<p>Mentioned briefly earlier, but the following things of runners can be exploited.
+We&#39;re always looking for contributions that can mitigate these <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/security/index.md">Security Considerations</a>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/ci/runners/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Container Registry administration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Container Registry administration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="container_registry.html#gitlab-container-registry-administration">GitLab Container Registry administration</a>
+<ul>
+<li>
+<a href="container_registry.html#enable-the-container-registry">Enable the Container Registry</a>
+</li>
+<li>
+<a href="container_registry.html#container-registry-domain-configuration">Container Registry domain configuration</a>
+<ul>
+<li>
+<a href="container_registry.html#configure-container-registry-under-an-existing-gitlab-domain">Configure Container Registry under an existing GitLab domain</a>
+</li>
+<li>
+<a href="container_registry.html#configure-container-registry-under-its-own-domain">Configure Container Registry under its own domain</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="container_registry.html#disable-container-registry-site-wide">Disable Container Registry site-wide</a>
+</li>
+<li>
+<a href="container_registry.html#disable-container-registry-for-new-projects-site-wide">Disable Container Registry for new projects site-wide</a>
+</li>
+<li>
+<a href="container_registry.html#container-registry-storage-path">Container Registry storage path</a>
+</li>
+<li>
+<a href="container_registry.html#container-registry-storage-driver">Container Registry storage driver</a>
+</li>
+<li>
+<a href="container_registry.html#change-the-registry-s-internal-port">Change the registry's internal port</a>
+</li>
+<li>
+<a href="container_registry.html#disable-container-registry-per-project">Disable Container Registry per project</a>
+</li>
+<li>
+<a href="container_registry.html#storage-limitations">Storage limitations</a>
+</li>
+<li>
+<a href="container_registry.html#changelog">Changelog</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-container-registry-administration'>GitLab Container Registry administration <a class='anchor' href='container_registry.html#gitlab-container-registry-administration' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/4040">Introduced</a> in GitLab 8.8.</p>
+</blockquote>
+
+<hr>
+
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Container Registry manifest <code>v1</code> support was added in GitLab 8.9 to support
+Docker versions earlier than 1.10.</li>
+<li>This document is about the admin guide. To learn how to use GitLab Container
+Registry <a href="../user/project/container_registry.html">user documentation</a>.</li>
+</ul>
+</blockquote>
+
+<p>With the Container Registry integrated into GitLab, every project can have its
+own space to store its Docker images.</p>
+
+<p>You can read more about the Container Registry at
+<a href="https://docs.docker.com/registry/introduction/">https://docs.docker.com/registry/introduction/</a>.</p>
+<h2 id='enable-the-container-registry'>Enable the Container Registry <a class='anchor' href='container_registry.html#enable-the-container-registry' title='Permalink'></a></h2>
+<p><strong>Omnibus GitLab installations</strong></p>
+
+<p>All you have to do is configure the domain name under which the Container
+Registry will listen to. Read
+<a href="container_registry.html#container-registry-domain-configuration">#container-registry-domain-configuration</a>
+and pick one of the two options that fits your case.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+The container registry works under HTTPS by default. Using HTTP is possible
+but not recommended and out of the scope of this document.
+Read the <a href="https://docs.docker.com/registry/insecure/">insecure Registry documentation</a> if you want to
+implement this.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<p>If you have installed GitLab from source:</p>
+
+<ol>
+<li>You will have to <a href="https://docs.docker.com/registry/deploying/">install Registry</a> by yourself.</li>
+<li>After the installation is complete, you will have to configure the Registry&#39;s
+settings in <code>gitlab.yml</code> in order to enable it.</li>
+<li>Use the sample NGINX configuration file that is found under
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/support/nginx/registry-ssl"><code>lib/support/nginx/registry-ssl</code></a> and edit it to match the
+<code>host</code>, <code>port</code> and TLS certs paths.</li>
+</ol>
+
+<p>The contents of <code>gitlab.yml</code> are:</p>
+<pre class="highlight plaintext"><code>registry:
+  enabled: true
+  host: registry.gitlab.example.com
+  port: 5005
+  api_url: http://localhost:5000/
+  key: config/registry.key
+  path: shared/registry
+  issuer: gitlab-issuer
+</code></pre>
+<p>where:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>true</code> or <code>false</code>. Enables the Registry in GitLab. By default this is <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>host</code></td>
+<td>The host URL under which the Registry will run and the users will be able to use.</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>The port under which the external Registry domain will listen on.</td>
+</tr>
+<tr>
+<td><code>api_url</code></td>
+<td>The internal API URL under which the Registry is exposed to. It defaults to <code>http://localhost:5000</code>.</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td>The private key location that is a pair of Registry&#39;s <code>rootcertbundle</code>. Read the <a href="https://docs.docker.com/registry/configuration/#token">token auth configuration documentation</a>.</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>This should be the same directory like specified in Registry&#39;s <code>rootdirectory</code>. Read the <a href="https://docs.docker.com/registry/configuration/#storage">storage configuration documentation</a>. This path needs to be readable by the GitLab user, the web-server user and the Registry user. Read more in <a href="container_registry.html#container-registry-storage-path">#container-registry-storage-path</a>.</td>
+</tr>
+<tr>
+<td><code>issuer</code></td>
+<td>This should be the same value as configured in Registry&#39;s <code>issuer</code>. Read the <a href="https://docs.docker.com/registry/configuration/#token">token auth configuration documentation</a>.</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p><strong>Note:</strong>
+A Registry init file is not shipped with GitLab if you install it from source.
+Hence, <a href="restart_gitlab.html#installations-from-source">restarting GitLab</a> will not restart the Registry should
+you modify its settings. Read the upstream documentation on how to achieve that.</p>
+</blockquote>
+
+<p>At the absolute minimum, make sure your <a href="https://docs.docker.com/registry/configuration/#auth">Registry configuration</a>
+has <code>container_registry</code> as the service and <code>https://gitlab.example.com/jwt/auth</code>
+as the realm:</p>
+<pre class="highlight plaintext"><code>auth:
+  token:
+    realm: https://gitlab.example.com/jwt/auth
+    service: container_registry
+    issuer: gitlab-issuer
+    rootcertbundle: /root/certs/certbundle
+</code></pre><h2 id='container-registry-domain-configuration'>Container Registry domain configuration <a class='anchor' href='container_registry.html#container-registry-domain-configuration' title='Permalink'></a></h2>
+<p>There are two ways you can configure the Registry&#39;s external domain.</p>
+
+<ul>
+<li>Either <a href="container_registry.html#configure-container-registry-under-an-existing-gitlab-domain">use the existing GitLab domain</a> where in that case
+the Registry will have to listen on a port and reuse GitLab&#39;s TLS certificate,</li>
+<li>or <a href="container_registry.html#configure-container-registry-under-its-own-domain">use a completely separate domain</a> with a new TLS certificate
+for that domain.</li>
+</ul>
+
+<p>Since the container Registry requires a TLS certificate, in the end it all boils
+down to how easy or pricey is to get a new one.</p>
+
+<p>Please take this into consideration before configuring the Container Registry
+for the first time.</p>
+<h3 id='configure-container-registry-under-an-existing-gitlab-domain'>Configure Container Registry under an existing GitLab domain <a class='anchor' href='container_registry.html#configure-container-registry-under-an-existing-gitlab-domain' title='Permalink'></a></h3>
+<p>If the Registry is configured to use the existing GitLab domain, you can
+expose the Registry on a port so that you can reuse the existing GitLab TLS
+certificate.</p>
+
+<p>Assuming that the GitLab domain is <code>https://gitlab.example.com</code> and the port the
+Registry is exposed to the outside world is <code>4567</code>, here is what you need to set
+in <code>gitlab.rb</code> or <code>gitlab.yml</code> if you are using Omnibus GitLab or installed
+GitLab from source respectively.</p>
+
+<blockquote>
+<p><strong>Note:</strong>
+Be careful to choose a port different than the one that Registry listens to (<code>5000</code> by default),
+otherwise you will run into conflicts .</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Omnibus GitLab installations</strong></p>
+
+<ol>
+<li><p>Your <code>/etc/gitlab/gitlab.rb</code> should contain the Registry URL as well as the
+path to the existing TLS certificate and key used by GitLab:</p>
+<pre class="highlight ruby"><code><span class="n">registry_external_url</span> <span class="s1">'https://gitlab.example.com:4567'</span>
+</code></pre>
+<p>Note how the <code>registry_external_url</code> is listening on HTTPS under the
+existing GitLab URL, but on a different port.</p>
+
+<p>If your TLS certificate is not in <code>/etc/gitlab/ssl/gitlab.example.com.crt</code>
+and key not in <code>/etc/gitlab/ssl/gitlab.example.com.key</code> uncomment the lines
+below:</p>
+<pre class="highlight ruby"><code><span class="n">registry_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/path/to/certificate.pem"</span>
+<span class="n">registry_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate_key'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/path/to/certificate.key"</span>
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<ol>
+<li><p>Open <code>/home/git/gitlab/config/gitlab.yml</code>, find the <code>registry</code> entry and
+configure it with the following settings:</p>
+<pre class="highlight plaintext"><code>registry:
+  enabled: true
+  host: gitlab.example.com
+  port: 4567
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#installations-from-source">restart GitLab</a> for the changes to take effect.</p></li>
+<li><p>Make the relevant changes in NGINX as well (domain, port, TLS certificates path).</p></li>
+</ol>
+
+<hr>
+
+<p>Users should now be able to login to the Container Registry with their GitLab
+credentials using:</p>
+<pre class="highlight shell"><code>docker login gitlab.example.com:4567
+</code></pre><h3 id='configure-container-registry-under-its-own-domain'>Configure Container Registry under its own domain <a class='anchor' href='container_registry.html#configure-container-registry-under-its-own-domain' title='Permalink'></a></h3>
+<p>If the Registry is configured to use its own domain, you will need a TLS
+certificate for that specific domain (e.g., <code>registry.example.com</code>) or maybe
+a wildcard certificate if hosted under a subdomain  of your existing GitLab
+domain (e.g., <code>registry.gitlab.example.com</code>).</p>
+
+<p>Let&#39;s assume that you want the container Registry to be accessible at
+<code>https://registry.gitlab.example.com</code>.</p>
+
+<hr>
+
+<p><strong>Omnibus GitLab installations</strong></p>
+
+<ol>
+<li><p>Place your TLS certificate and key in
+<code>/etc/gitlab/ssl/registry.gitlab.example.com.crt</code> and
+<code>/etc/gitlab/ssl/registry.gitlab.example.com.key</code> and make sure they have
+correct permissions:</p>
+<pre class="highlight shell"><code>chmod 600 /etc/gitlab/ssl/registry.gitlab.example.com.<span class="k">*</span>
+</code></pre></li>
+<li><p>Once the TLS certificate is in place, edit <code>/etc/gitlab/gitlab.rb</code> with:</p>
+<pre class="highlight ruby"><code><span class="n">registry_external_url</span> <span class="s1">'https://registry.gitlab.example.com'</span>
+</code></pre>
+<p>Note how the <code>registry_external_url</code> is listening on HTTPS.</p></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<blockquote>
+<p><strong>Note:</strong>
+If you have a <a href="https://en.wikipedia.org/wiki/Wildcard_certificate">wildcard certificate</a>, you need to specify the path to the
+certificate in addition to the URL, in this case <code>/etc/gitlab/gitlab.rb</code> will
+look like:</p>
+<pre class="highlight ruby"><code><span class="n">registry_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/certificate.pem"</span>
+<span class="n">registry_nginx</span><span class="p">[</span><span class="s1">'ssl_certificate_key'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/etc/gitlab/ssl/certificate.key"</span>
+</code></pre></blockquote>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<ol>
+<li><p>Open <code>/home/git/gitlab/config/gitlab.yml</code>, find the <code>registry</code> entry and
+configure it with the following settings:</p>
+<pre class="highlight plaintext"><code>registry:
+  enabled: true
+  host: registry.gitlab.example.com
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#installations-from-source">restart GitLab</a> for the changes to take effect.</p></li>
+<li><p>Make the relevant changes in NGINX as well (domain, port, TLS certificates path).</p></li>
+</ol>
+
+<hr>
+
+<p>Users should now be able to login to the Container Registry using their GitLab
+credentials:</p>
+<pre class="highlight shell"><code>docker login registry.gitlab.example.com
+</code></pre><h2 id='disable-container-registry-site-wide'>Disable Container Registry site-wide <a class='anchor' href='container_registry.html#disable-container-registry-site-wide' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+Disabling the Registry in the Rails GitLab application as set by the following
+steps, will not remove any existing Docker images. This is handled by the
+Registry application itself.</p>
+</blockquote>
+
+<p><strong>Omnibus GitLab</strong></p>
+
+<ol>
+<li><p>Open <code>/etc/gitlab/gitlab.rb</code> and set <code>registry[&#39;enable&#39;]</code> to <code>false</code>:</p>
+<pre class="highlight ruby"><code><span class="n">registry</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<ol>
+<li><p>Open <code>/home/git/gitlab/config/gitlab.yml</code>, find the <code>registry</code> entry and
+set <code>enabled</code> to <code>false</code>:</p>
+<pre class="highlight plaintext"><code>registry:
+  enabled: false
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#installations-from-source">restart GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h2 id='disable-container-registry-for-new-projects-site-wide'>Disable Container Registry for new projects site-wide <a class='anchor' href='container_registry.html#disable-container-registry-for-new-projects-site-wide' title='Permalink'></a></h2>
+<p>If the Container Registry is enabled, then it will be available on all new
+projects. To disable this function and let the owners of a project to enable
+the Container Registry by themselves, follow the steps below.</p>
+
+<hr>
+
+<p><strong>Omnibus GitLab installations</strong></p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code> and add the following line:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'gitlab_default_projects_features_container_registry'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<ol>
+<li><p>Open <code>/home/git/gitlab/config/gitlab.yml</code>, find the <code>default_projects_features</code>
+entry and configure it so that <code>container_registry</code> is set to <code>false</code>:</p>
+<pre class="highlight plaintext"><code>## Default project features settings
+default_projects_features:
+  issues: true
+  merge_requests: true
+  wiki: true
+  snippets: false
+  builds: true
+  container_registry: false
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#installations-from-source">restart GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h2 id='container-registry-storage-path'>Container Registry storage path <a class='anchor' href='container_registry.html#container-registry-storage-path' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+For configuring storage in the cloud instead of the filesystem, see the
+<a href="container_registry.html#container-registry-storage-driver">storage driver configuration</a>.</p>
+</blockquote>
+
+<p>If you want to store your images on the filesystem, you can change the storage
+path for the Container Registry, follow the steps below.</p>
+
+<p>This path is accessible to:</p>
+
+<ul>
+<li>the user running the Container Registry daemon,</li>
+<li>the user running GitLab</li>
+</ul>
+
+<blockquote>
+<p><strong>Warning</strong> You should confirm that all GitLab, Registry and web server users
+have access to this directory.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Omnibus GitLab installations</strong></p>
+
+<p>The default location where images are stored in Omnibus, is
+<code>/var/opt/gitlab/gitlab-rails/shared/registry</code>. To change it:</p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'registry_path'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"/path/to/registry/storage"</span>
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<p>The default location where images are stored in source installations, is
+<code>/home/git/gitlab/shared/registry</code>. To change it:</p>
+
+<ol>
+<li><p>Open <code>/home/git/gitlab/config/gitlab.yml</code>, find the <code>registry</code> entry and
+change the <code>path</code> setting:</p>
+<pre class="highlight plaintext"><code>registry:
+  path: shared/registry
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#installations-from-source">restart GitLab</a> for the changes to take effect.</p></li>
+</ol>
+<h2 id='container-registry-storage-driver'>Container Registry storage driver <a class='anchor' href='container_registry.html#container-registry-storage-driver' title='Permalink'></a></h2>
+<p>You can configure the Container Registry to use a different storage backend by
+configuring a different storage driver. By default the GitLab Container Registry
+is configured to use the filesystem driver, which makes use of <a href="container_registry.html#container-registry-storage-path">storage path</a>
+configuration.</p>
+
+<p>The different supported drivers are:</p>
+
+<table><thead>
+<tr>
+<th>Driver</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>filesystem</td>
+<td>Uses a path on the local filesystem</td>
+</tr>
+<tr>
+<td>azure</td>
+<td>Microsoft Azure Blob Storage</td>
+</tr>
+<tr>
+<td>gcs</td>
+<td>Google Cloud Storage</td>
+</tr>
+<tr>
+<td>s3</td>
+<td>Amazon Simple Storage Service</td>
+</tr>
+<tr>
+<td>swift</td>
+<td>OpenStack Swift Object Storage</td>
+</tr>
+<tr>
+<td>oss</td>
+<td>Aliyun OSS</td>
+</tr>
+</tbody></table>
+
+<p>Read more about the individual driver&#39;s config options in the
+<a href="https://docs.docker.com/registry/configuration/#storage">Docker Registry docs</a>.</p>
+
+<blockquote>
+<p><strong>Warning</strong> GitLab will not backup Docker images that are not stored on the
+filesystem. Remember to enable backups with your object storage provider if
+desired.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Omnibus GitLab installations</strong></p>
+
+<p>To configure the storage driver in Omnibus:</p>
+
+<ol>
+<li><p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">registry</span><span class="p">[</span><span class="s1">'storage'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'s3'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">'accesskey'</span> <span class="o">=&gt;</span> <span class="s1">'s3-access-key'</span><span class="p">,</span>
+    <span class="s1">'secretkey'</span> <span class="o">=&gt;</span> <span class="s1">'s3-secret-key-for-access-key'</span><span class="p">,</span>
+    <span class="s1">'bucket'</span> <span class="o">=&gt;</span> <span class="s1">'your-s3-bucket'</span><span class="p">,</span>
+    <span class="s1">'region'</span> <span class="o">=&gt;</span> <span class="s1">'your-s3-region'</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<p>Configuring the storage driver is done in your registry config YML file created
+when you <a href="https://docs.docker.com/registry/deploying/">deployed your docker registry</a>.</p>
+
+<p>Example:</p>
+<pre class="highlight plaintext"><code>storage:
+  s3:
+    accesskey: 'AKIAKIAKI'
+    secretkey: 'secret123'
+    bucket: 'gitlab-registry-bucket-AKIAKIAKI'
+    region: 'your-s3-region'
+  cache:
+    blobdescriptor: inmemory
+  delete:
+    enabled: true
+</code></pre><h2 id='change-the-registry-39-s-internal-port'>Change the registry&#39;s internal port <a class='anchor' href='container_registry.html#change-the-registry-39-s-internal-port' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+This is not to be confused with the port that GitLab itself uses to expose
+the Registry to the world.</p>
+</blockquote>
+
+<p>The Registry server listens on localhost at port <code>5000</code> by default,
+which is the address for which the Registry server should accept connections.
+In the examples below we set the Registry&#39;s port to <code>5001</code>.</p>
+
+<p><strong>Omnibus GitLab</strong></p>
+
+<ol>
+<li><p>Open <code>/etc/gitlab/gitlab.rb</code> and set <code>registry[&#39;registry_http_addr&#39;]</code>:</p>
+<pre class="highlight ruby"><code><span class="n">registry</span><span class="p">[</span><span class="s1">'registry_http_addr'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"localhost:5001"</span>
+</code></pre></li>
+<li><p>Save the file and <a href="restart_gitlab.html#omnibus-gitlab-reconfigure">reconfigure GitLab</a> for the changes to take effect.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>Installations from source</strong></p>
+
+<ol>
+<li><p>Open the configuration file of your Registry server and edit the
+<a href="https://docs.docker.com/registry/configuration/#http"><code>http:addr</code></a> value:</p>
+<pre class="highlight plaintext"><code>http
+  addr: localhost:5001
+</code></pre></li>
+<li><p>Save the file and restart the Registry server.</p></li>
+</ol>
+<h2 id='disable-container-registry-per-project'>Disable Container Registry per project <a class='anchor' href='container_registry.html#disable-container-registry-per-project' title='Permalink'></a></h2>
+<p>If Registry is enabled in your GitLab instance, but you don&#39;t need it for your
+project, you can disable it from your project&#39;s settings. Read the user guide
+on how to achieve that.</p>
+<h2 id='storage-limitations'>Storage limitations <a class='anchor' href='container_registry.html#storage-limitations' title='Permalink'></a></h2>
+<p>Currently, there is no storage limitation, which means a user can upload an
+infinite amount of Docker images with arbitrary sizes. This setting will be
+configurable in future releases.</p>
+<h2 id='changelog'>Changelog <a class='anchor' href='container_registry.html#changelog' title='Permalink'></a></h2>
+<p><strong>GitLab 8.8 (<a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/8-8-stable/doc/administration/container_registry.md">source docs</a>)</strong></p>
+
+<ul>
+<li>GitLab Container Registry feature was introduced.</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/container_registry.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

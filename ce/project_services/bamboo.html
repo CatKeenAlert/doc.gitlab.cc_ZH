@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Atlassian Bamboo CI Service - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Atlassian Bamboo CI Service</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="bamboo.html#atlassian-bamboo-ci-service">Atlassian Bamboo CI Service</a>
+<ul>
+<li>
+<a href="bamboo.html#setup">Setup</a>
+<ul>
+<li>
+<a href="bamboo.html#complete-these-steps-in-bamboo">Complete these steps in Bamboo:</a>
+</li>
+<li>
+<a href="bamboo.html#complete-these-steps-in-gitlab">Complete these steps in GitLab:</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="bamboo.html#troubleshooting">Troubleshooting</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='atlassian-bamboo-ci-service'>Atlassian Bamboo CI Service <a class='anchor' href='bamboo.html#atlassian-bamboo-ci-service' title='Permalink'></a></h1>
+<p>GitLab provides integration with Atlassian Bamboo for continuous integration.
+When configured, pushes to a project will trigger a build in Bamboo automatically.
+Merge requests will also display CI status showing whether the build is pending,
+failed, or completed successfully. It also provides a link to the Bamboo build
+page for more information.</p>
+
+<p>Bamboo doesn&#39;t quite provide the same features as a traditional build system when
+it comes to accepting webhooks and commit data. There are a few things that
+need to be configured in a Bamboo build plan before GitLab can integrate.</p>
+<h2 id='setup'>Setup <a class='anchor' href='bamboo.html#setup' title='Permalink'></a></h2><h3 id='complete-these-steps-in-bamboo'>Complete these steps in Bamboo: <a class='anchor' href='bamboo.html#complete-these-steps-in-bamboo' title='Permalink'></a></h3>
+<ol>
+<li>Navigate to a Bamboo build plan and choose &#39;Configure plan&#39; from the &#39;Actions&#39;
+dropdown.</li>
+<li>Select the &#39;Triggers&#39; tab.</li>
+<li>Click &#39;Add trigger&#39;.</li>
+<li>Enter a description such as &#39;GitLab trigger&#39;</li>
+<li>Choose &#39;Repository triggers the build when changes are committed&#39;</li>
+<li>Check one or more repositories checkboxes</li>
+<li>Enter the GitLab IP address in the &#39;Trigger IP addresses&#39; box. This is a 
+whitelist of IP addresses that are allowed to trigger Bamboo builds.</li>
+<li>Save the trigger.</li>
+<li>In the left pane, select a build stage. If you have multiple build stages 
+you want to select the last stage that contains the git checkout task.</li>
+<li>Select the &#39;Miscellaneous&#39; tab.</li>
+<li>Under &#39;Pattern Match Labelling&#39; put &#39;${bamboo.repository.revision.number}&#39; 
+in the &#39;Labels&#39; box.</li>
+<li>Save</li>
+</ol>
+
+<p>Bamboo is now ready to accept triggers from GitLab. Next, set up the Bamboo
+service in GitLab</p>
+<h3 id='complete-these-steps-in-gitlab'>Complete these steps in GitLab: <a class='anchor' href='bamboo.html#complete-these-steps-in-gitlab' title='Permalink'></a></h3>
+<ol>
+<li>Navigate to the project you want to configure to trigger builds.</li>
+<li>Select &#39;Settings&#39; in the top navigation.</li>
+<li>Select &#39;Services&#39; in the left navigation.</li>
+<li>Click &#39;Atlassian Bamboo CI&#39;</li>
+<li>Select the &#39;Active&#39; checkbox.</li>
+<li>Enter the base URL of your Bamboo server. &#39;<a href="https://bamboo.example.com">https://bamboo.example.com</a>&#39;</li>
+<li>Enter the build key from your Bamboo build plan. Build keys are a short, 
+all capital letter, identifier that is unique. It will be something like PR-BLD</li>
+<li>If necessary, enter username and password for a Bamboo user that has 
+access to trigger the build plan. Leave these fields blank if you do not require
+authentication.</li>
+<li>Save or optionally click &#39;Test Settings&#39;. Please note that &#39;Test Settings&#39;
+will actually trigger a build in Bamboo.</li>
+</ol>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='bamboo.html#troubleshooting' title='Permalink'></a></h2>
+<p>If builds are not triggered, these are a couple of things to keep in mind.</p>
+
+<ol>
+<li>Ensure you entered the right GitLab IP address in Bamboo under &#39;Trigger
+IP addresses&#39;.</li>
+<li>Remember that GitLab only triggers builds on push events. A commit via the
+web interface will not trigger CI currently.</li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/project_services/bamboo.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

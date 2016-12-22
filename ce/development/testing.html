@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Testing Standards and Style Guidelines - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Testing Standards and Style Guidelines</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="testing.html#testing-standards-and-style-guidelines">Testing Standards and Style Guidelines</a>
+<ul>
+<li>
+<a href="testing.html#factories">Factories</a>
+</li>
+<li>
+<a href="testing.html#javascript">JavaScript</a>
+</li>
+<li>
+<a href="testing.html#rspec">RSpec</a>
+<ul>
+<li>
+<a href="testing.html#general-guidelines">General Guidelines</a>
+</li>
+<li>
+<a href="testing.html#let-variables"><code>let</code> variables</a>
+</li>
+<li>
+<a href="testing.html#test-speed">Test speed</a>
+</li>
+<li>
+<a href="testing.html#features-integration">Features / Integration</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="testing.html#spinach-feature-tests">Spinach (feature) tests</a>
+</li>
+<li>
+<a href="testing.html#testing-rake-tasks">Testing Rake Tasks</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='testing-standards-and-style-guidelines'>Testing Standards and Style Guidelines <a class='anchor' href='testing.html#testing-standards-and-style-guidelines' title='Permalink'></a></h1>
+<p>This guide outlines standards and best practices for automated testing of GitLab
+CE and EE.</p>
+
+<p>It is meant to be an <em>extension</em> of the <a href="https://github.com/thoughtbot/guides/tree/master/style/testing">thoughtbot testing
+styleguide</a>. If
+this guide defines a rule that contradicts the thoughtbot guide, this guide
+takes precedence. Some guidelines may be repeated verbatim to stress their
+importance.</p>
+<h2 id='factories'>Factories <a class='anchor' href='testing.html#factories' title='Permalink'></a></h2>
+<p>GitLab uses <a href="https://github.com/thoughtbot/factory_girl">factory_girl</a> as a test fixture replacement.</p>
+
+<ul>
+<li>Factory definitions live in <code>spec/factories/</code>, named using the pluralization
+of their corresponding model (<code>User</code> factories are defined in <code>users.rb</code>).</li>
+<li>There should be only one top-level factory definition per file.</li>
+<li>FactoryGirl methods are mixed in to all RSpec groups. This means you can (and
+should) call <code>create(...)</code> instead of <code>FactoryGirl.create(...)</code>.</li>
+<li>Make use of <a href="http://www.rubydoc.info/gems/factory_girl/file/GETTING_STARTED.md#Traits">traits</a> to clean up definitions and usages.</li>
+<li>When defining a factory, don&#39;t define attributes that are not required for the
+resulting record to pass validation.</li>
+<li>When instantiating from a factory, don&#39;t supply attributes that aren&#39;t
+required by the test.</li>
+<li>Factories don&#39;t have to be limited to <code>ActiveRecord</code> objects.
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/commit/0b8cefd3b2385a21cfed779bd659978c0402766d">See example</a>.</li>
+</ul>
+<h2 id='javascript'>JavaScript <a class='anchor' href='testing.html#javascript' title='Permalink'></a></h2>
+<p>GitLab uses <a href="https://github.com/modeset/teaspoon">Teaspoon</a> to run its <a href="https://github.com/jasmine/jasmine">Jasmine</a> JavaScript specs. They can be run on
+the command line via <code>bundle exec teaspoon</code>, or via a web browser at
+<code>http://localhost:3000/teaspoon</code> when the Rails server is running.</p>
+
+<ul>
+<li>JavaScript tests live in <code>spec/javascripts/</code>, matching the folder structure of
+<code>app/assets/javascripts/</code>: <code>app/assets/javascripts/behaviors/autosize.js.es6</code> has a corresponding
+<code>spec/javascripts/behaviors/autosize_spec.js.es6</code> file.</li>
+<li><p>Haml fixtures required for JavaScript tests live in
+<code>spec/javascripts/fixtures</code>. They should contain the bare minimum amount of
+markup necessary for the test.</p>
+
+<blockquote>
+<p><strong>Warning:</strong> Keep in mind that a Rails view may change and
+invalidate your test, but everything will still pass because your fixture
+doesn&#39;t reflect the latest view.</p>
+</blockquote></li>
+<li><p>Keep in mind that in a CI environment, these tests are run in a headless
+browser and you will not have access to certain APIs, such as
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/notification"><code>Notification</code></a>,
+which will have to be stubbed.</p></li>
+</ul>
+<h2 id='rspec'>RSpec <a class='anchor' href='testing.html#rspec' title='Permalink'></a></h2><h3 id='general-guidelines'>General Guidelines <a class='anchor' href='testing.html#general-guidelines' title='Permalink'></a></h3>
+<ul>
+<li>Use a single, top-level <code>describe ClassName</code> block.</li>
+<li>Use <code>described_class</code> instead of repeating the class name being described.</li>
+<li>Use <code>.method</code> to describe class methods and <code>#method</code> to describe instance
+methods.</li>
+<li>Use <code>context</code> to test branching logic.</li>
+<li>Use multi-line <code>do...end</code> blocks for <code>before</code> and <code>after</code>, even when it would
+fit on a single line.</li>
+<li>Don&#39;t <code>describe</code> symbols (see <a href="gotchas.html#dont-describe-symbols">Gotchas</a>).</li>
+<li>Don&#39;t assert against the absolute value of a sequence-generated attribute (see <a href="gotchas.html#dont-assert-against-the-absolute-value-of-a-sequence-generated-attribute">Gotchas</a>).</li>
+<li>Don&#39;t supply the <code>:each</code> argument to hooks since it&#39;s the default.</li>
+<li>Prefer <code>not_to</code> to <code>to_not</code> (<em>this is enforced by Rubocop</em>).</li>
+<li>Try to match the ordering of tests to the ordering within the class.</li>
+<li>Try to follow the <a href="https://robots.thoughtbot.com/four-phase-test">Four-Phase Test</a> pattern, using newlines
+to separate phases.</li>
+<li>Try to use <code>Gitlab.config.gitlab.host</code> rather than hard coding <code>&#39;localhost&#39;</code></li>
+</ul>
+<h3 id='let-variables'><code>let</code> variables <a class='anchor' href='testing.html#let-variables' title='Permalink'></a></h3>
+<p>GitLab&#39;s RSpec suite has made extensive use of <code>let</code> variables to reduce
+duplication. However, this sometimes <a href="https://robots.thoughtbot.com/lets-not">comes at the cost of clarity</a>,
+so we need to set some guidelines for their use going forward:</p>
+
+<ul>
+<li><code>let</code> variables are preferable to instance variables. Local variables are
+preferable to <code>let</code> variables.</li>
+<li>Use <code>let</code> to reduce duplication throughout an entire spec file.</li>
+<li>Don&#39;t use <code>let</code> to define variables used by a single test; define them as
+local variables inside the test&#39;s <code>it</code> block.</li>
+<li>Don&#39;t define a <code>let</code> variable inside the top-level <code>describe</code> block that&#39;s
+only used in a more deeply-nested <code>context</code> or <code>describe</code> block. Keep the
+definition as close as possible to where it&#39;s used.</li>
+<li>Try to avoid overriding the definition of one <code>let</code> variable with another.</li>
+<li>Don&#39;t define a <code>let</code> variable that&#39;s only used by the definition of another.
+Use a helper method instead.</li>
+</ul>
+<h3 id='test-speed'>Test speed <a class='anchor' href='testing.html#test-speed' title='Permalink'></a></h3>
+<p>GitLab has a massive test suite that, without parallelization, can take more
+than an hour to run. It&#39;s important that we make an effort to write tests that
+are accurate and effective <em>as well as</em> fast.</p>
+
+<p>Here are some things to keep in mind regarding test performance:</p>
+
+<ul>
+<li><code>double</code> and <code>spy</code> are faster than <code>FactoryGirl.build(...)</code></li>
+<li><code>FactoryGirl.build(...)</code> and <code>.build_stubbed</code> are faster than <code>.create</code>.</li>
+<li>Don&#39;t <code>create</code> an object when <code>build</code>, <code>build_stubbed</code>, <code>attributes_for</code>,
+<code>spy</code>, or <code>double</code> will do. Database persistence is slow!</li>
+<li>Use <code>create(:empty_project)</code> instead of <code>create(:project)</code> when you don&#39;t need
+the underlying Git repository. Filesystem operations are slow!</li>
+<li>Don&#39;t mark a feature as requiring JavaScript (through <code>@javascript</code> in
+Spinach or <code>js: true</code> in RSpec) unless it&#39;s <em>actually</em> required for the test
+to be valid. Headless browser testing is slow!</li>
+</ul>
+<h3 id='features-integration'>Features / Integration <a class='anchor' href='testing.html#features-integration' title='Permalink'></a></h3>
+<ul>
+<li>Feature specs live in <code>spec/features/</code> and should be named
+<code>ROLE_ACTION_spec.rb</code>, such as <code>user_changes_password_spec.rb</code>.</li>
+<li>Use only one <code>feature</code> block per feature spec file.</li>
+<li>Use scenario titles that describe the success and failure paths.</li>
+<li>Avoid scenario titles that add no information, such as &quot;successfully.&quot;</li>
+<li>Avoid scenario titles that repeat the feature title.</li>
+</ul>
+<h2 id='spinach-feature-tests'>Spinach (feature) tests <a class='anchor' href='testing.html#spinach-feature-tests' title='Permalink'></a></h2>
+<p>GitLab <a href="https://github.com/gitlabhq/gitlabhq/pull/1426">moved from Cucumber to Spinach</a>
+for its feature/integration tests in September 2012.</p>
+
+<p>As of March 2016, we are <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/14121">trying to avoid adding new Spinach
+tests</a> going forward,
+opting for <a href="testing.html#features-integration">RSpec feature</a> specs.</p>
+
+<p>Adding new Spinach scenarios is acceptable <em>only if</em> the new scenario requires
+no more than one new <code>step</code> definition. If more than that is required, the
+test should be re-implemented using RSpec instead.</p>
+<h2 id='testing-rake-tasks'>Testing Rake Tasks <a class='anchor' href='testing.html#testing-rake-tasks' title='Permalink'></a></h2>
+<p>To make testing Rake tasks a little easier, there is a helper that can be included
+in lieu of the standard Spec helper. Instead of <code>require &#39;spec_helper&#39;</code>, use
+<code>require &#39;rake_helper&#39;</code>. The helper includes <code>spec_helper</code> for you, and configures
+a few other things to make testing Rake tasks easier.</p>
+
+<p>At a minimum, requiring the Rake helper will redirect <code>stdout</code>, include the
+runtime task helpers, and include the <code>RakeHelpers</code> Spec support module.</p>
+
+<p>The <code>RakeHelpers</code> module exposes a <code>run_rake_task(&lt;task&gt;)</code> method to make
+executing tasks simple. See <code>spec/support/rake_helpers.rb</code> for all available
+methods.</p>
+
+<p>Example:</p>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'rake_helper'</span>
+
+<span class="n">describe</span> <span class="s1">'gitlab:shell rake tasks'</span> <span class="k">do</span>
+  <span class="n">before</span> <span class="k">do</span>
+    <span class="no">Rake</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">rake_require</span> <span class="s1">'tasks/gitlab/shell'</span>
+
+    <span class="n">stub_warn_user_is_not_gitlab</span>
+  <span class="k">end</span>
+
+ <span class="n">describe</span> <span class="s1">'install task'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'invokes create_hooks task'</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="no">Rake</span><span class="o">::</span><span class="no">Task</span><span class="p">[</span><span class="s1">'gitlab:shell:create_hooks'</span><span class="p">]).</span><span class="nf">to</span> <span class="n">receive</span><span class="p">(</span><span class="ss">:invoke</span><span class="p">)</span>
+
+      <span class="n">run_rake_task</span><span class="p">(</span><span class="s1">'gitlab:shell:install'</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<hr>
+
+<p><a href="README.html">Return to Development documentation</a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/testing.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Moving repositories managed by GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Moving repositories managed by GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="moving_repositories.html#moving-repositories-managed-by-gitlab">Moving repositories managed by GitLab</a>
+<ul>
+<li>
+<a href="moving_repositories.html#target-directory-is-empty-use-a-tar-pipe">Target directory is empty: use a tar pipe</a>
+<ul>
+<li>
+<a href="moving_repositories.html#tar-pipe-to-another-server">Tar pipe to another server</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="moving_repositories.html#the-target-directory-contains-an-outdated-copy-of-the-repositories-use-rsync">The target directory contains an outdated copy of the repositories: use rsync</a>
+<ul>
+<li>
+<a href="moving_repositories.html#single-rsync-to-another-server">Single rsync to another server</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="moving_repositories.html#thousands-of-git-repositories-use-one-rsync-per-repository">Thousands of Git repositories: use one rsync per repository</a>
+<ul>
+<li>
+<a href="moving_repositories.html#parallel-rsync-for-all-repositories-known-to-gitlab">Parallel rsync for all repositories known to GitLab</a>
+</li>
+<li>
+<a href="moving_repositories.html#parallel-rsync-only-for-repositories-with-recent-activity">Parallel rsync only for repositories with recent activity</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='moving-repositories-managed-by-gitlab'>Moving repositories managed by GitLab <a class='anchor' href='moving_repositories.html#moving-repositories-managed-by-gitlab' title='Permalink'></a></h1>
+<p>Sometimes you need to move all repositories managed by GitLab to
+another filesystem or another server. In this document we will look
+at some of the ways you can copy all your repositories from
+<code>/var/opt/gitlab/git-data/repositories</code> to <code>/mnt/gitlab/repositories</code>.</p>
+
+<p>We will look at three scenarios: the target directory is empty, the
+target directory contains an outdated copy of the repositories, and
+how to deal with thousands of repositories.</p>
+
+<p><strong>Each of the approaches we list can/will overwrite data in the
+target directory <code>/mnt/gitlab/repositories</code>. Do not mix up the
+source and the target.</strong></p>
+<h2 id='target-directory-is-empty-use-a-tar-pipe'>Target directory is empty: use a tar pipe <a class='anchor' href='moving_repositories.html#target-directory-is-empty-use-a-tar-pipe' title='Permalink'></a></h2>
+<p>If the target directory <code>/mnt/gitlab/repositories</code> is empty the
+simplest thing to do is to use a tar pipe.  This method has low
+overhead and tar is almost always already installed on your system.
+However, it is not possible to resume an interrupted tar pipe:  if
+that happens then all data must be copied again.</p>
+<pre class="highlight plaintext"><code># As the git user
+tar -C /var/opt/gitlab/git-data/repositories -cf - -- . |\
+  tar -C /mnt/gitlab/repositories -xf -
+</code></pre>
+<p>If you want to see progress, replace <code>-xf</code> with <code>-xvf</code>.</p>
+<h3 id='tar-pipe-to-another-server'>Tar pipe to another server <a class='anchor' href='moving_repositories.html#tar-pipe-to-another-server' title='Permalink'></a></h3>
+<p>You can also use a tar pipe to copy data to another server. If your
+&#39;git&#39; user has SSH access to the newserver as &#39;git@newserver&#39;, you
+can pipe the data through SSH.</p>
+<pre class="highlight plaintext"><code># As the git user
+tar -C /var/opt/gitlab/git-data/repositories -cf - -- . |\
+  ssh git@newserver tar -C /mnt/gitlab/repositories -xf -
+</code></pre>
+<p>If you want to compress the data before it goes over the network
+(which will cost you CPU cycles) you can replace <code>ssh</code> with <code>ssh -C</code>.</p>
+<h2 id='the-target-directory-contains-an-outdated-copy-of-the-repositories-use-rsync'>The target directory contains an outdated copy of the repositories: use rsync <a class='anchor' href='moving_repositories.html#the-target-directory-contains-an-outdated-copy-of-the-repositories-use-rsync' title='Permalink'></a></h2>
+<p>If the target directory already contains a partial / outdated copy
+of the repositories it may be wasteful to copy all the data again
+with tar. In this scenario it is better to use rsync. This utility
+is either already installed on your system or easily installable
+via apt, yum etc.</p>
+<pre class="highlight plaintext"><code># As the 'git' user
+rsync -a --delete /var/opt/gitlab/git-data/repositories/. \
+  /mnt/gitlab/repositories
+</code></pre>
+<p>The <code>/.</code> in the command above is very important, without it you can
+easily get the wrong directory structure in the target directory.
+If you want to see progress, replace <code>-a</code> with <code>-av</code>.</p>
+<h3 id='single-rsync-to-another-server'>Single rsync to another server <a class='anchor' href='moving_repositories.html#single-rsync-to-another-server' title='Permalink'></a></h3>
+<p>If the &#39;git&#39; user on your source system has SSH access to the target
+server you can send the repositories over the network with rsync.</p>
+<pre class="highlight plaintext"><code># As the 'git' user
+rsync -a --delete /var/opt/gitlab/git-data/repositories/. \
+  git@newserver:/mnt/gitlab/repositories
+</code></pre><h2 id='thousands-of-git-repositories-use-one-rsync-per-repository'>Thousands of Git repositories: use one rsync per repository <a class='anchor' href='moving_repositories.html#thousands-of-git-repositories-use-one-rsync-per-repository' title='Permalink'></a></h2>
+<p>Every time you start an rsync job it has to inspect all files in
+the source directory, all files in the target directory, and then
+decide what files to copy or not. If the source or target directory
+has many contents this startup phase of rsync can become a burden
+for your GitLab server. In cases like this you can make rsync&#39;s
+life easier by dividing its work in smaller pieces, and sync one
+repository at a time.</p>
+
+<p>In addition to rsync we will use <a href="http://www.gnu.org/software/parallel/">GNU
+Parallel</a>. This utility is
+not included in GitLab so you need to install it yourself with apt
+or yum.  Also note that the GitLab scripts we used below were added
+in GitLab 8.1.</p>
+
+<p>** This process does not clean up repositories at the target location that no
+longer exist at the source. ** If you start using your GitLab instance with
+<code>/mnt/gitlab/repositories</code>, you need to run <code>gitlab-rake gitlab:cleanup:repos</code>
+after switching to the new repository storage directory.</p>
+<h3 id='parallel-rsync-for-all-repositories-known-to-gitlab'>Parallel rsync for all repositories known to GitLab <a class='anchor' href='moving_repositories.html#parallel-rsync-for-all-repositories-known-to-gitlab' title='Permalink'></a></h3>
+<p>This will sync repositories with 10 rsync processes at a time. We keep
+track of progress so that the transfer can be restarted if necessary.</p>
+
+<p>First we create a new directory, owned by &#39;git&#39;, to hold transfer
+logs. We assume the directory is empty before we start the transfer
+procedure, and that we are the only ones writing files in it.</p>
+<pre class="highlight plaintext"><code># Omnibus
+sudo mkdir /var/opt/gitlab/transfer-logs
+sudo chown git:git /var/opt/gitlab/transfer-logs
+
+# Source
+sudo -u git -H mkdir /home/git/transfer-logs
+</code></pre>
+<p>We seed the process with a list of the directories we want to copy.</p>
+<pre class="highlight plaintext"><code># Omnibus
+sudo -u git sh -c 'gitlab-rake gitlab:list_repos &gt; /var/opt/gitlab/transfer-logs/all-repos-$(date +%s).txt'
+
+# Source
+cd /home/git/gitlab
+sudo -u git -H sh -c 'bundle exec rake gitlab:list_repos &gt; /home/git/transfer-logs/all-repos-$(date +%s).txt'
+</code></pre>
+<p>Now we can start the transfer. The command below is idempotent, and
+the number of jobs done by GNU Parallel should converge to zero. If it
+does not some repositories listed in all-repos-1234.txt may have been
+deleted/renamed before they could be copied.</p>
+<pre class="highlight plaintext"><code># Omnibus
+sudo -u git sh -c '
+cat /var/opt/gitlab/transfer-logs/* | sort | uniq -u |\
+  /usr/bin/env JOBS=10 \
+  /opt/gitlab/embedded/service/gitlab-rails/bin/parallel-rsync-repos \
+    /var/opt/gitlab/transfer-logs/success-$(date +%s).log \
+    /var/opt/gitlab/git-data/repositories \
+    /mnt/gitlab/repositories
+'
+
+# Source
+cd /home/git/gitlab
+sudo -u git -H sh -c '
+cat /home/git/transfer-logs/* | sort | uniq -u |\
+  /usr/bin/env JOBS=10 \
+  bin/parallel-rsync-repos \
+    /home/git/transfer-logs/success-$(date +%s).log \
+    /home/git/repositories \
+    /mnt/gitlab/repositories
+`
+</code></pre><h3 id='parallel-rsync-only-for-repositories-with-recent-activity'>Parallel rsync only for repositories with recent activity <a class='anchor' href='moving_repositories.html#parallel-rsync-only-for-repositories-with-recent-activity' title='Permalink'></a></h3>
+<p>Suppose you have already done one sync that started after 2015-10-1 12:00 UTC.
+Then you might only want to sync repositories that were changed via GitLab
+<em>after</em> that time. You can use the &#39;SINCE&#39; variable to tell &#39;rake
+gitlab:list_repos&#39; to only print repositories with recent activity.</p>
+<pre class="highlight plaintext"><code># Omnibus
+sudo gitlab-rake gitlab:list_repos SINCE='2015-10-1 12:00 UTC' |\
+  sudo -u git \
+  /usr/bin/env JOBS=10 \
+  /opt/gitlab/embedded/service/gitlab-rails/bin/parallel-rsync-repos \
+    success-$(date +%s).log \
+    /var/opt/gitlab/git-data/repositories \
+    /mnt/gitlab/repositories
+
+# Source
+cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:list_repos SINCE='2015-10-1 12:00 UTC' |\
+  sudo -u git -H \
+  /usr/bin/env JOBS=10 \
+  bin/parallel-rsync-repos \
+    success-$(date +%s).log \
+    /home/git/repositories \
+    /mnt/gitlab/repositories
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/operations/moving_repositories.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

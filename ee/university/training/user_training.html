@@ -1,0 +1,597 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Git Workshop - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab University</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">GitLab Training Material</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Git Workshop</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="user_training.html#gitlab-git-workshop">GitLab Git Workshop</a>
+</li>
+<li>
+<a href="user_training.html#agenda">Agenda</a>
+</li>
+<li>
+<a href="user_training.html#git-introduction">Git introduction</a>
+</li>
+<li>
+<a href="user_training.html#help">Help!</a>
+</li>
+<li>
+<a href="user_training.html#gitlab-walkthrough">GitLab Walkthrough</a>
+</li>
+<li>
+<a href="user_training.html#configure-your-environment">Configure your environment</a>
+</li>
+<li>
+<a href="user_training.html#git-workshop">Git Workshop</a>
+<ul>
+<li>
+<a href="user_training.html#overview">Overview</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="user_training.html#configure-git">Configure Git</a>
+</li>
+<li>
+<a href="user_training.html#configure-ssh-key">Configure SSH Key</a>
+</li>
+<li>
+<a href="user_training.html#create-a-project">Create a project</a>
+</li>
+<li>
+<a href="user_training.html#commands">Commands</a>
+</li>
+<li>
+<a href="user_training.html#git-concepts">Git concepts</a>
+</li>
+<li>
+<a href="user_training.html#committing">Committing</a>
+</li>
+<li>
+<a href="user_training.html#commands">Commands</a>
+</li>
+<li>
+<a href="user_training.html#feature-branching">Feature branching</a>
+</li>
+<li>
+<a href="user_training.html#feature-branching">Feature branching</a>
+</li>
+<li>
+<a href="user_training.html#commands">Commands</a>
+</li>
+<li>
+<a href="user_training.html#merge-requests">Merge requests</a>
+</li>
+<li>
+<a href="user_training.html#merge-requests">Merge requests</a>
+</li>
+<li>
+<a href="user_training.html#feedback-and-collaboration">Feedback and Collaboration</a>
+</li>
+<li>
+<a href="user_training.html#feedback-and-collaboration">Feedback and Collaboration</a>
+</li>
+<li>
+<a href="user_training.html#explore-gitlab-projects">Explore GitLab projects</a>
+</li>
+<li>
+<a href="user_training.html#tags">Tags</a>
+</li>
+<li>
+<a href="user_training.html#tags">Tags</a>
+</li>
+<li>
+<a href="user_training.html#commands">Commands</a>
+</li>
+<li>
+<a href="user_training.html#merge-conflicts">Merge conflicts</a>
+</li>
+<li>
+<a href="user_training.html#merge-conflicts">Merge conflicts</a>
+</li>
+<li>
+<a href="user_training.html#merge-conflicts">Merge conflicts</a>
+</li>
+<li>
+<a href="user_training.html#rebase-with-squash">Rebase with squash</a>
+</li>
+<li>
+<a href="user_training.html#rebase-with-squash">Rebase with squash</a>
+</li>
+<li>
+<a href="user_training.html#questions">Questions?</a>
+</li>
+</ul>
+<h1 id='gitlab-git-workshop'>GitLab Git Workshop <a class='anchor' href='user_training.html#gitlab-git-workshop' title='Permalink'></a></h1>
+<hr>
+<h1 id='agenda'>Agenda <a class='anchor' href='user_training.html#agenda' title='Permalink'></a></h1>
+<ol>
+<li>Brief history of Git</li>
+<li>GitLab walkthrough</li>
+<li>Configure your environment</li>
+<li>Workshop</li>
+</ol>
+
+<hr>
+<h1 id='git-introduction'>Git introduction <a class='anchor' href='user_training.html#git-introduction' title='Permalink'></a></h1>
+<p><a href="https://git-scm.com/about">https://git-scm.com/about</a></p>
+
+<ul>
+<li>Distributed version control
+
+<ul>
+<li>Does not rely on connection to a central server</li>
+<li>Many copies of the complete history</li>
+</ul></li>
+<li>Powerful branching and merging</li>
+<li>Adapts to nearly any workflow</li>
+<li>Fast, reliable and stable file format</li>
+</ul>
+
+<hr>
+<h1 id='help'>Help! <a class='anchor' href='user_training.html#help' title='Permalink'></a></h1>
+<p>Use the tools at your disposal when you get stuck.</p>
+
+<ul>
+<li>Use &#39;<code>git help &lt;command&gt;</code>&#39; command</li>
+<li>Use Google</li>
+<li>Read documentation at <a href="https://git-scm.com">https://git-scm.com</a></li>
+</ul>
+
+<hr>
+<h1 id='gitlab-walkthrough'>GitLab Walkthrough <a class='anchor' href='user_training.html#gitlab-walkthrough' title='Permalink'></a></h1>
+<p><a target="_blank" href="logo.png"><img src="logo.png" title="" alt="fit"/></a></p>
+
+<hr>
+<h1 id='configure-your-environment'>Configure your environment <a class='anchor' href='user_training.html#configure-your-environment' title='Permalink'></a></h1>
+<ul>
+<li>Windows: Install &#39;Git for Windows&#39;</li>
+</ul>
+
+<blockquote>
+<p><a href="https://git-for-windows.github.io">https://git-for-windows.github.io</a></p>
+</blockquote>
+
+<ul>
+<li>Mac: Type &#39;<code>git</code>&#39; in the Terminal application.</li>
+</ul>
+
+<blockquote>
+<p>If it&#39;s not installed, it will prompt you to install it.</p>
+</blockquote>
+
+<ul>
+<li>Debian: &#39;<code>sudo apt-get install git-all</code>&#39;
+or Red Hat &#39;<code>sudo yum install git-all</code>&#39;</li>
+</ul>
+
+<hr>
+<h1 id='git-workshop'>Git Workshop <a class='anchor' href='user_training.html#git-workshop' title='Permalink'></a></h1><h2 id='overview'>Overview <a class='anchor' href='user_training.html#overview' title='Permalink'></a></h2>
+<ol>
+<li>Configure Git</li>
+<li>Configure SSH Key</li>
+<li>Create a project</li>
+<li>Committing</li>
+<li>Feature branching</li>
+<li>Merge requests</li>
+<li>Feedback and Collaboration</li>
+</ol>
+
+<hr>
+<h1 id='configure-git'>Configure Git <a class='anchor' href='user_training.html#configure-git' title='Permalink'></a></h1>
+<p>One-time configuration of the Git client</p>
+<pre class="highlight shell"><code>git config --global user.name <span class="s2">"Your Name"</span>
+git config --global user.email you@example.com
+</code></pre>
+<hr>
+<h1 id='configure-ssh-key'>Configure SSH Key <a class='anchor' href='user_training.html#configure-ssh-key' title='Permalink'></a></h1><pre class="highlight shell"><code>ssh-keygen -t rsa -b 4096 -C <span class="s2">"you@computer-name"</span>
+</code></pre><pre class="highlight shell"><code><span class="c"># You will be prompted for the following information. Press enter to accept the defaults. Defaults appear in parentheses.</span>
+Generating public/private rsa key pair.
+Enter file <span class="k">in </span>which to save the key <span class="o">(</span>/Users/you/.ssh/id_rsa<span class="o">)</span>:
+Enter passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>:
+Enter same passphrase again:
+Your identification has been saved <span class="k">in</span> /Users/you/.ssh/id_rsa.
+Your public key has been saved <span class="k">in</span> /Users/you/.ssh/id_rsa.pub.
+The key fingerprint is:
+39:fc:ce:94:f4:09:13:95:64:9a:65:c1:de:05:4d:01 you@computer-name
+</code></pre>
+<p>Copy your public key and add it to your GitLab profile</p>
+<pre class="highlight shell"><code>cat ~/.ssh/id_rsa.pub
+</code></pre><pre class="highlight shell"><code>ssh-rsa AAAAB3NzaC1yc2EAAAADAQEL17Ufacg8cDhlQMS5NhV8z3GHZdhCrZbl4gz you@example.com
+</code></pre>
+<hr>
+<h1 id='create-a-project'>Create a project <a class='anchor' href='user_training.html#create-a-project' title='Permalink'></a></h1>
+<ul>
+<li>Create a project in your user namespace
+
+<ul>
+<li>Choose to import from &#39;Any Repo by URL&#39; and use
+<a href="https://gitlab.com/gitlab-org/training-examples.git">https://gitlab.com/gitlab-org/training-examples.git</a></li>
+</ul></li>
+<li>Create a &#39;<code>development</code>&#39; or &#39;<code>workspace</code>&#39; directory in your home directory.</li>
+<li>Clone the &#39;<code>training-examples</code>&#39; project</li>
+</ul>
+
+<hr>
+<h1 id='commands'>Commands <a class='anchor' href='user_training.html#commands' title='Permalink'></a></h1><pre class="highlight plaintext"><code>mkdir ~/development
+cd ~/development
+
+-or-
+
+mkdir ~/workspace
+cd ~/workspace
+
+git clone git@gitlab.example.com:&lt;username&gt;/training-examples.git
+cd training-examples
+</code></pre>
+<hr>
+<h1 id='git-concepts'>Git concepts <a class='anchor' href='user_training.html#git-concepts' title='Permalink'></a></h1>
+<p><strong>Untracked files</strong></p>
+
+<p>New files that Git has not been told to track previously.</p>
+
+<p><strong>Working area</strong></p>
+
+<p>Files that have been modified but are not committed.</p>
+
+<p><strong>Staging area</strong></p>
+
+<p>Modified files that have been marked to go in the next commit.</p>
+
+<hr>
+<h1 id='committing'>Committing <a class='anchor' href='user_training.html#committing' title='Permalink'></a></h1>
+<ol>
+<li>Edit &#39;<code>edit_this_file.rb</code>&#39; in &#39;<code>training-examples</code>&#39;</li>
+<li>See it listed as a changed file (working area)</li>
+<li>View the differences</li>
+<li>Stage the file</li>
+<li>Commit</li>
+<li>Push the commit to the remote</li>
+<li>View the git log</li>
+</ol>
+
+<hr>
+<h1 id='commands'>Commands <a class='anchor' href='user_training.html#commands' title='Permalink'></a></h1><pre class="highlight plaintext"><code># Edit `edit_this_file.rb`
+git status
+git diff
+git add &lt;file&gt;
+git commit -m 'My change'
+git push origin master
+git log
+</code></pre>
+<hr>
+<h1 id='feature-branching'>Feature branching <a class='anchor' href='user_training.html#feature-branching' title='Permalink'></a></h1>
+<ul>
+<li>Efficient parallel workflow for teams</li>
+<li>Develop each feature in a branch</li>
+<li>Keeps changes isolated</li>
+<li>Consider a 1-to-1 link to issues</li>
+<li>Push branches to the server frequently
+
+<ul>
+<li>Hint: This is a cheap backup for your work-in-progress code</li>
+</ul></li>
+</ul>
+
+<hr>
+<h1 id='feature-branching'>Feature branching <a class='anchor' href='user_training.html#feature-branching' title='Permalink'></a></h1>
+<ol>
+<li>Create a new feature branch called &#39;squash_some_bugs&#39;</li>
+<li>Edit &#39;<code>bugs.rb</code>&#39; and remove all the bugs.</li>
+<li>Commit</li>
+<li>Push</li>
+</ol>
+
+<hr>
+<h1 id='commands'>Commands <a class='anchor' href='user_training.html#commands' title='Permalink'></a></h1><pre class="highlight plaintext"><code>git checkout -b squash_some_bugs
+# Edit `bugs.rb`
+git status
+git add bugs.rb
+git commit -m 'Fix some buggy code'
+git push origin squash_some_bugs
+</code></pre>
+<hr>
+<h1 id='merge-requests'>Merge requests <a class='anchor' href='user_training.html#merge-requests' title='Permalink'></a></h1>
+<ul>
+<li>When you want feedback create a merge request</li>
+<li>Target is the ‘default’ branch (usually master)</li>
+<li>Assign or mention the person you would like to review</li>
+<li>Add &#39;WIP&#39; to the title if it&#39;s a work in progress</li>
+<li>When accepting, always delete the branch</li>
+<li>Anyone can comment, not just the assignee</li>
+<li>Push corrections to the same branch</li>
+</ul>
+
+<hr>
+<h1 id='merge-requests'>Merge requests <a class='anchor' href='user_training.html#merge-requests' title='Permalink'></a></h1>
+<p><strong>Create your first merge request</strong></p>
+
+<ol>
+<li>Use the blue button in the activity feed</li>
+<li>View the diff (changes) and leave a comment</li>
+<li>Push a new commit to the same branch</li>
+<li>Review the changes again and notice the update</li>
+</ol>
+
+<hr>
+<h1 id='feedback-and-collaboration'>Feedback and Collaboration <a class='anchor' href='user_training.html#feedback-and-collaboration' title='Permalink'></a></h1>
+<ul>
+<li>Merge requests are a time for feedback and collaboration</li>
+<li>Giving feedback is hard</li>
+<li>Be as kind as possible</li>
+<li>Receiving feedback is hard</li>
+<li>Be as receptive as possible</li>
+<li>Feedback is about the best code, not the person. You are not your code</li>
+</ul>
+
+<hr>
+<h1 id='feedback-and-collaboration'>Feedback and Collaboration <a class='anchor' href='user_training.html#feedback-and-collaboration' title='Permalink'></a></h1>
+<p>Review the Thoughtbot code-review guide for suggestions to follow when reviewing merge requests:
+<a href="https://github.com/thoughtbot/guides/tree/master/code-review">https://github.com/thoughtbot/guides/tree/master/code-review</a></p>
+
+<p>See GitLab merge requests for examples:
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests">https://gitlab.com/gitlab-org/gitlab-ce/merge_requests</a></p>
+
+<hr>
+<h1 id='explore-gitlab-projects'>Explore GitLab projects <a class='anchor' href='user_training.html#explore-gitlab-projects' title='Permalink'></a></h1>
+<p><a target="_blank" href="logo.png"><img src="logo.png" title="" alt="fit"/></a></p>
+
+<ul>
+<li>Dashboard</li>
+<li>User Preferences</li>
+<li>ReadMe, Changelog, License shortcuts</li>
+<li>Issues</li>
+<li>Milestones and Labels</li>
+<li>Manage project members</li>
+<li>Project settings</li>
+</ul>
+
+<hr>
+<h1 id='tags'>Tags <a class='anchor' href='user_training.html#tags' title='Permalink'></a></h1>
+<ul>
+<li>Useful for marking deployments and releases</li>
+<li>Annotated tags are an unchangeable part of Git history</li>
+<li>Soft/lightweight tags can be set and removed at will</li>
+<li>Many projects combine an anotated release tag with a stable branch</li>
+<li>Consider setting deployment/release tags automatically</li>
+</ul>
+
+<hr>
+<h1 id='tags'>Tags <a class='anchor' href='user_training.html#tags' title='Permalink'></a></h1>
+<ul>
+<li>Create a lightweight tag</li>
+<li>Create an annotated tag</li>
+<li>Push the tags to the remote repository</li>
+</ul>
+
+<p><strong>Additional resources</strong></p>
+
+<p><a href="http://git-scm.com/book/en/Git-Basics-Tagging">http://git-scm.com/book/en/Git-Basics-Tagging</a></p>
+
+<hr>
+<h1 id='commands'>Commands <a class='anchor' href='user_training.html#commands' title='Permalink'></a></h1><pre class="highlight plaintext"><code>git checkout master
+
+# Lightweight tag
+git tag my_lightweight_tag
+
+# Annotated tag
+git tag -a v1.0 -m ‘Version 1.0’
+git tag
+
+git push origin --tags
+</code></pre>
+<hr>
+<h1 id='merge-conflicts'>Merge conflicts <a class='anchor' href='user_training.html#merge-conflicts' title='Permalink'></a></h1>
+<ul>
+<li>Happen often</li>
+<li>Learning to fix conflicts is hard</li>
+<li>Practice makes perfect</li>
+<li>Force push after fixing conflicts. Be careful!</li>
+</ul>
+
+<hr>
+<h1 id='merge-conflicts'>Merge conflicts <a class='anchor' href='user_training.html#merge-conflicts' title='Permalink'></a></h1>
+<ol>
+<li>Checkout a new branch and edit <code>conflicts.rb</code>. Add &#39;Line4&#39; and &#39;Line5&#39;.</li>
+<li>Commit and push</li>
+<li>Checkout master and edit <code>conflicts.rb</code>. Add &#39;Line6&#39; and &#39;Line7&#39; below &#39;Line3&#39;.</li>
+<li>Commit and push to master</li>
+<li>Create a merge request</li>
+</ol>
+
+<hr>
+<h1 id='merge-conflicts'>Merge conflicts <a class='anchor' href='user_training.html#merge-conflicts' title='Permalink'></a></h1>
+<p>After creating a merge request you should notice that conflicts exist. Resolve
+the conflicts locally by rebasing.</p>
+<pre class="highlight plaintext"><code>git rebase master
+
+# Fix conflicts by editing the files.
+
+git add conflicts.rb
+git commit -m 'Fix conflicts'
+git rebase --continue
+git push origin &lt;branch&gt; -f
+</code></pre>
+<hr>
+<h1 id='rebase-with-squash'>Rebase with squash <a class='anchor' href='user_training.html#rebase-with-squash' title='Permalink'></a></h1>
+<p>You may end up with a commit log that looks like this:</p>
+<pre class="highlight plaintext"><code>Fix issue #13
+Test
+Fix
+Fix again
+Test
+Test again
+Does this work?
+</code></pre>
+<p>Squash these in to meaningful commits using an interactive rebase.</p>
+
+<hr>
+<h1 id='rebase-with-squash'>Rebase with squash <a class='anchor' href='user_training.html#rebase-with-squash' title='Permalink'></a></h1>
+<p>Squash the commits on the same branch we used for the merge conflicts step.</p>
+<pre class="highlight plaintext"><code>git rebase -i master
+</code></pre>
+<p>In the editor, leave the first commit as &#39;pick&#39; and set others to &#39;fixup&#39;.</p>
+
+<hr>
+<h1 id='questions'>Questions? <a class='anchor' href='user_training.html#questions' title='Permalink'></a></h1>
+<p><a target="_blank" href="logo.png"><img src="logo.png" title="" alt="fit"/></a></p>
+
+<p>Thank you for your hard work!</p>
+
+<p><strong>Additional Resources</strong></p>
+
+<p>GitLab Documentation <a href="http://docs.gitlab.com/">http://docs.gitlab.com</a>
+GUI Clients <a href="http://git-scm.com/downloads/guis">http://git-scm.com/downloads/guis</a>
+Pro git book <a href="http://git-scm.com/book">http://git-scm.com/book</a>
+Platzi Course <a href="https://courses.platzi.com/courses/git-gitlab/">https://courses.platzi.com/courses/git-gitlab/</a>
+Code School tutorial <a href="http://try.github.io/">http://try.github.io/</a>
+Contact Us - <a href="https://doc.gitlab.cc/ee/university/training/subscribers@gitlab.com">subscribers@gitlab.com</a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/university/training/user_training.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>SQL Query Guidelines - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">SQL Query Guidelines</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="sql.html#sql-query-guidelines">SQL Query Guidelines</a>
+<ul>
+<li>
+<a href="sql.html#using-like-statements">Using LIKE Statements</a>
+</li>
+<li>
+<a href="sql.html#like-indexes">LIKE & Indexes</a>
+</li>
+<li>
+<a href="sql.html#plucking-ids">Plucking IDs</a>
+</li>
+<li>
+<a href="sql.html#use-unions">Use UNIONs</a>
+</li>
+<li>
+<a href="sql.html#ordering-by-creation-date">Ordering by Creation Date</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='sql-query-guidelines'>SQL Query Guidelines <a class='anchor' href='sql.html#sql-query-guidelines' title='Permalink'></a></h1>
+<p>This document describes various guidelines to follow when writing SQL queries,
+either using ActiveRecord/Arel or raw SQL queries.</p>
+<h2 id='using-like-statements'>Using LIKE Statements <a class='anchor' href='sql.html#using-like-statements' title='Permalink'></a></h2>
+<p>The most common way to search for data is using the <code>LIKE</code> statement. For
+example, to get all issues with a title starting with &quot;WIP:&quot; you&#39;d write the
+following query:</p>
+<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">issues</span>
+<span class="k">WHERE</span> <span class="n">title</span> <span class="k">LIKE</span> <span class="s1">'WIP:%'</span><span class="p">;</span>
+</code></pre>
+<p>On PostgreSQL the <code>LIKE</code> statement is case-sensitive. On MySQL this depends on
+the case-sensitivity of the collation, which is usually case-insensitive. To
+perform a case-insensitive <code>LIKE</code> on PostgreSQL you have to use <code>ILIKE</code> instead.
+This statement in turn isn&#39;t supported on MySQL.</p>
+
+<p>To work around this problem you should write <code>LIKE</code> queries using Arel instead
+of raw SQL fragments as Arel automatically uses <code>ILIKE</code> on PostgreSQL and <code>LIKE</code>
+on MySQL. This means that instead of this:</p>
+<pre class="highlight ruby"><code><span class="no">Issue</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="s1">'title LIKE ?'</span><span class="p">,</span> <span class="s1">'WIP:%'</span><span class="p">)</span>
+</code></pre>
+<p>You&#39;d write this instead:</p>
+<pre class="highlight ruby"><code><span class="no">Issue</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="no">Issue</span><span class="p">.</span><span class="nf">arel_table</span><span class="p">[</span><span class="ss">:title</span><span class="p">].</span><span class="nf">matches</span><span class="p">(</span><span class="s1">'WIP:%'</span><span class="p">))</span>
+</code></pre>
+<p>Here <code>matches</code> generates the correct <code>LIKE</code> / <code>ILIKE</code> statement depending on the
+database being used.</p>
+
+<p>If you need to chain multiple <code>OR</code> conditions you can also do this using Arel:</p>
+<pre class="highlight ruby"><code><span class="n">table</span> <span class="o">=</span> <span class="no">Issue</span><span class="p">.</span><span class="nf">arel_table</span>
+
+<span class="no">Issue</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="ss">:title</span><span class="p">].</span><span class="nf">matches</span><span class="p">(</span><span class="s1">'WIP:%'</span><span class="p">).</span><span class="nf">or</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="ss">:foo</span><span class="p">].</span><span class="nf">matches</span><span class="p">(</span><span class="s1">'WIP:%'</span><span class="p">)))</span>
+</code></pre>
+<p>For PostgreSQL this produces:</p>
+<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">issues</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="n">title</span> <span class="k">ILIKE</span> <span class="s1">'WIP:%'</span> <span class="k">OR</span> <span class="n">foo</span> <span class="k">ILIKE</span> <span class="s1">'WIP:%'</span><span class="p">)</span>
+</code></pre>
+<p>In turn for MySQL this produces:</p>
+<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">issues</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="n">title</span> <span class="k">LIKE</span> <span class="s1">'WIP:%'</span> <span class="k">OR</span> <span class="n">foo</span> <span class="k">LIKE</span> <span class="s1">'WIP:%'</span><span class="p">)</span>
+</code></pre><h2 id='like-amp-indexes'>LIKE &amp; Indexes <a class='anchor' href='sql.html#like-amp-indexes' title='Permalink'></a></h2>
+<p>Neither PostgreSQL nor MySQL use any indexes when using <code>LIKE</code> / <code>ILIKE</code> with a
+wildcard at the start. For example, this will not use any indexes:</p>
+<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">issues</span>
+<span class="k">WHERE</span> <span class="n">title</span> <span class="k">ILIKE</span> <span class="s1">'%WIP:%'</span><span class="p">;</span>
+</code></pre>
+<p>Because the value for <code>ILIKE</code> starts with a wildcard the database is not able to
+use an index as it doesn&#39;t know where to start scanning the indexes.</p>
+
+<p>MySQL provides no known solution to this problem. Luckily PostgreSQL <em>does</em>
+provide a solution: trigram GIN indexes. These indexes can be created as
+follows:</p>
+<pre class="highlight sql"><code><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="p">[</span><span class="n">CONCURRENTLY</span><span class="p">]</span> <span class="n">index_name_here</span>
+<span class="k">ON</span> <span class="k">table_name</span>
+<span class="k">USING</span> <span class="n">GIN</span><span class="p">(</span><span class="k">column_name</span> <span class="n">gin_trgm_ops</span><span class="p">);</span>
+</code></pre>
+<p>The key here is the <code>GIN(column_name gin_trgm_ops)</code> part. This creates a <a href="http://www.postgresql.org/docs/current/static/gin.html">GIN
+index</a> with the operator class set to <code>gin_trgm_ops</code>. These indexes
+<em>can</em> be used by <code>ILIKE</code> / <code>LIKE</code> and can lead to greatly improved performance.
+One downside of these indexes is that they can easily get quite large (depending
+on the amount of data indexed).</p>
+
+<p>To keep naming of these indexes consistent please use the following naming
+pattern:</p>
+<pre class="highlight plaintext"><code>index_TABLE_on_COLUMN_trigram
+</code></pre>
+<p>For example, a GIN/trigram index for <code>issues.title</code> would be called
+<code>index_issues_on_title_trigram</code>.</p>
+
+<p>Due to these indexes taking quite some time to be built they should be built
+concurrently. This can be done by using <code>CREATE INDEX CONCURRENTLY</code> instead of
+just <code>CREATE INDEX</code>. Concurrent indexes can <em>not</em> be created inside a
+transaction. Transactions for migrations can be disabled using the following
+pattern:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MigrationName</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="n">disable_ddl_transaction!</span>
+<span class="k">end</span>
+</code></pre>
+<p>For example:</p>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">AddUsersLowerUsernameEmailIndexes</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="n">disable_ddl_transaction!</span>
+
+  <span class="k">def</span> <span class="nf">up</span>
+    <span class="k">return</span> <span class="k">unless</span> <span class="no">Gitlab</span><span class="o">::</span><span class="no">Database</span><span class="p">.</span><span class="nf">postgresql?</span>
+
+    <span class="n">execute</span> <span class="s1">'CREATE INDEX CONCURRENTLY index_on_users_lower_username ON users (LOWER(username));'</span>
+    <span class="n">execute</span> <span class="s1">'CREATE INDEX CONCURRENTLY index_on_users_lower_email ON users (LOWER(email));'</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">down</span>
+    <span class="k">return</span> <span class="k">unless</span> <span class="no">Gitlab</span><span class="o">::</span><span class="no">Database</span><span class="p">.</span><span class="nf">postgresql?</span>
+
+    <span class="n">remove_index</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:index_on_users_lower_username</span>
+    <span class="n">remove_index</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:index_on_users_lower_email</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre><h2 id='plucking-ids'>Plucking IDs <a class='anchor' href='sql.html#plucking-ids' title='Permalink'></a></h2>
+<p>This can&#39;t be stressed enough: <strong>never</strong> use ActiveRecord&#39;s <code>pluck</code> to pluck a
+set of values into memory only to use them as an argument for another query. For
+example, this will make the database <strong>very</strong> sad:</p>
+<pre class="highlight ruby"><code><span class="n">projects</span> <span class="o">=</span> <span class="no">Project</span><span class="p">.</span><span class="nf">all</span><span class="p">.</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:id</span><span class="p">)</span>
+
+<span class="no">MergeRequest</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="ss">source_project_id: </span><span class="n">projects</span><span class="p">)</span>
+</code></pre>
+<p>Instead you can just use sub-queries which perform far better:</p>
+<pre class="highlight ruby"><code><span class="no">MergeRequest</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="ss">source_project_id: </span><span class="no">Project</span><span class="p">.</span><span class="nf">all</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="ss">:id</span><span class="p">))</span>
+</code></pre>
+<p>The <em>only</em> time you should use <code>pluck</code> is when you actually need to operate on
+the values in Ruby itself (e.g. write them to a file). In almost all other cases
+you should ask yourself &quot;Can I not just use a sub-query?&quot;.</p>
+<h2 id='use-unions'>Use UNIONs <a class='anchor' href='sql.html#use-unions' title='Permalink'></a></h2>
+<p>UNIONs aren&#39;t very commonly used in most Rails applications but they&#39;re very
+powerful and useful. In most applications queries tend to use a lot of JOINs to
+get related data or data based on certain criteria, but JOIN performance can
+quickly deteriorate as the data involved grows.</p>
+
+<p>For example, if you want to get a list of projects where the name contains a
+value <em>or</em> the name of the namespace contains a value most people would write
+the following query:</p>
+<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">projects</span>
+<span class="k">JOIN</span> <span class="n">namespaces</span> <span class="k">ON</span> <span class="n">namespaces</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">projects</span><span class="p">.</span><span class="n">namespace_id</span>
+<span class="k">WHERE</span> <span class="n">projects</span><span class="p">.</span><span class="n">name</span> <span class="k">ILIKE</span> <span class="s1">'%gitlab%'</span>
+<span class="k">OR</span> <span class="n">namespaces</span><span class="p">.</span><span class="n">name</span> <span class="k">ILIKE</span> <span class="s1">'%gitlab%'</span><span class="p">;</span>
+</code></pre>
+<p>Using a large database this query can easily take around 800 milliseconds to
+run. Using a UNION we&#39;d write the following instead:</p>
+<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="n">projects</span><span class="p">.</span><span class="o">*</span>
+<span class="k">FROM</span> <span class="n">projects</span>
+<span class="k">WHERE</span> <span class="n">projects</span><span class="p">.</span><span class="n">name</span> <span class="k">ILIKE</span> <span class="s1">'%gitlab%'</span>
+
+<span class="k">UNION</span>
+
+<span class="k">SELECT</span> <span class="n">projects</span><span class="p">.</span><span class="o">*</span>
+<span class="k">FROM</span> <span class="n">projects</span>
+<span class="k">JOIN</span> <span class="n">namespaces</span> <span class="k">ON</span> <span class="n">namespaces</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">projects</span><span class="p">.</span><span class="n">namespace_id</span>
+<span class="k">WHERE</span> <span class="n">namespaces</span><span class="p">.</span><span class="n">name</span> <span class="k">ILIKE</span> <span class="s1">'%gitlab%'</span><span class="p">;</span>
+</code></pre>
+<p>This query in turn only takes around 15 milliseconds to complete while returning
+the exact same records.</p>
+
+<p>This doesn&#39;t mean you should start using UNIONs everywhere, but it&#39;s something
+to keep in mind when using lots of JOINs in a query and filtering out records
+based on the joined data.</p>
+
+<p>GitLab comes with a <code>Gitlab::SQL::Union</code> class that can be used to build a UNION
+of multiple <code>ActiveRecord::Relation</code> objects. You can use this class as
+follows:</p>
+<pre class="highlight ruby"><code><span class="n">union</span> <span class="o">=</span> <span class="no">Gitlab</span><span class="o">::</span><span class="no">SQL</span><span class="o">::</span><span class="no">Union</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">projects</span><span class="p">,</span> <span class="n">more_projects</span><span class="p">,</span> <span class="p">.</span><span class="nf">.</span><span class="o">.</span><span class="p">])</span>
+
+<span class="no">Project</span><span class="p">.</span><span class="nf">from</span><span class="p">(</span><span class="s2">"(</span><span class="si">#{</span><span class="n">union</span><span class="p">.</span><span class="nf">to_sql</span><span class="si">}</span><span class="s2">) projects"</span><span class="p">)</span>
+</code></pre><h2 id='ordering-by-creation-date'>Ordering by Creation Date <a class='anchor' href='sql.html#ordering-by-creation-date' title='Permalink'></a></h2>
+<p>When ordering records based on the time they were created you can simply order
+by the <code>id</code> column instead of ordering by <code>created_at</code>. Because IDs are always
+unique and incremented in the order that rows are created this will produce the
+exact same results. This also means there&#39;s no need to add an index on
+<code>created_at</code> to ensure consistent performance as <code>id</code> is already indexed by
+default.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/sql.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

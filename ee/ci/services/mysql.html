@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Using MySQL - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">GitLab CI Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Breadcrumb</a></li>
+            
+          
+          <li class="breadcrumb">Using MySQL</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="mysql.html#using-mysql">Using MySQL</a>
+<ul>
+<li>
+<a href="mysql.html#use-mysql-with-the-docker-executor">Use MySQL with the Docker executor</a>
+</li>
+<li>
+<a href="mysql.html#use-mysql-with-the-shell-executor">Use MySQL with the Shell executor</a>
+</li>
+<li>
+<a href="mysql.html#example-project">Example project</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='using-mysql'>Using MySQL <a class='anchor' href='mysql.html#using-mysql' title='Permalink'></a></h1>
+<p>As many applications depend on MySQL as their database, you will eventually
+need it in order for your tests to run. Below you are guided how to do this
+with the Docker and Shell executors of GitLab Runner.</p>
+<h2 id='use-mysql-with-the-docker-executor'>Use MySQL with the Docker executor <a class='anchor' href='mysql.html#use-mysql-with-the-docker-executor' title='Permalink'></a></h2>
+<p>If you are using <a href="../runners/README.html">GitLab Runner</a> with the Docker executor
+you basically have everything set up already.</p>
+
+<p>First, in your <code>.gitlab-ci.yml</code> add:</p>
+<pre class="highlight yaml"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">mysql:latest</span>
+
+<span class="na">variables</span><span class="pi">:</span>
+  <span class="c1"># Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)</span>
+  <span class="na">MYSQL_DATABASE</span><span class="pi">:</span> <span class="s">el_duderino</span>
+  <span class="na">MYSQL_ROOT_PASSWORD</span><span class="pi">:</span> <span class="s">mysql_strong_password</span>
+</code></pre>
+<p>And then configure your application to use the database, for example:</p>
+<pre class="highlight yaml"><code><span class="na">Host</span><span class="pi">:</span> <span class="s">mysql</span>
+<span class="na">User</span><span class="pi">:</span> <span class="s">root</span>
+<span class="na">Password</span><span class="pi">:</span> <span class="s">mysql_strong_password</span>
+<span class="na">Database</span><span class="pi">:</span> <span class="s">el_duderino</span>
+</code></pre>
+<p>If you are wondering why we used <code>mysql</code> for the <code>Host</code>, read more at
+<a href="../docker/using_docker_images.html#how-is-service-linked-to-the-build">How is service linked to the build</a>.</p>
+
+<p>You can also use any other docker image available on <a href="https://hub.docker.com/r/_/mysql/">Docker Hub</a>.
+For example, to use MySQL 5.5 the service becomes <code>mysql:5.5</code>.</p>
+
+<p>The <code>mysql</code> image can accept some environment variables. For more details
+check the documentation on <a href="https://hub.docker.com/r/_/mysql/">Docker Hub</a>.</p>
+<h2 id='use-mysql-with-the-shell-executor'>Use MySQL with the Shell executor <a class='anchor' href='mysql.html#use-mysql-with-the-shell-executor' title='Permalink'></a></h2>
+<p>You can also use MySQL on manually configured servers that are using
+GitLab Runner with the Shell executor.</p>
+
+<p>First install the MySQL server:</p>
+<pre class="highlight shell"><code>sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
+</code></pre>
+<p>Pick a MySQL root password (can be anything), and type it twice when asked.</p>
+
+<p><em>Note: As a security measure you can run <code>mysql_secure_installation</code> to
+remove anonymous users, drop the test database and disable remote logins with
+the root user.</em></p>
+
+<p>The next step is to create a user, so login to MySQL as root:</p>
+<pre class="highlight shell"><code>mysql -u root -p
+</code></pre>
+<p>Then create a user (in our case <code>runner</code>) which will be used by your
+application. Change <code>$password</code> in the command below to a real strong password.</p>
+
+<p><em>Note: Do not type <code>mysql&gt;</code>, this is part of the MySQL prompt.</em></p>
+<pre class="highlight shell"><code><span class="gp">mysql&gt; </span>CREATE USER <span class="s1">'runner'</span>@<span class="s1">'localhost'</span> IDENTIFIED BY <span class="s1">'$password'</span>;
+</code></pre>
+<p>Create the database:</p>
+<pre class="highlight shell"><code><span class="gp">mysql&gt; </span>CREATE DATABASE IF NOT EXISTS <span class="sb">`</span>el_duderino<span class="sb">`</span> DEFAULT CHARACTER SET <span class="sb">`</span>utf8<span class="sb">`</span> COLLATE <span class="sb">`</span>utf8_unicode_ci<span class="sb">`</span>;
+</code></pre>
+<p>Grant the necessary permissions on the database:</p>
+<pre class="highlight shell"><code><span class="gp">mysql&gt; </span>GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, CREATE TEMPORARY TABLES, DROP, INDEX, ALTER, LOCK TABLES ON <span class="sb">`</span>el_duderino<span class="sb">`</span>.<span class="k">*</span> TO <span class="s1">'runner'</span>@<span class="s1">'localhost'</span>;
+</code></pre>
+<p>If all went well you can now quit the database session:</p>
+<pre class="highlight shell"><code><span class="gp">mysql&gt; </span><span class="se">\q</span>
+</code></pre>
+<p>Now, try to connect to the newly created database to check that everything is
+in place:</p>
+<pre class="highlight shell"><code>mysql -u runner -p -D el_duderino
+</code></pre>
+<p>As a final step, configure your application to use the database, for example:</p>
+<pre class="highlight shell"><code>Host: localhost
+User: runner
+Password: <span class="nv">$password</span>
+Database: el_duderino
+</code></pre><h2 id='example-project'>Example project <a class='anchor' href='mysql.html#example-project' title='Permalink'></a></h2>
+<p>We have set up an <a href="https://gitlab.com/gitlab-examples/mysql">Example MySQL Project</a> for your
+convenience that runs on <a href="https://gitlab.com">GitLab.com</a> using our publicly
+available <a href="../runners/README.html">shared runners</a>.</p>
+
+<p>Want to hack on it? Simply fork it, commit and push  your changes. Within a few
+moments the changes will be picked by a public runner and the build will begin.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ci/services/mysql.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>SSH - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Executors</a></li>
+            
+          
+          <li class="breadcrumb">SSH</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="ssh.html#ssh">SSH</a>
+<ul>
+<li>
+<a href="ssh.html#overview">Overview</a>
+</li>
+<li>
+<a href="ssh.html#security">Security</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='ssh'>SSH <a class='anchor' href='ssh.html#ssh' title='Permalink'></a></h1>
+<blockquote>
+<p><strong>Note:</strong>
+The SSH executor supports only scripts generated in Bash and the caching feature
+is currently not supported.</p>
+</blockquote>
+
+<p>This is a simple executor that allows you to execute builds on a remote machine
+by executing commands over SSH.</p>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="ssh.html#overview">Overview</a></li>
+<li><a href="ssh.html#security">Security</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='overview'>Overview <a class='anchor' href='ssh.html#overview' title='Permalink'></a></h2>
+<p>To use the SSH executor you need to specify <code>executor = &quot;ssh&quot;</code> under the
+<a href="../configuration/advanced-configuration.html#the-runnersssh-section"><code>[runners.ssh]</code></a> section. For example:</p>
+<pre class="highlight toml"><code><span class="nn">[[runners]]</span>
+  <span class="py">executor</span> <span class="p">=</span> <span class="s">"ssh"</span>
+  <span class="nn">[runners.ssh]</span>
+    <span class="py">host</span> <span class="p">=</span> <span class="s">"example.com"</span>
+    <span class="py">port</span> <span class="p">=</span> <span class="s">"22"</span>
+    <span class="py">user</span> <span class="p">=</span> <span class="s">"root"</span>
+    <span class="py">password</span> <span class="p">=</span> <span class="s">"password"</span>
+    <span class="py">identity_file</span> <span class="p">=</span> <span class="s">"/path/to/identity/file"</span>
+</code></pre>
+<p>You can use <code>password</code> or <code>identity_file</code> or both to authenticate against the
+server. GitLab Runner doesn&#39;t implicitly read <code>identity_file</code> from
+<code>/home/user/.ssh/id_(rsa|dsa|ecdsa)</code>. The <code>identity_file</code> needs to be
+explicitly specified.</p>
+
+<p>The project&#39;s source is checked out to:
+<code>~/builds/&lt;short-token&gt;/&lt;concurrent-id&gt;/&lt;namespace&gt;/&lt;project-name&gt;</code>.</p>
+
+<p>Where:</p>
+
+<ul>
+<li><code>&lt;short-token&gt;</code> is a shortened version of the Runner&#39;s token (first 8 letters)</li>
+<li><code>&lt;concurrent-id&gt;</code> is a unique number, identifying the local job ID on the
+particular Runner in context of the project</li>
+<li><code>&lt;namespace&gt;</code> is the namespace where the project is stored on GitLab</li>
+<li><code>&lt;project-name&gt;</code> is the name of the project as it is stored on GitLab</li>
+</ul>
+
+<p>To overwrite the <code>~/builds</code> directory, specify the <code>builds_dir</code> options under
+<code>[[runners]]</code> section in <a href="../configuration/advanced-configuration.html"><code>config.toml</code></a>.</p>
+<h2 id='security'>Security <a class='anchor' href='ssh.html#security' title='Permalink'></a></h2>
+<p>The SSH executor is susceptible to MITM attacks (man-in-the-middle), because of
+the missing <code>StrictHostKeyChecking</code> option. This will be fixed in one of the
+future releases.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/executors/ssh.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

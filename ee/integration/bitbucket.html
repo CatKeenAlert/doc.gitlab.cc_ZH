@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Integrate your GitLab server with Bitbucket - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Integrate your GitLab server with Bitbucket</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="bitbucket.html#integrate-your-gitlab-server-with-bitbucket">Integrate your GitLab server with Bitbucket</a>
+<ul>
+<li>
+<a href="bitbucket.html#overview">Overview</a>
+</li>
+<li>
+<a href="bitbucket.html#bitbucket-omniauth-provider">Bitbucket OmniAuth provider</a>
+</li>
+<li>
+<a href="bitbucket.html#bitbucket-project-import">Bitbucket project import</a>
+</li>
+<li>
+<a href="bitbucket.html#acknowledgemts">Acknowledgemts</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='integrate-your-gitlab-server-with-bitbucket'>Integrate your GitLab server with Bitbucket <a class='anchor' href='bitbucket.html#integrate-your-gitlab-server-with-bitbucket' title='Permalink'></a></h1>
+<p>Import projects from Bitbucket.org and login to your GitLab instance with your
+Bitbucket.org account.</p>
+<h2 id='overview'>Overview <a class='anchor' href='bitbucket.html#overview' title='Permalink'></a></h2>
+<p>You can set up Bitbucket.org as an OAuth provider so that you can use your
+credentials to authenticate into GitLab or import your projects from
+Bitbucket.org.</p>
+
+<ul>
+<li>To use Bitbucket.org as an OmniAuth provider, follow the <a href="bitbucket.html#bitbucket-omniauth-provider">Bitbucket OmniAuth
+provider</a> section.</li>
+<li>To import projects from Bitbucket, follow both the
+<a href="bitbucket.html#bitbucket-omniauth-provider">Bitbucket OmniAuth provider</a> and
+<a href="bitbucket.html#bitbucket-project-import">Bitbucket project import</a> sections.</li>
+</ul>
+<h2 id='bitbucket-omniauth-provider'>Bitbucket OmniAuth provider <a class='anchor' href='bitbucket.html#bitbucket-omniauth-provider' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+Make sure to first follow the <a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth configuration</a>
+before proceeding with setting up the Bitbucket integration.</p>
+</blockquote>
+
+<p>To enable the Bitbucket OmniAuth provider you must register your application
+with Bitbucket.org. Bitbucket will generate an application ID and secret key for
+you to use.</p>
+
+<ol>
+<li> Sign in to <a href="https://bitbucket.org">Bitbucket.org</a>.</li>
+<li> Navigate to your individual user settings (<strong>Bitbucket settings</strong>) or a team&#39;s
+settings (<strong>Manage team</strong>), depending on how you want the application registered.
+It does not matter if the application is registered as an individual or a
+team, that is entirely up to you.</li>
+<li> Select <strong>OAuth</strong> in the left menu under &quot;Access Management&quot;.</li>
+<li> Select <strong>Add consumer</strong>.</li>
+<li><p>Provide the required details:</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Item</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left"><strong>Name</strong></td>
+<td style="text-align: left">This can be anything. Consider something like <code>&lt;Organization&gt;&#39;s GitLab</code> or <code>&lt;Your Name&gt;&#39;s GitLab</code> or something else descriptive.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Application description</strong></td>
+<td style="text-align: left">Fill this in if you wish.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Callback URL</strong></td>
+<td style="text-align: left">Leave blank.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>URL</strong></td>
+<td style="text-align: left">The URL to your GitLab installation, e.g., <code>https://gitlab.example.com</code>.</td>
+</tr>
+</tbody></table>
+
+<p>And grant at least the following permissions:</p>
+<pre class="highlight plaintext"><code>Account: Email
+Repositories: Read, Admin
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong>
+It may seem a little odd to giving GitLab admin permissions to repositories,
+but this is needed in order for GitLab to be able to clone the repositories.</p>
+</blockquote>
+
+<p><a target="_blank" href="img/bitbucket_oauth_settings_page.png"><img src="img/bitbucket_oauth_settings_page.png" title="" alt="Bitbucket OAuth settings page"/></a></p></li>
+<li><p>Select <strong>Save</strong>.</p></li>
+<li><p>Select your newly created OAuth consumer and you should now see a Key and
+Secret in the list of OAuth customers. Keep this page open as you continue
+the configuration.</p>
+
+<p><a target="_blank" href="img/bitbucket_oauth_keys.png"><img src="img/bitbucket_oauth_keys.png" title="" alt="Bitbucket OAuth key"/></a></p></li>
+<li><p>On your GitLab server, open the configuration file:</p>
+<pre class="highlight plaintext"><code># For Omnibus packages
+sudo editor /etc/gitlab/gitlab.rb
+
+# For installations from source
+sudo -u git -H editor /home/git/gitlab/config/gitlab.yml
+</code></pre></li>
+<li><p>Follow the <a href="omniauth.html#initial-omniauth-configuration">Initial OmniAuth Configuration</a>
+for initial settings.</p></li>
+<li><p>Add the Bitbucket provider configuration:</p>
+
+<p>For Omnibus packages:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'omniauth_providers'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"name"</span> <span class="o">=&gt;</span> <span class="s2">"bitbucket"</span><span class="p">,</span>
+    <span class="s2">"app_id"</span> <span class="o">=&gt;</span> <span class="s2">"BITBUCKET_APP_KEY"</span><span class="p">,</span>
+    <span class="s2">"app_secret"</span> <span class="o">=&gt;</span> <span class="s2">"BITBUCKET_APP_SECRET"</span><span class="p">,</span>
+    <span class="s2">"url"</span> <span class="o">=&gt;</span> <span class="s2">"https://bitbucket.org/"</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</code></pre>
+<p>For installations from source:</p>
+<pre class="highlight yaml"><code><span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">bitbucket'</span><span class="pi">,</span>
+    <span class="nv">app_id</span><span class="pi">:</span> <span class="s1">'</span><span class="s">BITBUCKET_APP_KEY'</span><span class="pi">,</span>
+    <span class="nv">app_secret</span><span class="pi">:</span> <span class="s1">'</span><span class="s">BITBUCKET_APP_SECRET'</span> <span class="pi">}</span>
+</code></pre>
+<hr>
+
+<p>Where <code>BITBUCKET_APP_KEY</code> is the Key and <code>BITBUCKET_APP_SECRET</code> the Secret
+from the Bitbucket application page.</p></li>
+<li><p>Save the configuration file.</p></li>
+<li><p><a href="../administration/restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure</a> or <a href="../administration/restart_gitlab.html#installations-from-source">restart GitLab</a> for the changes to take effect if you
+installed GitLab via Omnibus or from source respectively.</p></li>
+</ol>
+
+<p>On the sign in page there should now be a Bitbucket icon below the regular sign
+in form. Click the icon to begin the authentication process. Bitbucket will ask
+the user to sign in and authorize the GitLab application. If everything goes
+well, the user will be returned to GitLab and will be signed in.</p>
+<h2 id='bitbucket-project-import'>Bitbucket project import <a class='anchor' href='bitbucket.html#bitbucket-project-import' title='Permalink'></a></h2>
+<p>To allow projects to be imported directly into GitLab, Bitbucket requires two
+extra setup steps compared to <a href="github.html">GitHub</a> and <a href="gitlab.html">GitLab.com</a>.</p>
+
+<p>Bitbucket doesn&#39;t allow OAuth applications to clone repositories over HTTPS, and
+instead requires GitLab to use SSH and identify itself using your GitLab
+server&#39;s SSH key.</p>
+
+<p>To be able to access repositories on Bitbucket, GitLab will automatically
+register your public key with Bitbucket as a deploy key for the repositories to
+be imported. Your public key needs to be at <code>~/.ssh/bitbucket_rsa</code> which
+translates to <code>/var/opt/gitlab/.ssh/bitbucket_rsa</code> for Omnibus packages and to
+<code>/home/git/.ssh/bitbucket_rsa.pub</code> for installations from source.</p>
+
+<hr>
+
+<p>Below are the steps that will allow GitLab to be able to import your projects
+from Bitbucket.</p>
+
+<ol>
+<li>Make sure you <a href="bitbucket.html#bitbucket-omniauth-provider">have enabled the Bitbucket OAuth support</a>.</li>
+<li><p>Create a new SSH key with an <strong>empty passphrase</strong>:</p>
+<pre class="highlight shell"><code>sudo -u git -H ssh-keygen
+</code></pre>
+<p>When asked to &#39;Enter file in which to save the key&#39; enter:
+<code>/var/opt/gitlab/.ssh/bitbucket_rsa</code> for Omnibus packages or
+<code>/home/git/.ssh/bitbucket_rsa</code> for installations from source. The name is
+important so make sure to get it right.</p>
+
+<blockquote>
+<p><strong>Warning:</strong>
+This key must NOT be associated with ANY existing Bitbucket accounts. If it
+is, the import will fail with an <code>Access denied! Please verify you can add
+deploy keys to this repository.</code> error.</p>
+</blockquote></li>
+<li><p>Next, you need to to configure the SSH client to use your new key. Open the
+SSH configuration file of the <code>git</code> user:</p>
+<pre class="highlight plaintext"><code># For Omnibus packages
+sudo editor /var/opt/gitlab/.ssh/config
+
+# For installations from source
+sudo editor /home/git/.ssh/config
+</code></pre></li>
+<li><p>Add a host configuration for <code>bitbucket.org</code>:</p>
+<pre class="highlight shell"><code>Host bitbucket.org
+  IdentityFile ~/.ssh/bitbucket_rsa
+  User git
+</code></pre></li>
+<li><p>Save the file and exit.</p></li>
+<li><p>Manually connect to <code>bitbucket.org</code> over SSH, while logged in as the <code>git</code>
+user that GitLab will use:</p>
+<pre class="highlight shell"><code>sudo -u git -H ssh bitbucket.org
+</code></pre>
+<p>That step is performed because GitLab needs to connect to Bitbucket over SSH,
+in order to add <code>bitbucket.org</code> to your GitLab server&#39;s known SSH hosts.</p></li>
+<li><p>Verify the RSA key fingerprint you&#39;ll see in the response matches the one
+in the <a href="https://confluence.atlassian.com/bitbucket/use-the-ssh-protocol-with-bitbucket-cloud-221449711.html#UsetheSSHprotocolwithBitbucketCloud-KnownhostorBitbucket%27spublickeyfingerprints">Bitbucket documentation</a> (the specific IP address
+doesn&#39;t matter):</p>
+<pre class="highlight shell"><code>The authenticity of host <span class="s1">'bitbucket.org (104.192.143.1)'</span> can<span class="s1">'t be established.
+RSA key fingerprint is SHA256:zzXQOXSRBEiUtuE8AikJYKwbHaxvSc0ojez9YXaGp1A.
+Are you sure you want to continue connecting (yes/no)?
+</span></code></pre></li>
+<li><p>If the fingerprint matches, type <code>yes</code> to continue connecting and have
+<code>bitbucket.org</code> be added to your known SSH hosts. After confirming you should
+see a permission denied message. If you see an authentication successful
+message you have done something wrong. The key you are using has already been
+added to a Bitbucket account and will cause the import script to fail. Ensure
+the key you are using CANNOT authenticate with Bitbucket.</p></li>
+<li><p>Restart GitLab to allow it to find the new public key.</p></li>
+</ol>
+
+<p>Your GitLab server is now able to connect to Bitbucket over SSH. You should be
+able to see the &quot;Import projects from Bitbucket&quot; option on the New Project page
+enabled.</p>
+<h2 id='acknowledgemts'>Acknowledgemts <a class='anchor' href='bitbucket.html#acknowledgemts' title='Permalink'></a></h2>
+<p>Special thanks to the writer behind the following article:</p>
+
+<ul>
+<li><a href="http://stratus3d.com/blog/2015/09/06/migrating-from-bitbucket-to-local-gitlab-server/">http://stratus3d.com/blog/2015/09/06/migrating-from-bitbucket-to-local-gitlab-server/</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/integration/bitbucket.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

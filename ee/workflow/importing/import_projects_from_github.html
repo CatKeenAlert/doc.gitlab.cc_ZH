@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Import your project from GitHub to GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">Workflow</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Migrating projects to a GitLab instance</a></li>
+            
+          
+          <li class="breadcrumb">Import your project from GitHub to GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="import_projects_from_github.html#import-your-project-from-github-to-gitlab">Import your project from GitHub to GitLab</a>
+<ul>
+<li>
+<a href="import_projects_from_github.html#overview">Overview</a>
+</li>
+<li>
+<a href="import_projects_from_github.html#how-it-works">How it works</a>
+</li>
+<li>
+<a href="import_projects_from_github.html#importing-your-github-repositories">Importing your GitHub repositories</a>
+<ul>
+<li>
+<a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-the-github-integration">Authorize access to your repositories using the GitHub integration</a>
+</li>
+<li>
+<a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-a-personal-access-token">Authorize access to your repositories using a personal access token</a>
+</li>
+<li>
+<a href="import_projects_from_github.html#select-which-repositories-to-import">Select which repositories to import</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='import-your-project-from-github-to-gitlab'>Import your project from GitHub to GitLab <a class='anchor' href='import_projects_from_github.html#import-your-project-from-github-to-gitlab' title='Permalink'></a></h1>
+<p>Import your projects from GitHub to GitLab with minimal effort.</p>
+<h2 id='overview'>Overview <a class='anchor' href='import_projects_from_github.html#overview' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+If you are an administrator you can enable the <a href="../../integration/github.html" title="GitHub integration">GitHub integration</a>
+in your GitLab instance sitewide. This configuration is optional, users will be
+able import their GitHub repositories with a <a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-a-personal-access-token">personal access token</a>.</p>
+</blockquote>
+
+<ul>
+<li>At its current state, GitHub importer can import:
+
+<ul>
+<li>the repository description (GitLab 7.7+)</li>
+<li>the Git repository data (GitLab 7.7+)</li>
+<li>the issues (GitLab 7.7+)</li>
+<li>the pull requests (GitLab 8.4+)</li>
+<li>the wiki pages (GitLab 8.4+)</li>
+<li>the milestones (GitLab 8.7+)</li>
+<li>the labels (GitLab 8.7+)</li>
+<li>the release note descriptions (GitLab 8.12+)</li>
+</ul></li>
+<li>References to pull requests and issues are preserved (GitLab 8.7+)</li>
+<li>Repository public access is retained. If a repository is private in GitHub
+it will be created as private in GitLab as well.</li>
+</ul>
+<h2 id='how-it-works'>How it works <a class='anchor' href='import_projects_from_github.html#how-it-works' title='Permalink'></a></h2>
+<p>When issues/pull requests are being imported, the GitHub importer tries to find
+the GitHub author/assignee in GitLab&#39;s database using the GitHub ID. For this
+to work, the GitHub author/assignee should have signed in beforehand in GitLab
+and <a href="https://doc.gitlab.cc/ee/profile/account/social_sign_in.html"><strong>associated their GitHub account</strong></a>. If the user is not
+found in GitLab&#39;s database, the project creator (most of the times the current
+user that started the import process) is set as the author, but a reference on
+the issue about the original GitHub author is kept.</p>
+
+<p>The importer will create any new namespaces (groups) if they don&#39;t exist or in
+the case the namespace is taken, the repository will be imported under the user&#39;s
+namespace that started the import process.</p>
+<h2 id='importing-your-github-repositories'>Importing your GitHub repositories <a class='anchor' href='import_projects_from_github.html#importing-your-github-repositories' title='Permalink'></a></h2>
+<p>The importer page is visible when you create a new project.</p>
+
+<p><a target="_blank" href="img/import_projects_from_github_new_project_page.png"><img src="img/import_projects_from_github_new_project_page.png" title="" alt="New project page on GitLab"/></a></p>
+
+<p>Click on the <strong>GitHub</strong> link and the import authorization process will start.
+There are two ways to authorize access to your GitHub repositories:</p>
+
+<ol>
+<li><a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-the-github-integration">Using the GitHub integration</a> (if it&#39;s enabled by your
+GitLab administrator). This is the preferred way as it&#39;s possible to
+preserve the GitHub authors/assignees. Read more in the <a href="import_projects_from_github.html#how-it-works">How it works</a>
+section.</li>
+<li><a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-a-personal-access-token">Using a personal access token</a> provided by GitHub.</li>
+</ol>
+
+<p><a target="_blank" href="img/import_projects_from_github_select_auth_method.png"><img src="img/import_projects_from_github_select_auth_method.png" title="" alt="Select authentication method"/></a></p>
+<h3 id='authorize-access-to-your-repositories-using-the-github-integration'>Authorize access to your repositories using the GitHub integration <a class='anchor' href='import_projects_from_github.html#authorize-access-to-your-repositories-using-the-github-integration' title='Permalink'></a></h3>
+<p>If the <a href="../../integration/github.html" title="GitHub integration">GitHub integration</a> is enabled by your GitLab administrator,
+you can use it instead of the personal access token.</p>
+
+<ol>
+<li>First you may want to connect your GitHub account to GitLab in order for
+the username mapping to be correct. Follow the <a href="https://doc.gitlab.cc/ee/profile/account/social_sign_in.html">social sign-in</a> documentation
+on how to do so.</li>
+<li>Once you connect GitHub, click the <strong>List your GitHub repositories</strong> button
+and you will be redirected to GitHub for permission to access your projects.</li>
+<li>After accepting, you&#39;ll be automatically redirected to the importer.</li>
+</ol>
+
+<p>You can now go on and <a href="import_projects_from_github.html#select-which-repositories-to-import">select which repositories to import</a>.</p>
+<h3 id='authorize-access-to-your-repositories-using-a-personal-access-token'>Authorize access to your repositories using a personal access token <a class='anchor' href='import_projects_from_github.html#authorize-access-to-your-repositories-using-a-personal-access-token' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+For a proper author/assignee mapping for issues and pull requests, the
+<a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-the-github-integration">GitHub integration</a> should be used instead of the
+<a href="import_projects_from_github.html#authorize-access-to-your-repositories-using-a-personal-access-token">personal access token</a>. If the GitHub integration is enabled by your
+GitLab administrator, it should be the preferred method to import your repositories.
+Read more in the <a href="import_projects_from_github.html#how-it-works">How it works</a> section.</p>
+</blockquote>
+
+<p>If you are not using the GitHub integration, you can still perform a one-off
+authorization with GitHub to grant GitLab access your repositories:</p>
+
+<ol>
+<li>Go to <a href="https://github.com/settings/tokens/new">https://github.com/settings/tokens/new</a>.</li>
+<li>Enter a token description.</li>
+<li>Check the <code>repo</code> scope.</li>
+<li>Click <strong>Generate token</strong>.</li>
+<li>Copy the token hash.</li>
+<li>Go back to GitLab and provide the token to the GitHub importer.</li>
+<li>Hit the <strong>List your GitHub repositories</strong> button and wait while GitLab reads
+your repositories&#39; information. Once done, you&#39;ll be taken to the importer
+page to select the repositories to import.</li>
+</ol>
+<h3 id='select-which-repositories-to-import'>Select which repositories to import <a class='anchor' href='import_projects_from_github.html#select-which-repositories-to-import' title='Permalink'></a></h3>
+<p>After you&#39;ve authorized access to your GitHub repositories, you will be
+redirected to the GitHub importer page.</p>
+
+<p>From there, you can see the import statuses of your GitHub repositories.</p>
+
+<ul>
+<li>Those that are being imported will show a <em>started</em> status,</li>
+<li>those already successfully imported will be green with a <em>done</em> status,</li>
+<li>whereas those that are not yet imported will have an <strong>Import</strong> button on the
+right side of the table.</li>
+</ul>
+
+<p>If you want, you can import all your GitHub projects in one go by hitting
+<strong>Import all projects</strong> in the upper left corner.</p>
+
+<p><a target="_blank" href="img/import_projects_from_github_importer.png"><img src="img/import_projects_from_github_importer.png" title="" alt="GitHub importer page"/></a></p>
+
+<hr>
+
+<p>You can also choose a different name for the project and a different namespace,
+if you have the privileges to do so.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/importing/import_projects_from_github.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

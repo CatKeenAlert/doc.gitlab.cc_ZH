@@ -1,0 +1,586 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>LDAP Additions in GitLab EE - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Authentication and Authorization</a></li>
+            
+          
+          <li class="breadcrumb">LDAP Additions in GitLab EE</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="ldap-ee.html#ldap-additions-in-gitlab-ee">LDAP Additions in GitLab EE</a>
+<ul>
+<li>
+<a href="ldap-ee.html#user-sync">User Sync</a>
+</li>
+<li>
+<a href="ldap-ee.html#group-sync">Group Sync</a>
+</li>
+<li>
+<a href="ldap-ee.html#administrator-sync">Administrator Sync</a>
+</li>
+<li>
+<a href="ldap-ee.html#external-groups">External Groups</a>
+</li>
+<li>
+<a href="ldap-ee.html#group-sync-technical-details">Group Sync Technical Details</a>
+<ul>
+<li>
+<a href="ldap-ee.html#supported-ldap-group-types-attributes">Supported LDAP Group Types/Attributes</a>
+</li>
+<li>
+<a href="ldap-ee.html#queries">Queries</a>
+</li>
+<li>
+<a href="ldap-ee.html#benchmarks">Benchmarks</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="ldap-ee.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="ldap-ee.html#referral-error">Referral Error</a>
+</li>
+<li>
+<a href="ldap-ee.html#user-dn-has-changed">User DN has changed</a>
+</li>
+<li>
+<a href="ldap-ee.html#user-is-not-being-added-to-a-group">User is not being added to a group</a>
+<ul>
+<li>
+<a href="ldap-ee.html#example-log-output">Example log output</a>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+</li>
+
+</ol>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='ldap-additions-in-gitlab-ee'>LDAP Additions in GitLab EE <a class='anchor' href='ldap-ee.html#ldap-additions-in-gitlab-ee' title='Permalink'></a></h1>
+<p>This is a continuation of the main <a href="ldap.html">LDAP documentation</a>, detailing LDAP
+features specific to GitLab Enterprise Edition.</p>
+<h2 id='user-sync'>User Sync <a class='anchor' href='ldap-ee.html#user-sync' title='Permalink'></a></h2>
+<p>Once per day, GitLab will run a worker to check and update GitLab
+users against LDAP.</p>
+
+<p>The process will execute the following access checks:</p>
+
+<ol>
+<li>Ensure the user is still present in LDAP</li>
+<li>If the LDAP server is Active Directory, ensure the user is active (not
+blocked/disabled state). This will only be checked if
+<code>active_directory: true</code> is set in the LDAP configuration <sup id="fnref1"><a href="ldap-ee.html#fn1" rel="footnote">1</a></sup></li>
+</ol>
+
+<p>The user will be set to <code>ldap_blocked</code> state in GitLab if the above conditions
+fail. This means the user will not be able to login or push/pull code.</p>
+
+<p>The process will also update the following user information:</p>
+
+<ol>
+<li>Email address</li>
+<li>If <code>sync_ssh_keys</code> is set, SSH public keys</li>
+<li>If Kerberos is enabled, Kerberos identity</li>
+</ol>
+
+<blockquote>
+<p><strong>Note:</strong> The LDAP sync process updates existing users while new users will
+  be created on first sign in.</p>
+</blockquote>
+<h2 id='group-sync'>Group Sync <a class='anchor' href='ldap-ee.html#group-sync' title='Permalink'></a></h2>
+<p>If <code>group_base</code> is set in LDAP configuration, a group sync process will run
+every hour, on the hour. This allows GitLab group membership to be automatically
+updated based on LDAP group members.</p>
+
+<p>The <code>group_base</code> configuration should be a base LDAP &#39;container&#39;, such as an
+&#39;organization&#39; or &#39;organizational unit&#39;, that contains LDAP groups that should
+be available to GitLab. For example, <code>group_base</code> could be
+<code>ou=groups,dc=example,dc=com</code>. In the config file it will look like the
+following.</p>
+
+<p><strong>Omnibus configuration</strong></p>
+
+<p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="sh">
+main:
+  # snip...
+  group_base: ou=groups,dc=example,dc=com
+</span><span class="no">EOS</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a> for the changes to take effect.</p>
+
+<p><strong>Source configuration</strong></p>
+
+<p>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">production</span><span class="pi">:</span>
+  <span class="na">ldap</span><span class="pi">:</span>
+    <span class="na">servers</span><span class="pi">:</span>
+      <span class="na">main</span><span class="pi">:</span>
+        <span class="c1"># snip...</span>
+        <span class="na">group_base</span><span class="pi">:</span> <span class="s">ou=groups,dc=example,dc=com</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#installations-from-source">Restart GitLab</a> for the changes to take effect.</p>
+
+<hr>
+
+<p>To take advantage of group sync, group owners or masters will need to create an
+LDAP group link in their group <strong>Settings -&gt; LDAP Groups</strong> page. Multiple LDAP
+groups can be linked with a single GitLab group. When the link is created, an
+access level/role is specified (Guest, Reporter, Developer, Master, or Owner).</p>
+<h2 id='administrator-sync'>Administrator Sync <a class='anchor' href='ldap-ee.html#administrator-sync' title='Permalink'></a></h2>
+<p>As an extension of group sync, you can automatically manage your global GitLab
+administrators. Specify a group CN for <code>admin_group</code> and all members of the
+LDAP group will be given administrator privileges. The configuration will look
+like the following.</p>
+
+<blockquote>
+<p><strong>Note:</strong> Administrators will not be synced unless <code>group_base</code> is also
+  specified alongside <code>admin_group</code>. Also, only specify the CN of the admin
+  group, as opposed to the full DN.</p>
+</blockquote>
+
+<p><strong>Omnibus configuration</strong></p>
+
+<p>Edit <code>/etc/gitlab/gitlab.rb</code>:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="sh">
+main:
+  # snip...
+  group_base: ou=groups,dc=example,dc=com
+  admin_group: my_admin_group
+</span><span class="no">EOS</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a> for the changes to take effect.</p>
+
+<p><strong>Source configuration</strong></p>
+
+<p>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</p>
+<pre class="highlight yaml"><code><span class="na">production</span><span class="pi">:</span>
+  <span class="na">ldap</span><span class="pi">:</span>
+    <span class="na">servers</span><span class="pi">:</span>
+      <span class="na">main</span><span class="pi">:</span>
+        <span class="c1"># snip...</span>
+        <span class="na">group_base</span><span class="pi">:</span> <span class="s">ou=groups,dc=example,dc=com</span>
+        <span class="na">admin_group</span><span class="pi">:</span> <span class="s">my_admin_group</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#installations-from-source">Restart GitLab</a> for the changes to take effect.</p>
+<h2 id='external-groups'>External Groups <a class='anchor' href='ldap-ee.html#external-groups' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong> External Groups configuration is only available in GitLab EE Version
+8.9 and above.</p>
+</blockquote>
+
+<p>Using the <code>external_groups</code> setting will allow you to mark all users belonging
+to these groups as <a href="../../user/permissions.html">external users</a>. Group membership is
+checked periodically through the <code>LdapGroupSync</code> background task.</p>
+
+<p><strong>Omnibus configuration</strong></p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="sh">
+main:
+  # snip...
+  external_groups: ['interns', 'contractors']
+</span><span class="no">EOS</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#omnibus-gitlab-reconfigure">Reconfigure GitLab</a> for the changes to take effect.</p>
+
+<p><strong>Source configuration</strong></p>
+<pre class="highlight yaml"><code><span class="na">production</span><span class="pi">:</span>
+  <span class="na">ldap</span><span class="pi">:</span>
+    <span class="na">servers</span><span class="pi">:</span>
+      <span class="na">main</span><span class="pi">:</span>
+        <span class="c1"># snip...</span>
+        <span class="na">external_groups</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">interns'</span><span class="pi">,</span> <span class="s1">'</span><span class="s">contractors'</span><span class="pi">]</span>
+</code></pre>
+<p><a href="../restart_gitlab.html#installations-from-source">Restart GitLab</a> for the changes to take effect.</p>
+<h2 id='group-sync-technical-details'>Group Sync Technical Details <a class='anchor' href='ldap-ee.html#group-sync-technical-details' title='Permalink'></a></h2>
+<p>There is a lot going on with group sync &#39;under the hood&#39;. This section
+outlines what LDAP queries are executed and what behavior you can expect
+from group sync.</p>
+
+<p>Group member access will be downgraded from a higher level if their LDAP group
+membership changes. For example, if a user has &#39;Owner&#39; rights in a group and the
+next group sync reveals they should only have &#39;Developer&#39; privileges, their
+access will be adjusted accordingly. The only exception is if the user is the
+<em>last</em> owner in a group. Groups need at least one owner to fulfill
+administrative duties.</p>
+<h3 id='supported-ldap-group-types-attributes'>Supported LDAP Group Types/Attributes <a class='anchor' href='ldap-ee.html#supported-ldap-group-types-attributes' title='Permalink'></a></h3>
+<p>GitLab supports LDAP groups that use member attributes <code>member</code>, <code>submember</code>,
+<code>uniquemember</code>, <code>memberof</code> and <code>memberuid</code>. This means group sync supports, at
+least, LDAP groups with object class <code>groupOfNames</code>, <code>posixGroup</code>, and
+<code>groupOfUniqueName</code>. Other object classes should work fine as long as members
+are defined as one of the mentioned attributes. This also means GitLab supports
+Microsoft Active Directory, Apple Open Directory, Open LDAP, and 389 Server.
+Other LDAP servers should work, too.</p>
+
+<p>Active Directory also supports nested groups. Group sync will recursively
+resolve membership if <code>active_directory: true</code> is set in the configuration file.</p>
+
+<blockquote>
+<p><strong>Note:</strong> Nested group membership will only be resolved if the nested group
+  also falls within the configured <code>group_base</code>. For example, if GitLab sees a
+  nested group with DN <code>cn=nested_group,ou=special_groups,dc=example,dc=com</code> but
+  the configured <code>group_base</code> is <code>ou=groups,dc=example,dc=com</code>, <code>cn=nested_group</code>
+  will be ignored.</p>
+</blockquote>
+<h3 id='queries'>Queries <a class='anchor' href='ldap-ee.html#queries' title='Permalink'></a></h3>
+<ul>
+<li>Each LDAP group is queried a maximum of one time with base <code>group_base</code> and
+filter <code>(cn=&lt;cn_from_group_link&gt;)</code>.</li>
+<li>If the LDAP group has the <code>memberuid</code> attribute, GitLab will execute another
+LDAP query per member to obtain each user&#39;s full DN. These queries are
+executed with base <code>base</code>, scope &#39;base object&#39;, and a filter depending on
+whether <code>user_filter</code> is set. Filter may be <code>(uid=&lt;uid_from_group&gt;)</code> or a
+joining of <code>user_filter</code>.</li>
+</ul>
+<h3 id='benchmarks'>Benchmarks <a class='anchor' href='ldap-ee.html#benchmarks' title='Permalink'></a></h3>
+<p>Group sync was written to be as performant as possible. Data is cached, database
+queries are optimized, and LDAP queries are minimized. The last benchmark run
+revealed the following metrics:</p>
+
+<p>For 20,000 LDAP users, 11,000 LDAP groups and 1,000 GitLab groups with 10
+LDAP group links each:</p>
+
+<ul>
+<li>Initial sync (no existing members assigned in GitLab) took 1.8 hours</li>
+<li>Subsequent syncs (checking membership, no writes) took 15 minutes</li>
+</ul>
+
+<p>These metrics are meant to provide a baseline and performance may vary based on
+any number of factors. This was a pretty extreme benchmark and most instances will
+not have near this many users or groups. Disk speed, database performance,
+network and LDAP server response time will affect these metrics.</p>
+<h2 id='troubleshooting'>Troubleshooting <a class='anchor' href='ldap-ee.html#troubleshooting' title='Permalink'></a></h2><h3 id='referral-error'>Referral Error <a class='anchor' href='ldap-ee.html#referral-error' title='Permalink'></a></h3>
+<p>If you see <code>LDAP search error: Referral</code> in the logs, or when troubleshooting
+LDAP Group Sync, this error may indicate a configuration problem. The LDAP
+configuration <code>/etc/gitlab/gitlab.rb</code> (Omnibus) or <code>config/gitlab.yml</code> (source)
+is in YAML format and is sensitive to indentation. Check that <code>group_base</code> and
+<code>admin_group</code> configuration keys are indented 2 spaces past the server
+identifier. The default identifier is <code>main</code> and an example snippet looks like
+the following:</p>
+<pre class="highlight yaml"><code><span class="na">main</span><span class="pi">:</span> <span class="c1"># 'main' is the GitLab 'provider ID' of this LDAP server</span>
+  <span class="na">label</span><span class="pi">:</span> <span class="s1">'</span><span class="s">LDAP'</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s1">'</span><span class="s">ldap.example.com'</span>
+  <span class="s">...</span>
+  <span class="na">group_base</span><span class="pi">:</span> <span class="s1">'</span><span class="s">cn=my_group,ou=groups,dc=example,dc=com'</span>
+  <span class="na">admin_group</span><span class="pi">:</span> <span class="s1">'</span><span class="s">my_admin_group'</span>
+</code></pre><h3 id='user-dn-has-changed'>User DN has changed <a class='anchor' href='ldap-ee.html#user-dn-has-changed' title='Permalink'></a></h3>
+<p>When an LDAP user is created in GitLab, their LDAP DN is stored for later reference.
+If a user&#39;s DN changes, it can cause problems for LDAP sync. Administrators can
+manually update a user&#39;s stored DN in this case.</p>
+
+<blockquote>
+<p><strong>Note:</strong> If GitLab cannot find a user by their DN, it will attempt to fallback
+  to finding the user by their email. If the lookup is successful, GitLab will
+  update the stored DN to the new value.</p>
+</blockquote>
+
+<ol>
+<li>Sign in to GitLab as an administrator user.</li>
+<li>Navigate to <strong>Admin area -&gt; Users</strong>.</li>
+<li>Search for the user</li>
+<li>Open the user, by clicking on their name. Do not click &#39;Edit&#39;.</li>
+<li>Navigate to the <strong>Identities</strong> tab.</li>
+<li>Click &#39;Edit&#39; next to the LDAP identity.</li>
+<li>Change the &#39;Identifier&#39; to match the user&#39;s new LDAP DN.</li>
+<li>Save the identity.</li>
+</ol>
+
+<p>Now the user should sync correctly.</p>
+<h3 id='user-is-not-being-added-to-a-group'>User is not being added to a group <a class='anchor' href='ldap-ee.html#user-is-not-being-added-to-a-group' title='Permalink'></a></h3>
+<p>Sometimes you may think a particular user should be added to a GitLab group via
+LDAP group sync, but for some reason it&#39;s not happening. There are several
+things to check to debug the situation.</p>
+
+<ul>
+<li>Ensure LDAP configuration has a <code>group_base</code> specified. This configuration is
+required for group sync to work properly.</li>
+<li>Ensure the correct LDAP group link is added to the GitLab group. Check group
+links by visiting the GitLab group, then <strong>Settings dropdown -&gt; LDAP groups</strong>.</li>
+<li>Check that the user has an LDAP identity
+
+<ol>
+<li>Sign in to GitLab as an administrator user.</li>
+<li>Navigate to <strong>Admin area -&gt; Users</strong>.</li>
+<li>Search for the user</li>
+<li>Open the user, by clicking on their name. Do not click &#39;Edit&#39;.</li>
+<li>Navigate to the <strong>Identities</strong> tab. There should be an LDAP identity with
+an LDAP DN as the &#39;Identifier&#39;.</li>
+</ol></li>
+</ul>
+
+<p>If all of the above looks good, jump in to a little more advanced debugging.
+Often, the best way to learn more about why group sync is behaving a certain
+way is to enable debug logging. There is verbose output that details every
+step of the sync.</p>
+
+<ol>
+<li><p>Start a Rails console</p>
+<pre class="highlight shell"><code><span class="c"># For Omnibus installations</span>
+sudo gitlab-rails console
+
+<span class="c"># For installations from source</span>
+sudo -u git -H bundle <span class="nb">exec </span>rails console production
+</code></pre></li>
+<li><p>Set the log level to debug (only for this session):</p>
+<pre class="highlight ruby"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">logger</span><span class="p">.</span><span class="nf">level</span> <span class="o">=</span> <span class="no">Logger</span><span class="o">::</span><span class="no">DEBUG</span>
+</code></pre></li>
+<li><p>Choose a GitLab group to test with. This group should have an LDAP group link
+already configured. If the output is <code>nil</code>, the group could not be found.
+If a bunch of group attributes are output, your group was found successfully.</p>
+<pre class="highlight ruby"><code><span class="n">group</span> <span class="o">=</span> <span class="no">Group</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'my_group'</span><span class="p">)</span>
+
+<span class="c1"># Output</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;Group:0x007fe825196558 id: 1234, name: "my_group"...&gt;</span>
+</code></pre></li>
+<li><p>Run a group sync for this particular group.</p>
+<pre class="highlight ruby"><code><span class="no">EE</span><span class="o">::</span><span class="no">Gitlab</span><span class="o">::</span><span class="no">LDAP</span><span class="o">::</span><span class="no">Sync</span><span class="o">::</span><span class="no">Group</span><span class="p">.</span><span class="nf">execute_all_providers</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+</code></pre></li>
+<li><p>Look through the output of the sync. See <a href="ldap-ee.html#example-log-output">example log output</a>
+below for more information about the output.</p></li>
+<li><p>If you still aren&#39;t able to see why the user isn&#39;t being added, query the
+LDAP group directly to see what members are listed. Still in the Rails console,
+run the following query:</p>
+<pre class="highlight ruby"><code><span class="n">adapter</span> <span class="o">=</span> <span class="no">Gitlab</span><span class="o">::</span><span class="no">LDAP</span><span class="o">::</span><span class="no">Adapter</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'ldapmain'</span><span class="p">)</span> <span class="c1"># If `main` is the LDAP provider</span>
+<span class="n">ldap_group</span> <span class="o">=</span> <span class="no">EE</span><span class="o">::</span><span class="no">Gitlab</span><span class="o">::</span><span class="no">LDAP</span><span class="o">::</span><span class="no">Group</span><span class="p">.</span><span class="nf">find_by_cn</span><span class="p">(</span><span class="s1">'group_cn_here'</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
+
+<span class="c1"># Output</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;EE::Gitlab::LDAP::Group:0x007fcbdd0bb6d8</span>
+</code></pre></li>
+<li><p>Query the LDAP group&#39;s member DNs and see if the user&#39;s DN is in the list.
+One of the DNs here should match the &#39;Identifier&#39; from the LDAP identity
+checked earlier. If it doesn&#39;t, the user does not appear to be in the LDAP
+group.</p>
+<pre class="highlight ruby"><code><span class="n">ldap_group</span><span class="p">.</span><span class="nf">member_dns</span>
+
+<span class="c1"># Output</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"uid=john,ou=people,dc=example,dc=com"</span><span class="p">,</span> <span class="s2">"uid=mary,ou=people,dc=example,dc=com"</span><span class="p">]</span>
+</code></pre></li>
+<li><p>Some LDAP servers don&#39;t store members by DN. Rather, they use UIDs instead.
+If you didn&#39;t see results from the last query, try querying by UIDs instead.</p>
+<pre class="highlight ruby"><code><span class="n">ldap_group</span><span class="p">.</span><span class="nf">member_uids</span>
+
+<span class="c1"># Output</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'john'</span><span class="p">,</span><span class="s1">'mary'</span><span class="p">]</span>
+</code></pre></li>
+</ol>
+<h4 id='example-log-output'>Example log output <a class='anchor' href='ldap-ee.html#example-log-output' title='Permalink'></a></h4>
+<p>The output of the last command will be very verbose, but contains lots of
+helpful information. For the most part you can ignore log entries that are SQL
+statements.</p>
+
+<p>Indicates the point where syncing actually begins:</p>
+<pre class="highlight shell"><code>Started syncing all providers <span class="k">for</span> <span class="s1">'my_group'</span> group
+</code></pre>
+<p>The follow entry shows an array of all user DNs GitLab sees in the LDAP server.
+Note that these are the users for a single LDAP group, not a GitLab group. If
+you have multiple LDAP groups linked to this GitLab group, you will see multiple
+log entries like this - one for each LDAP group. If you don&#39;t see an LDAP user
+DN in this log entry, LDAP is not returning the user when we do the lookup.
+Verify the user is actually in the LDAP group.</p>
+<pre class="highlight shell"><code>Members <span class="k">in</span> <span class="s1">'ldap_group_1'</span> LDAP group: <span class="o">[</span><span class="s2">"uid=john0,ou=people,dc=example,dc=com"</span>,
+<span class="s2">"uid=mary0,ou=people,dc=example,dc=com"</span>, <span class="s2">"uid=john1,ou=people,dc=example,dc=com"</span>,
+<span class="s2">"uid=mary1,ou=people,dc=example,dc=com"</span>, <span class="s2">"uid=john2,ou=people,dc=example,dc=com"</span>,
+<span class="s2">"uid=mary2,ou=people,dc=example,dc=com"</span>, <span class="s2">"uid=john3,ou=people,dc=example,dc=com"</span>,
+<span class="s2">"uid=mary3,ou=people,dc=example,dc=com"</span>, <span class="s2">"uid=john4,ou=people,dc=example,dc=com"</span>,
+<span class="s2">"uid=mary4,ou=people,dc=example,dc=com"</span><span class="o">]</span>
+</code></pre>
+<p>Shortly after each of the above entries, you will see a hash of resolved member
+access levels. This hash represents all user DNs GitLab thinks should have
+access to this group, and at which access level (role). This hash is additive,
+and more DNs may be added, or existing entries modified, based on additional
+LDAP group lookups. The very last occurrence of this entry should indicate
+exactly which users GitLab believes should be added to the group.</p>
+
+<blockquote>
+<p><strong>Note:</strong> 10 is &#39;Guest&#39;, 20 is &#39;Reporter&#39;, 30 is &#39;Developer&#39;, 40 is &#39;Master&#39;
+  and 50 is &#39;Owner&#39;</p>
+</blockquote>
+<pre class="highlight shell"><code>Resolved <span class="s1">'my_group'</span> group member access: <span class="o">{</span><span class="s2">"uid=john0,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30,
+<span class="s2">"uid=mary0,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30, <span class="s2">"uid=john1,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30,
+<span class="s2">"uid=mary1,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30, <span class="s2">"uid=john2,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30,
+<span class="s2">"uid=mary2,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30, <span class="s2">"uid=john3,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30,
+<span class="s2">"uid=mary3,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30, <span class="s2">"uid=john4,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30,
+<span class="s2">"uid=mary4,ou=people,dc=example,dc=com"</span><span class="o">=</span>&gt;30<span class="o">}</span>
+</code></pre>
+<p>It&#39;s not uncommon to see warnings like the following. These indicate that GitLab
+would have added the user to a group, but the user could not be found in GitLab.
+Usually this is not a cause for concern.</p>
+
+<p>If you think a particular user should already exist in GitLab, but you&#39;re seeing
+this entry, it could be due to a mismatched DN stored in GitLab. See
+<a href="ldap-ee.html#User-DN-has-changed">User DN has changed</a> to update the user&#39;s LDAP identity.</p>
+<pre class="highlight shell"><code>User with DN <span class="sb">`</span><span class="nv">uid</span><span class="o">=</span>john0,ou<span class="o">=</span>people,dc<span class="o">=</span>example,dc<span class="o">=</span>com<span class="sb">`</span> should have access
+to <span class="s1">'my_group'</span> group but there is no user <span class="k">in </span>GitLab with that
+identity. Membership will be updated once the user signs <span class="k">in for
+</span>the first time.
+</code></pre>
+<p>Finally, the following entry says syncing has finished for this group:</p>
+<pre class="highlight shell"><code>Finished syncing all providers <span class="k">for</span> <span class="s1">'my_group'</span> group
+</code></pre>
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>In Active Directory, a user is marked as disabled/blocked if the user
+  account control attribute (<code>userAccountControl:1.2.840.113556.1.4.803</code>)
+  has bit 2 set. See <a href="https://ctogonewild.com/2009/09/03/bitmask-searches-in-ldap/">https://ctogonewild.com/2009/09/03/bitmask-searches-in-ldap/</a>
+  for more information.&nbsp;<a href="ldap-ee.html#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/auth/ldap-ee.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

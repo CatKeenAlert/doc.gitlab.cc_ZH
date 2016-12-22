@@ -1,0 +1,428 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Runner release process - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Runner release process</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-runner-release-process">GitLab Runner release process</a>
+<ul>
+<li>
+<a href="README.html#release-roadmap">Release roadmap</a>
+<ul>
+<li>
+<a href="README.html#stable-release-timeline">Stable release timeline</a>
+</li>
+<li>
+<a href="README.html#supported-releases">Supported releases</a>
+</li>
+<li>
+<a href="README.html#release-planning">Release planning</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#workflow-merging-and-tagging-strategy">Workflow, merging and tagging strategy</a>
+<ul>
+<li>
+<a href="README.html#stable-release">Stable release</a>
+</li>
+<li>
+<a href="README.html#patch-releases">Patch releases</a>
+</li>
+<li>
+<a href="README.html#branch-naming">Branch naming</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#documentation">Documentation</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-runner-release-process'>GitLab Runner release process <a class='anchor' href='README.html#gitlab-runner-release-process' title='Permalink'></a></h1>
+<p>To handle the growth of this project, in <code>v1.6</code> we&#39;ve introduced a release process correlated
+with GitLab&#39;s CE/EE release process.</p>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong></p>
+
+<ul>
+<li><a href="README.html#release-roadmap">Release roadmap</a>
+
+<ul>
+<li><a href="README.html#stable-release-timeline">Stable release timeline</a></li>
+<li><a href="README.html#supported-releases">Supported releases</a></li>
+<li><a href="README.html#release-planning">Release planning</a></li>
+</ul></li>
+<li><a href="README.html#workflow-merging-and-tagging-strategy">Workflow, merging and tagging strategy</a>
+
+<ul>
+<li><a href="README.html#stable-release">Stable release</a></li>
+<li><a href="README.html#patch-releases">Patch releases</a></li>
+<li><a href="README.html#branch-naming">Branch naming</a></li>
+</ul></li>
+<li><a href="README.html#documentation">Documentation</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='release-roadmap'>Release roadmap <a class='anchor' href='README.html#release-roadmap' title='Permalink'></a></h2>
+<p>Starting with <code>v1.4</code>, GitLab Runner is released on the 22nd day of each month -
+together with GitLab CE and GitLab EE projects.</p>
+<h3 id='stable-release-timeline'>Stable release timeline <a class='anchor' href='README.html#stable-release-timeline' title='Permalink'></a></h3>
+<ul>
+<li><p>12th day of a month:</p>
+
+<ul>
+<li>tag first RC version on <code>master</code> branch, e.g., <code>v1.6.0-rc.1</code></li>
+<li>deploy the RC version to <code>docker-ci-X.gitlap.com</code>
+(each next RC version until the next date should be deployed to those hosts)</li>
+</ul></li>
+<li><p>17th day of a month:</p>
+
+<ul>
+<li>tag next RC version on <code>master</code> branch, e.g., <code>v1.6.0-rc.2</code></li>
+<li>deploy the current RC version to <code>shared-runners-manager-X.gitlab.com</code>
+(each next RC version until the next date should be deployed to those hosts)</li>
+</ul></li>
+<li><p>20th day of a month:</p>
+
+<ul>
+<li><p>close the <em>new features</em> window.</p>
+
+<p>From now on we&#39;re merging only features that are ready and are eventually
+waiting for documentation or last fixes. After the <em>new features</em> window
+is closed, we will not merge any feature that wasn&#39;t discussed even if it
+contains all needed changes (code, new tests, documentation) and for which
+all tests are passing.</p>
+
+<blockquote>
+<p>There is nothing bad in moving a feature to the next release at this stage,
+if it&#39;s still not <em>production ready</em>!</p>
+</blockquote></li>
+</ul></li>
+<li><p>21th day of a month:</p>
+
+<ul>
+<li>tag last RC version, e.g., <code>v1.6.0-rc.5</code></li>
+</ul></li>
+<li><p>22nd day of a month:</p>
+
+<ul>
+<li>update the <code>CHANGELOG</code> file with entries for current release</li>
+<li>tag a stable version <strong>on <code>master</code> branch</strong></li>
+<li>create the <code>X-Y-stable</code> on the current master</li>
+<li>increase version number in <code>VERSION</code> file</li>
+<li>deploy stable version to <code>docker-ci-X.gitlap.com</code> and <code>shared-runners-manager-X.gitlab.com</code></li>
+<li>announce the new release in <em>GitLab&#39;s release blog post</em></li>
+<li>open the <em>new features</em> window for the next release</li>
+<li>start the <code>pick-into-stable</code> strategy for the <code>X-Y-stable</code> branch</li>
+</ul></li>
+</ul>
+<h3 id='supported-releases'>Supported releases <a class='anchor' href='README.html#supported-releases' title='Permalink'></a></h3>
+<p>Due to a fast development and release cycle - we release a new version
+each 22nd day of a month! - we need to prepare a strict policy of releases&#39;
+supporting.</p>
+
+<p>With this release process description, we&#39;re starting the <em>last three
+releases support</em> policy. That means when we&#39;ll release a <code>v1.6</code> version
+we will still support <code>v1.5.x</code> and <code>v1.4.x</code> versions. But only them.</p>
+
+<p>After releasing <code>v1.7</code> we&#39;ll support <code>v1.5.x</code> and <code>v1.6.x</code> and so on.</p>
+
+<p>Each support requests for previous versions will be closed with
+a ~wontfix label.</p>
+
+<p><strong>What is supported?</strong></p>
+
+<p>By the <em>release support</em> we understand:</p>
+
+<ul>
+<li>fixes for security bugs</li>
+<li>fixes for other bugs</li>
+<li>requests for documentation</li>
+<li>questions of type <em>&quot;How can I ...?&quot;</em> related to a supported version</li>
+</ul>
+
+<p>Proposals for new features or improvements are welcome, but will be not
+prepared for supported releases. Instead - if we decide to implement
+them - they will be planned for one of the upcoming releases.</p>
+<h3 id='release-planning'>Release planning <a class='anchor' href='README.html#release-planning' title='Permalink'></a></h3>
+<p>For release planning we use the <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/milestones"><em>milestones</em></a> feature.</p>
+
+<p>Each issue or merge request planned for a release will be assigned to
+one of <code>vX.Y</code> milestones. This rule will be very important after
+releasing the version when the <code>pick-into-stable</code> strategy will be used to
+merge changes into the release stable branch.</p>
+
+<p>After releasing a version, the <code>vX.Y</code> milestone will be still used to assign
+issues and merge requests related to support process (bugs, security fixes, etc.).</p>
+
+<p>We will plan only one version ahead. However, we still want to have a way
+to mark issues or merge requests that we decided to include in upcoming
+releases even if we don&#39;t know when we&#39;ll have time for it. For this
+purpose we&#39;ve prepared the %Backlog milestone.</p>
+<h2 id='workflow-merging-and-tagging-strategy'>Workflow, merging and tagging strategy <a class='anchor' href='README.html#workflow-merging-and-tagging-strategy' title='Permalink'></a></h2><h3 id='stable-release'>Stable release <a class='anchor' href='README.html#stable-release' title='Permalink'></a></h3>
+<p>For a particular change:</p>
+
+<ul>
+<li>start work from <code>master</code> branch and open an MR into the <code>master</code> branch</li>
+<li>assign the MR to a milestone related to the currently upcoming release</li>
+<li>choose a good, descriptive title for the MR since it will be automatically
+inserted in the <code>CHANGELOG</code> before doing the release</li>
+<li>if the feature is planned for the current release (confirmed by the
+assigned milestone), merge the feature branch into master</li>
+</ul>
+
+<p>For a whole release please follow the <a href="README.html#stable-release-timeline">Stable release timeline</a>.</p>
+<h3 id='patch-releases'>Patch releases <a class='anchor' href='README.html#patch-releases' title='Permalink'></a></h3>
+<p>For a particular change:</p>
+
+<ul>
+<li>if bug exists in the currently upcoming version:
+
+<ul>
+<li>start working from the <code>master</code> branch and open an MR against <code>master</code></li>
+<li>assign the MR to a milestone related to the oldest version in which the bug exists</li>
+<li>choose a good, descriptive title for the MR since it will be automatically
+inserted in the <code>CHANGELOG</code> before doing the release</li>
+<li>assign the <code>pick-into-stable</code> label</li>
+<li>merge the feature branch into <code>master</code></li>
+<li>after the branch is merged into <code>master</code>, cherry-pick the merge commit to each
+<code>X-Y-stable</code> branch starting from the branch related to the assigned
+milestone up to the latest release</li>
+</ul></li>
+<li>if bug doesn&#39;t exist in the currently upcoming version:
+
+<ul>
+<li>start work from <code>X-Y-stable</code> of the most recent version where the
+bug exists and open an MR against this branch</li>
+<li>assign the MR to a milestone related to the oldest version in which the bug exists</li>
+<li>choose a good, descriptive title for the MR since it will be automatically
+inserted in the <code>CHANGELOG</code> before doing the release</li>
+<li>assign the <code>pick-into-stable</code> label</li>
+<li>merge the feature branch into the assigned <code>X-Y-stable</code> branch</li>
+<li>after the branch is merged into the assigned <code>X-Y-stable</code> branch,
+cherry-pick the merge and commit to each <code>X-Y-stable</code> branch starting from
+the branch related to the assigned milestone up to the latest release before
+the MR target</li>
+</ul></li>
+</ul>
+
+<p>For each <code>X-Y-stable</code> branch - if the release should be published:</p>
+
+<ul>
+<li>update the <code>CHANGELOG</code> file with entries for the current release</li>
+<li>create the <code>vX.Y.patch</code> tag on the <code>X-Y-stable</code> branch</li>
+<li>add the created <code>CHANGELOG</code> entries into the <code>CHANGELOG</code> file on the
+<code>master</code> branch</li>
+</ul>
+<h3 id='branch-naming'>Branch naming <a class='anchor' href='README.html#branch-naming' title='Permalink'></a></h3>
+<p>While we don&#39;t enforce any strict branch naming strategy, we recommend following
+these guidelines:</p>
+
+<ol>
+<li><p>Choose descriptive names for branches.</p>
+
+<p>For example don&#39;t name the branch <code>patch-1</code> or <code>test1</code> (which tells nothing about its
+content nor its purpose) when it could be named <code>remove-unused-method-from-docker-executor</code>.</p></li>
+<li><p>Use name prefixes:</p>
+
+<ul>
+<li>if the branch adds/updates documentation, start its name with <code>docs/</code>,</li>
+<li>if the branch adds a new feature, start its name with <code>feature/</code>,</li>
+<li>if the branch adds a new improvement, start its name with <code>improvement/</code>,</li>
+<li>if the branch fixes a bug, start its name with <code>fix/</code> or <code>bugfix/</code>.</li>
+</ul></li>
+<li><p>Including issues number in branch name is neither recommended nor discouraged.
+However, if you want to link the changes with an issue, it&#39;s better to
+create the MR from this branch as soon as possible (you can use the <code>WIP:</code> prefix
+in the title to prevent any unexpected merges) and link all relevant issues
+in its description.</p>
+
+<p>Use <code>Fixes #123, #456</code> or <code>Closes #123, #345</code> or mix of them if it&#39;s
+reasonable. Thanks to this <a href="https://docs.gitlab.com/ce/user/project/issues/automatic_issue_closing.html">issue closing pattern</a>, the issue will
+be closed along with merging the MR.</p></li>
+</ol>
+<h2 id='documentation'>Documentation <a class='anchor' href='README.html#documentation' title='Permalink'></a></h2>
+<p>Some documentation tips:</p>
+
+<ol>
+<li><p>Create documentation as early as possible and before the change
+is added into the <code>master</code>/<code>X-Y-stable</code> branch (before the MR is merged).</p></li>
+<li><p>Properly mark features that need modifications in both Runner and GitLab CE/EE.</p>
+
+<p>When we introduce new features we mostly mark them in the documentation
+with the following:</p>
+<pre class="highlight plaintext"><code>&gt; Introduced in GitLab Runner v1.6.0
+</code></pre>
+<p>Most of the times that&#39;s enough, but sometimes we introduce a change that
+needs to be released in both GitLab Runner and GitLab CE/EE to work,
+e.g., support for artifacts expiration.</p>
+
+<p>In that case, it should be properly marked in documentation, so it&#39;s
+clear to all <strong>what exactly is required</strong> for the feature to work.</p>
+
+<p>We can mark it like:</p>
+<pre class="highlight plaintext"><code>&gt; Introduced in GitLab Runner v1.6.0 but it needs at least GitLab 8.12 to work.
+</code></pre>
+<p>On GitLab CE/EE side (e.g., in API documentation) we would then mark it like:</p>
+<pre class="highlight plaintext"><code>&gt; This endpoint was introduced in GitLab 8.12 but it needs at least GitLab
+  Runner v1.6.0 to work.
+</code></pre>
+<p>If the changes are not released at the same time, it would be good to
+mark which version is not released yet:</p>
+
+<blockquote>
+<p>This endpoint was introduced in GitLab 8.12 but it will
+need at least GitLab Runner v1.7.0 (not released yet) to work.</p>
+</blockquote></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/release_process/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

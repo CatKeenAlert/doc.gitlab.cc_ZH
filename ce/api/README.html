@@ -1,0 +1,605 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab API - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">GitLab API</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#gitlab-api">GitLab API</a>
+<ul>
+<li>
+<a href="README.html#resources">Resources</a>
+<ul>
+<li>
+<a href="README.html#internal-ci-api">Internal CI API</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#authentication">Authentication</a>
+<ul>
+<li>
+<a href="README.html#private-tokens">Private Tokens</a>
+</li>
+<li>
+<a href="README.html#oauth-2-tokens">OAuth 2 Tokens</a>
+</li>
+<li>
+<a href="README.html#personal-access-tokens">Personal Access Tokens</a>
+</li>
+<li>
+<a href="README.html#session-cookie">Session Cookie</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#basic-usage">Basic Usage</a>
+</li>
+<li>
+<a href="README.html#status-codes">Status codes</a>
+</li>
+<li>
+<a href="README.html#sudo">Sudo</a>
+</li>
+<li>
+<a href="README.html#pagination">Pagination</a>
+<ul>
+<li>
+<a href="README.html#pagination-link-header">Pagination Link header</a>
+</li>
+<li>
+<a href="README.html#other-pagination-headers">Other pagination headers</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#id-vs-iid"><code>id</code> vs <code>iid</code></a>
+</li>
+<li>
+<a href="README.html#data-validation-and-error-reporting">Data validation and error reporting</a>
+</li>
+<li>
+<a href="README.html#unknown-route">Unknown route</a>
+</li>
+<li>
+<a href="README.html#clients">Clients</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-api'>GitLab API <a class='anchor' href='README.html#gitlab-api' title='Permalink'></a></h1>
+<p>Automate GitLab via a simple and powerful API. All definitions can be found
+under <a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/lib/api"><code>/lib/api</code></a>.</p>
+<h2 id='resources'>Resources <a class='anchor' href='README.html#resources' title='Permalink'></a></h2>
+<p>Documentation for various API resources can be found separately in the
+following locations:</p>
+
+<ul>
+<li><a href="award_emoji.html">Award Emoji</a></li>
+<li><a href="branches.html">Branches</a></li>
+<li><a href="broadcast_messages.html">Broadcast Messages</a></li>
+<li><a href="builds.html">Builds</a></li>
+<li><a href="build_triggers.html">Build Triggers</a></li>
+<li><a href="build_variables.html">Build Variables</a></li>
+<li><a href="commits.html">Commits</a></li>
+<li><a href="deployments.html">Deployments</a></li>
+<li><a href="deploy_keys.html">Deploy Keys</a></li>
+<li><a href="templates/gitignores.html">Gitignores templates</a></li>
+<li><a href="templates/gitlab_ci_ymls.html">GitLab CI Config templates</a></li>
+<li><a href="groups.html">Groups</a></li>
+<li><a href="access_requests.html">Group Access Requests</a></li>
+<li><a href="members.html">Group Members</a></li>
+<li><a href="issues.html">Issues</a></li>
+<li><a href="boards.html">Issue Boards</a></li>
+<li><a href="keys.html">Keys</a></li>
+<li><a href="labels.html">Labels</a></li>
+<li><a href="merge_requests.html">Merge Requests</a></li>
+<li><a href="milestones.html">Milestones</a></li>
+<li><a href="templates/licenses.html">Open source license templates</a></li>
+<li><a href="namespaces.html">Namespaces</a></li>
+<li><a href="notes.html">Notes</a> (comments)</li>
+<li><a href="notification_settings.html">Notification settings</a></li>
+<li><a href="pipelines.html">Pipelines</a></li>
+<li><a href="projects.html">Projects</a> including setting Webhooks</li>
+<li><a href="access_requests.html">Project Access Requests</a></li>
+<li><a href="members.html">Project Members</a></li>
+<li><a href="project_snippets.html">Project Snippets</a></li>
+<li><a href="repositories.html">Repositories</a></li>
+<li><a href="repository_files.html">Repository Files</a></li>
+<li><a href="runners.html">Runners</a></li>
+<li><a href="services.html">Services</a></li>
+<li><a href="session.html">Session</a></li>
+<li><a href="settings.html">Settings</a></li>
+<li><a href="sidekiq_metrics.html">Sidekiq metrics</a></li>
+<li><a href="system_hooks.html">System Hooks</a></li>
+<li><a href="tags.html">Tags</a></li>
+<li><a href="todos.html">Todos</a></li>
+<li><a href="users.html">Users</a></li>
+<li><a href="ci/lint.html">Validate CI configuration</a></li>
+<li><a href="version.html">Version</a></li>
+</ul>
+<h3 id='internal-ci-api'>Internal CI API <a class='anchor' href='README.html#internal-ci-api' title='Permalink'></a></h3>
+<p>The following documentation is for the <a href="ci/README.html">internal CI API</a>:</p>
+
+<ul>
+<li><a href="ci/builds.html">Builds</a></li>
+<li><a href="ci/runners.html">Runners</a></li>
+</ul>
+<h2 id='authentication'>Authentication <a class='anchor' href='README.html#authentication' title='Permalink'></a></h2>
+<p>All API requests require authentication via a session cookie or token. There are
+three types of tokens available: private tokens, OAuth 2 tokens, and personal
+access tokens.</p>
+
+<p>If authentication information is invalid or omitted, an error message will be
+returned with status code <code>401</code>:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"401 Unauthorized"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='private-tokens'>Private Tokens <a class='anchor' href='README.html#private-tokens' title='Permalink'></a></h3>
+<p>You need to pass a <code>private_token</code> parameter via query string or header. If passed as a
+header, the header name must be <code>PRIVATE-TOKEN</code> (uppercase and with a dash instead of
+an underscore). You can find or reset your private token in your account page
+(<code>/profile/account</code>).</p>
+<h3 id='oauth-2-tokens'>OAuth 2 Tokens <a class='anchor' href='README.html#oauth-2-tokens' title='Permalink'></a></h3>
+<p>You can use an OAuth 2 token to authenticate with the API by passing it either in the
+<code>access_token</code> parameter or in the <code>Authorization</code> header.</p>
+
+<p>Example of using the OAuth2 token in the header:</p>
+<pre class="highlight shell"><code>curl --header <span class="s2">"Authorization: Bearer OAUTH-TOKEN"</span> https://gitlab.example.com/api/v3/projects
+</code></pre>
+<p>Read more about <a href="oauth2.html">GitLab as an OAuth2 client</a>.</p>
+<h3 id='personal-access-tokens'>Personal Access Tokens <a class='anchor' href='README.html#personal-access-tokens' title='Permalink'></a></h3>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/3749">Introduced</a> in GitLab 8.8.</p>
+</blockquote>
+
+<p>You can create as many personal access tokens as you like from your GitLab
+profile (<code>/profile/personal_access_tokens</code>); perhaps one for each application
+that needs access to the GitLab API.</p>
+
+<p>Once you have your token, pass it to the API using either the <code>private_token</code>
+parameter or the <code>PRIVATE-TOKEN</code> header.</p>
+<h3 id='session-cookie'>Session Cookie <a class='anchor' href='README.html#session-cookie' title='Permalink'></a></h3>
+<p>When signing in to GitLab as an ordinary user, a <code>_gitlab_session</code> cookie is
+set. The API will use this cookie for authentication if it is present, but using
+the API to generate a new session cookie is currently not supported.</p>
+<h2 id='basic-usage'>Basic Usage <a class='anchor' href='README.html#basic-usage' title='Permalink'></a></h2>
+<p>API requests should be prefixed with <code>api</code> and the API version. The API version
+is defined in <a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/lib/api/api.rb"><code>lib/api.rb</code></a>.</p>
+
+<p>Example of a valid API request:</p>
+<pre class="highlight shell"><code>GET https://gitlab.example.com/api/v3/projects?private_token<span class="o">=</span>9koXpg98eAheJpvBs5tK
+</code></pre>
+<p>Example of a valid API request using cURL and authentication via header:</p>
+<pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects"</span>
+</code></pre>
+<p>The API uses JSON to serialize data. You don&#39;t need to specify <code>.json</code> at the
+end of an API URL.</p>
+<h2 id='status-codes'>Status codes <a class='anchor' href='README.html#status-codes' title='Permalink'></a></h2>
+<p>The API is designed to return different status codes according to context and
+action. This way, if a request results in an error, the caller is able to get
+insight into what went wrong.</p>
+
+<p>The following table gives an overview of how the API functions generally behave.</p>
+
+<table><thead>
+<tr>
+<th>Request type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>GET</code></td>
+<td>Access one or more resources and return the result as JSON.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td>Return <code>201 Created</code> if the resource is successfully created and return the newly created resource as JSON.</td>
+</tr>
+<tr>
+<td><code>GET</code> / <code>PUT</code> / <code>DELETE</code></td>
+<td>Return <code>200 OK</code> if the resource is accessed, modified or deleted successfully. The (modified) result is returned as JSON.</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td>Designed to be idempotent, meaning a request to a resource still returns <code>200 OK</code> even it was deleted before or is not available. The reasoning behind this, is that the user is not really interested if the resource existed before or not.</td>
+</tr>
+</tbody></table>
+
+<p>The following table shows the possible return codes for API requests.</p>
+
+<table><thead>
+<tr>
+<th>Return values</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>The <code>GET</code>, <code>PUT</code> or <code>DELETE</code> request was successful, the resource(s) itself is returned as JSON.</td>
+</tr>
+<tr>
+<td><code>201 Created</code></td>
+<td>The <code>POST</code> request was successful and the resource is returned as JSON.</td>
+</tr>
+<tr>
+<td><code>304 Not Modified</code></td>
+<td>Indicates that the resource has not been modified since the last request.</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>A required attribute of the API request is missing, e.g., the title of an issue is not given.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>The user is not authenticated, a valid <a href="README.html#authentication">user token</a> is necessary.</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>The request is not allowed, e.g., the user is not allowed to delete a project.</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>A resource could not be accessed, e.g., an ID for a resource could not be found.</td>
+</tr>
+<tr>
+<td><code>405 Method Not Allowed</code></td>
+<td>The request is not supported.</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td>A conflicting resource already exists, e.g., creating a project with a name that already exists.</td>
+</tr>
+<tr>
+<td><code>422 Unprocessable</code></td>
+<td>The entity could not be processed.</td>
+</tr>
+<tr>
+<td><code>500 Server Error</code></td>
+<td>While handling the request something went wrong server-side.</td>
+</tr>
+</tbody></table>
+<h2 id='sudo'>Sudo <a class='anchor' href='README.html#sudo' title='Permalink'></a></h2>
+<p>All API requests support performing an API call as if you were another user,
+provided your private token is from an administrator account. You need to pass
+the <code>sudo</code> parameter either via query string or a header with an ID/username of
+the user you want to perform the operation as. If passed as a header, the
+header name must be <code>SUDO</code> (uppercase).</p>
+
+<p>If a non administrative <code>private_token</code> is provided, then an error message will
+be returned with status code <code>403</code>:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"403 Forbidden - Must be admin to use sudo"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>If the sudo user ID or username cannot be found, an error message will be
+returned with status code <code>404</code>:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"404 Not Found: No user id or username for: &lt;id/username&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<hr>
+
+<p>Example of a valid API call and a request using cURL with sudo request,
+providing a username:</p>
+<pre class="highlight shell"><code>GET /projects?private_token<span class="o">=</span>9koXpg98eAheJpvBs5tK&amp;sudo<span class="o">=</span>username
+</code></pre><pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --header <span class="s2">"SUDO: username"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects"</span>
+</code></pre>
+<p>Example of a valid API call and a request using cURL with sudo request,
+providing an ID:</p>
+<pre class="highlight shell"><code>GET /projects?private_token<span class="o">=</span>9koXpg98eAheJpvBs5tK&amp;sudo<span class="o">=</span>23
+</code></pre><pre class="highlight shell"><code>curl --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> --header <span class="s2">"SUDO: 23"</span> <span class="s2">"https://gitlab.example.com/api/v3/projects"</span>
+</code></pre><h2 id='pagination'>Pagination <a class='anchor' href='README.html#pagination' title='Permalink'></a></h2>
+<p>Sometimes the returned result will span across many pages. When listing
+resources you can pass the following parameters:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>page</code></td>
+<td>Page number (default: <code>1</code>)</td>
+</tr>
+<tr>
+<td><code>per_page</code></td>
+<td>Number of items to list per page (default: <code>20</code>, max: <code>100</code>)</td>
+</tr>
+</tbody></table>
+
+<p>In the example below, we list 50 <a href="namespaces.html">namespaces</a> per page.</p>
+<pre class="highlight shell"><code>curl --request PUT --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> <span class="s2">"https://gitlab.example.com/api/v3/namespaces?per_page=50
+</span></code></pre><h3 id='pagination-link-header'>Pagination Link header <a class='anchor' href='README.html#pagination-link-header' title='Permalink'></a></h3>
+<p><a href="http://www.w3.org/wiki/LinkHeader">Link headers</a> are sent back with each
+response. They have <code>rel</code> set to prev/next/first/last and contain the relevant
+URL. Please use these links instead of generating your own URLs.</p>
+
+<p>In the cURL example below, we limit the output to 3 items per page (<code>per_page=3</code>)
+and we request the second page (<code>page=2</code>) of <a href="notes.html">comments</a> of the issue
+with ID <code>8</code> which belongs to the project with ID <code>8</code>:</p>
+<pre class="highlight shell"><code>curl --head --header <span class="s2">"PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK"</span> https://gitlab.example.com/api/v3/projects/8/issues/8/notes?per_page<span class="o">=</span>3&amp;page<span class="o">=</span>2
+</code></pre>
+<p>The response will then be:</p>
+<pre class="highlight plaintext"><code>HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 1103
+Content-Type: application/json
+Date: Mon, 18 Jan 2016 09:43:18 GMT
+Link: &lt;https://gitlab.example.com/api/v3/projects/8/issues/8/notes?page=1&amp;per_page=3&gt;; rel="prev", &lt;https://gitlab.example.com/api/v3/projects/8/issues/8/notes?page=3&amp;per_page=3&gt;; rel="next", &lt;https://gitlab.example.com/api/v3/projects/8/issues/8/notes?page=1&amp;per_page=3&gt;; rel="first", &lt;https://gitlab.example.com/api/v3/projects/8/issues/8/notes?page=3&amp;per_page=3&gt;; rel="last"
+Status: 200 OK
+Vary: Origin
+X-Next-Page: 3
+X-Page: 2
+X-Per-Page: 3
+X-Prev-Page: 1
+X-Request-Id: 732ad4ee-9870-4866-a199-a9db0cde3c86
+X-Runtime: 0.108688
+X-Total: 8
+X-Total-Pages: 3
+</code></pre><h3 id='other-pagination-headers'>Other pagination headers <a class='anchor' href='README.html#other-pagination-headers' title='Permalink'></a></h3>
+<p>Additional pagination headers are also sent back.</p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>X-Total</code></td>
+<td>The total number of items</td>
+</tr>
+<tr>
+<td><code>X-Total-Pages</code></td>
+<td>The total number of pages</td>
+</tr>
+<tr>
+<td><code>X-Per-Page</code></td>
+<td>The number of items per page</td>
+</tr>
+<tr>
+<td><code>X-Page</code></td>
+<td>The index of the current page (starting at 1)</td>
+</tr>
+<tr>
+<td><code>X-Next-Page</code></td>
+<td>The index of the next page</td>
+</tr>
+<tr>
+<td><code>X-Prev-Page</code></td>
+<td>The index of the previous page</td>
+</tr>
+</tbody></table>
+<h2 id='id-vs-iid'><code>id</code> vs <code>iid</code> <a class='anchor' href='README.html#id-vs-iid' title='Permalink'></a></h2>
+<p>When you work with the API, you may notice two similar fields in API entities:
+<code>id</code> and <code>iid</code>. The main difference between them is scope.</p>
+
+<p>For example, an issue might have <code>id: 46</code> and <code>iid: 5</code>.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>Is unique across all issues and is used for any API call</td>
+</tr>
+<tr>
+<td><code>iid</code></td>
+<td>Is unique only in scope of a single project. When you browse issues or merge requests with the Web UI, you see the <code>iid</code></td>
+</tr>
+</tbody></table>
+
+<p>That means that if you want to get an issue via the API you should use the <code>id</code>:</p>
+<pre class="highlight shell"><code>GET /projects/42/issues/:id
+</code></pre>
+<p>On the other hand, if you want to create a link to a web page you should use
+the <code>iid</code>:</p>
+<pre class="highlight shell"><code>GET /projects/42/issues/:iid
+</code></pre><h2 id='data-validation-and-error-reporting'>Data validation and error reporting <a class='anchor' href='README.html#data-validation-and-error-reporting' title='Permalink'></a></h2>
+<p>When working with the API you may encounter validation errors, in which case
+the API will answer with an HTTP <code>400</code> status.</p>
+
+<p>Such errors appear in two cases:</p>
+
+<ul>
+<li>A required attribute of the API request is missing, e.g., the title of an
+issue is not given</li>
+<li>An attribute did not pass the validation, e.g., user bio is too long</li>
+</ul>
+
+<p>When an attribute is missing, you will get something like:</p>
+<pre class="highlight plaintext"><code>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+{
+    "message":"400 (Bad request) \"title\" not given"
+}
+</code></pre>
+<p>When a validation error occurs, error messages will be different. They will
+hold all details of validation errors:</p>
+<pre class="highlight plaintext"><code>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+{
+    "message": {
+        "bio": [
+            "is too long (maximum is 255 characters)"
+        ]
+    }
+}
+</code></pre>
+<p>This makes error messages more machine-readable. The format can be described as
+follows:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"&lt;property-name&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"&lt;error-message&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"&lt;error-message&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"&lt;embed-entity&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"&lt;property-name&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"&lt;error-message&gt;"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"&lt;error-message&gt;"</span><span class="p">,</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='unknown-route'>Unknown route <a class='anchor' href='README.html#unknown-route' title='Permalink'></a></h2>
+<p>When you try to access an API URL that does not exist you will receive 404 Not Found.</p>
+<pre class="highlight plaintext"><code>HTTP/1.1 404 Not Found
+Content-Type: application/json
+{
+    "error": "404 Not Found"
+}
+</code></pre><h2 id='clients'>Clients <a class='anchor' href='README.html#clients' title='Permalink'></a></h2>
+<p>There are many unofficial GitLab API Clients for most of the popular
+programming languages. Visit the <a href="https://about.gitlab.com/applications/#api-clients" title="Clients using the GitLab API">GitLab website</a> for a complete list.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/api/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

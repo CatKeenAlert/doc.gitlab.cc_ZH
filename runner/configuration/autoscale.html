@@ -1,0 +1,619 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Runners autoscale configuration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Configuring GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Runners autoscale configuration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="autoscale.html#runners-autoscale-configuration">Runners autoscale configuration</a>
+<ul>
+<li>
+<a href="autoscale.html#overview">Overview</a>
+</li>
+<li>
+<a href="autoscale.html#system-requirements">System requirements</a>
+</li>
+<li>
+<a href="autoscale.html#runner-configuration">Runner configuration</a>
+<ul>
+<li>
+<a href="autoscale.html#runner-global-options">Runner global options</a>
+</li>
+<li>
+<a href="autoscale.html#runners-options"><code>[[runners]]</code> options</a>
+</li>
+<li>
+<a href="autoscale.html#runners-machine-options"><code>[runners.machine]</code> options</a>
+</li>
+<li>
+<a href="autoscale.html#runners-cache-options"><code>[runners.cache]</code> options</a>
+</li>
+<li>
+<a href="autoscale.html#additional-configuration-information">Additional configuration information</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="autoscale.html#autoscaling-algorithm-and-parameters">Autoscaling algorithm and parameters</a>
+</li>
+<li>
+<a href="autoscale.html#how-current-limit-and-idlecount-generate-the-upper-limit-of-running-machines">How <code>current</code>, <code>limit</code> and <code>IdleCount</code> generate the upper limit of running machines</a>
+</li>
+<li>
+<a href="autoscale.html#off-peak-time-mode-configuration">Off Peak time mode configuration</a>
+</li>
+<li>
+<a href="autoscale.html#distributed-runners-caching">Distributed runners caching</a>
+</li>
+<li>
+<a href="autoscale.html#distributed-docker-registry-mirroring">Distributed Docker registry mirroring</a>
+</li>
+<li>
+<a href="autoscale.html#a-complete-example-of-config-toml">A complete example of <code>config.toml</code></a>
+</li>
+<li>
+<a href="autoscale.html#what-are-the-supported-cloud-providers">What are the supported cloud providers</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='runners-autoscale-configuration'>Runners autoscale configuration <a class='anchor' href='autoscale.html#runners-autoscale-configuration' title='Permalink'></a></h1>
+<blockquote>
+<p>The autoscale feature was introduced in GitLab Runner 1.1.0.</p>
+</blockquote>
+
+<hr>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+
+<ul>
+<li><a href="autoscale.html#overview">Overview</a></li>
+<li><a href="autoscale.html#system-requirements">System requirements</a></li>
+<li><a href="autoscale.html#runner-configuration">Runner configuration</a>
+
+<ul>
+<li><a href="autoscale.html#runner-global-options">Runner global options</a></li>
+<li><a href="autoscale.html#runners-options"><code>[[runners]]</code> options</a></li>
+<li><a href="autoscale.html#runnersmachine-options"><code>[runners.machine]</code> options</a></li>
+<li><a href="autoscale.html#runnerscache-options"><code>[runners.cache]</code> options</a></li>
+<li><a href="autoscale.html#additional-configuration-information">Additional configuration information</a></li>
+</ul></li>
+<li><a href="autoscale.html#autoscaling-algorithm-and-parameters">Autoscaling algorithm and parameters</a></li>
+<li><a href="autoscale.html#how-current-limit-and-idlecount-generate-the-upper-limit-of-running-machines">How <code>current</code>, <code>limit</code> and <code>IdleCount</code> generate the upper limit of running machines</a></li>
+<li><a href="autoscale.html#off-peak-time-mode-configuration">Off Peak time mode configuration</a></li>
+<li><a href="autoscale.html#distributed-runners-caching">Distributed runners caching</a></li>
+<li><a href="autoscale.html#distributed-docker-registry-mirroring">Distributed Docker registry mirroring</a></li>
+<li><a href="autoscale.html#a-complete-example-of-configtoml">A complete example of <code>config.toml</code></a></li>
+<li><a href="autoscale.html#what-are-the-supported-cloud-providers">What are the supported cloud providers</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='overview'>Overview <a class='anchor' href='autoscale.html#overview' title='Permalink'></a></h2>
+<p>Autoscale provides the ability to utilize resources in a more elastic and
+dynamic way.</p>
+
+<p>When this feature is enabled and configured properly, builds are executed on
+machines created <em>on demand</em>. Those machines, after the build is finished, can
+wait to run the next builds or can be removed after the configured <code>IdleTime</code>.
+In case of many cloud providers this helps to utilize the cost of already used
+instances.</p>
+
+<p>Thanks to runners being able to autoscale, your infrastructure contains only as
+much build instances as necessary at anytime. If you configure the Runner to
+only use autoscale, the system on which the Runner is installed acts as a
+bastion for all the machines it creates.</p>
+
+<p>Below, you can see a real life example of the runners autoscale feature, tested
+on GitLab.com for the <a href="https://gitlab.com/gitlab-org/gitlab-ce">GitLab Community Edition</a> project:</p>
+
+<p><a target="_blank" href="img/autoscale-example.png"><img src="img/autoscale-example.png" title="" alt="Real life example of autoscaling"/></a></p>
+
+<p>Each machine on the chart is an independent cloud instance, running build jobs
+inside of Docker containers.</p>
+<h2 id='system-requirements'>System requirements <a class='anchor' href='autoscale.html#system-requirements' title='Permalink'></a></h2>
+<p>To use the autoscale feature, the system which will host the Runner must have:</p>
+
+<ul>
+<li>GitLab Runner executable - installation guide can be found in
+<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner#installation">GitLab Runner Documentation</a></li>
+<li>Docker Machine executable - installation guide can be found in
+<a href="https://docs.docker.com/machine/install-machine/">Docker Machine documentation</a></li>
+</ul>
+
+<p>If you need to use any virtualization/cloud providers that aren&#39;t handled by
+Docker&#39;s Machine internal drivers, the appropriate driver plugin must be
+installed. The Docker Machine driver plugin installation and configuration is
+out of the scope of this documentation. For more details please read the
+<a href="https://docs.docker.com/machine/">Docker Machine documentation</a>.</p>
+<h2 id='runner-configuration'>Runner configuration <a class='anchor' href='autoscale.html#runner-configuration' title='Permalink'></a></h2>
+<p>In this section we will describe only the significant parameters from the
+autoscale feature point of view. For more configurations details please read
+the <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner#installation">GitLab Runner - Installation</a>
+and <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner#advanced-configuration">GitLab Runner - Advanced Configuration</a>.</p>
+<h3 id='runner-global-options'>Runner global options <a class='anchor' href='autoscale.html#runner-global-options' title='Permalink'></a></h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>concurrent</code></td>
+<td>integer</td>
+<td>Limits how many jobs globally can be run concurrently. This is the most upper limit of number of jobs using <em>all</em> defined runners, local and autoscale. Together with <code>limit</code> (from <a href="autoscale.html#runners-options"><code>[[runners]]</code> section</a>) and <code>IdleCount</code> (from <a href="advanced-configuration.html#the-runnersmachine-section"><code>[runners.machine]</code> section</a>) it affects the upper limit of created machines.</td>
+</tr>
+</tbody></table>
+<h3 id='runners-options'><code>[[runners]]</code> options <a class='anchor' href='autoscale.html#runners-options' title='Permalink'></a></h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>executor</code></td>
+<td>string</td>
+<td>To use the autoscale feature, <code>executor</code> must be set to <code>docker+machine</code> or <code>docker-ssh+machine</code>.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>integer</td>
+<td>Limits how many jobs can be handled concurrently by this specific token. 0 simply means don&#39;t limit. For autoscale it&#39;s the upper limit of machines created by this provider (in conjunction with <code>concurrent</code> and <code>IdleCount</code>).</td>
+</tr>
+</tbody></table>
+<h3 id='runners-machine-options'><code>[runners.machine]</code> options <a class='anchor' href='autoscale.html#runners-machine-options' title='Permalink'></a></h3>
+<p>Configuration parameters details can be found
+in <a href="advanced-configuration.html#the-runnersmachine-section">GitLab Runner - Advanced Configuration - The runners.machine section</a>.</p>
+<h3 id='runners-cache-options'><code>[runners.cache]</code> options <a class='anchor' href='autoscale.html#runners-cache-options' title='Permalink'></a></h3>
+<p>Configuration parameters details can be found
+in <a href="advanced-configuration.html#the-runnerscache-section">GitLab Runner - Advanced Configuration - The runners.cache section</a></p>
+<h3 id='additional-configuration-information'>Additional configuration information <a class='anchor' href='autoscale.html#additional-configuration-information' title='Permalink'></a></h3>
+<p>There is also a special mode, when you set <code>IdleCount = 0</code>. In this mode,
+machines are <strong>always</strong> created <strong>on-demand</strong> before each build (if there is no
+available machine in <em>Idle</em> state). After the build is finished, the autoscaling
+algorithm works
+<a href="autoscale.html#autoscaling-algorithm-and-parameters">the same as it is described below</a>.
+The machine is waiting for the next builds, and if no one is executed, after
+the <code>IdleTime</code> period, the machine is removed. If there are no builds, there
+are no machines in <em>Idle</em> state.</p>
+<h2 id='autoscaling-algorithm-and-parameters'>Autoscaling algorithm and parameters <a class='anchor' href='autoscale.html#autoscaling-algorithm-and-parameters' title='Permalink'></a></h2>
+<p>The autoscaling algorithm is based on three main parameters: <code>IdleCount</code>,
+<code>IdleTime</code> and <code>limit</code>.</p>
+
+<p>We say that each machine that does not run a build is in <em>Idle</em> state. When
+GitLab Runner is in autoscale mode, it monitors all machines and ensures that
+there is always an <code>IdleCount</code> of machines in <em>Idle</em> state.</p>
+
+<p>At the same time, GitLab Runner is checking the duration of the <em>Idle</em> state of
+each machine. If the time exceeds the <code>IdleTime</code> value, the machine is
+automatically removed.</p>
+
+<hr>
+
+<p><strong>Example:</strong>
+Let&#39;s suppose, that we have configured GitLab Runner with the following
+autoscale parameters:</p>
+<pre class="highlight shell"><code><span class="o">[[</span>runners]]
+  limit <span class="o">=</span> 10
+  <span class="o">(</span>...<span class="o">)</span>
+  executor <span class="o">=</span> <span class="s2">"docker+machine"</span>
+  <span class="o">[</span>runners.machine]
+    IdleCount <span class="o">=</span> 2
+    IdleTime <span class="o">=</span> 1800
+    <span class="o">(</span>...<span class="o">)</span>
+</code></pre>
+<p>At the beginning, when no builds are queued, GitLab Runner starts two machines
+(<code>IdleCount = 2</code>), and sets them in <em>Idle</em> state. If there is 30 minutes
+(<code>IdleTime = 1800</code>) of inactivity (since last project finished building), both
+machines will be removed. As of this moment we have <strong>zero</strong> machines in <em>Idle</em>
+state, so GitLab Runner starts 2 new machines to satisfy <code>IdleCount</code> which is
+set to 2.</p>
+
+<p>Now, let&#39;s assume that 5 builds are queued in GitLab CI. The first 2 builds are
+sent to the <em>Idle</em> machines. GitLab Runner notices that the number of <em>Idle</em>
+machines is less than <code>IdleCount</code> (<code>0 &lt; 2</code>), so it starts 2 new machines. Then,
+the next 2 builds from the queue are sent to those newly created machines.
+Again, the number of <em>Idle</em> machines is less than <code>IdleCount</code>, so GitLab Runner
+starts 2 new machines and the last queued build is sent to one of the <em>Idle</em>
+machines.</p>
+
+<p>We now have 1 <em>Idle</em> machine, so GitLab Runner starts another 1 new machine to
+satisfy <code>IdleCount</code>. Because there are no new builds in queue, those two
+machines stay in <em>Idle</em> state and GitLab Runner is satisfied.</p>
+
+<hr>
+
+<p><strong>This is what happened:</strong>
+We had 2 machines, waiting in <em>Idle</em> state for new builds. After the 5 builds
+where queued, new machines were created, so in total we had 7 machines. Five of
+them were running builds, and 2 were in <em>Idle</em> state, waiting for the next
+builds.</p>
+
+<p>The algorithm will still work in the same way; GitLab Runner will create a new
+<em>Idle</em> machine for each machine used for the build execution until <code>IdleCount</code>
+is satisfied. Those machines will be created up to the number defined by
+<code>limit</code> parameter. If GitLab Runner notices that there is a <code>limit</code> number of
+total created machines, it will stop autoscaling, and new builds will need to
+wait in the build queue until machines start returning to <em>Idle</em> state.</p>
+
+<p>In the above example we will always have two idle machines. The <code>IdleTime</code>
+applies only when we are over the <code>IdleCount</code>, then we try to reduce the number
+of machines to <code>IdleCount</code>.</p>
+
+<hr>
+
+<p><strong>Scaling down:</strong>
+After the build is finished, the machine is set to <em>Idle</em> state and is waiting
+for the next builds to be executed. Let&#39;s suppose that we have no new builds in
+the queue. After the time designated by <code>IdleTime</code> passes, the <em>Idle</em> machines
+will be removed. In our example, after 30 minutes, all machines will be removed
+(each machine after 30 minutes from when last build execution ended) and GitLab
+Runner will start to keep an <code>IdleCount</code> of <em>Idle</em> machines running, just like
+at the beginning of the example.</p>
+
+<hr>
+
+<p>So, to sum up:</p>
+
+<ol>
+<li>We start the Runner</li>
+<li>Runner creates 2 idle machines</li>
+<li>Runner picks one build</li>
+<li>Runner creates one more machine to fulfill the strong requirement of always
+having the two idle machines</li>
+<li>Build finishes, we have 3 idle machines</li>
+<li>When one of the three idle machines goes over <code>IdleTime</code> from the time when
+last time it picked the build it will be removed</li>
+<li>The Runner will always have at least 2 idle machines waiting for fast
+picking of the builds</li>
+</ol>
+
+<p>Below you can see a comparison chart of builds statuses and machines statuses
+in time:</p>
+
+<p><a target="_blank" href="img/autoscale-state-chart.png"><img src="img/autoscale-state-chart.png" title="" alt="Autoscale state chart"/></a></p>
+<h2 id='how-current-limit-and-idlecount-generate-the-upper-limit-of-running-machines'>How <code>current</code>, <code>limit</code> and <code>IdleCount</code> generate the upper limit of running machines <a class='anchor' href='autoscale.html#how-current-limit-and-idlecount-generate-the-upper-limit-of-running-machines' title='Permalink'></a></h2>
+<p>There doesn&#39;t exist a magic equation that will tell you what to set <code>limit</code> or
+<code>concurrent</code> to. Act according to your needs. Having <code>IdleCount</code> of <em>Idle</em>
+machines is a speedup feature. You don&#39;t need to wait 10s/20s/30s for the
+instance to be created. But as a user, you&#39;d want all your machines (for which
+you need to pay) to be running builds, not stay in <em>Idle</em> state. So you should
+have <code>concurrent</code> and <code>limit</code> set to values that will run the maximum count of
+machines you are willing to pay for. As for <code>IdleCount</code>, it should be set to a
+value that will generate a minimum amount of <em>not used</em> machines when the build
+queue is empty.</p>
+
+<p>Let&#39;s assume the following example:</p>
+<pre class="highlight shell"><code><span class="nv">concurrent</span><span class="o">=</span>20
+
+<span class="o">[[</span>runners]]
+  limit <span class="o">=</span> 40
+  <span class="o">[</span>runners.machine]
+    IdleCount <span class="o">=</span> 10
+</code></pre>
+<p>In the above scenario the total amount of machines we could have is 30. The
+<code>limit</code> of total machines (building and idle) can be 40. We can have 10 idle
+machines but the <code>concurrent</code> builds are 20. So in total we can have 20
+concurrent machines running builds and 10 idle, summing up to 30.</p>
+
+<p>But what happens if the <code>limit</code> is less than the total amount of machines that
+could be created? The example below explains that case:</p>
+<pre class="highlight shell"><code><span class="nv">concurrent</span><span class="o">=</span>20
+
+<span class="o">[[</span>runners]]
+  limit <span class="o">=</span> 25
+  <span class="o">[</span>runners.machine]
+    IdleCount <span class="o">=</span> 10
+</code></pre>
+<p>In this example we will have at most 20 concurrent builds, and at most 25
+machines created. In the worst case scenario regarding idle machines, we will
+not be able to have 10 idle machines, but only 5, because the <code>limit</code> is 25.</p>
+<h2 id='off-peak-time-mode-configuration'>Off Peak time mode configuration <a class='anchor' href='autoscale.html#off-peak-time-mode-configuration' title='Permalink'></a></h2>
+<blockquote>
+<p>Introduced in GitLab Runner v1.7</p>
+</blockquote>
+
+<p>Autoscale can be configured with the support for <em>Off Peak</em> time mode periods.</p>
+
+<p><strong>What is <em>Off Peak</em> time mode period?</strong></p>
+
+<p>Some organizations can select a regular time periods when no work is done.
+For example most of commercial companies are working from Monday to
+Friday in a fixed hours, eg. from 10am to 6pm. In the rest of the week -
+from Monday to Friday at 12am-9am and 6pm-11pm and whole Saturday and Sunday -
+no one is working. These time periods we&#39;re naming here as <em>Off Peak</em>.</p>
+
+<p>Organizations where <em>Off Peak</em> time periods occurs probably don&#39;t want
+to pay for the <em>Idle</em> machines when it&#39;s certain that no builds will be
+executed in this time. Especially when <code>IdleCount</code> is set to a big number.</p>
+
+<p>In the <code>v1.7</code> version of the Runner we&#39;ve added the support for <em>Off Peak</em>
+configuration. With parameters described in configuration file you can now
+change the <code>IdleCount</code> and <code>IdleTime</code> values for the <em>Off Peak</em> time mode
+periods.</p>
+
+<p><strong>How it is working?</strong></p>
+
+<p>Configuration of <em>Off Peak</em> is done by three parameters: <code>OffPeakPeriods</code>,
+<code>OffPeakIdleCount</code> and <code>OffPeakIdleTime</code>. The <code>OffPeakPeriods</code> setting
+contains an array of cron-style patterns defining when the <em>Off Peak</em> time
+mode should be set on. For example:</p>
+<pre class="highlight toml"><code><span class="nn">[runners.machine]</span>
+  <span class="py">OffPeakPeriods</span> <span class="p">=</span> <span class="p">[</span>
+    <span class="s">"* * 0-9,18-23 * * mon-fri *"</span><span class="p">,</span>
+    <span class="s">"* * * * * sat,sun *"</span>
+  <span class="p">]</span>
+</code></pre>
+<p>will enable the <em>Off Peak</em> periods described above, so the <em>working</em> days
+from 12am to 9am and from 6pm to 11pm and whole weekend days. Machines
+scheduler is checking all patterns from the array and if at least one of
+them describes current time, then the <em>Off Peak</em> time mode is enabled.</p>
+
+<p>When the <em>Off Peak</em> time mode is enabled machines scheduler use
+<code>OffPeakIdleCount</code> instead of <code>IdleCount</code> setting and <code>OffPeakIdleTime</code>
+instead of <code>IdleTime</code> setting. The autoscaling algorithm is not changed,
+only the parameters. When machines scheduler discovers that none from
+the <code>OffPeakPeriods</code> pattern is fulfilled then it switches back to
+<code>IdleCount</code> and <code>IdleTime</code> settings.</p>
+
+<p>More information about syntax of <code>OffPeakPeriods</code> patterns can be found
+in <a href="advanced-configuration.html#the-runnersmachine-section">GitLab Runner - Advanced Configuration - The runners.machine section</a>.</p>
+<h2 id='distributed-runners-caching'>Distributed runners caching <a class='anchor' href='autoscale.html#distributed-runners-caching' title='Permalink'></a></h2>
+<p>To speed up your builds, GitLab Runner provides a <a href="http://doc.gitlab.com/ce/ci/yaml/README.html#cache">cache mechanism</a>
+where selected directories and/or files are saved and shared between subsequent
+builds.</p>
+
+<p>This is working fine when builds are run on the same host, but when you start
+using the Runners autoscale feature, most of your builds will be running on a
+new (or almost new) host, which will execute each build in a new Docker
+container. In that case, you will not be able to take advantage of the cache
+feature.</p>
+
+<p>To overcome this issue, together with the autoscale feature, the distributed
+Runners cache feature was introduced.</p>
+
+<p>It uses any S3-compatible server to share the cache between used Docker hosts.
+When restoring and archiving the cache, GitLab Runner will query the S3 server
+and will download or upload the archive.</p>
+
+<p>To enable distributed caching, you have to define it in <code>config.toml</code> using the
+<a href="advanced-configuration.html#the-runnerscache-section"><code>[runners.cache]</code> directive</a>:</p>
+<pre class="highlight shell"><code><span class="o">[[</span>runners]]
+  limit <span class="o">=</span> 10
+  executor <span class="o">=</span> <span class="s2">"docker+machine"</span>
+  <span class="o">[</span>runners.cache]
+    Type <span class="o">=</span> <span class="s2">"s3"</span>
+    ServerAddress <span class="o">=</span> <span class="s2">"s3.example.com"</span>
+    AccessKey <span class="o">=</span> <span class="s2">"access-key"</span>
+    SecretKey <span class="o">=</span> <span class="s2">"secret-key"</span>
+    BucketName <span class="o">=</span> <span class="s2">"runner"</span>
+    Insecure <span class="o">=</span> <span class="nb">false</span>
+</code></pre>
+<p>Read how to <a href="../install/autoscaling.html#install-the-cache-server">install your own caching server</a>.</p>
+<h2 id='distributed-docker-registry-mirroring'>Distributed Docker registry mirroring <a class='anchor' href='autoscale.html#distributed-docker-registry-mirroring' title='Permalink'></a></h2>
+<p>To speed up builds executed inside of Docker containers, you can use the <a href="https://docs.docker.com/docker-trusted-registry/overview/">Docker
+registry mirroring service</a>. This will provide a proxy between your
+Docker machines and all used registries. Images will be downloaded once by the
+registry mirror. On each new host, or on an existing host where the image is
+not available, it will be downloaded from the configured registry mirror.</p>
+
+<p>Provided that the mirror will exist in your Docker machines LAN, the image
+downloading step should be much faster on each host.</p>
+
+<p>To configure the Docker registry mirroring, you have to add <code>MachineOptions</code> to
+the configuration in <code>config.toml</code>:</p>
+<pre class="highlight shell"><code><span class="o">[[</span>runners]]
+  limit <span class="o">=</span> 10
+  executor <span class="o">=</span> <span class="s2">"docker+machine"</span>
+  <span class="o">[</span>runners.machine]
+    <span class="o">(</span>...<span class="o">)</span>
+    MachineOptions <span class="o">=</span> <span class="o">[</span>
+      <span class="o">(</span>...<span class="o">)</span>
+      <span class="s2">"engine-registry-mirror=http://10.11.12.13:12345"</span>
+    <span class="o">]</span>
+</code></pre>
+<p>Where <code>10.11.12.13:12345</code> is the IP address and port where your registry mirror
+is listening for connections from the Docker service. It must be accessible for
+each host created by Docker Machine.</p>
+
+<p>Read how to <a href="../install/autoscaling.html#install-docker-registry">install your own Docker registry server</a>.</p>
+<h2 id='a-complete-example-of-config-toml'>A complete example of <code>config.toml</code> <a class='anchor' href='autoscale.html#a-complete-example-of-config-toml' title='Permalink'></a></h2>
+<p>The <code>config.toml</code> below uses the <code>digitalocean</code> Docker Machine driver:</p>
+<pre class="highlight shell"><code>concurrent <span class="o">=</span> 50   <span class="c"># All registered Runners can run up to 50 concurrent builds</span>
+
+<span class="o">[[</span>runners]]
+  url <span class="o">=</span> <span class="s2">"https://gitlab.com"</span>
+  token <span class="o">=</span> <span class="s2">"RUNNER_TOKEN"</span>             <span class="c"># Note this is different from the registration token used by `gitlab-runner register`</span>
+  name <span class="o">=</span> <span class="s2">"autoscale-runner"</span>
+  executor <span class="o">=</span> <span class="s2">"docker+machine"</span>        <span class="c"># This Runner is using the 'docker+machine' executor</span>
+  limit <span class="o">=</span> 10                         <span class="c"># This Runner can execute up to 10 builds (created machines)</span>
+  <span class="o">[</span>runners.docker]
+    image <span class="o">=</span> <span class="s2">"ruby:2.1"</span>               <span class="c"># The default image used for builds is 'ruby:2.1'</span>
+  <span class="o">[</span>runners.machine]
+    OffPeakPeriods <span class="o">=</span> <span class="o">[</span>               <span class="c"># Set the Off Peak time mode on for:</span>
+      <span class="s2">"* * 0-9,18-23 * * mon-fri *"</span>, <span class="c"># - Monday to Friday for 12am to 9am and 6pm to 11pm</span>
+      <span class="s2">"* * * * * sat,sun *"</span>          <span class="c"># - whole Saturday and Sunday</span>
+    <span class="o">]</span>
+    OffPeakIdleCount <span class="o">=</span> 1             <span class="c"># There must be 1 machine in Idle state - when Off Peak time mode is on</span>
+    OffPeakIdleTime <span class="o">=</span> 1200           <span class="c"># Each machine can be in Idle state up to 1200 seconds (after this it will be removed) - when Off Peak time mode is on</span>
+    IdleCount <span class="o">=</span> 5                    <span class="c"># There must be 5 machines in Idle state - when Off Peak time mode is off</span>
+    IdleTime <span class="o">=</span> 600                   <span class="c"># Each machine can be in Idle state up to 600 seconds (after this it will be removed) - when Off Peak time mode is off</span>
+    MaxBuilds <span class="o">=</span> 100                  <span class="c"># Each machine can handle up to 100 builds in a row (after this it will be removed)</span>
+    MachineName <span class="o">=</span> <span class="s2">"auto-scale-%s"</span>    <span class="c"># Each machine will have a unique name ('%s' is required)</span>
+    MachineDriver <span class="o">=</span> <span class="s2">"digitalocean"</span>   <span class="c"># Docker Machine is using the 'digitalocean' driver</span>
+    MachineOptions <span class="o">=</span> <span class="o">[</span>
+        <span class="s2">"digitalocean-image=coreos-beta"</span>,
+        <span class="s2">"digitalocean-ssh-user=core"</span>,
+        <span class="s2">"digitalocean-access-token=DO_ACCESS_TOKEN"</span>,
+        <span class="s2">"digitalocean-region=nyc2"</span>,
+        <span class="s2">"digitalocean-size=4gb"</span>,
+        <span class="s2">"digitalocean-private-networking"</span>,
+        <span class="s2">"engine-registry-mirror=http://10.11.12.13:12345"</span>   <span class="c"># Docker Machine is using registry mirroring</span>
+    <span class="o">]</span>
+  <span class="o">[</span>runners.cache]
+    Type <span class="o">=</span> <span class="s2">"s3"</span>   <span class="c"># The Runner is using a distributed cache with Amazon S3 service</span>
+    ServerAddress <span class="o">=</span> <span class="s2">"s3-eu-west-1.amazonaws.com"</span>
+    AccessKey <span class="o">=</span> <span class="s2">"AMAZON_S3_ACCESS_KEY"</span>
+    SecretKey <span class="o">=</span> <span class="s2">"AMAZON_S3_SECRET_KEY"</span>
+    BucketName <span class="o">=</span> <span class="s2">"runners"</span>
+    Insecure <span class="o">=</span> <span class="nb">false</span>
+</code></pre>
+<p>Note that the <code>MachineOptions</code> parameter contains options for the <code>digitalocean</code>
+driver which is used by Docker Machine to spawn machines hosted on Digital Ocean,
+and one option for Docker Machine itself (<code>engine-registry-mirror</code>).</p>
+<h2 id='what-are-the-supported-cloud-providers'>What are the supported cloud providers <a class='anchor' href='autoscale.html#what-are-the-supported-cloud-providers' title='Permalink'></a></h2>
+<p>The autoscale mechanism currently is based on Docker Machine. Advanced
+configuration options, including virtualization/cloud provider parameters, are
+available at the <a href="https://docs.docker.com/machine/drivers/">Docker Machine documentation</a>.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/configuration/autoscale.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>SCSS styleguide - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">SCSS styleguide</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="scss_styleguide.html#scss-styleguide">SCSS styleguide</a>
+<ul>
+<li>
+<a href="scss_styleguide.html#rules">Rules</a>
+<ul>
+<li>
+<a href="scss_styleguide.html#naming">Naming</a>
+</li>
+<li>
+<a href="scss_styleguide.html#formatting">Formatting</a>
+</li>
+<li>
+<a href="scss_styleguide.html#colors">Colors</a>
+</li>
+<li>
+<a href="scss_styleguide.html#indentation">Indentation</a>
+</li>
+<li>
+<a href="scss_styleguide.html#semicolons">Semicolons</a>
+</li>
+<li>
+<a href="scss_styleguide.html#shorthand">Shorthand</a>
+</li>
+<li>
+<a href="scss_styleguide.html#zero-units">Zero Units</a>
+</li>
+<li>
+<a href="scss_styleguide.html#selectors-with-a-js-prefix">Selectors with a <code>js-</code> Prefix</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="scss_styleguide.html#linting">Linting</a>
+<ul>
+<li>
+<a href="scss_styleguide.html#fixing-issues">Fixing issues</a>
+</li>
+<li>
+<a href="scss_styleguide.html#ignoring-issues">Ignoring issues</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='scss-styleguide'>SCSS styleguide <a class='anchor' href='scss_styleguide.html#scss-styleguide' title='Permalink'></a></h1>
+<p>This style guide recommends best practices for SCSS to make styles easy to read,
+easy to maintain, and performant for the end-user.</p>
+<h2 id='rules'>Rules <a class='anchor' href='scss_styleguide.html#rules' title='Permalink'></a></h2><h3 id='naming'>Naming <a class='anchor' href='scss_styleguide.html#naming' title='Permalink'></a></h3>
+<p>CSS classes should use the <code>lowercase-hyphenated</code> format rather than
+<code>snake_case</code> or <code>camelCase</code>.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad
+</span><span class="nc">.class_name</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Bad
+</span><span class="nc">.className</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good
+</span><span class="nc">.class-name</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre><h3 id='formatting'>Formatting <a class='anchor' href='scss_styleguide.html#formatting' title='Permalink'></a></h3>
+<p>You should always use a space before a brace, braces should be on the same
+line, each property should each get its own line, and there should be a space
+between the property and its value.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad
+</span><span class="nc">.container-item</span> <span class="p">{</span> 
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span> <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">margin-top</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Bad
+</span><span class="nc">.container-item</span>
+<span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">margin-top</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Bad
+</span><span class="nc">.container-item</span><span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span><span class="m">100px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span><span class="m">100px</span><span class="p">;</span>
+  <span class="nl">margin-top</span><span class="p">:</span><span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good
+</span><span class="nc">.container-item</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">margin-top</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<p>Note that there is an exception for single-line rulesets, although these are 
+not typically recommended.</p>
+<pre class="highlight scss"><code><span class="nt">p</span> <span class="p">{</span> <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span> <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span> <span class="p">}</span>
+</code></pre><h3 id='colors'>Colors <a class='anchor' href='scss_styleguide.html#colors' title='Permalink'></a></h3>
+<p>HEX (hexadecimal) colors should use shorthand where possible, and should use 
+lower case letters to differentiate between letters and numbers, e.g. <code>#E3E3E3</code>
+vs. <code>#e3e3e3</code>.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad
+</span><span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#ffffff</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Bad
+</span><span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#FFFFFF</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good
+</span><span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre><h3 id='indentation'>Indentation <a class='anchor' href='scss_styleguide.html#indentation' title='Permalink'></a></h3>
+<p>Indentation should always use two spaces for each indentation level.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad, four spaces
+</span><span class="nt">p</span> <span class="p">{</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="mh">#f00</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good
+</span><span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="mh">#f00</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre><h3 id='semicolons'>Semicolons <a class='anchor' href='scss_styleguide.html#semicolons' title='Permalink'></a></h3>
+<p>Always include semicolons after every property. When the stylesheets are 
+minified, the semicolons will be removed automatically.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad
+</span><span class="nc">.container-item</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span>
+<span class="p">}</span>
+
+<span class="c1">// Good
+</span><span class="nc">.container-item</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre><h3 id='shorthand'>Shorthand <a class='anchor' href='scss_styleguide.html#shorthand' title='Permalink'></a></h3>
+<p>The shorthand form should be used for properties that support it.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad
+</span><span class="nl">margin</span><span class="p">:</span> <span class="m">10px</span> <span class="m">15px</span> <span class="m">10px</span> <span class="m">15px</span><span class="p">;</span>
+<span class="nl">padding</span><span class="p">:</span> <span class="m">10px</span> <span class="m">10px</span> <span class="m">10px</span> <span class="m">10px</span><span class="p">;</span>
+
+<span class="c1">// Good
+</span><span class="nl">margin</span><span class="p">:</span> <span class="m">10px</span> <span class="m">15px</span><span class="p">;</span>
+<span class="nl">padding</span><span class="p">:</span> <span class="m">10px</span><span class="p">;</span>
+</code></pre><h3 id='zero-units'>Zero Units <a class='anchor' href='scss_styleguide.html#zero-units' title='Permalink'></a></h3>
+<p>Omit length units on zero values, they&#39;re unnecessary and not including them 
+is slightly more performant.</p>
+<pre class="highlight scss"><code><span class="c1">// Bad
+</span><span class="nc">.item-with-padding</span> <span class="p">{</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good
+</span><span class="nc">.item-with-padding</span> <span class="p">{</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre><h3 id='selectors-with-a-js-prefix'>Selectors with a <code>js-</code> Prefix <a class='anchor' href='scss_styleguide.html#selectors-with-a-js-prefix' title='Permalink'></a></h3>
+<p>Do not use any selector prefixed with <code>js-</code> for styling purposes. These 
+selectors are intended for use only with JavaScript to allow for removal or 
+renaming without breaking styling.</p>
+<h2 id='linting'>Linting <a class='anchor' href='scss_styleguide.html#linting' title='Permalink'></a></h2>
+<p>We use <a href="https://github.com/brigade/scss-lint">SCSS Lint</a> to check for style guide conformity. It uses the 
+ruleset in <code>.scss-lint.yml</code>, which is located in the home directory of the 
+project.</p>
+
+<p>To check if any warnings will be produced by your changes, you can run <code>rake 
+scss_lint</code> in the GitLab directory. SCSS Lint will also run in GitLab CI to 
+catch any warnings.</p>
+
+<p>If the Rake task is throwing warnings you don&#39;t understand, SCSS Lint&#39;s 
+documentation includes <a href="https://github.com/brigade/scss-lint/blob/master/lib/scss_lint/linter/README.md">a full list of their linters</a>.</p>
+<h3 id='fixing-issues'>Fixing issues <a class='anchor' href='scss_styleguide.html#fixing-issues' title='Permalink'></a></h3>
+<p>If you want to automate changing a large portion of the codebase to conform to 
+the SCSS style guide, you can use <a href="https://github.com/csscomb/csscomb.js">CSSComb</a>. First install
+<a href="https://github.com/nodejs/node">Node</a> and <a href="https://www.npmjs.com/">NPM</a>, then run <code>npm install csscomb -g</code> to install 
+CSSComb globally (system-wide). Run it in the GitLab directory with 
+<code>csscomb app/assets/stylesheets</code> to automatically fix issues with CSS/SCSS.</p>
+
+<p>Note that this won&#39;t fix every problem, but it should fix a majority.</p>
+<h3 id='ignoring-issues'>Ignoring issues <a class='anchor' href='scss_styleguide.html#ignoring-issues' title='Permalink'></a></h3>
+<p>If you want a line or set of lines to be ignored by the linter, you can use 
+<code>// scss-lint:disable RuleName</code> (<a href="https://github.com/brigade/scss-lint#disabling-linters-via-source">more info</a>):</p>
+<pre class="highlight scss"><code><span class="c1">// This lint rule is disabled because the class name comes from a gem.
+// scss-lint:disable SelectorFormat
+</span><span class="nc">.ui_charcoal</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="mh">#333</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// scss-lint:enable SelectorFormat
+</span></code></pre>
+<p>Make sure a comment is added on the line above the <code>disable</code> rule, otherwise the
+linter will throw a warning. <code>DisableLinterReason</code> is enabled to make sure the 
+style guide isn&#39;t being ignored, and to communicate to others why the style 
+guide is ignored in this instance.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/scss_styleguide.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

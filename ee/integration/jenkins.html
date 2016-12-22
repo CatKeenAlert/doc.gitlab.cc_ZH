@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Jenkins CI integration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab Integration</a></li>
+            
+          
+          <li class="breadcrumb">Jenkins CI integration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="jenkins.html#jenkins-ci-integration">Jenkins CI integration</a>
+<ul>
+<li>
+<a href="jenkins.html#jenkins-ci-service">Jenkins CI Service</a>
+<ul>
+<li>
+<a href="jenkins.html#requirements">Requirements:</a>
+</li>
+<li>
+<a href="jenkins.html#configure-gitlab-users">Configure GitLab users</a>
+</li>
+<li>
+<a href="jenkins.html#configure-the-jenkins-server">Configure the Jenkins server</a>
+</li>
+<li>
+<a href="jenkins.html#configure-a-jenkins-project">Configure a Jenkins project</a>
+</li>
+<li>
+<a href="jenkins.html#configure-a-gitlab-project">Configure a GitLab project</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="jenkins.html#jenkins-ci-deprecated-service">Jenkins CI (Deprecated) Service</a>
+<ul>
+<li>
+<a href="jenkins.html#jenkins">Jenkins</a>
+</li>
+<li>
+<a href="jenkins.html#gitlab">GitLab</a>
+<ul>
+<li>
+<a href="jenkins.html#read-access-to-repository">Read access to repository</a>
+</li>
+<li>
+<a href="jenkins.html#jenkins-service">Jenkins service</a>
+</li>
+<li>
+<a href="jenkins.html#multi-project-configuration">Multi-project Configuration</a>
+</li>
+<li>
+<a href="jenkins.html#mark-unstable-build-as-passing">Mark unstable build as passing</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="jenkins.html#development">Development</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='jenkins-ci-integration'>Jenkins CI integration <a class='anchor' href='jenkins.html#jenkins-ci-integration' title='Permalink'></a></h1>
+<p>In GitLab 8.3, Jenkins integration using the
+<a href="https://wiki.jenkins-ci.org/display/JENKINS/GitLab+Hook+Plugin">GitLab Hook Plugin</a>
+was deprecated in favor of the
+<a href="https://wiki.jenkins-ci.org/display/JENKINS/GitLab+Plugin">GitLab Plugin</a>.
+The deprecated integration has been renamed to &#39;Jenkins CI (Deprecated)&#39; in the
+project service settings. We may remove this in a future release and recommend
+using the new &#39;Jenkins CI&#39; project service instead. See
+<a href="jenkins.html#jenkins-ci-deprecated-service">documentation for &#39;Jenkins CI (Deprecated)&#39;</a>
+below.</p>
+<h2 id='jenkins-ci-service'>Jenkins CI Service <a class='anchor' href='jenkins.html#jenkins-ci-service' title='Permalink'></a></h2>
+<p>Integration includes:</p>
+
+<ul>
+<li>Trigger a Jenkins build after push to a repository and/or when a merge request
+is created</li>
+<li>Show build status on Merge Request page, on each commit and on the project
+home page</li>
+</ul>
+<h3 id='requirements'>Requirements: <a class='anchor' href='jenkins.html#requirements' title='Permalink'></a></h3>
+<ul>
+<li><a href="https://wiki.jenkins-ci.org/display/JENKINS/GitLab+Plugin">Jenkins GitLab Plugin</a></li>
+<li><a href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin">Jenkins Git Plugin</a></li>
+<li>Git clone access for Jenkins from the GitLab repository</li>
+<li>GitLab API access to report build status</li>
+</ul>
+<h3 id='configure-gitlab-users'>Configure GitLab users <a class='anchor' href='jenkins.html#configure-gitlab-users' title='Permalink'></a></h3>
+<p>Create a user or choose an existing user that Jenkins will use to interact
+through the GitLab API. This user will need to be a global Admin or added
+as a member to each Group/Project. Developer permission is required for reporting
+build status. This is because a successful build status can trigger a merge
+when &#39;Merge when build succeeds&#39; feature is used. Some features of the GitLab
+Plugin may require additional privileges. For example, there is an option to
+accept a merge request if the build is successful. Using this feature would
+require developer, master or owner-level permission.</p>
+
+<p>Copy the private API token from <strong>Profile Settings -&gt; Account</strong>. You will need this
+when configuring the Jenkins server later.</p>
+<h3 id='configure-the-jenkins-server'>Configure the Jenkins server <a class='anchor' href='jenkins.html#configure-the-jenkins-server' title='Permalink'></a></h3>
+<p>Install <a href="https://wiki.jenkins-ci.org/display/JENKINS/GitLab+Plugin">Jenkins GitLab Plugin</a>
+and <a href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin">Jenkins Git Plugin</a>.</p>
+
+<p>Go to Manage Jenkins -&gt; Configure System and scroll down to the &#39;GitLab&#39; section.
+Enter the GitLab server URL in the &#39;GitLab host URL&#39; field and paste the API token
+copied earlier in the &#39;API Token&#39; field.</p>
+
+<p><a target="_blank" href="jenkins_gitlab_plugin_config.png"><img src="jenkins_gitlab_plugin_config.png" title="" alt="Jenkins GitLab plugin configuration"/></a></p>
+<h3 id='configure-a-jenkins-project'>Configure a Jenkins project <a class='anchor' href='jenkins.html#configure-a-jenkins-project' title='Permalink'></a></h3>
+<p>Follow the GitLab Plugin documentation under the
+<a href="https://github.com/jenkinsci/gitlab-plugin#using-it-with-a-job">Using it With a Job</a>
+heading. You <em>do not</em> need to complete instructions under the &#39;GitLab
+Configuration (&gt;= 8.0)&#39;. Be sure to check the &#39;Use GitLab CI features&#39; checkbox
+as described under the &#39;GitLab Configuration (&gt;= 8.1)&#39;.</p>
+<h3 id='configure-a-gitlab-project'>Configure a GitLab project <a class='anchor' href='jenkins.html#configure-a-gitlab-project' title='Permalink'></a></h3>
+<p>Create a new GitLab project or choose an existing one. Then, go to <strong>Services -&gt;
+Jenkins CI</strong>.</p>
+
+<p>Check the &#39;Active&#39; box. Select whether you want GitLab to trigger a build
+on push, Merge Request creation, tag push, or any combination of these. We
+recommend unchecking &#39;Merge Request events&#39; unless you have a specific use-case
+that requires re-building a commit when a merge request is created. With &#39;Push
+events&#39; selected, GitLab will build the latest commit on each push and the build
+status will be displayed in the merge request.</p>
+
+<p>Enter the Jenkins URL and Project name. The project name should be URL-friendly
+where spaces are replaced with underscores. To be safe, copy the project name
+from the URL bar of your browser while viewing the Jenkins project.</p>
+
+<p>Optionally, enter a username and password if your Jenkins server requires
+authentication.</p>
+
+<p><a target="_blank" href="jenkins_gitlab_service_settings.png"><img src="jenkins_gitlab_service_settings.png" title="" alt="GitLab service settings"/></a></p>
+<h1 id='jenkins-ci-deprecated-service'>Jenkins CI (Deprecated) Service <a class='anchor' href='jenkins.html#jenkins-ci-deprecated-service' title='Permalink'></a></h1>
+<p>This service is deprecated and may be removed in a future version of GitLab.
+Please see documentation for the new Jenkins CI service above.</p>
+
+<p>Integration includes:</p>
+
+<ul>
+<li>Trigger Jenkins build after push to repo</li>
+<li>Show build status on Merge Request page</li>
+</ul>
+
+<p>Requirements: </p>
+
+<ul>
+<li><a href="https://wiki.jenkins-ci.org/display/JENKINS/GitLab+Hook+Plugin">Jenkins GitLab Hook plugin</a></li>
+<li>git clone access for Jenkins from GitLab repo (via ssh key)</li>
+</ul>
+<h2 id='jenkins'>Jenkins <a class='anchor' href='jenkins.html#jenkins' title='Permalink'></a></h2>
+<ol>
+<li>Install <a href="https://wiki.jenkins-ci.org/display/JENKINS/GitLab+Hook+Plugin">GitLab Hook plugin</a></li>
+<li>Setup jenkins project</li>
+</ol>
+
+<p><a target="_blank" href="jenkins_project.png"><img src="jenkins_project.png" title="" alt="screen"/></a></p>
+<h2 id='gitlab'>GitLab <a class='anchor' href='jenkins.html#gitlab' title='Permalink'></a></h2><h3 id='read-access-to-repository'>Read access to repository <a class='anchor' href='jenkins.html#read-access-to-repository' title='Permalink'></a></h3>
+<p>Jenkins needs read access to the GitLab repository. We already specified a
+private key to use in Jenkins, now we need to add a public one to the GitLab
+project. For that case we will need a Deploy key. Read the documentation on
+<a href="https://doc.gitlab.cc/ssh/README.html#deploy-keys">how to setup a Deploy key</a>.</p>
+<h3 id='jenkins-service'>Jenkins service <a class='anchor' href='jenkins.html#jenkins-service' title='Permalink'></a></h3>
+<p>Now navigate to GitLab services page and activate Jenkins</p>
+
+<p><a target="_blank" href="jenkins_gitlab_service.png"><img src="jenkins_gitlab_service.png" title="" alt="screen"/></a></p>
+
+<p>Done! Now when you push to GitLab - it will create a build for Jenkins.
+And also you will be able to see merge request build status with a link to the Jenkins build.</p>
+<h3 id='multi-project-configuration'>Multi-project Configuration <a class='anchor' href='jenkins.html#multi-project-configuration' title='Permalink'></a></h3>
+<p>The GitLab Hook plugin in Jenkins supports the automatic creation of a project
+for each feature branch. After configuration GitLab will trigger feature branch
+builds and a corresponding project will be created in Jenkins.</p>
+
+<p>Configure the GitLab Hook plugin in Jenkins. Go to &#39;Manage Jenkins&#39; and then
+&#39;Configure System&#39;. Find the &#39;GitLab Web Hook&#39; section and configure as shown below.</p>
+
+<p><a target="_blank" href="jenkins_multiproject_configuration.png"><img src="jenkins_multiproject_configuration.png" title="" alt="Jenkins Multi-project Configuration"/></a></p>
+
+<p>In the Jenkins service in GitLab, check the &#39;Multi-project setup enabled?&#39;.</p>
+
+<p><a target="_blank" href="jenkins_multiproject_enabled.png"><img src="jenkins_multiproject_enabled.png" title="" alt="Jenkins Multi-project Enabled"/></a></p>
+<h3 id='mark-unstable-build-as-passing'>Mark unstable build as passing <a class='anchor' href='jenkins.html#mark-unstable-build-as-passing' title='Permalink'></a></h3>
+<p>When using some plugins in Jenkins, an unstable build status will result when
+tests are not passing. In these cases the unstable status in Jenkins should
+register as a failure in GitLab on the merge request page. In other cases you
+may not want an unstable status to display as a build failure in GitLab. Control
+this behavior using the &#39;Should unstable builds be treated as passing?&#39; setting
+in the Jenkins service in GitLab.</p>
+
+<p>When checked, unstable builds will display as green or passing in GitLab. By
+default unstable builds display in GitLab as red or failed.</p>
+
+<p><a target="_blank" href="jenkins_unstable_passing.png"><img src="jenkins_unstable_passing.png" title="" alt="Jenkins Unstable Passing"/></a></p>
+<h2 id='development'>Development <a class='anchor' href='jenkins.html#development' title='Permalink'></a></h2>
+<p>An explanation of how this works in case anyone want to improve it or develop this service for another CI tool.
+In GitLab there is no database table that lists the commits, these are always read from the repository.
+Therefore it is not possible to mark the build status of a commit in GitLab.
+Actually we believe this information should be stored in a single place, the CI tool itself.
+To show this information in a merge request you make a project service in GitLab.
+This project service does a (JSON) query to a url of the CI tool with the SHA1 of the commit.
+The project service builds this url and payload based on project service settings and knowlegde of the CI tool.
+The response is parsed to give a response in GitLab (success/failed/pending).
+All this happens with AJAX requests on the merge request page.
+The Jenkins project service code is only available in GitLab EE.
+The GitLab CI project service code is available in the GitLab CE codebase.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/integration/jenkins.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

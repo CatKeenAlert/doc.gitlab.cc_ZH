@@ -1,0 +1,410 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>FAQ - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">FAQ</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#faq">FAQ</a>
+<ul>
+<li>
+<a href="README.html#1-where-are-logs-stored-when-run-as-a-service">1. Where are logs stored when run as a service?</a>
+</li>
+<li>
+<a href="README.html#2-run-in-debug-mode">2. Run in <code>--debug</code> mode</a>
+</li>
+<li>
+<a href="README.html#3-i-get-a-pathtoolongexception-during-my-builds-on-windows">3. I get a PathTooLongException during my builds on Windows</a>
+<ul>
+<li>
+<a href="README.html#a-use-git-with-core-longpaths-enabled">a) Use Git with core.longpaths enabled</a>
+</li>
+<li>
+<a href="README.html#b-use-ntfssecurity-tools-for-powershell">b) Use NTFSSecurity tools for PowerShell</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#4-i-m-seeing-x509-certificate-signed-by-unknown-authority">4. I'm seeing <code>x509: certificate signed by unknown authority</code></a>
+</li>
+<li>
+<a href="README.html#5-i-get-permission-denied-when-accessing-the-var-run-docker-sock">5. I get <code>Permission Denied</code> when accessing the <code>/var/run/docker.sock</code></a>
+</li>
+<li>
+<a href="README.html#6-the-docker-executor-gets-timeout-when-building-java-project">6. The Docker executor gets timeout when building Java project.</a>
+</li>
+<li>
+<a href="README.html#7-i-get-411-when-uploading-artifacts">7. I get 411 when uploading artifacts.</a>
+</li>
+<li>
+<a href="README.html#8-i-can-t-run-windows-bash-scripts-i-m-getting-the-system-cannot-find-the-batch-label-specified-buildscript">8. I can't run Windows BASH scripts; I'm getting <code>The system cannot find the batch label specified - buildscript</code>.</a>
+</li>
+<li>
+<a href="README.html#9-my-gitlab-runner-is-on-windows-how-can-i-get-colored-output-on-the-web-terminal">9. My gitlab runner is on Windows. How can I get colored output on the web terminal?</a>
+</li>
+<li>
+<a href="README.html#10-warning-you-appear-to-have-cloned-an-empty-repository">10. "warning: You appear to have cloned an empty repository."</a>
+</li>
+<li>
+<a href="README.html#11-quot-launchctl-quot-failed-exit-status-112-could-not-find-domain-for">11. <code>&quot;launchctl&quot; failed: exit status 112, Could not find domain for</code></a>
+</li>
+<li>
+<a href="README.html#12-failed-to-authorize-rights-0x1-with-status-60007">12. <code>Failed to authorize rights (0x1) with status: -60007.</code></a>
+</li>
+<li>
+<a href="README.html#13-the-service-did-not-start-due-to-a-logon-failure-error-when-starting-service-on-windows">13. <code>The service did not start due to a logon failure</code> error when starting service on Windows</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='faq'>FAQ <a class='anchor' href='README.html#faq' title='Permalink'></a></h1>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<ul>
+<li><a href="README.html#1-where-are-logs-stored-when-run-as-a-service">1. Where are logs stored when run as a service?</a></li>
+<li><a href="README.html#2-run-in---debug-mode">2. Run in <code>--debug</code> mode</a></li>
+<li><a href="README.html#3-i-get-a-pathtoolongexception-during-my-builds-on-windows">3. I get a PathTooLongException during my builds on Windows</a></li>
+<li><a href="README.html#4-im-seeing-x509-certificate-signed-by-unknown-authority">4. I&#39;m seeing <code>x509: certificate signed by unknown authority</code></a></li>
+<li><a href="README.html#5-i-get-permission-denied-when-accessing-the-varrundockersock">5. I get <code>Permission Denied</code> when accessing the <code>/var/run/docker.sock</code></a></li>
+<li><a href="README.html#6-the-docker-executor-gets-timeout-when-building-java-project">6. The Docker executor gets timeout when building Java project.</a></li>
+<li><a href="README.html#7-i-get-411-when-uploading-artifacts">7. I get 411 when uploading artifacts.</a></li>
+<li><a href="README.html#8-i-cant-run-windows-bash-scripts-im-getting-the-system-cannot-find-the-batch-label-specified---buildscript">8. I can&#39;t run Windows BASH scripts; I&#39;m getting <code>The system cannot find the batch label specified - buildscript</code>.</a></li>
+<li><a href="README.html#9-my-gitlab-runner-is-on-windows-how-can-i-get-colored-output-on-the-web-terminal">9. My gitlab runner is on Windows. How can I get colored output on the web terminal?</a></li>
+<li><a href="README.html#10-warning-you-appear-to-have-cloned-an-empty-repository">10. &quot;warning: You appear to have cloned an empty repository.&quot;</a></li>
+<li><a href="README.html#11-launchctl-failed-exit-status-112-could-not-find-domain-for">11. <code>&quot;launchctl&quot; failed: exit status 112, Could not find domain for</code></a></li>
+<li><a href="README.html#12-failed-to-authorize-rights-0x1-with-status--60007">12. <code>Failed to authorize rights (0x1) with status: -60007.</code></a></li>
+<li><a href="README.html#13-the-service-did-not-start-due-to-a-logon-failure-error-when-starting-service-on-windows">13. <code>The service did not start due to a logon failure</code> error when starting service on Windows</a></li>
+</ul>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id='1-where-are-logs-stored-when-run-as-a-service'>1. Where are logs stored when run as a service? <a class='anchor' href='README.html#1-where-are-logs-stored-when-run-as-a-service' title='Permalink'></a></h2>
+<ul>
+<li>If the GitLab Runner is run as service on Linux/OSX  the daemon logs to syslog.</li>
+<li>If the GitLab Runner is run as service on Windows it logs to System&#39;s Event Log.</li>
+</ul>
+<h2 id='2-run-in-debug-mode'>2. Run in <code>--debug</code> mode <a class='anchor' href='README.html#2-run-in-debug-mode' title='Permalink'></a></h2>
+<p>Is it possible to run GitLab Runner in debug/verbose mode. From a terminal, do:</p>
+<pre class="highlight plaintext"><code>gitlab-runner --debug run
+</code></pre><h2 id='3-i-get-a-pathtoolongexception-during-my-builds-on-windows'>3. I get a PathTooLongException during my builds on Windows <a class='anchor' href='README.html#3-i-get-a-pathtoolongexception-during-my-builds-on-windows' title='Permalink'></a></h2>
+<p>This is caused by tools like <code>npm</code> which will sometimes generate directory structures
+with paths more than 260 characters in length. There are two possible fixes you can
+adopt to solve the problem.</p>
+<h3 id='a-use-git-with-core-longpaths-enabled'>a) Use Git with core.longpaths enabled <a class='anchor' href='README.html#a-use-git-with-core-longpaths-enabled' title='Permalink'></a></h3>
+<p>You can avoid the problem by using Git to clean your directory structure, first run
+<code>git config --system core.longpaths true</code> from the command line and then set your
+project to use <em>git fetch</em> from the GitLab CI project settings page.</p>
+<h3 id='b-use-ntfssecurity-tools-for-powershell'>b) Use NTFSSecurity tools for PowerShell <a class='anchor' href='README.html#b-use-ntfssecurity-tools-for-powershell' title='Permalink'></a></h3>
+<p>The <a href="https://ntfssecurity.codeplex.com/">NTFSSecurity</a> PowerShell module provides
+a <em>Remove-Item2</em> method which supports long paths. The Gitlab CI Multi Runner will
+detect it if it is available and automatically make use of it.</p>
+<h2 id='4-i-39-m-seeing-x509-certificate-signed-by-unknown-authority'>4. I&#39;m seeing <code>x509: certificate signed by unknown authority</code> <a class='anchor' href='README.html#4-i-39-m-seeing-x509-certificate-signed-by-unknown-authority' title='Permalink'></a></h2>
+<p>Please <a href="../configuration/tls-self-signed.html">See the self-signed certificates</a></p>
+<h2 id='5-i-get-permission-denied-when-accessing-the-var-run-docker-sock'>5. I get <code>Permission Denied</code> when accessing the <code>/var/run/docker.sock</code> <a class='anchor' href='README.html#5-i-get-permission-denied-when-accessing-the-var-run-docker-sock' title='Permalink'></a></h2>
+<p>If you want to use Docker executor,
+and you are connecting to Docker Engine installed on server.
+You can see the <code>Permission Denied</code> error.
+The most likely cause is that your system uses SELinux (enabled by default on CentOS, Fedora and RHEL).
+Check your SELinux policy on your system for possible denials.</p>
+<h2 id='6-the-docker-executor-gets-timeout-when-building-java-project'>6. The Docker executor gets timeout when building Java project. <a class='anchor' href='README.html#6-the-docker-executor-gets-timeout-when-building-java-project' title='Permalink'></a></h2>
+<p>This most likely happens, because of the broken AUFS storage driver:
+<a href="https://github.com/docker/docker/issues/18502">Java process hangs on inside container</a>.
+The best solution is to change the <a href="https://docs.docker.com/engine/userguide/storagedriver/selectadriver/">storage driver</a>
+to either OverlayFS (faster) or DeviceMapper (slower).</p>
+
+<p>Check this article about <a href="https://docs.docker.com/engine/articles/configuring/">configuring and running Docker</a>
+or this article about <a href="https://docs.docker.com/engine/articles/systemd/">control and configure with systemd</a>.</p>
+<h2 id='7-i-get-411-when-uploading-artifacts'>7. I get 411 when uploading artifacts. <a class='anchor' href='README.html#7-i-get-411-when-uploading-artifacts' title='Permalink'></a></h2>
+<p>This happens due to fact that runner uses <code>Transfer-Encoding: chunked</code> which is broken on early version of Nginx (<a href="http://serverfault.com/questions/164220/is-there-a-way-to-avoid-nginx-411-content-length-required-errors">http://serverfault.com/questions/164220/is-there-a-way-to-avoid-nginx-411-content-length-required-errors</a>).</p>
+
+<p>Upgrade your Nginx to newer version. For more information see this issue: <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1031">https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1031</a></p>
+<h2 id='8-i-can-39-t-run-windows-bash-scripts-i-39-m-getting-the-system-cannot-find-the-batch-label-specified-buildscript'>8. I can&#39;t run Windows BASH scripts; I&#39;m getting <code>The system cannot find the batch label specified - buildscript</code>. <a class='anchor' href='README.html#8-i-can-39-t-run-windows-bash-scripts-i-39-m-getting-the-system-cannot-find-the-batch-label-specified-buildscript' title='Permalink'></a></h2>
+<p>You need to prepend <code>call</code> to your batch file line in .gitlab-ci.yml so that it looks like <code>call C:\path\to\test.bat</code>. Here
+is a more complete example:</p>
+<pre class="highlight plaintext"><code>before_script:
+  - call C:\path\to\test.bat
+</code></pre>
+<p>Additional info can be found under issue <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1025">#1025</a>.</p>
+<h2 id='9-my-gitlab-runner-is-on-windows-how-can-i-get-colored-output-on-the-web-terminal'>9. My gitlab runner is on Windows. How can I get colored output on the web terminal? <a class='anchor' href='README.html#9-my-gitlab-runner-is-on-windows-how-can-i-get-colored-output-on-the-web-terminal' title='Permalink'></a></h2>
+<p><strong>Short answer:</strong></p>
+
+<p>Make sure that you have the ANSI color codes in your program&#39;s output. For the purposes of text formatting, assume that you&#39;re
+running in a UNIX ANSI terminal emulator (because that&#39;s what the webUI&#39;s output is).</p>
+
+<p><strong>Long Answer:</strong></p>
+
+<p>The web interface for gitlab-ci emulates a UNIX ANSI terminal (at least partially). The <code>gitlab-runner</code> pipes any output from the build
+directly to the web interface. That means that any ANSI color codes that are present will be honored.</p>
+
+<p>Windows&#39; CMD terminal (before Win10 (<a href="http://www.nivot.org/blog/post/2016/02/04/Windows-10-TH2-(v1511)-Console-Host-Enhancements">source</a>))
+does not support ANSI color codes - it uses win32 (<a href="https://en.wikipedia.org/wiki/ANSI.SYS"><code>ANSI.SYS</code></a>) calls instead which are <strong>not</strong> present in
+the string to be displayed. When writing cross-platform programs, a developer will typically use ANSI color codes by default and convert
+them to win32 calls when running on a Windows system (example: <a href="https://pypi.python.org/pypi/colorama">Colorama</a>).</p>
+
+<p>If your program is doing the above, then you need to disable that conversion for the CI builds so that the ANSI codes remain in the string.</p>
+
+<p>See issue <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/332">#332</a> for more information.</p>
+<h2 id='10-quot-warning-you-appear-to-have-cloned-an-empty-repository-quot'>10. &quot;warning: You appear to have cloned an empty repository.&quot; <a class='anchor' href='README.html#10-quot-warning-you-appear-to-have-cloned-an-empty-repository-quot' title='Permalink'></a></h2>
+<p>When running <code>git clone</code> using HTTP(s) (with GitLab Runner or manually for
+tests) and you see the following output:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>git clone https://git.example.com/user/repo.git
+
+Cloning into <span class="s1">'repo'</span>...
+warning: You appear to have cloned an empty repository.
+</code></pre>
+<p>Make sure, that the configuration of the HTTP Proxy in your GitLab server
+installation is done properly. Especially if you are using some HTTP Proxy with
+its own configuration, make sure that GitLab requests are proxied to the
+<strong>GitLab Workhorse socket</strong>, not to the <strong>GitLab unicorn socket</strong>.</p>
+
+<p>Git protocol via HTTP(S) is resolved by the GitLab Workhorse, so this is the
+<strong>main entrypoint</strong> of GitLab.</p>
+
+<p>If you are using Omnibus GitLab, but don&#39;t want to use the bundled Nginx
+server, please read <a href="http://doc.gitlab.com/omnibus/settings/nginx.html#using-a-non-bundled-web-server">using a non-bundled web-server</a>.</p>
+
+<p>In gitlab-recipes repository there are <a href="https://gitlab.com/gitlab-org/gitlab-recipes/tree/master/web-server">web-server configuration
+examples</a> for Apache and Nginx.</p>
+
+<p>If you are using GitLab installed from source, please also read the above
+documentation and examples, and make sure that all HTTP(S) traffic is going
+through the <strong>GitLab Workhorse</strong>.</p>
+
+<p>See <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/1105">an example of a user issue</a>.</p>
+<h2 id='11-quot-launchctl-quot-failed-exit-status-112-could-not-find-domain-for'>11. <code>&quot;launchctl&quot; failed: exit status 112, Could not find domain for</code> <a class='anchor' href='README.html#11-quot-launchctl-quot-failed-exit-status-112-could-not-find-domain-for' title='Permalink'></a></h2>
+<p>This message may occur when you try to install GitLab Runner on OSX. Make sure
+that you manage GitLab Runner service from the GUI Terminal application, not
+the SSH connection.</p>
+<h2 id='12-failed-to-authorize-rights-0x1-with-status-60007'>12. <code>Failed to authorize rights (0x1) with status: -60007.</code> <a class='anchor' href='README.html#12-failed-to-authorize-rights-0x1-with-status-60007' title='Permalink'></a></h2>
+<p>If your Runner is stuck on the above message when using OSX, there are two
+causes to why this happens:</p>
+
+<ol>
+<li><p>Make sure that your user can perform UI interactions:</p>
+<pre class="highlight shell"><code>DevToolsSecurity -enable
+sudo security authorizationdb remove system.privilege.taskport is-developer
+</code></pre>
+<p>The first command enables access to developer tools for your user.
+The second command allows the user who is member of the developer group to
+do UI interactions, e.g., run the iOS simulator.</p>
+
+<hr></li>
+<li><p>Make sure that your Runner service doesn&#39;t use <code>SessionCreate = true</code>.
+Previously, when running GitLab Runner as a service, we were creating
+<code>LaunchAgents</code> with <code>SessionCreate</code>. At that point (<strong>Mavericks</strong>), this was
+the only solution to make Code Signing work. That changed recently with
+<strong>OSX El Capitan</strong> which introduced a lot of new security features that
+altered this behavior.
+Since GitLab Runner 1.1, when creating a <code>LaunchAgent</code>, we don&#39;t set
+<code>SessionCreate</code>. However, in order to upgrade, you need to manually
+reinstall the <code>LaunchAgent</code> script:</p>
+<pre class="highlight plaintext"><code>gitlab-ci-multi-runner uninstall
+gitlab-ci-multi-runner install
+gitlab-ci-multi-runner start
+</code></pre>
+<p>Then you can verify that <code>~/Library/LaunchAgents/gitlab-runner.plist</code> has
+<code>SessionCreate</code> set to <code>false</code>.</p></li>
+</ol>
+<h2 id='13-the-service-did-not-start-due-to-a-logon-failure-error-when-starting-service-on-windows'>13. <code>The service did not start due to a logon failure</code> error when starting service on Windows <a class='anchor' href='README.html#13-the-service-did-not-start-due-to-a-logon-failure-error-when-starting-service-on-windows' title='Permalink'></a></h2>
+<p>When installing and starting the GitLab Runner service on Windows you can
+meet with such error:</p>
+<pre class="highlight plaintext"><code>$ gitlab-ci-multi-runner.exe install --password WINDOWS_MACHINE_PASSWORD
+$ gitlab-ci-multi-runner.exe start
+$ FATA[0000] Failed to start GitLab Runner: The service did not start due to a logon failure.
+</code></pre>
+<p>This error can occur when the user used to execut the service doesn&#39;t have
+the <code>SeServiceLogonRight</code> permission. In such case you need to add this
+permission for the chosen user and then try to start the service again.</p>
+
+<p>You can add <code>SeServiceLogonRight</code> in two ways:</p>
+
+<ol>
+<li>Manually using Administrative Tools:</li>
+</ol>
+
+<ul>
+<li>Go to <em>Control Panel &gt; System and Security &gt; Administrative Tools</em>,</li>
+<li>open the <em>Local Security Policy</em> tool,</li>
+<li>chose the <em>Security Settings &gt; Local Policies &gt; User RIghts Assigment</em> on the
+ list on the left,</li>
+<li>open the <em>Log on as a service</em> on the list on the right,</li>
+<li>click on the <em>Add User or Group...</em> button,</li>
+<li>add the user (&quot;by hand&quot; or using <em>Advanced...</em> button) and apply the settings.</li>
+</ul>
+
+<blockquote>
+<p><strong>Notice:</strong> According to <a href="https://technet.microsoft.com/en-us/library/dn221981">Microsoft&#39;s documentation</a>
+this should work for: Windows Vista, Windows Server 2008, Windows 7, Windows 8.1,
+Windows Server 2008 R2, Windows Server 2012 R2, Windows Server 2012, Windows 8</p>
+
+<p><strong>Notice:</strong> The <em>Local Security Policy</em> tool may be not available in some
+Windows versions - for example in &quot;Home Edition&quot; variant of each version.</p>
+</blockquote>
+
+<ol>
+<li>From command line, using the <code>Ntrights.exe</code> tool:</li>
+</ol>
+
+<ul>
+<li>Download tools from <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17657">Microsoft&#39;s download site</a>,</li>
+<li>execute <code>ntrights.exe ntrights +r SeServiceLogonRight -u USER_NAME_HERE</code> (remember,
+ that you should provide a full path for <code>ntrights.exe</code> executable <strong>or</strong> add that
+ path to system&#39;s <code>$Path</code> environment variable).</li>
+</ul>
+
+<blockquote>
+<p><strong>Notice:</strong> The tool was created in 2003 and was initially designed to use
+with Windows XP and Windows Server 2003. On <a href="https://technet.microsoft.com/en-us/library/dd548356(WS.10).aspx">Microsoft sites</a>
+you can find an example of usage <code>Ntrights.exe</code> that applies to Windows 7 and Windows Server 2008 R2.
+This solution is not tested and because of the age of the software <strong>it may not work
+on newest Windows versions</strong>.</p>
+</blockquote>
+
+<p>After adding the <code>SeServiceLogonRight</code> for the user used in service configuration,
+the command <code>gitlab-ci-multi-runner.exe start</code> should finish without failures
+and the service should be started properly.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/faq/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

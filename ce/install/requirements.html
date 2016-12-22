@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>安装GitLab的需求 - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Installation</a></li>
+            
+          
+          <li class="breadcrumb">安装GitLab的需求</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="requirements.html#gitlab">安装GitLab的需求</a>
+<ul>
+<li>
+<a href="requirements.html">操作系统</a>
+<ul>
+<li>
+<a href="requirements.html#unix">受支持的Unix衍生版</a>
+</li>
+<li>
+<a href="requirements.html#unix">不受支持的Unix衍生版</a>
+</li>
+<li>
+<a href="requirements.html#unix-windows">非Unix操作系统(Windows)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="requirements.html#ruby">Ruby版本</a>
+</li>
+<li>
+<a href="requirements.html">硬件需求</a>
+<ul>
+<li>
+<a href="requirements.html">存储</a>
+</li>
+<li>
+<a href="requirements.html#cpu">CPU</a>
+</li>
+<li>
+<a href="requirements.html#memory">Memory</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="requirements.html#gitlab-runner">GitLab Runner</a>
+</li>
+<li>
+<a href="requirements.html#unicorn-workers">Unicorn Workers</a>
+</li>
+<li>
+<a href="requirements.html">数据库</a>
+<ul>
+<li>
+<a href="requirements.html#postgresql">PostgreSQL 需求</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="requirements.html#redis-and-sidekiq">Redis and Sidekiq</a>
+</li>
+<li>
+<a href="requirements.html">支持的浏览器</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab'>安装GitLab的需求 <a class='anchor' href='requirements.html#gitlab' title='Permalink'></a></h1><h2 id=''>操作系统 <a class='anchor' href='requirements.html#' title='Permalink'></a></h2><h3 id='unix'>受支持的Unix衍生版 <a class='anchor' href='requirements.html#unix' title='Permalink'></a></h3>
+<ul>
+<li>Ubuntu</li>
+<li>Debian</li>
+<li>CentOS</li>
+<li>Red Hat Enterprise Linux (使用CentOS的包和命令)</li>
+<li>Scientific Linux (使用CentOS的包和命令)</li>
+<li>Oracle Linux (使用CentOS的包和命令)</li>
+</ul>
+
+<p>安装配置请参与 <a href="http://www.gitlab.cc/installation/">GitLab中文网的安装介绍页面</a>.</p>
+<h3 id='unix'>不受支持的Unix衍生版 <a class='anchor' href='requirements.html#unix' title='Permalink'></a></h3>
+<ul>
+<li>OS X</li>
+<li>Arch Linux</li>
+<li>Fedora</li>
+<li>Gentoo</li>
+<li>FreeBSD</li>
+</ul>
+
+<p>上面这些不受支持的Unix衍生版也可以自己手动编译安装GitLab。
+请查阅<a href="installation.html">源码安装手册</a>和<a href="http://www.gitlab.cc/installation/">GitLab安装手册</a>。</p>
+<h3 id='unix-windows'>非Unix操作系统(Windows) <a class='anchor' href='requirements.html#unix-windows' title='Permalink'></a></h3>
+<p>GitLab是专为Unix操作系统开发的。
+GitLab <strong>不可</strong> 运行在Windows操作系统上，而且我们近期也没有考虑支持Windows。
+你可以在Linux虚拟机上或者Docker上来安装GitLab。</p>
+<h2 id='ruby'>Ruby版本 <a class='anchor' href='requirements.html#ruby' title='Permalink'></a></h2>
+<p>GitLab 需要Ruby (MRI) 2.3，自GitLab 8.13开始不再支持 2.3以下版本。</p>
+
+<p>我们建议使用标准的MRI解释器来运行Ruby。
+虽然大部分Ruby开发者喜欢<a href="http://jruby.org/">JRuby</a>和<a href="http://rubini.us/">Rubinius</a>。
+但是GitLab需要原生的Gems。</p>
+<h2 id=''>硬件需求 <a class='anchor' href='requirements.html#' title='Permalink'></a></h2><h3 id=''>存储 <a class='anchor' href='requirements.html#' title='Permalink'></a></h3>
+<p>存储空间的大小主要取决于你将存储的Git仓库的大小。但根据 <em>rule of thumb(经验法则)</em>
+你应该考虑多留一些空间用来存储Git仓库的备份。</p>
+
+<p>如果你想使用弹性的存储空间，你可以考虑在分配分区的时候使用LVM架构，这样可以在后期需要的清空下添加硬盘在增加存储空间。</p>
+
+<p>除此之外你还可以挂在一个支持NFS的分卷，比如NAS、
+SAN、AWS、EBS。</p>
+
+<p>如果你的服务器有足够大的内存和CPU处理性能，GitLab的响应速度主要受限于硬盘的寻道时间。
+使用更快的硬盘(7200转)或者SSD硬盘会很大程度的提升GitLab的响应速度。</p>
+<h3 id='cpu'>CPU <a class='anchor' href='requirements.html#cpu' title='Permalink'></a></h3>
+<ul>
+<li>1 核心CPU最多支持100个用户，所有的workers和后台任务都在同一个核心工作这将导致GitLab服务响应会有点缓慢。</li>
+<li><strong>2核心</strong> 支持500用户，这也是<strong>官方推荐</strong>的最低标准。</li>
+<li>4 核心支持2,000用户。</li>
+<li>8 核心支持5,000用户。</li>
+<li>16 核心支持10,000用户。</li>
+<li>32 核心支持20,000用户。</li>
+<li>64 核心支持40,000用户。</li>
+<li>如果想支持更多用户，可以使用 <a href="http://www.gitlab.cc/high-availability/">集群式架构</a></li>
+</ul>
+<h3 id='memory'>Memory <a class='anchor' href='requirements.html#memory' title='Permalink'></a></h3>
+<p>安装使用GitLab需要至少4GB可用内存(RAM + Swap)!
+由于操作系统和其他正在运行的应用也会使用内存,
+所以安装GitLab前一定要注意当前服务器至少有4GB的可用内存.
+少于4GB内存会导致在reconfigure的时候出现各种诡异的问题,
+而且在使用过程中也经常会出现500错误.</p>
+
+<ul>
+<li>1GB 物理内存 + 3GB 交换分区 是最低的要求，但我们 <strong>强烈反对</strong> 使用这样的配置。 查看下面<a href="requirements.html#unicorn-workers">unicorn worker</a>章节获取更多建议。</li>
+<li>2GB 物理内存 + 2GB 交换分区 支持100用户，但服务响应会很慢。</li>
+<li><strong>4GB 物理内存</strong> 支持100用户，也是 <strong>官方推荐</strong> 的配置。</li>
+<li>8GB 物理内存 支持 1,000 用户。</li>
+<li>16GB 物理内存 支持 2,000 用户。</li>
+<li>32GB 物理内存 支持 4,000 用户。</li>
+<li>64GB 物理内存 支持 8,000 用户。</li>
+<li>128GB 物理内存 支持 16,000 用户。</li>
+<li>256GB 物理内存 支持 32,000 用户。</li>
+<li>如果想支持更多用户，可以使用 <a href="http://www.gitlab.cc/high-availability/">集群式架构</a></li>
+</ul>
+
+<p>即使你服务器有足够多的RAM，
+也要给服务器至少分配2GB的交换分区。
+因为使用交换分区可以在你的可用内存波动的时候降低GitLab出错的几率。</p>
+
+<p>注意: Sidekiq的25个workers在查看进程(top或者htop)的时候会发现它会单独显示每个worker，但是它们是共享内存分配的，这是因为Sidekiq是一个多线程的程序。
+详细内容查看下面关于<a href="requirements.html#unicorn-workers">Unicorn workers</a> 的介绍。</p>
+<h2 id='gitlab-runner'>GitLab Runner <a class='anchor' href='requirements.html#gitlab-runner' title='Permalink'></a></h2>
+<p>我们强烈反对把GitLab Runner安装到GitLab服务器上。
+GitLab Runner的配置取决于你的应用在CI环境中需要使用什么执行。
+GitLab Runner
+在工作过程中会消耗大量的内存。</p>
+
+<p>上面章节中的可用内存计算，
+前提是GitLab Runner与GitLab Rails
+程序不在同一个机器上。</p>
+
+<p>同时因为一些<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/security/index.md">安全因素</a> - 尤其是你要把shell作为
+GitLab Runner的执行器。
+所以GitLab Runner安装到一个独立服务器是不安全的。</p>
+
+<p>我们建议GitLab Runner安装到一个独立的环境中，
+比如可以用Docker。</p>
+<h2 id='unicorn-workers'>Unicorn Workers <a class='anchor' href='requirements.html#unicorn-workers' title='Permalink'></a></h2>
+<p>增加unicorn的workers数量,可以减少应用的响应时间并提高处理并发请求的能力</p>
+
+<p>对于大部分实例，我们建议使用这样的配置：CPU 核心数 + 1 = unicorn workers数。
+比如一个2个核心的机器，把unicorn workers设置为3是比较合理的。</p>
+
+<p>对于只有2GB内存的机器，我们建议至少配置3个unicorn workers。
+如果你使用1GB内存加一个机械硬盘上的swap分区，建议只配置2个Unicron workers，以防止过度使用交换分区。
+如果只使用一个unicorn workers，git只能通过ssh协议工作，因为HTTP访问需要两个workers(一个用来处理用户请求，一个用来处理身份验证)
+如果你使用512MB内存加一个固态硬盘（SSD）上的swap分区，你可以用2个unicorn workers，git就可以通过HTTP方式访问GitLab。</p>
+
+<p>Omnibus GitLab上如何修改Unicron-workers <a href="../../omnibus/settings/unicorn.html#unicorn-settings">Omnibus GitLab修改unicorn-workers文档</a>.</p>
+<h2 id=''>数据库 <a class='anchor' href='requirements.html#' title='Permalink'></a></h2>
+<p>如果想让数据库给每个客户端预分配1MB大小的存储空间，需要按照下面的要求来做。</p>
+<h3 id='postgresql'>PostgreSQL 需求 <a class='anchor' href='requirements.html#postgresql' title='Permalink'></a></h3>
+<p>使用PostgreSQL必须确认GitLab使用的数据库安装了<code>pg_trgm</code>扩展。
+这个扩展需要PostgreSQL使用 root
+用户在GitLab每个数据库里面执行下面的命令:</p>
+<pre class="highlight plaintext"><code>CREATE EXTENSION pg_trgm;
+</code></pre>
+<p>某些系统启用此扩展可能需要安装PostgreSQL的依赖
+(比如<code>postgresql-contrib</code>) 。</p>
+<h2 id='redis-and-sidekiq'>Redis and Sidekiq <a class='anchor' href='requirements.html#redis-and-sidekiq' title='Permalink'></a></h2>
+<p>Redis存储每个客户端的sessions和后台任务队列。
+Redis需求的存储空间很小, 大约每个用户25kB。
+Sidekiq使用多线程处理后台任务。
+这个进程启动的时候会使用整个Rails堆栈(200MB+)，但是它会在内存泄漏的情况下增加。
+一个用户非常活跃的服务器上(10,000个活跃用户)Sidekiq进程会占用1GB+的内存。</p>
+<h2 id=''>支持的浏览器 <a class='anchor' href='requirements.html#' title='Permalink'></a></h2>
+<p>GitLab前端页面支持Firefox,Safari,Chome等最新稳定版及历史稳定版，同时也支持Microsoft Edge和Microsoft IE11。</p>
+
+<p>当浏览器有新版本发布后，GitLab将只会支持最新版及之前3个历史版本的支持。</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/install/requirements.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

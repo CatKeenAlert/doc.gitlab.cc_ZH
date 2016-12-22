@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Cycle Analytics - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Cycle Analytics</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="cycle_analytics.html#cycle-analytics">Cycle Analytics</a>
+<ul>
+<li>
+<a href="cycle_analytics.html#overview">Overview</a>
+</li>
+<li>
+<a href="cycle_analytics.html#how-the-data-is-measured">How the data is measured</a>
+</li>
+<li>
+<a href="cycle_analytics.html#example-workflow">Example workflow</a>
+</li>
+<li>
+<a href="cycle_analytics.html#permissions">Permissions</a>
+</li>
+<li>
+<a href="cycle_analytics.html#more-resources">More resources</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='cycle-analytics'>Cycle Analytics <a class='anchor' href='cycle_analytics.html#cycle-analytics' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5986">Introduced</a> in GitLab 8.12. Further features were added in GitLab
+  8.14.</p>
+</blockquote>
+
+<p>Cycle Analytics measures the time it takes to go from an <a href="https://about.gitlab.com/2016/08/05/continuous-integration-delivery-and-deployment-with-gitlab/#from-idea-to-production-with-gitlab">idea to production</a> for
+each project you have. This is achieved by not only indicating the total time it
+takes to reach at that point, but the total time is broken down into the
+multiple stages an idea has to pass through to be shipped.</p>
+
+<p>Cycle Analytics is that it is tightly coupled with the <a href="../../workflow/gitlab_flow.html">GitLab flow</a> and
+calculates a separate median for each stage.</p>
+<h2 id='overview'>Overview <a class='anchor' href='cycle_analytics.html#overview' title='Permalink'></a></h2>
+<p>You can find the Cycle Analytics page under your project&#39;s <strong>Pipelines ➔ Cycle
+Analytics</strong> tab.</p>
+
+<p><a target="_blank" href="img/cycle_analytics_landing_page.png"><img src="img/cycle_analytics_landing_page.png" title="" alt="Cycle Analytics landing page"/></a></p>
+
+<p>You can see that there are seven stages in total:</p>
+
+<ul>
+<li><strong>Issue</strong> (Tracker)
+
+<ul>
+<li>Median time from issue creation until given a milestone or list label
+(first assignment, any milestone, milestone date or assignee is not required)</li>
+</ul></li>
+<li><strong>Plan</strong> (Board)
+
+<ul>
+<li>Median time from giving an issue a milestone or label until pushing the
+first commit to the branch</li>
+</ul></li>
+<li><strong>Code</strong> (IDE)
+
+<ul>
+<li>Median time from the first commit to the branch until the merge request is
+created</li>
+</ul></li>
+<li><strong>Test</strong> (CI)
+
+<ul>
+<li>Median total test time for all commits/merges</li>
+</ul></li>
+<li><strong>Review</strong> (Merge Request/MR)
+
+<ul>
+<li>Median time from merge request creation until the merge request is merged
+(closed merge requests won&#39;t be taken into account)</li>
+</ul></li>
+<li><strong>Staging</strong> (Continuous Deployment)
+
+<ul>
+<li>Median time from when the merge request got merged until the deploy to
+production (production is last stage/environment)</li>
+</ul></li>
+<li><strong>Production</strong> (Total)
+
+<ul>
+<li>Sum of all the above stages&#39; times excluding the Test (CI) time. To clarify,
+it&#39;s not so much that CI time is &quot;excluded&quot;, but rather CI time is already
+counted in the review stage since CI is done automatically. Most of the
+other stages are purely sequential, but <strong>Test</strong> is not.</li>
+</ul></li>
+</ul>
+<h2 id='how-the-data-is-measured'>How the data is measured <a class='anchor' href='cycle_analytics.html#how-the-data-is-measured' title='Permalink'></a></h2>
+<p>Cycle Analytics records cycle time and data based on the project issues with the
+exception of the staging and production stages, where only data deployed to 
+production are measured.</p>
+
+<p>Specifically, if your CI is not set up and you have not defined a <code>production</code>
+<a href="../../ci/yaml/README.html#environment">environment</a>, then you will not have any data for those stages.</p>
+
+<p>Below you can see in more detail what the various stages of Cycle Analytics mean.</p>
+
+<table><thead>
+<tr>
+<th><strong>Stage</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Issue</td>
+<td>Measures the median time between creating an issue and taking action to solve it, by either labeling it or adding it to a milestone, whatever comes first. The label will be tracked only if it already has an <a href="issue_board.html#creating-a-new-list">Issue Board list</a> created for it.</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>Measures the median time between the action you took for the previous stage, and pushing the first commit to the branch. The very first commit of the branch is the one that triggers the separation between <strong>Plan</strong> and <strong>Code</strong>, and at least one of the commits in the branch needs to contain the related issue number (e.g., <code>#42</code>). If none of the commits in the branch mention the related issue number, it is not considered to the measurement time of the stage.</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>Measures the median time between pushing a first commit (previous stage) and creating a merge request (MR) related to that commit. The key to keep the process tracked is to include the <a href="issues/automatic_issue_closing.html">issue closing pattern</a> to the description of the merge request (for example, <code>Closes #xxx</code>, where <code>xxx</code> is the number of the issue related to this merge request). If the issue closing pattern is not present in the merge request description, the MR is not considered to the measurement time of the stage.</td>
+</tr>
+<tr>
+<td>Test</td>
+<td>Measures the median time to run the entire pipeline for that project. It&#39;s related to the time GitLab CI takes to run every job for the commits pushed to that merge request defined in the previous stage. It is basically the start-&gt;finish time for all pipelines. <code>master</code> is not excluded. It does not attempt to track time for any particular stages.</td>
+</tr>
+<tr>
+<td>Review</td>
+<td>Measures the median time taken to review the merge request, between its creation and until it&#39;s merged.</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>Measures the median time between merging the merge request until the very first deployment to production. It&#39;s tracked by the <a href="../../ci/yaml/README.html#environment">environment</a> set to <code>production</code> (case-sensitive, <code>Production</code> won&#39;t work) in your GitLab CI configuration. If there isn&#39;t a <code>production</code> environment, this is not tracked.</td>
+</tr>
+<tr>
+<td>Production</td>
+<td>The sum of all time (medians) taken to run the entire process, from issue creation to deploying the code to production.</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<p>Here&#39;s a little explanation of how this works behind the scenes:</p>
+
+<ol>
+<li>Issues and merge requests are grouped together in pairs, such that for each
+<code>&lt;issue, merge request&gt;</code> pair, the merge request has the <a href="issues/automatic_issue_closing.html">issue closing pattern</a>
+for the corresponding issue. All other issues and merge requests are <strong>not</strong>
+considered.</li>
+<li>Then the <issue, merge request> pairs are filtered out by last XX days (specified
+by the UI - default is 90 days). So it prohibits these pairs from being considered.</li>
+<li>For the remaining <code>&lt;issue, merge request&gt;</code> pairs, we check the information that
+we need for the stages, like issue creation date, merge request merge time,
+etc.</li>
+</ol>
+
+<p>To sum up, anything that doesn&#39;t follow the <a href="../../workflow/gitlab_flow.html">GitLab flow</a> won&#39;t be tracked at all.
+So, if a merge request doesn&#39;t close an issue or an issue is not labeled with a
+label present in the Issue Board or assigned a milestone or a project has no
+<code>production</code> environment (for staging and production stages), the Cycle Analytics
+dashboard won&#39;t present any data at all.</p>
+<h2 id='example-workflow'>Example workflow <a class='anchor' href='cycle_analytics.html#example-workflow' title='Permalink'></a></h2>
+<p>Below is a simple fictional workflow of a single cycle that happens in a
+single day passing through all seven stages. Note that if a stage does not have
+a start/stop mark, it is not measured and hence not calculated in the median
+time. It is assumed that milestones are created and CI for testing and setting
+environments is configured.</p>
+
+<ol>
+<li>Issue is created at 09:00 (start of <strong>Issue</strong> stage).</li>
+<li>Issue is added to a milestone at 11:00 (stop of <strong>Issue</strong> stage / start of
+<strong>Plan</strong> stage).</li>
+<li>Start working on the issue, create a branch locally and make one commit at
+12:00.</li>
+<li>Make a second commit to the branch which mentions the issue number at 12.30
+(stop of <strong>Plan</strong> stage / start of <strong>Code</strong> stage).</li>
+<li>Push branch and create a merge request that contains the <a href="issues/automatic_issue_closing.html">issue closing pattern</a>
+in its description at 14:00 (stop of <strong>Code</strong> stage / start of <strong>Test</strong> and
+<strong>Review</strong> stages).</li>
+<li>The CI starts running your scripts defined in <a href="../../ci/yaml/README.html"><code>.gitlab-ci.yml</code></a> and
+takes 5min (stop of <strong>Test</strong> stage).</li>
+<li>Review merge request, ensure that everything is OK and merge the merge
+request at 19:00. (stop of <strong>Review</strong> stage / start of <strong>Staging</strong> stage).</li>
+<li>Now that the merge request is merged, a deployment to the <code>production</code>
+environment starts and finishes at 19:30 (stop of <strong>Staging</strong> stage).</li>
+<li>The cycle completes and the sum of the median times of the previous stages
+is recorded to the <strong>Production</strong> stage. That is the time between creating an
+issue and deploying its relevant merge request to production.</li>
+</ol>
+
+<p>From the above example you can conclude the time it took each stage to complete
+as long as their total time:</p>
+
+<ul>
+<li><strong>Issue</strong>:  2h (11:00 - 09:00)</li>
+<li><strong>Plan</strong>:   1h (12:00 - 11:00)</li>
+<li><strong>Code</strong>:   2h (14:00 - 12:00)</li>
+<li><strong>Test</strong>:   5min</li>
+<li><strong>Review</strong>: 5h (19:00 - 14:00)</li>
+<li><strong>Staging</strong>:  30min (19:30 - 19:00)</li>
+<li><strong>Production</strong>: Since this stage measures the sum of median time off all
+previous stages, we cannot calculate it if we don&#39;t know the status of the
+stages before. In case this is the very first cycle that is run in the project,
+then the <strong>Production</strong> time is 10h 30min (19:30 - 09:00)</li>
+</ul>
+
+<p>A few notes:</p>
+
+<ul>
+<li>In the above example we demonstrated that it doesn&#39;t matter if your first
+commit doesn&#39;t mention the issue number, you can do this later in any commit
+of the branch you are working on.</li>
+<li>You can see that the <strong>Test</strong> stage is not calculated to the overall time of
+the cycle since it is included in the <strong>Review</strong> process (every MR should be
+tested).</li>
+<li>The example above was just <strong>one cycle</strong> of the seven stages. Add multiple
+cycles, calculate their median time and the result is what the dashboard of
+Cycle Analytics is showing.</li>
+</ul>
+<h2 id='permissions'>Permissions <a class='anchor' href='cycle_analytics.html#permissions' title='Permalink'></a></h2>
+<p>The current permissions on the Cycle Analytics dashboard are:</p>
+
+<ul>
+<li>Public projects - anyone can access</li>
+<li>Private/internal projects - any member (guest level and above) can access</li>
+</ul>
+
+<p>You can <a href="../permissions.html">read more about permissions</a> in general.</p>
+<h2 id='more-resources'>More resources <a class='anchor' href='cycle_analytics.html#more-resources' title='Permalink'></a></h2>
+<p>Learn more about Cycle Analytics in the following resources:</p>
+
+<ul>
+<li><a href="https://about.gitlab.com/solutions/cycle-analytics/">Cycle Analytics feature page</a></li>
+<li><a href="https://about.gitlab.com/2016/09/16/feature-preview-introducing-cycle-analytics/">Cycle Analytics feature preview</a></li>
+<li><a href="https://about.gitlab.com/2016/09/21/cycle-analytics-feature-highlight/">Cycle Analytics feature highlight</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/user/project/cycle_analytics.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

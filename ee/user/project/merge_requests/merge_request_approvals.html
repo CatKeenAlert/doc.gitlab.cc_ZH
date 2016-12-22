@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Merge request approvals - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Merge request approvals</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="merge_request_approvals.html#merge-request-approvals">Merge request approvals</a>
+<ul>
+<li>
+<a href="merge_request_approvals.html#configuring-approvals">Configuring Approvals</a>
+<ul>
+<li>
+<a href="merge_request_approvals.html#approvals-required">Approvals Required</a>
+</li>
+<li>
+<a href="merge_request_approvals.html#reset-approvals-on-push">Reset approvals on push</a>
+</li>
+<li>
+<a href="merge_request_approvals.html#approvers">Approvers</a>
+</li>
+<li>
+<a href="merge_request_approvals.html#approver-groups">Approver groups</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="merge_request_approvals.html#using-approvals">Using approvals</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='merge-request-approvals'>Merge request approvals <a class='anchor' href='merge_request_approvals.html#merge-request-approvals' title='Permalink'></a></h1>
+<blockquote>
+<p>Introduced in GitLab Enterprise Edition 7.13.</p>
+</blockquote>
+
+<p>If you want to make sure every merge request is approved by one or more
+people, you can enforce this workflow by using merge request approvals.
+Merge request approvals allow you to set the number of necessary approvals
+and predefine a list of approvers that will need to approve every
+merge request in a project.</p>
+<h2 id='configuring-approvals'>Configuring Approvals <a class='anchor' href='merge_request_approvals.html#configuring-approvals' title='Permalink'></a></h2>
+<p>You can configure the approvals in the project settings, under merge requests.
+To enable it, set <strong>Approvals required</strong> to 1 or higher and search for the
+users you want to be approvers.</p>
+
+<p><a target="_blank" href="img/approvals_settings.png"><img src="img/approvals_settings.png" title="" alt="Merge Request Approvals in Project Settings"/></a></p>
+<h3 id='approvals-required'>Approvals Required <a class='anchor' href='merge_request_approvals.html#approvals-required' title='Permalink'></a></h3>
+<p>This sets the amount of approvals required before being able to merge a merge request.
+At 0, this disables the feature. Any value above 0 requires that amount of different
+users to approve the merge request.</p>
+
+<p>The number of approvers can be higher than the required approvals.</p>
+<h3 id='reset-approvals-on-push'>Reset approvals on push <a class='anchor' href='merge_request_approvals.html#reset-approvals-on-push' title='Permalink'></a></h3>
+<p>With this setting turned on, approvals are reset when a new push
+is done to the merge request branch.</p>
+
+<p>Turn <strong>Reset approvals on push</strong> off if you want approvals to persist,
+independent of changes to the merge request.</p>
+
+<p>Approvals do not get reset when rebasing a merge request from the UI.</p>
+
+<p>If one of the approvers pushes a commit to the branch that is tied to the
+merge request, they automatically get excluded from the approvers list.</p>
+<h3 id='approvers'>Approvers <a class='anchor' href='merge_request_approvals.html#approvers' title='Permalink'></a></h3>
+<p>At the approvers area you can define the default set of users that need to
+approve a merge request.</p>
+
+<p>Depending on the number of required approvals and the number of approvers set,
+there are different cases:</p>
+
+<ul>
+<li>If there are more approvers than required approvals, any subset of these users
+can approve the merge request.</li>
+<li>If there are less approvers than required approvals, all the set approvers plus
+any other user(s) need to approve the merge request before being able to merge it.</li>
+<li>If the approvers are equal to the amount of required approvals, all the
+approvers are required to approve the merge request.</li>
+</ul>
+
+<p>Note that approvers and the number of required approvals can be changed while
+creating or editing a merge request.</p>
+
+<p>When someone is marked as a required approver for a merge request, an email is
+sent to them and a todo is added to their list of todos.</p>
+<h3 id='approver-groups'>Approver groups <a class='anchor' href='merge_request_approvals.html#approver-groups' title='Permalink'></a></h3>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/743">Introduced</a> in GitLab Enterprise Edition 8.13.</p>
+</blockquote>
+
+<p>You can also define one or more groups that can be assigned as approvers. It
+works the same way like regular approvers do, the only difference is that you
+assign several users with one action. One possible scenario would be to to assign
+a group of approvers at the project level and change them later when creating
+or editing the merge request.</p>
+<h2 id='using-approvals'>Using approvals <a class='anchor' href='merge_request_approvals.html#using-approvals' title='Permalink'></a></h2>
+<p>After configuring approvals, you will be able to change the default set of
+approvers and the amount of required approvals before creating the merge request.
+The amount of required approvals, if changed, must be greater than the default
+set at the project level. This ensures that you&#39;re not forced to adjust settings
+when someone is unavailable for approval, yet the process is still enforced.</p>
+
+<p>If the approvers are changed via the project&#39;s settings after a merge request
+is created, the merge request retains the previous approvers, but you can always
+change them by editing the merge request.</p>
+
+<p>The author of a merge request cannot be set as an approver for that merge
+request.</p>
+
+<p>To approve a merge request, simply press the <strong>Approve merge request</strong> button.</p>
+
+<p><a target="_blank" href="img/approvals_mr.png"><img src="img/approvals_mr.png" title="" alt="Merge request approval"/></a></p>
+
+<p>Once you approve, the button will disappear and the number of approvers
+will be decreased by one.</p>
+
+<p><a target="_blank" href="img/approvals_mr_approved.png"><img src="img/approvals_mr_approved.png" title="" alt="Merge request approval"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/merge_requests/merge_request_approvals.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

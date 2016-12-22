@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>InfluxDB Schema - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../../index.html">
+    <img src="../../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">InfluxDB Schema</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="influxdb_schema.html#influxdb-schema">InfluxDB Schema</a>
+<ul>
+<li>
+<a href="influxdb_schema.html#process_file_descriptors">PROCESS_file_descriptors</a>
+</li>
+<li>
+<a href="influxdb_schema.html#process_gc_statistics">PROCESS_gc_statistics</a>
+</li>
+<li>
+<a href="influxdb_schema.html#process_memory_usage">PROCESS_memory_usage</a>
+</li>
+<li>
+<a href="influxdb_schema.html#process_method_calls">PROCESS_method_calls</a>
+</li>
+<li>
+<a href="influxdb_schema.html#process_object_counts">PROCESS_object_counts</a>
+</li>
+<li>
+<a href="influxdb_schema.html#process_transactions">PROCESS_transactions</a>
+</li>
+<li>
+<a href="influxdb_schema.html#process_views">PROCESS_views</a>
+</li>
+<li>
+<a href="influxdb_schema.html#events">events</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='influxdb-schema'>InfluxDB Schema <a class='anchor' href='influxdb_schema.html#influxdb-schema' title='Permalink'></a></h1>
+<p>The following measurements are currently stored in InfluxDB:</p>
+
+<ul>
+<li><code>PROCESS_file_descriptors</code></li>
+<li><code>PROCESS_gc_statistics</code></li>
+<li><code>PROCESS_memory_usage</code></li>
+<li><code>PROCESS_method_calls</code></li>
+<li><code>PROCESS_object_counts</code></li>
+<li><code>PROCESS_transactions</code></li>
+<li><code>PROCESS_views</code></li>
+<li><code>events</code></li>
+</ul>
+
+<p>Here, <code>PROCESS</code> is replaced with either <code>rails</code> or <code>sidekiq</code> depending on the
+process type. In all series, any form of duration is stored in milliseconds.</p>
+<h2 id='process_file_descriptors'>PROCESS_file_descriptors <a class='anchor' href='influxdb_schema.html#process_file_descriptors' title='Permalink'></a></h2>
+<p>This measurement contains the number of open file descriptors over time. The
+value field <code>value</code> contains the number of descriptors.</p>
+<h2 id='process_gc_statistics'>PROCESS_gc_statistics <a class='anchor' href='influxdb_schema.html#process_gc_statistics' title='Permalink'></a></h2>
+<p>This measurement contains Ruby garbage collection statistics such as the amount
+of minor/major GC runs (relative to the last sampling interval), the time spent
+in garbage collection cycles, and all fields/values returned by <code>GC.stat</code>.</p>
+<h2 id='process_memory_usage'>PROCESS_memory_usage <a class='anchor' href='influxdb_schema.html#process_memory_usage' title='Permalink'></a></h2>
+<p>This measurement contains the process&#39; memory usage (in bytes) over time. The
+value field <code>value</code> contains the number of bytes.</p>
+<h2 id='process_method_calls'>PROCESS_method_calls <a class='anchor' href='influxdb_schema.html#process_method_calls' title='Permalink'></a></h2>
+<p>This measurement contains the methods called during a transaction along with
+their duration, and a name of the transaction action that invoked the method (if
+available). The method call duration is stored in the value field <code>duration</code>,
+while the method name is stored in the tag <code>method</code>. The tag <code>action</code> contains
+the full name of the transaction action. Both the <code>method</code> and <code>action</code> fields
+are in the following format:</p>
+<pre class="highlight plaintext"><code>ClassName#method_name
+</code></pre>
+<p>For example, a method called by the <code>show</code> method in the <code>UsersController</code> class
+would have <code>action</code> set to <code>UsersController#show</code>.</p>
+<h2 id='process_object_counts'>PROCESS_object_counts <a class='anchor' href='influxdb_schema.html#process_object_counts' title='Permalink'></a></h2>
+<p>This measurement is used to store retained Ruby objects (per class) and the
+amount of retained objects. The number of objects is stored in the <code>count</code> value
+field while the class name is stored in the <code>type</code> tag.</p>
+<h2 id='process_transactions'>PROCESS_transactions <a class='anchor' href='influxdb_schema.html#process_transactions' title='Permalink'></a></h2>
+<p>This measurement is used to store basic transaction details such as the time it
+took to complete a transaction, how much time was spent in SQL queries, etc. The
+following value fields are available:</p>
+
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>duration</code></td>
+<td>The total duration of the transaction</td>
+</tr>
+<tr>
+<td><code>allocated_memory</code></td>
+<td>The amount of bytes allocated while the transaction was running. This value is only reliable when using single-threaded application servers</td>
+</tr>
+<tr>
+<td><code>method_duration</code></td>
+<td>The total time spent in method calls</td>
+</tr>
+<tr>
+<td><code>sql_duration</code></td>
+<td>The total time spent in SQL queries</td>
+</tr>
+<tr>
+<td><code>view_duration</code></td>
+<td>The total time spent in views</td>
+</tr>
+</tbody></table>
+<h2 id='process_views'>PROCESS_views <a class='anchor' href='influxdb_schema.html#process_views' title='Permalink'></a></h2>
+<p>This measurement is used to store view rendering timings for a transaction. The
+following value fields are available:</p>
+
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>duration</code></td>
+<td>The rendering time of the view</td>
+</tr>
+<tr>
+<td><code>view</code></td>
+<td>The path of the view, relative to the application&#39;s root directory</td>
+</tr>
+</tbody></table>
+
+<p>The <code>action</code> tag contains the action name of the transaction that rendered the
+view.</p>
+<h2 id='events'>events <a class='anchor' href='influxdb_schema.html#events' title='Permalink'></a></h2>
+<p>This measurement is used to store generic events such as the number of Git
+pushes, Emails sent, etc. Each point in this measurement has a single value
+field called <code>count</code>. The value of this field is simply set to <code>1</code>. Each point
+also has at least one tag: <code>event</code>. This tag&#39;s value is set to the event name.
+Depending on the event type additional tags may be available as well.</p>
+
+<hr>
+
+<p>Read more on:</p>
+
+<ul>
+<li><a href="introduction.html">Introduction to GitLab Performance Monitoring</a></li>
+<li><a href="gitlab_configuration.html">GitLab Configuration</a></li>
+<li><a href="influxdb_configuration.html">InfluxDB Configuration</a></li>
+<li><a href="grafana_configuration.html">Grafana Install/Configuration</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/administration/monitoring/performance/influxdb_schema.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

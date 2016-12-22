@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Configuring a Database for GitLab HA - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">High Availability</a></li>
+            
+          
+          <li class="breadcrumb">Configuring a Database for GitLab HA</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="database.html#configuring-a-database-for-gitlab-ha">Configuring a Database for GitLab HA</a>
+<ul>
+<li>
+<a href="database.html#configure-your-own-database-server">Configure your own database server</a>
+</li>
+<li>
+<a href="database.html#configure-using-omnibus">Configure using Omnibus</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='configuring-a-database-for-gitlab-ha'>Configuring a Database for GitLab HA <a class='anchor' href='database.html#configuring-a-database-for-gitlab-ha' title='Permalink'></a></h1>
+<p>You can choose to install and manage a database server (PostgreSQL/MySQL)
+yourself, or you can use GitLab Omnibus packages to help. GitLab recommends
+PostgreSQL. This is the database that will be installed if you use the
+Omnibus package to manage your database.</p>
+<h2 id='configure-your-own-database-server'>Configure your own database server <a class='anchor' href='database.html#configure-your-own-database-server' title='Permalink'></a></h2>
+<p>If you&#39;re hosting GitLab on a cloud provider, you can optionally use a
+managed service for PostgreSQL. For example, AWS offers a managed Relational
+Database Service (RDS) that runs PostgreSQL.</p>
+
+<p>If you use a cloud-managed service, or provide your own PostgreSQL:</p>
+
+<ol>
+<li>Set up a <code>gitlab</code> username with a password of your choice. The <code>gitlab</code> user
+needs privileges to create the <code>gitlabhq_production</code> database.</li>
+<li>Configure the GitLab application servers with the appropriate details.
+This step is covered in <a href="gitlab.html">Configuring GitLab for HA</a></li>
+</ol>
+<h2 id='configure-using-omnibus'>Configure using Omnibus <a class='anchor' href='database.html#configure-using-omnibus' title='Permalink'></a></h2>
+<ol>
+<li>Download/install GitLab Omnibus using <strong>steps 1 and 2</strong> from
+<a href="https://about.gitlab.com/downloads">GitLab downloads</a>. Do not complete other
+steps on the download page.</li>
+<li><p>Create/edit <code>/etc/gitlab/gitlab.rb</code> and use the following configuration.
+Be sure to change the <code>external_url</code> to match your eventual GitLab front-end
+URL.</p>
+<pre class="highlight ruby"><code><span class="n">external_url</span> <span class="s1">'https://gitlab.example.com'</span>
+
+<span class="c1"># Disable all components except PostgreSQL</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">bootstrap</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">nginx</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">unicorn</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">sidekiq</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">redis</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">gitlab_workhorse</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">mailroom</span><span class="p">[</span><span class="s1">'enable'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="c1"># PostgreSQL configuration</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'sql_password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'DB password'</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'md5_auth_cidr_addresses'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.0.0.0/0'</span><span class="p">]</span>
+<span class="n">postgresql</span><span class="p">[</span><span class="s1">'listen_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'0.0.0.0'</span>
+</code></pre></li>
+<li><p>Run <code>sudo gitlab-ctl reconfigure</code> to install and configure PostgreSQL.</p>
+
+<blockquote>
+<p><strong>Note</strong>: This <code>reconfigure</code> step will result in some errors.
+  That&#39;s OK - don&#39;t be alarmed.</p>
+</blockquote></li>
+<li><p>Open a database prompt:</p>
+<pre class="highlight plaintext"><code>su - gitlab-psql
+/bin/bash
+psql -h /var/opt/gitlab/postgresql -d template1
+
+# Output:
+
+psql (9.2.15)
+Type "help" for help.
+
+template1=#
+</code></pre></li>
+<li><p>Run the following command at the database prompt and you will be asked to
+enter the new password for the PostgreSQL superuser.</p>
+<pre class="highlight plaintext"><code>\password
+
+# Output:
+
+Enter new password:
+Enter it again:
+</code></pre></li>
+<li><p>Similarly, set the password for the <code>gitlab</code> database user. Use the same
+password that you specified in the <code>/etc/gitlab/gitlab.rb</code> file for
+<code>postgresql[&#39;sql_password&#39;]</code>.</p>
+<pre class="highlight plaintext"><code>\password gitlab
+
+# Output:
+
+Enter new password:
+Enter it again:
+</code></pre></li>
+<li><p>Enable the <code>pg_trgm</code> extension:</p>
+<pre class="highlight plaintext"><code>CREATE EXTENSION pg_trgm;
+
+# Output:
+
+CREATE EXTENSION
+</code></pre></li>
+<li><p>Exit the database prompt by typing <code>\q</code> and Enter.</p></li>
+<li><p>Exit the <code>gitlab-psql</code> user by running <code>exit</code> twice.</p></li>
+<li><p>Run <code>sudo gitlab-ctl reconfigure</code> a final time.</p></li>
+<li><p>Run <code>touch /etc/gitlab/skip-auto-migrations</code> to prevent database migrations
+from running on upgrade. Only the primary GitLab application server should
+handle migrations.</p></li>
+</ol>
+
+<hr>
+
+<p>Read more on high-availability configuration:</p>
+
+<ol>
+<li><a href="redis.html">Configure Redis</a></li>
+<li><a href="nfs.html">Configure NFS</a></li>
+<li><a href="gitlab.html">Configure the GitLab application servers</a></li>
+<li><a href="load_balancer.html">Configure the load balancers</a></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/high_availability/database.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

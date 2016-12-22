@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Public access - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Public access</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="public_access.html#public-access">Public access</a>
+<ul>
+<li>
+<a href="public_access.html#visibility-of-projects">Visibility of projects</a>
+<ul>
+<li>
+<a href="public_access.html#public-projects">Public projects</a>
+</li>
+<li>
+<a href="public_access.html#internal-projects">Internal projects</a>
+</li>
+<li>
+<a href="public_access.html#how-to-change-project-visibility">How to change project visibility</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="public_access.html#visibility-of-groups">Visibility of groups</a>
+</li>
+<li>
+<a href="public_access.html#visibility-of-users">Visibility of users</a>
+</li>
+<li>
+<a href="public_access.html#restricting-the-use-of-public-or-internal-projects">Restricting the use of public or internal projects</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='public-access'>Public access <a class='anchor' href='public_access.html#public-access' title='Permalink'></a></h1>
+<p>GitLab allows you to change your projects&#39; visibility in order be accessed
+<strong>publicly</strong> or <strong>internally</strong>.</p>
+
+<p>Projects with either of these visibility levels will be listed in the
+public access directory (<code>/public</code> under your GitLab instance).
+Here is the <a href="https://gitlab.com/public">GitLab.com example</a>.</p>
+
+<p>Internal projects will only be available to authenticated users.</p>
+<h2 id='visibility-of-projects'>Visibility of projects <a class='anchor' href='public_access.html#visibility-of-projects' title='Permalink'></a></h2><h3 id='public-projects'>Public projects <a class='anchor' href='public_access.html#public-projects' title='Permalink'></a></h3>
+<p>Public projects can be cloned <strong>without any</strong> authentication.</p>
+
+<p>They will also be listed on the public access directory (<code>/public</code>).</p>
+
+<p><strong>Any logged in user</strong> will have <a href="../user/permissions.html">Guest</a>
+permissions on the repository.</p>
+<h3 id='internal-projects'>Internal projects <a class='anchor' href='public_access.html#internal-projects' title='Permalink'></a></h3>
+<p>Internal projects can be cloned by any logged in user.</p>
+
+<p>They will also be listed on the public access directory (<code>/public</code>) for logged
+in users.</p>
+
+<p>Any logged in user will have <a href="../user/permissions.html">Guest</a> permissions
+on the repository.</p>
+<h3 id='how-to-change-project-visibility'>How to change project visibility <a class='anchor' href='public_access.html#how-to-change-project-visibility' title='Permalink'></a></h3>
+<ol>
+<li>Go to your project&#39;s <strong>Settings</strong></li>
+<li>Change &quot;Visibility Level&quot; to either Public, Internal or Private</li>
+</ol>
+<h2 id='visibility-of-groups'>Visibility of groups <a class='anchor' href='public_access.html#visibility-of-groups' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/3323">Starting with</a> GitLab 8.6, the group visibility has changed and can be
+configured the same way as projects. In previous versions, a group&#39;s page was
+always visible to all users.</p>
+</blockquote>
+
+<p>Like with projects, the visibility of a group can be set to dictate whether
+anonymous users, all signed in users, or only explicit group members can view
+it. The restriction for visibility levels on the application setting level also
+applies to groups, so if that&#39;s set to internal, the explore page will be empty
+for anonymous users. The group page now has a visibility level icon.</p>
+<h2 id='visibility-of-users'>Visibility of users <a class='anchor' href='public_access.html#visibility-of-users' title='Permalink'></a></h2>
+<p>The public page of a user, located at <code>/u/username</code>, is always visible whether
+you are logged in or not.</p>
+
+<p>When visiting the public page of a user, you can only see the projects which
+you are privileged to.</p>
+
+<p>If the public level is restricted, user profiles are only visible to logged in users.</p>
+<h2 id='restricting-the-use-of-public-or-internal-projects'>Restricting the use of public or internal projects <a class='anchor' href='public_access.html#restricting-the-use-of-public-or-internal-projects' title='Permalink'></a></h2>
+<p>In the Admin area under <strong>Settings</strong> (<code>/admin/application_settings</code>), you can
+restrict the use of visibility levels for users when they create a project or a
+snippet. This is useful to prevent people exposing their repositories to public
+by accident. The restricted visibility settings do not apply to admin users.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/public_access/public_access.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Migrating from SVN to GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="../README.html">Workflow</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Migrating projects to a GitLab instance</a></li>
+            
+          
+          <li class="breadcrumb">Migrating from SVN to GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="migrating_from_svn.html#migrating-from-svn-to-gitlab">Migrating from SVN to GitLab</a>
+<ul>
+<li>
+<a href="migrating_from_svn.html#overview">Overview</a>
+</li>
+<li>
+<a href="migrating_from_svn.html#smooth-migration-with-a-git-svn-mirror-using-subgit">Smooth migration with a Git/SVN mirror using SubGit</a>
+<ul>
+<li>
+<a href="migrating_from_svn.html#subgit-prerequisites">SubGit prerequisites</a>
+</li>
+<li>
+<a href="migrating_from_svn.html#subgit-configuration">SubGit configuration</a>
+</li>
+<li>
+<a href="migrating_from_svn.html#initial-translation">Initial translation</a>
+</li>
+<li>
+<a href="migrating_from_svn.html#subgit-licensing">SubGit licensing</a>
+</li>
+<li>
+<a href="migrating_from_svn.html#subgit-support">SubGit support</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="migrating_from_svn.html#cut-over-migration-with-svn2git">Cut over migration with svn2git</a>
+</li>
+<li>
+<a href="migrating_from_svn.html#contribute-to-this-guide">Contribute to this guide</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='migrating-from-svn-to-gitlab'>Migrating from SVN to GitLab <a class='anchor' href='migrating_from_svn.html#migrating-from-svn-to-gitlab' title='Permalink'></a></h1>
+<p>Subversion (SVN) is a central version control system (VCS) while
+Git is a distributed version control system. There are some major differences
+between the two, for more information consult your favorite search engine.</p>
+<h2 id='overview'>Overview <a class='anchor' href='migrating_from_svn.html#overview' title='Permalink'></a></h2>
+<p>There are two approaches to SVN to Git migration:</p>
+
+<ol>
+<li><p><a href="migrating_from_svn.html#smooth-migration-with-a-gitsvn-mirror-using-subgit">Git/SVN Mirror</a> which:</p>
+
+<ul>
+<li>Makes the GitLab repository to mirror the SVN project.</li>
+<li>Git and SVN repositories are kept in sync; you can use either one.</li>
+<li>Smoothens the migration process and allows to manage migration risks.</li>
+</ul></li>
+<li><p><a href="migrating_from_svn.html#cut-over-migration-with-svn2git">Cut over migration</a> which:</p>
+
+<ul>
+<li>Translates and imports the existing data and history from SVN to Git.</li>
+<li>Is a fire and forget approach, good for smaller teams.</li>
+</ul></li>
+</ol>
+<h2 id='smooth-migration-with-a-git-svn-mirror-using-subgit'>Smooth migration with a Git/SVN mirror using SubGit <a class='anchor' href='migrating_from_svn.html#smooth-migration-with-a-git-svn-mirror-using-subgit' title='Permalink'></a></h2>
+<p><a href="https://subgit.com">SubGit</a> is a tool for a smooth, stress-free SVN to Git
+migration. It creates a writable Git mirror of a local or remote Subversion
+repository and that way you can use both Subversion and Git as long as you like.
+It requires access to your GitLab server as it talks with the Git repositories
+directly in a filesystem level.</p>
+<h3 id='subgit-prerequisites'>SubGit prerequisites <a class='anchor' href='migrating_from_svn.html#subgit-prerequisites' title='Permalink'></a></h3>
+<ol>
+<li>Install Oracle JRE 1.8 or newer. On Debian-based Linux distributions you can
+follow <a href="http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html">this article</a>.</li>
+<li>Download SubGit from <a href="https://subgit.com/download/">https://subgit.com/download/</a>.</li>
+<li>Unpack the downloaded SubGit zip archive to the <code>/opt</code> directory. The <code>subgit</code>
+command will be available at <code>/opt/subgit-VERSION/bin/subgit</code>.</li>
+</ol>
+<h3 id='subgit-configuration'>SubGit configuration <a class='anchor' href='migrating_from_svn.html#subgit-configuration' title='Permalink'></a></h3>
+<p>The first step to mirror you SVN repository in GitLab is to create a new empty
+project which will be used as a mirror. For Omnibus installations the path to
+the repository will be located at
+<code>/var/opt/gitlab/git-data/repositories/USER/REPO.git</code> by default. For
+installations from source, the default repository directory will be
+<code>/home/git/repositories/USER/REPO.git</code>. For convenience, assign this path to a
+variable:</p>
+<pre class="highlight plaintext"><code>GIT_REPO_PATH=/var/opt/gitlab/git-data/repositories/USER/REPOS.git
+</code></pre>
+<p>SubGit will keep this repository in sync with a remote SVN project. For
+convenience, assign your remote SVN project URL to a variable:</p>
+<pre class="highlight plaintext"><code>SVN_PROJECT_URL=http://svn.company.com/repos/project
+</code></pre>
+<p>Next you need to run SubGit to set up a Git/SVN mirror. Make sure the following
+<code>subgit</code> command is ran on behalf of the same user that keeps ownership of
+GitLab Git repositories (by default <code>git</code>):</p>
+<pre class="highlight plaintext"><code>subgit configure --layout auto $SVN_PROJECT_URL $GIT_REPO_PATH
+</code></pre>
+<p>Adjust authors and branches mappings, if necessary. Open with your favorite
+text editor:</p>
+<pre class="highlight plaintext"><code>edit $GIT_REPO_PATH/subgit/authors.txt
+edit $GIT_REPO_PATH/subgit/config
+</code></pre>
+<p>For more information regarding the SubGit configuration options, refer to
+<a href="https://subgit.com/documentation.html">SubGit&#39;s documentation</a> website.</p>
+<h3 id='initial-translation'>Initial translation <a class='anchor' href='migrating_from_svn.html#initial-translation' title='Permalink'></a></h3>
+<p>Now that SubGit has configured the Git/SVN repos, run <code>subgit</code> to perform the
+initial translation of existing SVN revisions into the Git repository:</p>
+<pre class="highlight plaintext"><code>subgit install $GIT_REPOS_PATH
+</code></pre>
+<p>After the initial translation is completed, the Git repository and the SVN
+project will be kept in sync by <code>subgit</code> - new Git commits will be translated to
+SVN revisions and new SVN revisions will be translated to Git commits. Mirror
+works transparently and does not require any special commands.</p>
+
+<p>If you would prefer to perform one-time cut over migration with <code>subgit</code>, use
+the <code>import</code> command instead of <code>install</code>:</p>
+<pre class="highlight plaintext"><code>subgit import $GIT_REPO_PATH
+</code></pre><h3 id='subgit-licensing'>SubGit licensing <a class='anchor' href='migrating_from_svn.html#subgit-licensing' title='Permalink'></a></h3>
+<p>Running SubGit in a mirror mode requires a
+<a href="https://subgit.com/pricing.html">registration</a>. Registration is free for open
+source, academic and startup projects.</p>
+
+<p>We&#39;re currently working on deeper GitLab/SubGit integration. You may track our
+progress at <a href="https://gitlab.com/gitlab-org/gitlab-ee/issues/990">this issue</a>.</p>
+<h3 id='subgit-support'>SubGit support <a class='anchor' href='migrating_from_svn.html#subgit-support' title='Permalink'></a></h3>
+<p>For any questions related to SVN to GitLab migration with SubGit, you can
+contact the SubGit team directly at <a href="mailto:support@subgit.com">support@subgit.com</a>.</p>
+<h2 id='cut-over-migration-with-svn2git'>Cut over migration with svn2git <a class='anchor' href='migrating_from_svn.html#cut-over-migration-with-svn2git' title='Permalink'></a></h2>
+<p>If you are currently using an SVN repository, you can migrate the repository
+to Git and GitLab. We recommend a hard cut over - run the migration command once
+and then have all developers start using the new GitLab repository immediately.
+Otherwise, it&#39;s hard to keep changing in sync in both directions. The conversion
+process should be run on a local workstation.</p>
+
+<p>Install <code>svn2git</code>. On all systems you can install as a Ruby gem if you already
+have Ruby and Git installed.</p>
+<pre class="highlight shell"><code>sudo gem install svn2git
+</code></pre>
+<p>On Debian-based Linux distributions you can install the native packages:</p>
+<pre class="highlight shell"><code>sudo apt-get install git-core git-svn ruby
+</code></pre>
+<p>Optionally, prepare an authors file so <code>svn2git</code> can map SVN authors to Git authors.
+If you choose not to create the authors file then commits will not be attributed
+to the correct GitLab user. Some users may not consider this a big issue while
+others will want to ensure they complete this step. If you choose to map authors
+you will be required to map every author that is present on changes in the SVN
+repository. If you don&#39;t, the conversion will fail and you will have to update
+the author file accordingly. The following command will search through the
+repository and output a list of authors.</p>
+<pre class="highlight shell"><code>svn log --quiet | grep -E <span class="s2">"r[0-9]+ </span><span class="se">\|</span><span class="s2"> .+ </span><span class="se">\|</span><span class="s2">"</span> | cut -d<span class="s1">'|'</span> -f2 | sed <span class="s1">'s/ //g'</span> | sort | uniq
+</code></pre>
+<p>Use the output from the last command to construct the authors file.
+Create a file called <code>authors.txt</code> and add one mapping per line.</p>
+<pre class="highlight plaintext"><code>janedoe = Jane Doe &lt;janedoe@example.com&gt;
+johndoe = John Doe &lt;johndoe@example.com&gt;
+</code></pre>
+<p>If your SVN repository is in the standard format (trunk, branches, tags,
+not nested) the conversion is simple. For a non-standard repository see
+<a href="https://github.com/nirvdrum/svn2git">svn2git documentation</a>. The following
+command will checkout the repository and do the conversion in the current
+working directory. Be sure to create a new directory for each repository before
+running the <code>svn2git</code> command. The conversion process will take some time.</p>
+<pre class="highlight shell"><code>svn2git https://svn.example.com/path/to/repo --authors /path/to/authors.txt
+</code></pre>
+<p>If your SVN repository requires a username and password add the
+<code>--username &lt;username&gt;</code> and <code>--password &lt;password</code> flags to the above command.
+<code>svn2git</code> also supports excluding certain file paths, branches, tags, etc. See
+<a href="https://github.com/nirvdrum/svn2git">svn2git documentation</a> or run
+<code>svn2git --help</code> for full documentation on all of the available options.</p>
+
+<p>Create a new GitLab project, where you will eventually push your converted code.
+Copy the SSH or HTTP(S) repository URL from the project page. Add the GitLab
+repository as a Git remote and push all the changes. This will push all commits,
+branches and tags.</p>
+<pre class="highlight shell"><code>git remote add origin git@gitlab.com:&lt;group&gt;/&lt;project&gt;.git
+git push --all origin
+git push --tags origin
+</code></pre><h2 id='contribute-to-this-guide'>Contribute to this guide <a class='anchor' href='migrating_from_svn.html#contribute-to-this-guide' title='Permalink'></a></h2>
+<p>We welcome all contributions that would expand this guide with instructions on
+how to migrate from SVN and other version control systems.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/workflow/importing/migrating_from_svn.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

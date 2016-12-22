@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>These settings are documented in more detail at - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Omnibus GitLab documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Configuring omnibus settings</a></li>
+            
+          
+          <li class="breadcrumb">These settings are documented in more detail at</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="ldap.html#setting-up-ldap-sign-in">Setting up LDAP sign-in</a>
+</li>
+</ul>
+<h3 id='setting-up-ldap-sign-in'>Setting up LDAP sign-in <a class='anchor' href='ldap.html#setting-up-ldap-sign-in' title='Permalink'></a></h3>
+<p>If you have an LDAP directory service such as Active Directory, you can
+configure GitLab so that your users can sign in with their LDAP credentials.
+Add the following to <code>/etc/gitlab/gitlab.rb</code>, edited for your server.</p>
+
+<p>For GitLab Community Edition:</p>
+<pre class="highlight ruby"><code><span class="c1"># These settings are documented in more detail at</span>
+<span class="c1"># https://gitlab.com/gitlab-org/gitlab-ce/blob/a0a826ebdcb783c660dd40d8cb217db28a9d4998/config/gitlab.yml.example#L136</span>
+<span class="c1"># Be careful not to break the identation in the ldap_servers block. It is in</span>
+<span class="c1"># yaml format and the spaces must be retained. Using tabs will not work.</span>
+
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span> <span class="c1"># remember to close this block with 'EOS' below</span><span class="sh">
+main: # 'main' is the GitLab 'provider ID' of this LDAP server
+  ## label
+  #
+  # A human-friendly name for your LDAP server. It is OK to change the label later,
+  # for instance if you find out it is too large to fit on the web page.
+  #
+  # Example: 'Paris' or 'Acme, Ltd.'
+  label: 'LDAP'
+
+  host: '_your_ldap_server'
+  port: 389 # or 636
+  uid: 'sAMAccountName'
+  method: 'plain' # "tls" or "ssl" or "plain"
+  bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
+  password: '_the_password_of_the_bind_user'
+
+  # This setting specifies if LDAP server is Active Directory LDAP server.
+  # For non AD servers it skips the AD specific queries.
+  # If your LDAP server is not AD, set this to false.
+  active_directory: true
+
+  # If allow_username_or_email_login is enabled, GitLab will ignore everything
+  # after the first '@' in the LDAP username submitted by the user on login.
+  #
+  # Example:
+  # - the user enters 'jane.doe@example.com' and 'p@ssw0rd' as LDAP credentials;
+  # - GitLab queries the LDAP server with 'jane.doe' and 'p@ssw0rd'.
+  #
+  # If you are using "uid: 'userPrincipalName'" on ActiveDirectory you need to
+  # disable this setting, because the userPrincipalName contains an '@'.
+  allow_username_or_email_login: false
+
+  # Base where we can search for users
+  #
+  #   Ex. ou=People,dc=gitlab,dc=example
+  #
+  base: ''
+
+  # Filter LDAP users
+  #
+  #   Format: RFC 4515 http://tools.ietf.org/search/rfc4515
+  #   Ex. (employeeType=developer)
+  #
+  #   Note: GitLab does not support omniauth-ldap's custom filter syntax.
+  #
+  user_filter: ''
+</span><span class="no">EOS</span>
+
+</code></pre>
+<p>If you are installing GitLab Enterprise edition package you can use multiple LDAP servers:</p>
+<pre class="highlight ruby"><code><span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_enabled'</span><span class="p">]</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'ldap_servers'</span><span class="p">]</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span> <span class="c1"># remember to close this block with 'EOS' below</span><span class="sh">
+main: # 'main' is the GitLab 'provider ID' of this LDAP server
+  label: 'LDAP'
+  host: '_your_ldap_server'
+  port: 389
+  uid: 'sAMAccountName'
+  method: 'plain' # "tls" or "ssl" or "plain"
+  bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
+  password: '_the_password_of_the_bind_user'
+  active_directory: true
+  allow_username_or_email_login: false
+  block_auto_created_users: false
+  base: ''
+  user_filter: ''
+  ## EE only
+  group_base: ''
+  admin_group: ''
+  sync_ssh_keys: false
+
+secondary: # 'secondary' is the GitLab 'provider ID' of second LDAP server
+  label: 'LDAP'
+  host: '_your_ldap_server'
+  port: 389
+  uid: 'sAMAccountName'
+  method: 'plain' # "tls" or "ssl" or "plain"
+  bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
+  password: '_the_password_of_the_bind_user'
+  active_directory: true
+  allow_username_or_email_login: false
+  block_auto_created_users: false
+  base: ''
+  user_filter: ''
+  ## EE only
+  group_base: ''
+  admin_group: ''
+  sync_ssh_keys: false
+</span><span class="no">EOS</span>
+
+</code></pre>
+<p>Run <code>sudo gitlab-ctl reconfigure</code> for the LDAP settings to take effect.</p>
+
+<p>For more information on LDAP Integration, check
+<a href="https://docs.gitlab.com/ce/integration/ldap.html">Gitlab CE LDAP Documentation</a> or 
+<a href="https://docs.gitlab.com/ee/integration/ldap.html">Gitlab EE LDAP Documentation</a></p>
+
+<p><em>Note</em>: If you are using pre GitLab 7.4 <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/e65f026839594d54ad46a31a672d735b9caa16f0/README.md#setting-up-ldap-sign-in">configuration syntax like described in the old version README LDAP section</a> be advised that it is deprecated.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/ldap.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

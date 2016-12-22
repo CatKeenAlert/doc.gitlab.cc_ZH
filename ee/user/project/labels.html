@@ -1,0 +1,332 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Labels - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Labels</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="labels.html#labels">Labels</a>
+<ul>
+<li>
+<a href="labels.html#create-new-labels">Create new labels</a>
+</li>
+<li>
+<a href="labels.html#default-labels">Default Labels</a>
+<ul>
+<li>
+<a href="labels.html#generate-gitlab-s-predefined-label-set">Generate GitLab's predefined label set</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="labels.html#labels-overview">Labels Overview</a>
+</li>
+<li>
+<a href="labels.html#prioritize-labels">Prioritize labels</a>
+</li>
+<li>
+<a href="labels.html#subscribe-to-labels">Subscribe to labels</a>
+</li>
+<li>
+<a href="labels.html#create-a-new-label-right-from-the-issue-tracker">Create a new label right from the issue tracker</a>
+</li>
+<li>
+<a href="labels.html#assigning-labels-to-issues-and-merge-requests">Assigning labels to issues and merge requests</a>
+</li>
+<li>
+<a href="labels.html#use-labels-to-filter-issues">Use labels to filter issues</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='labels'>Labels <a class='anchor' href='labels.html#labels' title='Permalink'></a></h1>
+<p>Labels provide an easy way to categorize the issues or merge requests based on
+descriptive titles like <code>bug</code>, <code>documentation</code> or any other text you feel like.
+They can have different colors, a description, and are visible throughout
+the issue tracker or inside each issue individually.</p>
+
+<p>With labels, you can navigate the issue tracker and filter any bloated
+information to visualize only the issues you are interested in. Let&#39;s see how
+that works.</p>
+<h2 id='create-new-labels'>Create new labels <a class='anchor' href='labels.html#create-new-labels' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+A permission level of <code>Developer</code> or higher is required in order to manage
+labels.</p>
+</blockquote>
+
+<p>Head over a single project and navigate to <strong>Issues &gt; Labels</strong>.</p>
+
+<p>The first time you visit this page, you&#39;ll notice that there are no labels
+created yet.</p>
+
+<p><a target="_blank" href="img/labels_generate.png"><img src="img/labels_generate.png" title="" alt="Generate new labels"/></a></p>
+
+<p>Creating a new label from scratch is as easy as pressing the <strong>New label</strong>
+button. From there on you can choose the name, give it an optional description,
+a color and you are set.</p>
+
+<p>When you are ready press the <strong>Create label</strong> button to create the new label.</p>
+
+<p><a target="_blank" href="img/labels_new_label.png"><img src="img/labels_new_label.png" title="" alt="New label"/></a></p>
+
+<hr>
+<h2 id='default-labels'>Default Labels <a class='anchor' href='labels.html#default-labels' title='Permalink'></a></h2>
+<p>It&#39;s possible to populate the labels for your project from a set of predefined labels.</p>
+<h3 id='generate-gitlab-39-s-predefined-label-set'>Generate GitLab&#39;s predefined label set <a class='anchor' href='labels.html#generate-gitlab-39-s-predefined-label-set' title='Permalink'></a></h3>
+<p><a target="_blank" href="img/labels_generate.png"><img src="img/labels_generate.png" title="" alt="Generate new labels"/></a></p>
+
+<p>Click the link to &#39;Generate a default set of labels&#39; and GitLab will
+generate a set of predefined labels for you. There are 8 default generated labels
+in total and you can see them in the screenshot below.</p>
+
+<p><a target="_blank" href="img/labels_default.png"><img src="img/labels_default.png" title="" alt="Default generated labels"/></a></p>
+
+<hr>
+<h2 id='labels-overview'>Labels Overview <a class='anchor' href='labels.html#labels-overview' title='Permalink'></a></h2>
+<p><a target="_blank" href="img/labels_default.png"><img src="img/labels_default.png" title="" alt="Default generated labels"/></a></p>
+
+<p>You can see that from the labels page you can have an overview of the number of
+issues and merge requests assigned to each label.</p>
+<h2 id='prioritize-labels'>Prioritize labels <a class='anchor' href='labels.html#prioritize-labels' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Introduced in GitLab 8.9.</li>
+<li>Priority sorting is based on the highest priority label only. This might
+change in the future, follow the discussion in
+<a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/18554">https://gitlab.com/gitlab-org/gitlab-ce/issues/18554</a>.</li>
+</ul>
+</blockquote>
+
+<p>Prioritized labels are like any other label, but sorted by priority. This allows
+you to sort issues and merge requests by priority.</p>
+
+<p>To prioritize labels, navigate to your project&#39;s <strong>Issues &gt; Labels</strong> and click
+on the star icon next to them to put them in the priority list. Click on the
+star icon again to remove them from the list.</p>
+
+<p>From there, you can drag them around to set the desired priority. Priority is
+set from high to low with an ascending order. Labels with no priority, count as
+having their priority set to null.</p>
+
+<p><a target="_blank" href="img/labels_prioritize.png"><img src="img/labels_prioritize.png" title="" alt="Prioritize labels"/></a></p>
+
+<p>Now that you have labels prioritized, you can use the &#39;Priority&#39; filter in the
+issues or merge requests tracker. Those with the highest priority label, will
+appear on top.</p>
+
+<p><a target="_blank" href="img/labels_filter_by_priority.png"><img src="img/labels_filter_by_priority.png" title="" alt="Filter labels by priority"/></a></p>
+<h2 id='subscribe-to-labels'>Subscribe to labels <a class='anchor' href='labels.html#subscribe-to-labels' title='Permalink'></a></h2>
+<p>If you don’t want to miss issues or merge requests that are important to you,
+simply subscribe to a label. You’ll get notified via email whenever the label gets added
+to an issue or merge request, making sure you don’t miss a thing.</p>
+
+<p>Go to your project&#39;s <strong>Issues &gt; Labels</strong> area, find the label(s) you want to
+subscribe to and click on the eye icon. Click again to unsubscribe.</p>
+
+<p><a target="_blank" href="img/labels_subscribe.png"><img src="img/labels_subscribe.png" title="" alt="Subscribe to labels"/></a></p>
+
+<p>If you work on a large or popular project, try subscribing only to the labels
+that are relevant to you. You’ll notice it’ll be much easier to focus on what’s
+important.</p>
+<h2 id='create-a-new-label-right-from-the-issue-tracker'>Create a new label right from the issue tracker <a class='anchor' href='labels.html#create-a-new-label-right-from-the-issue-tracker' title='Permalink'></a></h2>
+<blockquote>
+<p>Introduced in GitLab 8.6.</p>
+</blockquote>
+
+<p>There are times when you are already in the issue tracker searching for a
+label, only to realize it doesn&#39;t exist. Instead of going to the <strong>Labels</strong>
+page and being distracted from your original purpose, you can create new
+labels on the fly.</p>
+
+<p>Select <strong>Create new</strong> from the labels dropdown list, provide a name, pick a
+color and hit <strong>Create</strong>.</p>
+
+<p><a target="_blank" href="img/labels_new_label_on_the_fly_create.png"><img src="img/labels_new_label_on_the_fly_create.png" title="" alt="Create new label on the fly"/></a>
+<a target="_blank" href="img/labels_new_label_on_the_fly.png"><img src="img/labels_new_label_on_the_fly.png" title="" alt="New label on the fly"/></a></p>
+<h2 id='assigning-labels-to-issues-and-merge-requests'>Assigning labels to issues and merge requests <a class='anchor' href='labels.html#assigning-labels-to-issues-and-merge-requests' title='Permalink'></a></h2>
+<p>There are generally two ways to assign a label to an issue or merge request.</p>
+
+<p>You can assign a label when you first create or edit an issue or merge request.</p>
+
+<p><a target="_blank" href="img/labels_assign_label_in_new_issue.png"><img src="img/labels_assign_label_in_new_issue.png" title="" alt="Assign label in new issue"/></a></p>
+
+<hr>
+
+<p>The second way is by using the right sidebar when inside an issue or merge
+request. Expand it and hit <strong>Edit</strong> in the labels area. Start typing the name
+of the label you are looking for to narrow down the list, and select it. You
+can add more than one labels at once. When done, click outside the sidebar area
+for the changes to take effect.</p>
+
+<p><a target="_blank" href="img/labels_assign_label_sidebar.png"><img src="img/labels_assign_label_sidebar.png" title="" alt="Assign label in sidebar"/></a>
+<a target="_blank" href="img/labels_assign_label_sidebar_saved.png"><img src="img/labels_assign_label_sidebar_saved.png" title="" alt="Save labels in sidebar"/></a></p>
+
+<hr>
+
+<p>To remove labels, expand the left sidebar and unmark them from the labels list.
+Simple as that.</p>
+<h2 id='use-labels-to-filter-issues'>Use labels to filter issues <a class='anchor' href='labels.html#use-labels-to-filter-issues' title='Permalink'></a></h2>
+<p>Once you start adding labels to your issues, you&#39;ll see the benefit of it.
+Labels can have several uses, one of them being the quick filtering of issues
+or merge requests.</p>
+
+<p>Pick an existing label from the dropdown <em>Label</em> menu or click on an existing
+label from the issue tracker. In the latter case, you also get to see the
+label description like shown below.</p>
+
+<p><a target="_blank" href="img/labels_filter.png"><img src="img/labels_filter.png" title="" alt="Filter labels"/></a></p>
+
+<hr>
+
+<p>And if you added a description to your label, you can see it by hovering your
+mouse over the label in the issue tracker or wherever else the label is
+rendered.</p>
+
+<p><a target="_blank" href="img/labels_description_tooltip.png"><img src="img/labels_description_tooltip.png" title="" alt="Label tooltips"/></a></p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/user/project/labels.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

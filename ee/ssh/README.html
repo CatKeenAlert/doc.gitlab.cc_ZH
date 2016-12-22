@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>SSH - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">SSH</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#ssh">SSH</a>
+<ul>
+<li>
+<a href="README.html#ssh-keys">SSH keys</a>
+</li>
+<li>
+<a href="README.html#deploy-keys">Deploy keys</a>
+</li>
+<li>
+<a href="README.html#applications">Applications</a>
+<ul>
+<li>
+<a href="README.html#eclipse">Eclipse</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#tip-non-default-openssh-key-file-names-or-locations">Tip: Non-default OpenSSH key file names or locations</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='ssh'>SSH <a class='anchor' href='README.html#ssh' title='Permalink'></a></h1><h2 id='ssh-keys'>SSH keys <a class='anchor' href='README.html#ssh-keys' title='Permalink'></a></h2>
+<p>An SSH key allows you to establish a secure connection between your
+computer and GitLab. Before generating an SSH key in your shell, check if your system
+already has one by running the following command:</p>
+
+<p><strong>Windows Command Line:</strong></p>
+<pre class="highlight shell"><code><span class="nb">type</span> %userprofile%<span class="se">\.</span>ssh<span class="se">\i</span>d_rsa.pub
+</code></pre>
+<p><strong>GNU/Linux/Mac/PowerShell:</strong></p>
+<pre class="highlight shell"><code>cat ~/.ssh/id_rsa.pub
+</code></pre>
+<p>If you see a long string starting with <code>ssh-rsa</code>, you can skip the <code>ssh-keygen</code> step.</p>
+
+<p>To generate a new SSH key, use the following command:</p>
+<pre class="highlight shell"><code>ssh-keygen -t rsa -C <span class="s2">"</span><span class="nv">$your_email</span><span class="s2">"</span>
+</code></pre>
+<p>This command will prompt you for a location and filename to store the key
+pair and for a password. When prompted for the location and filename, just
+press enter to use the default. If you use a different name, the key will not
+be used automatically.</p>
+
+<p>Note: It is a best practice to use a password for an SSH key, but it is not
+required and you can skip creating a password by pressing enter.</p>
+
+<p>If you want to change the password of your key later, you can use the following
+command: <code>ssh-keygen -p &lt;keyname&gt;</code></p>
+
+<p>Use the command below to show your public key:</p>
+
+<p><strong>Windows Command Line:</strong></p>
+<pre class="highlight shell"><code><span class="nb">type</span> %userprofile%<span class="se">\.</span>ssh<span class="se">\i</span>d_rsa.pub
+</code></pre>
+<p><strong>GNU/Linux/Mac/PowerShell:</strong></p>
+<pre class="highlight shell"><code>cat ~/.ssh/id_rsa.pub
+</code></pre>
+<p>Copy-paste the key to the &#39;My SSH Keys&#39; section under the &#39;SSH&#39; tab in your
+user profile. Please copy the complete key starting with <code>ssh-rsa</code> and ending
+with your username and host.</p>
+
+<p>To copy your public key to the clipboard, use the code below. Depending on your
+OS you&#39;ll need to use a different command:</p>
+
+<p><strong>Windows Command Line:</strong></p>
+<pre class="highlight shell"><code><span class="nb">type</span> %userprofile%<span class="se">\.</span>ssh<span class="se">\i</span>d_rsa.pub | clip
+</code></pre>
+<p><strong>Windows PowerShell:</strong></p>
+<pre class="highlight shell"><code>cat ~/.ssh/id_rsa.pub | clip
+</code></pre>
+<p><strong>Mac:</strong></p>
+<pre class="highlight shell"><code>pbcopy &lt; ~/.ssh/id_rsa.pub
+</code></pre>
+<p><strong>GNU/Linux (requires xclip):</strong></p>
+<pre class="highlight shell"><code>xclip -sel clip &lt; ~/.ssh/id_rsa.pub
+</code></pre><h2 id='deploy-keys'>Deploy keys <a class='anchor' href='README.html#deploy-keys' title='Permalink'></a></h2>
+<p>Deploy keys allow read-only access to multiple projects with a single SSH
+key.</p>
+
+<p>This is really useful for cloning repositories to your Continuous
+Integration (CI) server. By using deploy keys, you don&#39;t have to setup a
+dummy user account.</p>
+
+<p>If you are a project master or owner, you can add a deploy key in the
+project settings under the section &#39;Deploy Keys&#39;. Press the &#39;New Deploy
+Key&#39; button and upload a public SSH key. After this, the machine that uses
+the corresponding private key has read-only access to the project.</p>
+
+<p>You can&#39;t add the same deploy key twice with the &#39;New Deploy Key&#39; option.
+If you want to add the same key to another project, please enable it in the
+list that says &#39;Deploy keys from projects available to you&#39;. All the deploy
+keys of all the projects you have access to are available. This project
+access can happen through being a direct member of the project, or through
+a group. See <code>def accessible_deploy_keys</code> in <code>app/models/user.rb</code> for more
+information.</p>
+
+<p>Deploy keys can be shared between projects, you just need to add them to each project.</p>
+<h2 id='applications'>Applications <a class='anchor' href='README.html#applications' title='Permalink'></a></h2><h3 id='eclipse'>Eclipse <a class='anchor' href='README.html#eclipse' title='Permalink'></a></h3>
+<p>How to add your ssh key to Eclipse: <a href="https://wiki.eclipse.org/EGit/User_Guide#Eclipse_SSH_Configuration">https://wiki.eclipse.org/EGit/User_Guide#Eclipse_SSH_Configuration</a></p>
+<h2 id='tip-non-default-openssh-key-file-names-or-locations'>Tip: Non-default OpenSSH key file names or locations <a class='anchor' href='README.html#tip-non-default-openssh-key-file-names-or-locations' title='Permalink'></a></h2>
+<p>If, for whatever reason, you decide to specify a non-default location and filename for your GitLab SSH key pair, you must configure your SSH client to find your GitLab SSH private key for connections to your GitLab server (perhaps gitlab.com). For OpenSSH clients, this is handled in the <code>~/.ssh/config</code> file with a stanza similar to the following:</p>
+<pre class="highlight plaintext"><code>#
+# Main gitlab.com server
+#
+Host gitlab.com
+RSAAuthentication yes
+IdentityFile ~/my-ssh-key-directory/my-gitlab-private-key-filename
+User mygitlabusername
+</code></pre>
+<p>Another example</p>
+<pre class="highlight plaintext"><code>#
+# Our company's internal GitLab server
+#
+Host my-gitlab.company.com
+RSAAuthentication yes
+IdentityFile ~/my-ssh-key-directory/company-com-private-key-filename
+</code></pre>
+<p>Note in the gitlab.com example above a username was specified to override the default chosen by OpenSSH (your local username). This is only required if your local and remote usernames differ.</p>
+
+<p>Due to the wide variety of SSH clients and their very large number of configuration options, further explanation of these topics is beyond the scope of this document.</p>
+
+<p>Public SSH keys need to be unique, as they will bind to your account. Your SSH key is the only identifier you&#39;ll
+have when pushing code via SSH. That&#39;s why it needs to uniquely map to a single user.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/ssh/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

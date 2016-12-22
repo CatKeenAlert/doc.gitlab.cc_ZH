@@ -1,0 +1,853 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Services - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">GitLab API</a></li>
+            
+          
+          <li class="breadcrumb">Services</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="services.html#services">Services</a>
+<ul>
+<li>
+<a href="services.html#asana">Asana</a>
+<ul>
+<li>
+<a href="services.html#create-edit-asana-service">Create/Edit Asana service</a>
+</li>
+<li>
+<a href="services.html#delete-asana-service">Delete Asana service</a>
+</li>
+<li>
+<a href="services.html#get-asana-service-settings">Get Asana service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#assembla">Assembla</a>
+<ul>
+<li>
+<a href="services.html#create-edit-assembla-service">Create/Edit Assembla service</a>
+</li>
+<li>
+<a href="services.html#delete-assembla-service">Delete Assembla service</a>
+</li>
+<li>
+<a href="services.html#get-assembla-service-settings">Get Assembla service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#atlassian-bamboo-ci">Atlassian Bamboo CI</a>
+<ul>
+<li>
+<a href="services.html#create-edit-atlassian-bamboo-ci-service">Create/Edit Atlassian Bamboo CI service</a>
+</li>
+<li>
+<a href="services.html#delete-atlassian-bamboo-ci-service">Delete Atlassian Bamboo CI service</a>
+</li>
+<li>
+<a href="services.html#get-atlassian-bamboo-ci-service-settings">Get Atlassian Bamboo CI service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#buildkite">Buildkite</a>
+<ul>
+<li>
+<a href="services.html#create-edit-buildkite-service">Create/Edit Buildkite service</a>
+</li>
+<li>
+<a href="services.html#delete-buildkite-service">Delete Buildkite service</a>
+</li>
+<li>
+<a href="services.html#get-buildkite-service-settings">Get Buildkite service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#campfire">Campfire</a>
+<ul>
+<li>
+<a href="services.html#create-edit-campfire-service">Create/Edit Campfire service</a>
+</li>
+<li>
+<a href="services.html#delete-campfire-service">Delete Campfire service</a>
+</li>
+<li>
+<a href="services.html#get-campfire-service-settings">Get Campfire service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#custom-issue-tracker">Custom Issue Tracker</a>
+<ul>
+<li>
+<a href="services.html#create-edit-custom-issue-tracker-service">Create/Edit Custom Issue Tracker service</a>
+</li>
+<li>
+<a href="services.html#delete-custom-issue-tracker-service">Delete Custom Issue Tracker service</a>
+</li>
+<li>
+<a href="services.html#get-custom-issue-tracker-service-settings">Get Custom Issue Tracker service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#drone-ci">Drone CI</a>
+<ul>
+<li>
+<a href="services.html#create-edit-drone-ci-service">Create/Edit Drone CI service</a>
+</li>
+<li>
+<a href="services.html#delete-drone-ci-service">Delete Drone CI service</a>
+</li>
+<li>
+<a href="services.html#get-drone-ci-service-settings">Get Drone CI service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#emails-on-push">Emails on push</a>
+<ul>
+<li>
+<a href="services.html#create-edit-emails-on-push-service">Create/Edit Emails on push service</a>
+</li>
+<li>
+<a href="services.html#delete-emails-on-push-service">Delete Emails on push service</a>
+</li>
+<li>
+<a href="services.html#get-emails-on-push-service-settings">Get Emails on push service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#external-wiki">External Wiki</a>
+<ul>
+<li>
+<a href="services.html#create-edit-external-wiki-service">Create/Edit External Wiki service</a>
+</li>
+<li>
+<a href="services.html#delete-external-wiki-service">Delete External Wiki service</a>
+</li>
+<li>
+<a href="services.html#get-external-wiki-service-settings">Get External Wiki service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#flowdock">Flowdock</a>
+<ul>
+<li>
+<a href="services.html#create-edit-flowdock-service">Create/Edit Flowdock service</a>
+</li>
+<li>
+<a href="services.html#delete-flowdock-service">Delete Flowdock service</a>
+</li>
+<li>
+<a href="services.html#get-flowdock-service-settings">Get Flowdock service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#gemnasium">Gemnasium</a>
+<ul>
+<li>
+<a href="services.html#create-edit-gemnasium-service">Create/Edit Gemnasium service</a>
+</li>
+<li>
+<a href="services.html#delete-gemnasium-service">Delete Gemnasium service</a>
+</li>
+<li>
+<a href="services.html#get-gemnasium-service-settings">Get Gemnasium service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#hipchat">HipChat</a>
+<ul>
+<li>
+<a href="services.html#create-edit-hipchat-service">Create/Edit HipChat service</a>
+</li>
+<li>
+<a href="services.html#delete-hipchat-service">Delete HipChat service</a>
+</li>
+<li>
+<a href="services.html#get-hipchat-service-settings">Get HipChat service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#irker-irc-gateway">Irker (IRC gateway)</a>
+<ul>
+<li>
+<a href="services.html#create-edit-irker-irc-gateway-service">Create/Edit Irker (IRC gateway) service</a>
+</li>
+<li>
+<a href="services.html#delete-irker-irc-gateway-service">Delete Irker (IRC gateway) service</a>
+</li>
+<li>
+<a href="services.html#get-irker-irc-gateway-service-settings">Get Irker (IRC gateway) service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#jira">JIRA</a>
+<ul>
+<li>
+<a href="services.html#get-jira-service-settings">Get JIRA service settings</a>
+</li>
+<li>
+<a href="services.html#create-edit-jira-service">Create/Edit JIRA service</a>
+</li>
+<li>
+<a href="services.html#delete-jira-service">Delete JIRA service</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#pivotaltracker">PivotalTracker</a>
+<ul>
+<li>
+<a href="services.html#create-edit-pivotaltracker-service">Create/Edit PivotalTracker service</a>
+</li>
+<li>
+<a href="services.html#delete-pivotaltracker-service">Delete PivotalTracker service</a>
+</li>
+<li>
+<a href="services.html#get-pivotaltracker-service-settings">Get PivotalTracker service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#pushover">Pushover</a>
+<ul>
+<li>
+<a href="services.html#create-edit-pushover-service">Create/Edit Pushover service</a>
+</li>
+<li>
+<a href="services.html#delete-pushover-service">Delete Pushover service</a>
+</li>
+<li>
+<a href="services.html#get-pushover-service-settings">Get Pushover service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#redmine">Redmine</a>
+<ul>
+<li>
+<a href="services.html#create-edit-redmine-service">Create/Edit Redmine service</a>
+</li>
+<li>
+<a href="services.html#delete-redmine-service">Delete Redmine service</a>
+</li>
+<li>
+<a href="services.html#get-redmine-service-settings">Get Redmine service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#slack">Slack</a>
+<ul>
+<li>
+<a href="services.html#create-edit-slack-service">Create/Edit Slack service</a>
+</li>
+<li>
+<a href="services.html#delete-slack-service">Delete Slack service</a>
+</li>
+<li>
+<a href="services.html#get-slack-service-settings">Get Slack service settings</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="services.html#jetbrains-teamcity-ci">JetBrains TeamCity CI</a>
+<ul>
+<li>
+<a href="services.html#create-edit-jetbrains-teamcity-ci-service">Create/Edit JetBrains TeamCity CI service</a>
+</li>
+<li>
+<a href="services.html#delete-jetbrains-teamcity-ci-service">Delete JetBrains TeamCity CI service</a>
+</li>
+<li>
+<a href="services.html#get-jetbrains-teamcity-ci-service-settings">Get JetBrains TeamCity CI service settings</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='services'>Services <a class='anchor' href='services.html#services' title='Permalink'></a></h1><h2 id='asana'>Asana <a class='anchor' href='services.html#asana' title='Permalink'></a></h2>
+<p>Asana - Teamwork without email</p>
+<h3 id='create-edit-asana-service'>Create/Edit Asana service <a class='anchor' href='services.html#create-edit-asana-service' title='Permalink'></a></h3>
+<p>Set Asana service for a project.</p>
+
+<blockquote>
+<p>This service adds commit messages as comments to Asana tasks. Once enabled, commit messages are checked for Asana task URLs (for example, <code>https://app.asana.com/0/123456/987654</code>) or task IDs starting with # (for example, <code>#987654</code>). Every task ID found will get the commit comment added to it.  You can also close a task with a message containing: <code>fix #123456</code>.  You can find your Api Keys here: <a href="https://asana.com/developers/documentation/getting-started/auth#api-key">https://asana.com/developers/documentation/getting-started/auth#api-key</a></p>
+</blockquote>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/asana
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>api_key</code> (<strong>required</strong>) - User API token. User must have access to task, all comments will be attributed to this user.</li>
+<li><code>restrict_to_branch</code> (optional) - Comma-separated list of branches which will be automatically inspected. Leave blank to include all branches.</li>
+</ul>
+<h3 id='delete-asana-service'>Delete Asana service <a class='anchor' href='services.html#delete-asana-service' title='Permalink'></a></h3>
+<p>Delete Asana service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/asana
+</code></pre><h3 id='get-asana-service-settings'>Get Asana service settings <a class='anchor' href='services.html#get-asana-service-settings' title='Permalink'></a></h3>
+<p>Get Asana service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/asana
+</code></pre><h2 id='assembla'>Assembla <a class='anchor' href='services.html#assembla' title='Permalink'></a></h2>
+<p>Project Management Software (Source Commits Endpoint)</p>
+<h3 id='create-edit-assembla-service'>Create/Edit Assembla service <a class='anchor' href='services.html#create-edit-assembla-service' title='Permalink'></a></h3>
+<p>Set Assembla service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/assembla
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>)</li>
+<li><code>subdomain</code> (optional)</li>
+</ul>
+<h3 id='delete-assembla-service'>Delete Assembla service <a class='anchor' href='services.html#delete-assembla-service' title='Permalink'></a></h3>
+<p>Delete Assembla service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/assembla
+</code></pre><h3 id='get-assembla-service-settings'>Get Assembla service settings <a class='anchor' href='services.html#get-assembla-service-settings' title='Permalink'></a></h3>
+<p>Get Assembla service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/assembla
+</code></pre><h2 id='atlassian-bamboo-ci'>Atlassian Bamboo CI <a class='anchor' href='services.html#atlassian-bamboo-ci' title='Permalink'></a></h2>
+<p>A continuous integration and build server</p>
+<h3 id='create-edit-atlassian-bamboo-ci-service'>Create/Edit Atlassian Bamboo CI service <a class='anchor' href='services.html#create-edit-atlassian-bamboo-ci-service' title='Permalink'></a></h3>
+<p>Set Atlassian Bamboo CI service for a project.</p>
+
+<blockquote>
+<p>You must set up automatic revision labeling and a repository trigger in Bamboo.</p>
+</blockquote>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/bamboo
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>bamboo_url</code> (<strong>required</strong>) - Bamboo root URL like <a href="https://bamboo.example.com">https://bamboo.example.com</a></li>
+<li><code>build_key</code> (<strong>required</strong>) - Bamboo build plan key like KEY</li>
+<li><code>username</code> (<strong>required</strong>) - A user with API access, if applicable</li>
+<li><code>password</code> (<strong>required</strong>)</li>
+</ul>
+<h3 id='delete-atlassian-bamboo-ci-service'>Delete Atlassian Bamboo CI service <a class='anchor' href='services.html#delete-atlassian-bamboo-ci-service' title='Permalink'></a></h3>
+<p>Delete Atlassian Bamboo CI service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/bamboo
+</code></pre><h3 id='get-atlassian-bamboo-ci-service-settings'>Get Atlassian Bamboo CI service settings <a class='anchor' href='services.html#get-atlassian-bamboo-ci-service-settings' title='Permalink'></a></h3>
+<p>Get Atlassian Bamboo CI service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/bamboo
+</code></pre><h2 id='buildkite'>Buildkite <a class='anchor' href='services.html#buildkite' title='Permalink'></a></h2>
+<p>Continuous integration and deployments</p>
+<h3 id='create-edit-buildkite-service'>Create/Edit Buildkite service <a class='anchor' href='services.html#create-edit-buildkite-service' title='Permalink'></a></h3>
+<p>Set Buildkite service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/buildkite
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>) - Buildkite project GitLab token</li>
+<li><code>project_url</code> (<strong>required</strong>) - <a href="https://buildkite.com/example/project">https://buildkite.com/example/project</a></li>
+<li><code>enable_ssl_verification</code> (optional) - Enable SSL verification</li>
+</ul>
+<h3 id='delete-buildkite-service'>Delete Buildkite service <a class='anchor' href='services.html#delete-buildkite-service' title='Permalink'></a></h3>
+<p>Delete Buildkite service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/buildkite
+</code></pre><h3 id='get-buildkite-service-settings'>Get Buildkite service settings <a class='anchor' href='services.html#get-buildkite-service-settings' title='Permalink'></a></h3>
+<p>Get Buildkite service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/buildkite
+</code></pre><h2 id='campfire'>Campfire <a class='anchor' href='services.html#campfire' title='Permalink'></a></h2>
+<p>Simple web-based real-time group chat</p>
+<h3 id='create-edit-campfire-service'>Create/Edit Campfire service <a class='anchor' href='services.html#create-edit-campfire-service' title='Permalink'></a></h3>
+<p>Set Campfire service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/campfire
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>)</li>
+<li><code>subdomain</code> (optional)</li>
+<li><code>room</code> (optional)</li>
+</ul>
+<h3 id='delete-campfire-service'>Delete Campfire service <a class='anchor' href='services.html#delete-campfire-service' title='Permalink'></a></h3>
+<p>Delete Campfire service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/campfire
+</code></pre><h3 id='get-campfire-service-settings'>Get Campfire service settings <a class='anchor' href='services.html#get-campfire-service-settings' title='Permalink'></a></h3>
+<p>Get Campfire service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/campfire
+</code></pre><h2 id='custom-issue-tracker'>Custom Issue Tracker <a class='anchor' href='services.html#custom-issue-tracker' title='Permalink'></a></h2>
+<p>Custom issue tracker</p>
+<h3 id='create-edit-custom-issue-tracker-service'>Create/Edit Custom Issue Tracker service <a class='anchor' href='services.html#create-edit-custom-issue-tracker-service' title='Permalink'></a></h3>
+<p>Set Custom Issue Tracker service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/custom-issue-tracker
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>new_issue_url</code> (<strong>required</strong>) - New Issue url</li>
+<li><code>issues_url</code> (<strong>required</strong>) - Issue url</li>
+<li><code>project_url</code> (<strong>required</strong>) - Project url</li>
+<li><code>description</code> (optional) - Custom issue tracker</li>
+<li><code>title</code> (optional) - Custom Issue Tracker</li>
+</ul>
+<h3 id='delete-custom-issue-tracker-service'>Delete Custom Issue Tracker service <a class='anchor' href='services.html#delete-custom-issue-tracker-service' title='Permalink'></a></h3>
+<p>Delete Custom Issue Tracker service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/custom-issue-tracker
+</code></pre><h3 id='get-custom-issue-tracker-service-settings'>Get Custom Issue Tracker service settings <a class='anchor' href='services.html#get-custom-issue-tracker-service-settings' title='Permalink'></a></h3>
+<p>Get Custom Issue Tracker service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/custom-issue-tracker
+</code></pre><h2 id='drone-ci'>Drone CI <a class='anchor' href='services.html#drone-ci' title='Permalink'></a></h2>
+<p>Drone is a Continuous Integration platform built on Docker, written in Go</p>
+<h3 id='create-edit-drone-ci-service'>Create/Edit Drone CI service <a class='anchor' href='services.html#create-edit-drone-ci-service' title='Permalink'></a></h3>
+<p>Set Drone CI service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/drone-ci
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>) - Drone CI project specific token</li>
+<li><code>drone_url</code> (<strong>required</strong>) - <a href="http://drone.example.com">http://drone.example.com</a></li>
+<li><code>enable_ssl_verification</code> (optional) - Enable SSL verification</li>
+</ul>
+<h3 id='delete-drone-ci-service'>Delete Drone CI service <a class='anchor' href='services.html#delete-drone-ci-service' title='Permalink'></a></h3>
+<p>Delete Drone CI service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/drone-ci
+</code></pre><h3 id='get-drone-ci-service-settings'>Get Drone CI service settings <a class='anchor' href='services.html#get-drone-ci-service-settings' title='Permalink'></a></h3>
+<p>Get Drone CI service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/drone-ci
+</code></pre><h2 id='emails-on-push'>Emails on push <a class='anchor' href='services.html#emails-on-push' title='Permalink'></a></h2>
+<p>Email the commits and diff of each push to a list of recipients.</p>
+<h3 id='create-edit-emails-on-push-service'>Create/Edit Emails on push service <a class='anchor' href='services.html#create-edit-emails-on-push-service' title='Permalink'></a></h3>
+<p>Set Emails on push service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/emails-on-push
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>recipients</code> (<strong>required</strong>) - Emails separated by whitespace</li>
+<li><code>disable_diffs</code> (optional) - Disable code diffs</li>
+<li><code>send_from_committer_email</code> (optional) - Send from committer</li>
+</ul>
+<h3 id='delete-emails-on-push-service'>Delete Emails on push service <a class='anchor' href='services.html#delete-emails-on-push-service' title='Permalink'></a></h3>
+<p>Delete Emails on push service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/emails-on-push
+</code></pre><h3 id='get-emails-on-push-service-settings'>Get Emails on push service settings <a class='anchor' href='services.html#get-emails-on-push-service-settings' title='Permalink'></a></h3>
+<p>Get Emails on push service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/emails-on-push
+</code></pre><h2 id='external-wiki'>External Wiki <a class='anchor' href='services.html#external-wiki' title='Permalink'></a></h2>
+<p>Replaces the link to the internal wiki with a link to an external wiki.</p>
+<h3 id='create-edit-external-wiki-service'>Create/Edit External Wiki service <a class='anchor' href='services.html#create-edit-external-wiki-service' title='Permalink'></a></h3>
+<p>Set External Wiki service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/external-wiki
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>external_wiki_url</code> (<strong>required</strong>) - The URL of the external Wiki</li>
+</ul>
+<h3 id='delete-external-wiki-service'>Delete External Wiki service <a class='anchor' href='services.html#delete-external-wiki-service' title='Permalink'></a></h3>
+<p>Delete External Wiki service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/external-wiki
+</code></pre><h3 id='get-external-wiki-service-settings'>Get External Wiki service settings <a class='anchor' href='services.html#get-external-wiki-service-settings' title='Permalink'></a></h3>
+<p>Get External Wiki service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/external-wiki
+</code></pre><h2 id='flowdock'>Flowdock <a class='anchor' href='services.html#flowdock' title='Permalink'></a></h2>
+<p>Flowdock is a collaboration web app for technical teams.</p>
+<h3 id='create-edit-flowdock-service'>Create/Edit Flowdock service <a class='anchor' href='services.html#create-edit-flowdock-service' title='Permalink'></a></h3>
+<p>Set Flowdock service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/flowdock
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>) - Flowdock Git source token</li>
+</ul>
+<h3 id='delete-flowdock-service'>Delete Flowdock service <a class='anchor' href='services.html#delete-flowdock-service' title='Permalink'></a></h3>
+<p>Delete Flowdock service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/flowdock
+</code></pre><h3 id='get-flowdock-service-settings'>Get Flowdock service settings <a class='anchor' href='services.html#get-flowdock-service-settings' title='Permalink'></a></h3>
+<p>Get Flowdock service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/flowdock
+</code></pre><h2 id='gemnasium'>Gemnasium <a class='anchor' href='services.html#gemnasium' title='Permalink'></a></h2>
+<p>Gemnasium monitors your project dependencies and alerts you about updates and security vulnerabilities.</p>
+<h3 id='create-edit-gemnasium-service'>Create/Edit Gemnasium service <a class='anchor' href='services.html#create-edit-gemnasium-service' title='Permalink'></a></h3>
+<p>Set Gemnasium service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/gemnasium
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>api_key</code> (<strong>required</strong>) - Your personal API KEY on gemnasium.com</li>
+<li><code>token</code> (<strong>required</strong>) - The project&#39;s slug on gemnasium.com</li>
+</ul>
+<h3 id='delete-gemnasium-service'>Delete Gemnasium service <a class='anchor' href='services.html#delete-gemnasium-service' title='Permalink'></a></h3>
+<p>Delete Gemnasium service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/gemnasium
+</code></pre><h3 id='get-gemnasium-service-settings'>Get Gemnasium service settings <a class='anchor' href='services.html#get-gemnasium-service-settings' title='Permalink'></a></h3>
+<p>Get Gemnasium service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/gemnasium
+</code></pre><h2 id='hipchat'>HipChat <a class='anchor' href='services.html#hipchat' title='Permalink'></a></h2>
+<p>Private group chat and IM</p>
+<h3 id='create-edit-hipchat-service'>Create/Edit HipChat service <a class='anchor' href='services.html#create-edit-hipchat-service' title='Permalink'></a></h3>
+<p>Set HipChat service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/hipchat
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>) - Room token</li>
+<li><code>color</code> (optional)</li>
+<li><code>notify</code> (optional)</li>
+<li><code>room</code> (optional) - Room name or ID</li>
+<li><code>api_version</code> (optional) - Leave blank for default (v2)</li>
+<li><code>server</code> (optional) - Leave blank for default. <a href="https://hipchat.example.com">https://hipchat.example.com</a></li>
+</ul>
+<h3 id='delete-hipchat-service'>Delete HipChat service <a class='anchor' href='services.html#delete-hipchat-service' title='Permalink'></a></h3>
+<p>Delete HipChat service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/hipchat
+</code></pre><h3 id='get-hipchat-service-settings'>Get HipChat service settings <a class='anchor' href='services.html#get-hipchat-service-settings' title='Permalink'></a></h3>
+<p>Get HipChat service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/hipchat
+</code></pre><h2 id='irker-irc-gateway'>Irker (IRC gateway) <a class='anchor' href='services.html#irker-irc-gateway' title='Permalink'></a></h2>
+<p>Send IRC messages, on update, to a list of recipients through an Irker gateway.</p>
+<h3 id='create-edit-irker-irc-gateway-service'>Create/Edit Irker (IRC gateway) service <a class='anchor' href='services.html#create-edit-irker-irc-gateway-service' title='Permalink'></a></h3>
+<p>Set Irker (IRC gateway) service for a project.</p>
+
+<blockquote>
+<p>NOTE: Irker does NOT have built-in authentication, which makes it vulnerable to spamming IRC channels if it is hosted outside of a  firewall. Please make sure you run the daemon within a secured network  to prevent abuse. For more details, read: <a href="http://www.catb.org/%7Eesr/irker/security.html">http://www.catb.org/~esr/irker/security.html</a>.</p>
+</blockquote>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/irker
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>recipients</code> (<strong>required</strong>) - Recipients/channels separated by whitespaces</li>
+<li><code>default_irc_uri</code> (optional) - irc://irc.network.net:6697/</li>
+<li><code>server_port</code> (optional) - 6659</li>
+<li><code>server_host</code> (optional) - localhost</li>
+<li><code>colorize_messages</code> (optional)</li>
+</ul>
+<h3 id='delete-irker-irc-gateway-service'>Delete Irker (IRC gateway) service <a class='anchor' href='services.html#delete-irker-irc-gateway-service' title='Permalink'></a></h3>
+<p>Delete Irker (IRC gateway) service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/irker
+</code></pre><h3 id='get-irker-irc-gateway-service-settings'>Get Irker (IRC gateway) service settings <a class='anchor' href='services.html#get-irker-irc-gateway-service-settings' title='Permalink'></a></h3>
+<p>Get Irker (IRC gateway) service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/irker
+</code></pre><h2 id='jira'>JIRA <a class='anchor' href='services.html#jira' title='Permalink'></a></h2>
+<p>JIRA issue tracker.</p>
+<h3 id='get-jira-service-settings'>Get JIRA service settings <a class='anchor' href='services.html#get-jira-service-settings' title='Permalink'></a></h3>
+<p>Get JIRA service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/jira
+</code></pre><h3 id='create-edit-jira-service'>Create/Edit JIRA service <a class='anchor' href='services.html#create-edit-jira-service' title='Permalink'></a></h3>
+<p>Set JIRA service for a project.</p>
+
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>Starting with GitLab 8.14, <code>api_url</code>, <code>issues_url</code>, <code>new_issue_url</code> and
+<code>project_url</code> are replaced by <code>project_key</code>, <code>url</code>.  If you are using an
+older version, <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/8-13-stable/doc/api/services.md#jira">follow this documentation</a>.</li>
+</ul>
+</blockquote>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/jira
+</code></pre>
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>active</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Enable/disable the JIRA service.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The URL to the JIRA project which is being linked to this GitLab project, e.g., <code>https://jira.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>project_key</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The short identifier for your JIRA project, all uppercase, e.g., <code>PROJ</code>.</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>string</td>
+<td>no</td>
+<td>The username of the user created to be used with GitLab/JIRA.</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>no</td>
+<td>The password of the user created to be used with GitLab/JIRA.</td>
+</tr>
+<tr>
+<td><code>jira_issue_transition_id</code></td>
+<td>string</td>
+<td>no</td>
+<td>The ID of a transition that moves issues to a closed state. You can find this number under the JIRA workflow administration (<strong>Administration &gt; Issues &gt; Workflows</strong>) by selecting <strong>View</strong> under <strong>Operations</strong> of the desired workflow of your project. The ID of each state can be found inside the parenthesis of each transition name under the <strong>Transitions (id)</strong> column ([see screenshot][trans]). By default, this ID is set to <code>2</code>.</td>
+</tr>
+</tbody></table>
+<h3 id='delete-jira-service'>Delete JIRA service <a class='anchor' href='services.html#delete-jira-service' title='Permalink'></a></h3>
+<p>Remove all previously JIRA settings from a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/jira
+</code></pre><h2 id='pivotaltracker'>PivotalTracker <a class='anchor' href='services.html#pivotaltracker' title='Permalink'></a></h2>
+<p>Project Management Software (Source Commits Endpoint)</p>
+<h3 id='create-edit-pivotaltracker-service'>Create/Edit PivotalTracker service <a class='anchor' href='services.html#create-edit-pivotaltracker-service' title='Permalink'></a></h3>
+<p>Set PivotalTracker service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/pivotaltracker
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>token</code> (<strong>required</strong>)</li>
+<li><code>restrict_to_branch</code> (optional) - Comma-separated list of branches which will be automatically inspected. Leave blank to include all branches.</li>
+</ul>
+<h3 id='delete-pivotaltracker-service'>Delete PivotalTracker service <a class='anchor' href='services.html#delete-pivotaltracker-service' title='Permalink'></a></h3>
+<p>Delete PivotalTracker service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/pivotaltracker
+</code></pre><h3 id='get-pivotaltracker-service-settings'>Get PivotalTracker service settings <a class='anchor' href='services.html#get-pivotaltracker-service-settings' title='Permalink'></a></h3>
+<p>Get PivotalTracker service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/pivotaltracker
+</code></pre><h2 id='pushover'>Pushover <a class='anchor' href='services.html#pushover' title='Permalink'></a></h2>
+<p>Pushover makes it easy to get real-time notifications on your Android device, iPhone, iPad, and Desktop.</p>
+<h3 id='create-edit-pushover-service'>Create/Edit Pushover service <a class='anchor' href='services.html#create-edit-pushover-service' title='Permalink'></a></h3>
+<p>Set Pushover service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/pushover
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>api_key</code> (<strong>required</strong>) - Your application key</li>
+<li><code>user_key</code> (<strong>required</strong>) - Your user key</li>
+<li><code>priority</code> (<strong>required</strong>)</li>
+<li><code>device</code> (optional) - Leave blank for all active devices</li>
+<li><code>sound</code> (optional)</li>
+</ul>
+<h3 id='delete-pushover-service'>Delete Pushover service <a class='anchor' href='services.html#delete-pushover-service' title='Permalink'></a></h3>
+<p>Delete Pushover service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/pushover
+</code></pre><h3 id='get-pushover-service-settings'>Get Pushover service settings <a class='anchor' href='services.html#get-pushover-service-settings' title='Permalink'></a></h3>
+<p>Get Pushover service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/pushover
+</code></pre><h2 id='redmine'>Redmine <a class='anchor' href='services.html#redmine' title='Permalink'></a></h2>
+<p>Redmine issue tracker</p>
+<h3 id='create-edit-redmine-service'>Create/Edit Redmine service <a class='anchor' href='services.html#create-edit-redmine-service' title='Permalink'></a></h3>
+<p>Set Redmine service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/redmine
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>new_issue_url</code> (<strong>required</strong>) - New Issue url</li>
+<li><code>project_url</code> (<strong>required</strong>) - Project url</li>
+<li><code>issues_url</code> (<strong>required</strong>) - Issue url</li>
+<li><code>description</code> (optional) - Redmine issue tracker</li>
+</ul>
+<h3 id='delete-redmine-service'>Delete Redmine service <a class='anchor' href='services.html#delete-redmine-service' title='Permalink'></a></h3>
+<p>Delete Redmine service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/redmine
+</code></pre><h3 id='get-redmine-service-settings'>Get Redmine service settings <a class='anchor' href='services.html#get-redmine-service-settings' title='Permalink'></a></h3>
+<p>Get Redmine service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/redmine
+</code></pre><h2 id='slack'>Slack <a class='anchor' href='services.html#slack' title='Permalink'></a></h2>
+<p>A team communication tool for the 21st century</p>
+<h3 id='create-edit-slack-service'>Create/Edit Slack service <a class='anchor' href='services.html#create-edit-slack-service' title='Permalink'></a></h3>
+<p>Set Slack service for a project.</p>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/slack
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>webhook</code> (<strong>required</strong>) - <a href="https://hooks.slack.com/services/">https://hooks.slack.com/services/</a>...</li>
+<li><code>username</code> (optional) - username</li>
+<li><code>channel</code> (optional) - #channel</li>
+</ul>
+<h3 id='delete-slack-service'>Delete Slack service <a class='anchor' href='services.html#delete-slack-service' title='Permalink'></a></h3>
+<p>Delete Slack service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/slack
+</code></pre><h3 id='get-slack-service-settings'>Get Slack service settings <a class='anchor' href='services.html#get-slack-service-settings' title='Permalink'></a></h3>
+<p>Get Slack service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/slack
+</code></pre><h2 id='jetbrains-teamcity-ci'>JetBrains TeamCity CI <a class='anchor' href='services.html#jetbrains-teamcity-ci' title='Permalink'></a></h2>
+<p>A continuous integration and build server</p>
+<h3 id='create-edit-jetbrains-teamcity-ci-service'>Create/Edit JetBrains TeamCity CI service <a class='anchor' href='services.html#create-edit-jetbrains-teamcity-ci-service' title='Permalink'></a></h3>
+<p>Set JetBrains TeamCity CI service for a project.</p>
+
+<blockquote>
+<p>The build configuration in Teamcity must use the build format number %build.vcs.number% you will also want to configure monitoring of all branches so merge requests build, that setting is in the vsc root advanced settings.</p>
+</blockquote>
+<pre class="highlight plaintext"><code>PUT /projects/:id/services/teamcity
+</code></pre>
+<p>Parameters:</p>
+
+<ul>
+<li><code>teamcity_url</code> (<strong>required</strong>) - TeamCity root URL like <a href="https://teamcity.example.com">https://teamcity.example.com</a></li>
+<li><code>build_type</code> (<strong>required</strong>) - Build configuration ID</li>
+<li><code>username</code> (<strong>required</strong>) - A user with permissions to trigger a manual build</li>
+<li><code>password</code> (<strong>required</strong>)</li>
+</ul>
+<h3 id='delete-jetbrains-teamcity-ci-service'>Delete JetBrains TeamCity CI service <a class='anchor' href='services.html#delete-jetbrains-teamcity-ci-service' title='Permalink'></a></h3>
+<p>Delete JetBrains TeamCity CI service for a project.</p>
+<pre class="highlight plaintext"><code>DELETE /projects/:id/services/teamcity
+</code></pre><h3 id='get-jetbrains-teamcity-ci-service-settings'>Get JetBrains TeamCity CI service settings <a class='anchor' href='services.html#get-jetbrains-teamcity-ci-service-settings' title='Permalink'></a></h3>
+<p>Get JetBrains TeamCity CI service settings for a project.</p>
+<pre class="highlight plaintext"><code>GET /projects/:id/services/teamcity
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/api/services.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Koding & GitLab - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Koding & GitLab</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="koding.html#koding-gitlab">Koding & GitLab</a>
+<ul>
+<li>
+<a href="koding.html#requirements">Requirements</a>
+<ul>
+<li>
+<a href="koding.html#hardware">Hardware</a>
+</li>
+<li>
+<a href="koding.html#software">Software</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="koding.html#getting-started-with-development-versions">Getting Started with Development Versions</a>
+<ul>
+<li>
+<a href="koding.html#koding">Koding</a>
+</li>
+<li>
+<a href="koding.html#gitlab">GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="koding.html#integration">Integration</a>
+<ul>
+<li>
+<a href="koding.html#gitlab-side">GitLab Side</a>
+<ul>
+<li>
+<a href="koding.html#registering-koding-for-oauth-integration">Registering Koding for OAuth integration</a>
+</li>
+<li>
+<a href="koding.html#registering-system-hooks-to-koding-optional">Registering system hooks to Koding (optional)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="koding.html#koding-part">Koding Part</a>
+<ul>
+<li>
+<a href="koding.html#start-koding-with-gitlab-url">Start Koding with GitLab URL</a>
+<ul>
+<li>
+<a href="koding.html#from-command-line">From command-line</a>
+</li>
+<li>
+<a href="koding.html#by-updating-configuration">By updating configuration</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="koding.html#enable-single-sign-on">Enable Single Sign On</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='koding-amp-gitlab'>Koding &amp; GitLab <a class='anchor' href='koding.html#koding-amp-gitlab' title='Permalink'></a></h1>
+<blockquote>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5909">Introduced</a> in GitLab 8.11.</p>
+</blockquote>
+
+<p>This document will guide you through installing and configuring Koding with
+GitLab.</p>
+
+<p>First of all, to be able to use Koding and GitLab together you will need public
+access to your server. This allows you to use single sign-on from GitLab to
+Koding and using vms from cloud providers like AWS. Koding has a registry for
+VMs, called Kontrol and it runs on the same server as Koding itself, VMs from
+cloud providers register themselves to Kontrol via the agent that we put into
+provisioned VMs. This agent is called Klient and it provides Koding to access
+and manage the target machine.</p>
+
+<p>Kontrol and Klient are based on another technology called
+<a href="https://github.com/koding/kite">Kite</a>, that we have written at Koding. Which is a
+microservice framework that allows you to develop microservices easily.</p>
+<h2 id='requirements'>Requirements <a class='anchor' href='koding.html#requirements' title='Permalink'></a></h2><h3 id='hardware'>Hardware <a class='anchor' href='koding.html#hardware' title='Permalink'></a></h3>
+<p>Minimum requirements are;</p>
+
+<ul>
+<li>2 cores CPU</li>
+<li>3G RAM</li>
+<li>10G Storage</li>
+</ul>
+
+<p>If you plan to use AWS to install Koding it is recommended that you use at
+least a <code>c3.xlarge</code> instance.</p>
+<h3 id='software'>Software <a class='anchor' href='koding.html#software' title='Permalink'></a></h3>
+<ul>
+<li><a href="https://git-scm.com">Git</a></li>
+<li><a href="https://www.docker.com">Docker</a></li>
+<li><a href="https://www.docker.com/products/docker-compose">docker-compose</a></li>
+</ul>
+
+<p>Koding can run on most of the UNIX based operating systems, since it&#39;s shipped
+as containerized with Docker support, it can work on any operating system that
+supports Docker.</p>
+
+<p>Required services are:</p>
+
+<ul>
+<li><strong>PostgreSQL</strong> - Kontrol and Service DB provider</li>
+<li><strong>MongoDB</strong>    - Main DB provider the application</li>
+<li><strong>Redis</strong>      - In memory DB used by both application and services</li>
+<li><strong>RabbitMQ</strong>   - Message Queue for both application and services</li>
+</ul>
+
+<p>which are also provided as a Docker container by Koding.</p>
+<h2 id='getting-started-with-development-versions'>Getting Started with Development Versions <a class='anchor' href='koding.html#getting-started-with-development-versions' title='Permalink'></a></h2><h3 id='koding'>Koding <a class='anchor' href='koding.html#koding' title='Permalink'></a></h3>
+<p>You can run <code>docker-compose</code> environment for developing koding by
+executing commands in the following snippet.</p>
+<pre class="highlight shell"><code>git clone https://github.com/koding/koding.git
+<span class="nb">cd </span>koding
+docker-compose -f docker-compose-init.yml run init
+docker-compose up
+</code></pre>
+<p>This should start koding on <code>localhost:8090</code>.</p>
+
+<p>By default there is no team exists in Koding DB. You&#39;ll need to create a team
+called <code>gitlab</code> which is the default team name for GitLab integration in the
+configuration. To make things in order it&#39;s recommended to create the <code>gitlab</code>
+team first thing after setting up Koding.</p>
+<h3 id='gitlab'>GitLab <a class='anchor' href='koding.html#gitlab' title='Permalink'></a></h3>
+<p>To install GitLab to your environment for development purposes it&#39;s recommended
+to use GitLab Development Kit which you can get it from
+<a href="https://gitlab.com/gitlab-org/gitlab-development-kit">here</a>.</p>
+
+<p>After all those steps, gitlab should be running on <code>localhost:3000</code></p>
+<h2 id='integration'>Integration <a class='anchor' href='koding.html#integration' title='Permalink'></a></h2>
+<p>Integration includes following components;</p>
+
+<ul>
+<li>Single Sign On with OAuth from GitLab to Koding</li>
+<li>System Hook integration for handling GitLab events on Koding
+(<code>project_created</code>, <code>user_joined</code> etc.)</li>
+<li>Service endpoints for importing/executing stacks from GitLab to Koding
+(<code>Run/Try on IDE (Koding)</code> buttons on GitLab Projects, Issues, MRs)</li>
+</ul>
+
+<p>As it&#39;s pointed out before, you will need public access to this machine that
+you&#39;ve installed Koding and GitLab on. Better to use a domain but a static IP
+is also fine.</p>
+
+<p>For IP based installation you can use <a href="https://xip.io">xip.io</a> service which is
+free and provides DNS resolution to IP based requests like following;</p>
+
+<ul>
+<li>127.0.0.1.xip.io              -&gt; resolves to 127.0.0.1</li>
+<li>foo.bar.baz.127.0.0.1.xip.io  -&gt; resolves to 127.0.0.1</li>
+<li>and so on...</li>
+</ul>
+
+<p>As Koding needs subdomains for team names; <code>foo.127.0.0.1.xip.io</code> requests for
+a running koding instance on <code>127.0.0.1</code> server will be handled as <code>foo</code> team
+requests.</p>
+<h3 id='gitlab-side'>GitLab Side <a class='anchor' href='koding.html#gitlab-side' title='Permalink'></a></h3>
+<p>You need to enable Koding integration from Settings under Admin Area. To do
+that login with an Admin account and do followings;</p>
+
+<ul>
+<li>open <a href="http://127.0.0.1:3000/admin/application_settings">http://127.0.0.1:3000/admin/application_settings</a></li>
+<li>scroll to bottom of the page until Koding section</li>
+<li>check <code>Enable Koding</code> checkbox</li>
+<li><p>provide GitLab team page for running Koding instance as <code>Koding URL</code>*</p>
+
+<ul>
+<li>For <code>Koding URL</code> you need to provide the gitlab integration enabled team on
+your Koding installation. Team called <code>gitlab</code> has integration on Koding out
+of the box, so if you didn&#39;t change anything your team on Koding should be
+<code>gitlab</code>.</li>
+</ul></li>
+</ul>
+
+<p>So, if your Koding is running on <code>http://1.2.3.4.xip.io:8090</code> your URL needs
+to be <code>http://gitlab.1.2.3.4.xip.io:8090</code>. You need to provide the same host
+with your Koding installation here.</p>
+<h4 id='registering-koding-for-oauth-integration'>Registering Koding for OAuth integration <a class='anchor' href='koding.html#registering-koding-for-oauth-integration' title='Permalink'></a></h4>
+<p>We need <code>Application ID</code> and <code>Secret</code> to enable login to Koding via GitLab
+feature and to do that you need to register running Koding as a new application
+to your running GitLab application. Follow
+<a href="http://docs.gitlab.com/ce/integration/oauth_provider.html">these</a> steps to
+enable this integration.</p>
+
+<p>Redirect URI should be <code>http://gitlab.127.0.0.1:8090/-/oauth/gitlab/callback</code>
+which again you need to <em>replace <code>127.0.0.1</code> with your instance public IP.</em></p>
+
+<p>Take a copy of <code>Application ID</code> and <code>Secret</code> that is generated by the GitLab
+application, we will need those on <em>Koding Part</em> of this guide.</p>
+<h4 id='registering-system-hooks-to-koding-optional'>Registering system hooks to Koding (optional) <a class='anchor' href='koding.html#registering-system-hooks-to-koding-optional' title='Permalink'></a></h4>
+<p>Koding can take actions based on the events generated by GitLab application.
+This feature is still in progress and only following events are processed by
+Koding at the moment;</p>
+
+<ul>
+<li>user_create</li>
+<li>user_destroy</li>
+</ul>
+
+<p>All system events are handled but not implemented on Koding side.</p>
+
+<p>To enable this feature you need to provide a <code>URL</code> and a <code>Secret Token</code> to your
+GitLab application. Open your admin area on your GitLab app from
+<a href="http://127.0.0.1:3000/admin/hooks">http://127.0.0.1:3000/admin/hooks</a>
+and provide <code>URL</code> as <code>http://gitlab.127.0.0.1:8090/-/api/gitlab</code> which is the
+endpoint to handle GitLab events on Koding side. Provide a <code>Secret Token</code> and
+keep a copy of it, we will need it on <em>Koding Part</em> of this guide.</p>
+
+<p><em>(replace <code>127.0.0.1</code> with your instance public IP)</em></p>
+<h3 id='koding-part'>Koding Part <a class='anchor' href='koding.html#koding-part' title='Permalink'></a></h3>
+<p>If you followed the steps in GitLab part we should have followings to enable
+Koding part integrations;</p>
+
+<ul>
+<li><code>Application ID</code> and <code>Secret</code> for OAuth integration</li>
+<li><code>Secret Token</code> for system hook integration</li>
+<li>Public address of running GitLab instance</li>
+</ul>
+<h4 id='start-koding-with-gitlab-url'>Start Koding with GitLab URL <a class='anchor' href='koding.html#start-koding-with-gitlab-url' title='Permalink'></a></h4>
+<p>Now we need to configure Koding with all this information to get things ready.
+If it&#39;s already running please stop koding first.</p>
+<h5 id='from-command-line'>From command-line <a class='anchor' href='koding.html#from-command-line' title='Permalink'></a></h5>
+<p>Replace followings with the ones you got from GitLab part of this guide;</p>
+<pre class="highlight shell"><code><span class="nb">cd </span>koding
+docker-compose run                              <span class="se">\</span>
+  --service-ports backend                       <span class="se">\</span>
+  /opt/koding/scripts/bootstrap-container build <span class="se">\</span>
+  --host<span class="o">=</span><span class="k">**</span>YOUR_IP<span class="k">**</span>.xip.io                     <span class="se">\</span>
+  --gitlabHost<span class="o">=</span><span class="k">**</span>GITLAB_IP<span class="k">**</span>                    <span class="se">\</span>
+  --gitlabPort<span class="o">=</span><span class="k">**</span>GITLAB_PORT<span class="k">**</span>                  <span class="se">\</span>
+  --gitlabToken<span class="o">=</span><span class="k">**</span>SECRET_TOKEN<span class="k">**</span>                <span class="se">\</span>
+  --gitlabAppId<span class="o">=</span><span class="k">**</span>APPLICATION_ID<span class="k">**</span>              <span class="se">\</span>
+  --gitlabAppSecret<span class="o">=</span><span class="k">**</span>SECRET<span class="k">**</span>
+</code></pre><h5 id='by-updating-configuration'>By updating configuration <a class='anchor' href='koding.html#by-updating-configuration' title='Permalink'></a></h5>
+<p>Alternatively you can update <code>gitlab</code> section on
+<code>config/credentials.default.coffee</code> like following;</p>
+<pre class="highlight plaintext"><code>gitlab =
+  host: '**GITLAB_IP**'
+  port: '**GITLAB_PORT**'
+  applicationId: '**APPLICATION_ID**'
+  applicationSecret: '**SECRET**'
+  team: 'gitlab'
+  redirectUri: ''
+  systemHookToken: '**SECRET_TOKEN**'
+  hooksEnabled: yes
+</code></pre>
+<p>and start by only providing the <code>host</code>;</p>
+<pre class="highlight shell"><code><span class="nb">cd </span>koding
+docker-compose run                              <span class="se">\</span>
+  --service-ports backend                       <span class="se">\</span>
+  /opt/koding/scripts/bootstrap-container build <span class="se">\</span>
+  --host<span class="o">=</span><span class="k">**</span>YOUR_IP<span class="k">**</span>.xip.io                     <span class="se">\</span>
+</code></pre><h4 id='enable-single-sign-on'>Enable Single Sign On <a class='anchor' href='koding.html#enable-single-sign-on' title='Permalink'></a></h4>
+<p>Once you restarted your Koding and logged in with your username and password
+you need to activate oauth authentication for your user. To do that</p>
+
+<ul>
+<li>Navigate to Dashboard on Koding from;
+<code>http://gitlab.**YOUR_IP**.xip.io:8090/Home/my-account</code></li>
+<li>Scroll down to Integrations section</li>
+<li>Click on toggle to turn On integration in GitLab integration section</li>
+</ul>
+
+<p>This will redirect you to your GitLab instance and will ask your permission (
+if you are not logged in to GitLab at this point you will be redirected after
+login) once you accept you will be redirected to your Koding instance.</p>
+
+<p>From now on you can login by using <code>SIGN IN WITH GITLAB</code> button on your Login
+screen in your Koding instance.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/integration/koding.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

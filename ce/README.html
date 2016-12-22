@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Documentation - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../assets/stylesheets/highlight-v4.css">
+  <script async src="../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../index.html">
+    <img src="../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+          <li class="breadcrumb">Documentation</li>
+        </ul>
+      
+      <h1 id='documentation'>Documentation <a class='anchor' href='README.html#documentation' title='Permalink'></a></h1><h2 id='user-documentation'>User documentation 用户文档 <a class='anchor' href='README.html#user-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="user/account/security.html">账号安全</a> 使用two-factor等验证方式以确保账号的安全性。</li>
+<li><a href="api/README.html">API</a> 通过简单而又强大的API实现GitLab自动化。</li>
+<li><a href="ci/README.html">CI/CD</a> GitLab CI可持续集成系统和CD可持续交付系统， <code>.gitlab-ci.yml</code> 参数配置及一些例子。</li>
+<li><a href="integration/oauth_provider.html">使用GitLab提供OAuth2验证服务</a> 使用GitLab为其他应用的提供身份验证服务。</li>
+<li><a href="container_registry/README.html">Container Registry</a> Learn how to use GitLab Container Registry。</li>
+<li><a href="gitlab-basics/README.html">GitLab基础知识</a> 引导你一步一步的使用git命令行走入GitLab的世界。</li>
+<li><a href="workflow/importing/README.html">将项目导入GitLab</a>.</li>
+<li><a href="user/project/settings/import_export.html">不同GitLab实例之间导入导出项目</a>.</li>
+<li><a href="markdown/markdown.html">Markdown</a> GitLab的高级格式化语法。</li>
+<li><a href="workflow/importing/migrating_from_svn.html">导入SVN仓库</a> 转换SVN仓库为Git仓库存储到GitLab上。</li>
+<li><a href="permissions/permissions.html">权限分配</a> 了解项目中的各个角色 (external/guest/reporter/developer/master/owner) 分别拥有什么操作权限。</li>
+<li><a href="profile/README.html">个性化设置</a></li>
+<li><a href="project_services/project_services.html">项目服务</a> 外部服务整合，如CI、聊天系统。</li>
+<li><a href="public_access/public_access.html">公开访问</a> 了解如何将项目设置为公开访问，或者GitLab内部用户访问。</li>
+<li><a href="ssh/README.html">SSH</a> 设置用于安全访问你的项目ssh keys和deploy keys。</li>
+<li><a href="web_hooks/web_hooks.html">Webhooks</a> 当项目有新代码push进来的时候可以让GitLab通知你。</li>
+<li><a href="workflow/README.html">Workflow</a> GitLab工作流。从Github和SVN导入项目到GitLab。</li>
+<li><a href="university/README.html">Git,GitLab课堂</a> 通过在线课程和视频学习Git和GitLab。</li>
+<li><a href="user/project/git_attributes.html">Git Attributes</a> 使用 <code>.gitattributes</code> 文件定义该git仓库的属性，（exp. 定义使用哪种语法高亮，哪些文件是二进制文件）。</li>
+<li><a href="https://gitlab.com/gitlab-com/marketing/raw/master/design/print/git-cheatsheet/print-pdf/git-cheatsheet.pdf">Git cheatsheet备忘录</a> 一个包含了日常使用中
+较常见的备忘录，PDF格式。</li>
+</ul>
+<h2 id='administrator-documentation'>Administrator documentation 管理员文档 <a class='anchor' href='README.html#administrator-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="user/admin_area/settings/visibility_and_access_controls.html#enabled-git-access-protocols">GitLab访问限制</a> 定义用户可以通过哪些协议访问Gitlab，如限制ssh(即git://)方式访问Gitlab。</li>
+<li><a href="administration/auth/README.html">身份验证与授权</a> 配置使用LDAP、SAML、CAS外部验证程序以及
+如何使用GitLab提供Omniauth授权服务。</li>
+<li><a href="hooks/custom_hooks.html">自定义 git hooks</a> 当webhook无法实现某些功能时可使用自定义的git hooks。</li>
+<li><a href="install/README.html">源码安装手册</a> 源码安装需求，源码目录结构。</li>
+<li><a href="administration/restart_gitlab.html">重启GitLab实例</a> 了解如何重启GitLab实例及其他的组件。</li>
+<li><a href="integration/README.html">集成第三方应用</a> 了解如何与其他系统集成，如JIRA、Redmine、Twitter。</li>
+<li><a href="administration/issue_closing_pattern.html">Issue closing pattern</a> 了解如何定制利用commit信息关闭issue。</li>
+<li><a href="administration/integration/koding.html">Koding</a> Set up Koding to use with GitLab.</li>
+<li><a href="customization/libravatar.html">Libravatar</a> 使用Libravatar提供的用户头像服务。</li>
+<li><a href="logs/logs.html">Log system</a> 日志系统。</li>
+<li><a href="administration/environment_variables.html">环境变量</a> GitLab可用的环境变量。</li>
+<li><a href="operations/README.html">GitLab维护</a> 了解GitLab的运行机制，保证GitLab的可用性。</li>
+<li><a href="raketasks/README.html">Raketasks</a> 备份、维护、webhook自动安装、导入项目等。</li>
+<li><a href="administration/repository_checks.html">Git仓库检查</a> 周期性的Git仓库检查。</li>
+<li><a href="administration/repository_storages.html">Repository storages</a> 配置存储repositories的路径。</li>
+<li><a href="security/README.html">安全设置</a> 了解如何增强GitLab实例的安全性。</li>
+<li><a href="system_hooks/system_hooks.html">System hooks</a> 当用户、项目和SSH keys发生变化时发送通知。</li>
+<li><a href="update/README.html">更新说明</a> 了解如何更新已安装的GitLab实例。</li>
+<li><a href="customization/welcome_message.html">欢迎信息</a> 登录页面添加自定义的欢迎信息。</li>
+<li><a href="incoming_email/README.html">Reply by email</a> 允许用户通过回复预设的邮箱来评论issue和合并请求。</li>
+<li><a href="migrate_ci_to_ce/README.html">把GitLab CI整合到CE/EE</a> 了解如何把已经存在(GitLab8.x版本之前CI是独立的)的GitLab CI数据整合到GitLab CE/EE。</li>
+<li><a href="workflow/lfs/lfs_administration.html">Git LFS 配置</a></li>
+<li><a href="administration/housekeeping.html">Housekeeping</a> 整理Git仓库，类似于磁盘的碎片整理功能。</li>
+<li><a href="monitoring/performance/introduction.html">GitLab 性能监视</a> 配置GitLab和InfluxDB以监视GitLab性能指标。</li>
+<li><a href="administration/monitoring/performance/request_profiling.html">Request Profiling</a> Get a detailed profile on slow requests.</li>
+<li><a href="monitoring/health_check.html">Monitoring uptime</a> 在终端使用health check检查服务状态。</li>
+<li><a href="administration/troubleshooting/debug.html">Debugging Tips</a> Tips to debug problems when things go wrong</li>
+<li><a href="administration/troubleshooting/sidekiq.html">Sidekiq 故障排查</a> 当Sidekq挂起或者不执行后台任务的时候进行调试。</li>
+<li><a href="administration/high_availability/README.html">GitLab高可用</a> GitLab高可用集群搭建方案。</li>
+<li><a href="administration/container_registry.html">Container Registry</a> Configure Docker Registry with GitLab</li>
+<li><a href="administration/repository_storages.html">Multiple mountpoints for the repositories storage</a> Define multiple repository storage paths to distribute the storage load.</li>
+</ul>
+<h2 id='contributor-documentation'>Contributor documentation 代码贡献文档 <a class='anchor' href='README.html#contributor-documentation' title='Permalink'></a></h2>
+<ul>
+<li><a href="development/README.html">Development</a> 讲解GitLab的架构以及shell命令指南。</li>
+<li><a href="legal/README.html">法律声明</a> 贡献者许可协议。</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

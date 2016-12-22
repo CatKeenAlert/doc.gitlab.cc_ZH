@@ -1,0 +1,911 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Advanced configuration - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../index.html">GitLab Runner</a></li>
+            
+              <li class="breadcrumb"><a href="index.html">Configuring GitLab Runner</a></li>
+            
+          
+          <li class="breadcrumb">Advanced configuration</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="advanced-configuration.html#advanced-configuration">Advanced configuration</a>
+<ul>
+<li>
+<a href="advanced-configuration.html#the-global-section">The global section</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-section">The [[runners]] section</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-executors">The EXECUTORS</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-shells">The SHELLS</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-docker-section">The [runners.docker] section</a>
+<ul>
+<li>
+<a href="advanced-configuration.html#volumes-in-the-runners-docker-section">Volumes in the [runners.docker] section</a>
+<ul>
+<li>
+<a href="advanced-configuration.html#example-1-adding-a-data-volume">Example 1: adding a data volume</a>
+</li>
+<li>
+<a href="advanced-configuration.html#example-2-mount-a-host-directory-as-a-data-volume">Example 2: mount a host directory as a data volume</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="advanced-configuration.html#using-a-private-container-registry">Using a private container registry</a>
+</li>
+<li>
+<a href="advanced-configuration.html#support-for-gitlab-integrated-registry">Support for GitLab integrated registry</a>
+</li>
+<li>
+<a href="advanced-configuration.html#restrict-allowed_images-to-private-registry">Restrict <code>allowed_images</code> to private registry</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-parallels-section">The [runners.parallels] section</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-virtualbox-section">The [runners.virtualbox] section</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-ssh-section">The [runners.ssh] section</a>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-machine-section">The [runners.machine] section</a>
+<ul>
+<li>
+<a href="advanced-configuration.html#offpeakperiods-syntax">OffPeakPeriods syntax</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="advanced-configuration.html#the-runners-cache-section">The [runners.cache] section</a>
+</li>
+<li>
+<a href="advanced-configuration.html#note">Note</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='advanced-configuration'>Advanced configuration <a class='anchor' href='advanced-configuration.html#advanced-configuration' title='Permalink'></a></h1>
+<p>GitLab Runner configuration uses the <a href="https://github.com/toml-lang/toml">TOML</a> format.</p>
+
+<p>The file to be edited can be found in:</p>
+
+<ol>
+<li><code>/etc/gitlab-runner/config.toml</code> on *nix systems when gitlab-runner is
+executed as root (<strong>this is also path for service configuration</strong>)</li>
+<li><code>~/.gitlab-runner/config.toml</code> on *nix systems when gitlab-runner is
+executed as non-root</li>
+<li><code>./config.toml</code> on other systems</li>
+</ol>
+<h2 id='the-global-section'>The global section <a class='anchor' href='advanced-configuration.html#the-global-section' title='Permalink'></a></h2>
+<p>This defines global settings of multi-runner.</p>
+
+<table><thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>concurrent</code></td>
+<td>limits how many jobs globally can be run concurrently. The most upper limit of jobs using all defined runners</td>
+</tr>
+<tr>
+<td><code>check_interval</code></td>
+<td>defines in seconds how often to check GitLab for a new builds</td>
+</tr>
+<tr>
+<td><code>sentry_dsn</code></td>
+<td>enable tracking of all system level errors to sentry</td>
+</tr>
+<tr>
+<td><code>metrics_server</code></td>
+<td>address (<code>&lt;host&gt;:&lt;port&gt;</code>) on which the Prometheus metrics HTTP server should be listening</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code>concurrent <span class="o">=</span> 4
+</code></pre><h2 id='the-runners-section'>The [[runners]] section <a class='anchor' href='advanced-configuration.html#the-runners-section' title='Permalink'></a></h2>
+<p>This defines one runner entry.</p>
+
+<table><thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>name</code></td>
+<td>not used, just informatory</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>CI URL</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>runner token</td>
+</tr>
+<tr>
+<td><code>tls-ca-file</code></td>
+<td>file containing the certificates to verify the peer when using HTTPS</td>
+</tr>
+<tr>
+<td><code>tls-skip-verify</code></td>
+<td>whether to verify the TLS certificate when using HTTPS, default: false</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>limit how many jobs can be handled concurrently by this token. 0 simply means don&#39;t limit</td>
+</tr>
+<tr>
+<td><code>executor</code></td>
+<td>select how a project should be built, see next section</td>
+</tr>
+<tr>
+<td><code>shell</code></td>
+<td>the name of shell to generate the script (default value is platform dependent)</td>
+</tr>
+<tr>
+<td><code>builds_dir</code></td>
+<td>directory where builds will be stored in context of selected executor (Locally, Docker, SSH)</td>
+</tr>
+<tr>
+<td><code>cache_dir</code></td>
+<td>directory where build caches will be stored in context of selected executor (Locally, Docker, SSH). If the <code>docker</code> executor is used, this directory needs to be included in its <code>volumes</code> parameter.</td>
+</tr>
+<tr>
+<td><code>environment</code></td>
+<td>append or overwrite environment variables</td>
+</tr>
+<tr>
+<td><code>disable_verbose</code></td>
+<td>don&#39;t print run commands</td>
+</tr>
+<tr>
+<td><code>output_limit</code></td>
+<td>set maximum build log size in kilobytes, by default set to 4096 (4MB)</td>
+</tr>
+<tr>
+<td><code>pre_clone_script</code></td>
+<td>commands to be executed on the runner before cloning the Git repository. this can be used to adjust the Git client configuration first, for example. to insert multiple commands, use a (triple-quoted) multi-line string.</td>
+</tr>
+<tr>
+<td><code>pre_build_script</code></td>
+<td>commands to be executed on the runner after cloning the Git repository, but before executing the build. to insert multiple commands, use a (triple-quoted) multi-line string.</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code><span class="o">[[</span>runners]]
+  name <span class="o">=</span> <span class="s2">"ruby-2.1-docker"</span>
+  url <span class="o">=</span> <span class="s2">"https://CI/"</span>
+  token <span class="o">=</span> <span class="s2">"TOKEN"</span>
+  limit <span class="o">=</span> 0
+  executor <span class="o">=</span> <span class="s2">"docker"</span>
+  builds_dir <span class="o">=</span> <span class="s2">""</span>
+  shell <span class="o">=</span> <span class="s2">""</span>
+  environment <span class="o">=</span> <span class="o">[</span><span class="s2">"ENV=value"</span>, <span class="s2">"LC_ALL=en_US.UTF-8"</span><span class="o">]</span>
+  disable_verbose <span class="o">=</span> <span class="nb">false</span>
+</code></pre><h2 id='the-executors'>The EXECUTORS <a class='anchor' href='advanced-configuration.html#the-executors' title='Permalink'></a></h2>
+<p>There are a couple of available executors currently.</p>
+
+<table><thead>
+<tr>
+<th>Executor</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>shell</code></td>
+<td>run build locally, default</td>
+</tr>
+<tr>
+<td><code>docker</code></td>
+<td>run build using Docker container - this requires the presence of <code>[runners.docker]</code> and <a href="https://www.docker.com/docker-engine">Docker Engine</a> installed on the system that the Runner runs</td>
+</tr>
+<tr>
+<td><code>docker-ssh</code></td>
+<td>run build using Docker container, but connect to it with SSH - this requires the presence of <code>[runners.docker]</code> , <code>[runners.ssh]</code> and <a href="https://www.docker.com/docker-engine">Docker Engine</a> installed on the system that the Runner runs. <strong>Note: This will run the docker container on the local machine, it just changes how the commands are run inside that container. If you want to run docker commands on an external machine, then you should change the <code>host</code> parameter in the <code>runners.docker</code> section.</strong></td>
+</tr>
+<tr>
+<td><code>ssh</code></td>
+<td>run build remotely with SSH - this requires the presence of <code>[runners.ssh]</code></td>
+</tr>
+<tr>
+<td><code>parallels</code></td>
+<td>run build using Parallels VM, but connect to it with SSH - this requires the presence of <code>[runners.parallels]</code> and <code>[runners.ssh]</code></td>
+</tr>
+<tr>
+<td><code>virtualbox</code></td>
+<td>run build using VirtualBox VM, but connect to it with SSH - this requires the presence of <code>[runners.virtualbox]</code> and <code>[runners.ssh]</code></td>
+</tr>
+<tr>
+<td><code>docker+machine</code></td>
+<td>like <code>docker</code>, but uses <a href="autoscale.html">auto-scaled docker machines</a> - this requires the presence of <code>[runners.docker]</code> and <code>[runners.machine]</code></td>
+</tr>
+<tr>
+<td><code>docker-ssh+machine</code></td>
+<td>like <code>docker-ssh</code>, but uses <a href="autoscale.html">auto-scaled docker machines</a> - this requires the presence of <code>[runners.docker]</code> and <code>[runners.machine]</code></td>
+</tr>
+</tbody></table>
+<h2 id='the-shells'>The SHELLS <a class='anchor' href='advanced-configuration.html#the-shells' title='Permalink'></a></h2>
+<p>There are a couple of available shells that can be run on different platforms.</p>
+
+<table><thead>
+<tr>
+<th>Shell</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>bash</code></td>
+<td>generate Bash (Bourne-shell) script. All commands executed in Bash context (default for all Unix systems)</td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>generate Sh (Bourne-shell) script. All commands executed in Sh context (fallback for <code>bash</code> for all Unix systems)</td>
+</tr>
+<tr>
+<td><code>cmd</code></td>
+<td>generate Windows Batch script. All commands are executed in Batch context (default for Windows)</td>
+</tr>
+<tr>
+<td><code>powershell</code></td>
+<td>generate Windows PowerShell script. All commands are executed in PowerShell context</td>
+</tr>
+</tbody></table>
+<h2 id='the-runners-docker-section'>The [runners.docker] section <a class='anchor' href='advanced-configuration.html#the-runners-docker-section' title='Permalink'></a></h2>
+<p>This defines the Docker Container parameters.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>host</code></td>
+<td>specify custom Docker endpoint, by default <code>DOCKER_HOST</code> environment is used or <code>unix:///var/run/docker.sock</code></td>
+</tr>
+<tr>
+<td><code>hostname</code></td>
+<td>specify custom hostname for Docker container</td>
+</tr>
+<tr>
+<td><code>tls_cert_path</code></td>
+<td>when set it will use <code>ca.pem</code>, <code>cert.pem</code> and <code>key.pem</code> from that folder to make secure TLS connection to Docker (useful in boot2docker)</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>use this image to run builds</td>
+</tr>
+<tr>
+<td><code>cpuset_cpus</code></td>
+<td>string value containing the cgroups CpusetCpus to use</td>
+</tr>
+<tr>
+<td><code>dns</code></td>
+<td>a list of DNS servers for the container to use</td>
+</tr>
+<tr>
+<td><code>dns_search</code></td>
+<td>a list of DNS search domains</td>
+</tr>
+<tr>
+<td><code>privileged</code></td>
+<td>make container run in Privileged mode (insecure)</td>
+</tr>
+<tr>
+<td><code>cap_add</code></td>
+<td>add additional Linux capabilities to the container</td>
+</tr>
+<tr>
+<td><code>cap_drop</code></td>
+<td>drop additional Linux capabilities from the container</td>
+</tr>
+<tr>
+<td><code>security_opt</code></td>
+<td>set security options (--security-opt in docker run), takes a list of &#39;:&#39; separated key/values</td>
+</tr>
+<tr>
+<td><code>devices</code></td>
+<td>share additional host devices with the container</td>
+</tr>
+<tr>
+<td><code>disable_cache</code></td>
+<td>disable automatic</td>
+</tr>
+<tr>
+<td><code>wait_for_services_timeout</code></td>
+<td>specify how long to wait for docker services, set to 0 to disable, default: 30</td>
+</tr>
+<tr>
+<td><code>cache_dir</code></td>
+<td>specify where Docker caches should be stored (this can be absolute or relative to current working directory)</td>
+</tr>
+<tr>
+<td><code>volumes</code></td>
+<td>specify additional volumes that should be mounted (same syntax as Docker -v option)</td>
+</tr>
+<tr>
+<td><code>extra_hosts</code></td>
+<td>specify hosts that should be defined in container environment</td>
+</tr>
+<tr>
+<td><code>volumes_from</code></td>
+<td>specify a list of volumes to inherit from another container in the form <code>&lt;container name&gt;[:&lt;ro&#124;rw&gt;]</code></td>
+</tr>
+<tr>
+<td><code>links</code></td>
+<td>specify containers which should be linked with building container</td>
+</tr>
+<tr>
+<td><code>services</code></td>
+<td>specify additional services that should be run with build. Please visit <a href="https://registry.hub.docker.com/">Docker Registry</a> for list of available applications. Each service will be run in separate container and linked to the build.</td>
+</tr>
+<tr>
+<td><code>allowed_images</code></td>
+<td>specify wildcard list of images that can be specified in .gitlab-ci.yml. If not present all images are allowed (equivalent to <code>[&quot;*/*:*&quot;]</code>)</td>
+</tr>
+<tr>
+<td><code>allowed_services</code></td>
+<td>specify wildcard list of services that can be specified in .gitlab-ci.yml. If not present all images are allowed (equivalent to <code>[&quot;*/*:*&quot;]</code>)</td>
+</tr>
+<tr>
+<td><code>pull_policy</code></td>
+<td>specify the image pull policy: <code>never</code>, <code>if-not-present</code> or <code>always</code> (default); read more in the <a href="../executors/docker.html#how-pull-policies-work">pull policies documentation</a></td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.docker]
+  host <span class="o">=</span> <span class="s2">""</span>
+  hostname <span class="o">=</span> <span class="s2">""</span>
+  tls_cert_path <span class="o">=</span> <span class="s2">"/Users/ayufan/.boot2docker/certs"</span>
+  image <span class="o">=</span> <span class="s2">"ruby:2.1"</span>
+  cpuset_cpus <span class="o">=</span> <span class="s2">"0,1"</span>
+  dns <span class="o">=</span> <span class="o">[</span><span class="s2">"8.8.8.8"</span><span class="o">]</span>
+  dns_search <span class="o">=</span> <span class="o">[</span><span class="s2">""</span><span class="o">]</span>
+  privileged <span class="o">=</span> <span class="nb">false
+  </span>cap_add <span class="o">=</span> <span class="o">[</span><span class="s2">"NET_ADMIN"</span><span class="o">]</span>
+  cap_drop <span class="o">=</span> <span class="o">[</span><span class="s2">"DAC_OVERRIDE"</span><span class="o">]</span>
+  devices <span class="o">=</span> <span class="o">[</span><span class="s2">"/dev/net/tun"</span><span class="o">]</span>
+  disable_cache <span class="o">=</span> <span class="nb">false
+  </span>wait_for_services_timeout <span class="o">=</span> 30
+  cache_dir <span class="o">=</span> <span class="s2">""</span>
+  volumes <span class="o">=</span> <span class="o">[</span><span class="s2">"/data"</span>, <span class="s2">"/home/project/cache"</span><span class="o">]</span>
+  extra_hosts <span class="o">=</span> <span class="o">[</span><span class="s2">"other-host:127.0.0.1"</span><span class="o">]</span>
+  volumes_from <span class="o">=</span> <span class="o">[</span><span class="s2">"storage_container:ro"</span><span class="o">]</span>
+  links <span class="o">=</span> <span class="o">[</span><span class="s2">"mysql_container:mysql"</span><span class="o">]</span>
+  services <span class="o">=</span> <span class="o">[</span><span class="s2">"mysql"</span>, <span class="s2">"redis:2.8"</span>, <span class="s2">"postgres:9"</span><span class="o">]</span>
+  allowed_images <span class="o">=</span> <span class="o">[</span><span class="s2">"ruby:*"</span>, <span class="s2">"python:*"</span>, <span class="s2">"php:*"</span><span class="o">]</span>
+  allowed_services <span class="o">=</span> <span class="o">[</span><span class="s2">"postgres:9.4"</span>, <span class="s2">"postgres:latest"</span><span class="o">]</span>
+</code></pre><h3 id='volumes-in-the-runners-docker-section'>Volumes in the [runners.docker] section <a class='anchor' href='advanced-configuration.html#volumes-in-the-runners-docker-section' title='Permalink'></a></h3>
+<p>You can find the complete guide of Docker volume usage
+<a href="https://docs.docker.com/userguide/dockervolumes/">here</a>.</p>
+
+<p>Let&#39;s use some examples to explain how it work (assuming you have a working
+runner).</p>
+<h4 id='example-1-adding-a-data-volume'>Example 1: adding a data volume <a class='anchor' href='advanced-configuration.html#example-1-adding-a-data-volume' title='Permalink'></a></h4>
+<p>A data volume is a specially-designated directory within one or more containers
+that bypasses the Union File System. Data volumes are designed to persist data,
+independent of the container&#39;s life cycle.</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.docker]
+  host <span class="o">=</span> <span class="s2">""</span>
+  hostname <span class="o">=</span> <span class="s2">""</span>
+  tls_cert_path <span class="o">=</span> <span class="s2">"/Users/ayufan/.boot2docker/certs"</span>
+  image <span class="o">=</span> <span class="s2">"ruby:2.1"</span>
+  privileged <span class="o">=</span> <span class="nb">false
+  </span>disable_cache <span class="o">=</span> <span class="nb">true
+  </span>volumes <span class="o">=</span> <span class="o">[</span><span class="s2">"/path/to/volume/in/container"</span><span class="o">]</span>
+</code></pre>
+<p>This will create a new volume inside the container at <code>/path/to/volume/in/container</code>.</p>
+<h4 id='example-2-mount-a-host-directory-as-a-data-volume'>Example 2: mount a host directory as a data volume <a class='anchor' href='advanced-configuration.html#example-2-mount-a-host-directory-as-a-data-volume' title='Permalink'></a></h4>
+<p>In addition to creating a volume using you can also mount a directory from your
+Docker daemon&#39;s host into a container. It&#39;s useful when you want to store
+builds outside the container.</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.docker]
+  host <span class="o">=</span> <span class="s2">""</span>
+  hostname <span class="o">=</span> <span class="s2">""</span>
+  tls_cert_path <span class="o">=</span> <span class="s2">"/Users/ayufan/.boot2docker/certs"</span>
+  image <span class="o">=</span> <span class="s2">"ruby:2.1"</span>
+  privileged <span class="o">=</span> <span class="nb">false
+  </span>disable_cache <span class="o">=</span> <span class="nb">true
+  </span>volumes <span class="o">=</span> <span class="o">[</span><span class="s2">"/path/to/bind/from/host:/path/to/bind/in/container:rw"</span><span class="o">]</span>
+</code></pre>
+<p>This will use <code>/path/to/bind/from/host</code> of the CI host inside the container at
+<code>/path/to/bind/in/container</code>.</p>
+<h3 id='using-a-private-container-registry'>Using a private container registry <a class='anchor' href='advanced-configuration.html#using-a-private-container-registry' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>This feature requires GitLab Runner <strong>1.8</strong> or higher</li>
+<li>For GitLab Runner versions <strong>&gt;= 0.6, &lt;1.8</strong> there was a partial
+support for using private registries, which required manual configuration
+of credentials on runner&#39;s host. We recommend to upgrade your Runner to
+at least version <strong>1.8</strong> if you want to use private registries.</li>
+<li>Private registries are currently not supported by the Kubernetes executor.</li>
+<li>Using private registries with the <code>if-not-present</code> pull policy may introduce
+<a href="../security/index.html#usage-of-private-docker-images-with-if-not-present-pull-policy">security implications</a>. To fully understand how pull policies work,
+read the <a href="../executors/docker.html#how-pull-policies-work">pull policies documentation</a>.</li>
+</ul>
+</blockquote>
+
+<p>If you want to use private registries as a source of images for your builds,
+you can set the authorization configuration in the <code>DOCKER_AUTH_CONFIG</code>
+<a href="https://docs.gitlab.com/ce/ci/variables/#secret-variables">secret variable</a>. It can be set in both GitLab Variables section of
+a project and in the <code>config.toml</code> file.</p>
+
+<p>As an example, let&#39;s assume that you want to use the <code>registry.example.com/private/image:latest</code>
+image which is private and requires you to login into a private container registry.
+To configure access for <code>registry.example.com</code>, follow these steps:</p>
+
+<ol>
+<li><p>Do a <code>docker login</code> on your computer:</p>
+<pre class="highlight shell"><code> docker login registry.example.com --username my_username --password my_password
+</code></pre></li>
+<li><p>Copy the content of <code>~/.docker/config.json</code></p></li>
+<li><p>Create a <a href="https://docs.gitlab.com/ce/ci/variables/#secret-variables">secret variable</a> <code>DOCKER_AUTH_CONFIG</code> with the content of the
+Docker configuration file as the value:</p>
+<pre class="highlight json"><code><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="s2">"auths"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"registry.example.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+             </span><span class="s2">"auth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bXlfdXNlcm5hbWU6bXlfcGFzc3dvcmQ="</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre></li>
+<li><p>Do a <code>docker logout</code> on your computer if you don&#39;t need access to the
+registry from it:</p>
+<pre class="highlight shell"><code> docker <span class="nb">logout </span>registry.example.com
+</code></pre></li>
+<li><p>You can now use any private image from <code>registry.example.com</code> defined in
+<code>image</code> and/or <code>services</code> in your <a href="https://docs.gitlab.com/ce/ci/yaml/README.html#image-and-services"><code>.gitlab-ci.yml</code> file</a>.</p></li>
+</ol>
+
+<p>You can add configuration for as many registries as you want, adding more
+registries to the <code>&quot;auth&quot;</code> hash as described above.</p>
+
+<p>The steps performed by the Runner can be summed up to:</p>
+
+<ol>
+<li>The registry name is found from the image name.</li>
+<li>If the value is not empty, the executor will search for the authentication
+configuration for this registry.</li>
+<li>Finally, if an authentication corresponding to the specified registry is
+found, subsequent pulls will make use of it.</li>
+</ol>
+
+<p>Now that the Runner is set up to authenticate against your private registry,
+learn <a href="https://docs.gitlab.com/ce/ci/yaml/README.html#image-and-services">how to configure .gitlab-ci.yml</a> in order to use that
+registry.</p>
+<h3 id='support-for-gitlab-integrated-registry'>Support for GitLab integrated registry <a class='anchor' href='advanced-configuration.html#support-for-gitlab-integrated-registry' title='Permalink'></a></h3>
+<blockquote>
+<p><strong>Note:</strong>
+To work automatically with private/protected images from
+GitLab integrated registry it needs at least GitLab CE/EE <strong>8.14</strong>.</p>
+</blockquote>
+
+<p>Starting with GitLab CE/EE 8.14, GitLab will send credentials for its integrated
+registry along with the build data. These credentials will be automatically
+added to registries authorization parameters list.</p>
+
+<p>After this authorization against the registry will be proceed like for
+configuration added with <code>DOCKER_AUTH_CONFIG</code> variable.</p>
+
+<p>Thanks to this, in your builds you can use any image from you GitLab integrated
+registry, even if the image is private/protected. To fully understand for
+which images the builds will have access, read the
+<a href="https://docs.gitlab.com/ce/user/project/new_ci_build_permissions_model.html">New CI build permissions model</a> documentation.</p>
+<h3 id='restrict-allowed_images-to-private-registry'>Restrict <code>allowed_images</code> to private registry <a class='anchor' href='advanced-configuration.html#restrict-allowed_images-to-private-registry' title='Permalink'></a></h3>
+<p>For certain setups you will restrict access of the build jobs to docker images
+which comes from your private docker registry. In that case set</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.docker]
+  …
+  allowed_images <span class="o">=</span> <span class="o">[</span><span class="s2">"my.registry.tld:5000/*:*"</span><span class="o">]</span>
+</code></pre><h2 id='the-runners-parallels-section'>The [runners.parallels] section <a class='anchor' href='advanced-configuration.html#the-runners-parallels-section' title='Permalink'></a></h2>
+<p>This defines the Parallels parameters.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>base_name</code></td>
+<td>name of Parallels VM which will be cloned</td>
+</tr>
+<tr>
+<td><code>template_name</code></td>
+<td>custom name of Parallels VM linked template (optional)</td>
+</tr>
+<tr>
+<td><code>disable_snapshots</code></td>
+<td>if disabled the VMs will be destroyed after build</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.parallels]
+  base_name <span class="o">=</span> <span class="s2">"my-parallels-image"</span>
+  template_name <span class="o">=</span> <span class="s2">""</span>
+  disable_snapshots <span class="o">=</span> <span class="nb">false</span>
+</code></pre><h2 id='the-runners-virtualbox-section'>The [runners.virtualbox] section <a class='anchor' href='advanced-configuration.html#the-runners-virtualbox-section' title='Permalink'></a></h2>
+<p>This defines the VirtualBox parameters. This executor relies on
+<code>vboxmanage</code> as executable to control VirtualBox machines so you have to adjust
+your <code>PATH</code> environment variable on Windows hosts:
+<code>PATH=%PATH%;C:\Program Files\Oracle\VirtualBox</code>.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Explanation</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>base_name</code></td>
+<td>name of VirtualBox VM which will be cloned</td>
+</tr>
+<tr>
+<td><code>base_snapshot</code></td>
+<td>name or UUID of a specific snapshot of the VM from which to create a linked clone. If this is empty or omitted, the current snapshot will be used. If there is no current snapshot, one will be created unless <code>disable_snapshots</code> is true, in which case a full clone of the base VM will be made.</td>
+</tr>
+<tr>
+<td><code>disable_snapshots</code></td>
+<td>if disabled the VMs will be destroyed after build</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.virtualbox]
+  base_name <span class="o">=</span> <span class="s2">"my-virtualbox-image"</span>
+  base_snapshot <span class="o">=</span> <span class="s2">"my-image-snapshot"</span>
+  disable_snapshots <span class="o">=</span> <span class="nb">false</span>
+</code></pre><h2 id='the-runners-ssh-section'>The [runners.ssh] section <a class='anchor' href='advanced-configuration.html#the-runners-ssh-section' title='Permalink'></a></h2>
+<p>This defines the SSH connection parameters.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>host</code></td>
+<td>where to connect (overridden when using <code>docker-ssh</code>)</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>specify port, default: 22</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>specify user</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>specify password</td>
+</tr>
+<tr>
+<td><code>identity_file</code></td>
+<td>specify file path to SSH private key (id_rsa, id_dsa or id_edcsa). The file needs to be stored unencrypted</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight plaintext"><code>[runners.ssh]
+  host = "my-production-server"
+  port = "22"
+  user = "root"
+  password = "production-server-password"
+  identity_file = ""
+</code></pre><h2 id='the-runners-machine-section'>The [runners.machine] section <a class='anchor' href='advanced-configuration.html#the-runners-machine-section' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+Added in GitLab Runner v1.1.0.</p>
+</blockquote>
+
+<p>This defines the Docker Machine based autoscaling feature. More details can be
+found in the separate <a href="autoscale.html">runners autoscale documentation</a>.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>IdleCount</code></td>
+<td>Number of machines, that need to be created and waiting in <em>Idle</em> state.</td>
+</tr>
+<tr>
+<td><code>IdleTime</code></td>
+<td>Time (in seconds) for machine to be in <em>Idle</em> state before it is removed.</td>
+</tr>
+<tr>
+<td><code>OffPeakPeriods</code></td>
+<td>Time periods when the scheduler is in the OffPeak mode. An array of cron-style patterns (described below)</td>
+</tr>
+<tr>
+<td><code>OffPeakIdleCount</code></td>
+<td>Like <code>IdleCount</code>, but for <em>Off Peak</em> time periods.</td>
+</tr>
+<tr>
+<td><code>OffPeakIdleTime</code></td>
+<td>Like <code>IdleTime</code>, but for <em>Off Peak</em> time mperiods.</td>
+</tr>
+<tr>
+<td><code>MaxBuilds</code></td>
+<td>Builds count after which machine will be removed.</td>
+</tr>
+<tr>
+<td><code>MachineName</code></td>
+<td>Name of the machine. It <strong>must</strong> contain <code>%s</code>, which will be replaced with a unique machine identifier.</td>
+</tr>
+<tr>
+<td><code>MachineDriver</code></td>
+<td>Docker Machine <code>driver</code> to use. More details can be found in the <a href="autoscale.html#what-are-the-supported-cloud-providers">Docker Machine configuration section</a>.</td>
+</tr>
+<tr>
+<td><code>MachineOptions</code></td>
+<td>Docker Machine options. More details can be found in the <a href="autoscale.html#what-are-the-supported-cloud-providers">Docker Machine configuration section</a>.</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.machine]
+  IdleCount <span class="o">=</span> 5
+  IdleTime <span class="o">=</span> 600
+  OffPeakPeriods <span class="o">=</span> <span class="o">[</span>
+    <span class="s2">"* * 0-10,18-23 * * mon-fri *"</span>,
+    <span class="s2">"* * * * * sat,sun *"</span>
+  <span class="o">]</span>
+  OffPeakIdleCount <span class="o">=</span> 1
+  OffPeakIdleTime <span class="o">=</span> 3600
+  MaxBuilds <span class="o">=</span> 100
+  MachineName <span class="o">=</span> <span class="s2">"auto-scale-%s"</span>
+  MachineDriver <span class="o">=</span> <span class="s2">"digitalocean"</span>
+  MachineOptions <span class="o">=</span> <span class="o">[</span>
+      <span class="s2">"digitalocean-image=coreos-beta"</span>,
+      <span class="s2">"digitalocean-ssh-user=core"</span>,
+      <span class="s2">"digitalocean-access-token=DO_ACCESS_TOKEN"</span>,
+      <span class="s2">"digitalocean-region=nyc2"</span>,
+      <span class="s2">"digitalocean-size=4gb"</span>,
+      <span class="s2">"digitalocean-private-networking"</span>,
+      <span class="s2">"engine-registry-mirror=http://10.11.12.13:12345"</span>
+  <span class="o">]</span>
+</code></pre><h3 id='offpeakperiods-syntax'>OffPeakPeriods syntax <a class='anchor' href='advanced-configuration.html#offpeakperiods-syntax' title='Permalink'></a></h3>
+<p>The <code>OffPeakPeriods</code> setting contains an array of string patterns of
+time periods represented in a cron-style format. The line contains
+following fields:</p>
+<pre class="highlight plaintext"><code>[second] [minute] [hour] [day of month] [month] [day of week] [year]
+</code></pre>
+<p>Like in the standard cron configuration file the fields can contain single
+values, ranges, lists and asterisks. A detailed description of the syntax
+can be found <a href="https://doc.gitlab.cc/vendor/github.com/gorhill/cronexpr/README.html">here</a>.</p>
+<h2 id='the-runners-cache-section'>The [runners.cache] section <a class='anchor' href='advanced-configuration.html#the-runners-cache-section' title='Permalink'></a></h2>
+<blockquote>
+<p><strong>Note:</strong>
+Added in GitLab Runner v1.1.0.</p>
+</blockquote>
+
+<p>This defines the distributed cache feature. More details can be found
+in the <a href="autoscale.html#distributed-runners-caching">runners autoscale documentation</a>.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>Type</code></td>
+<td>string</td>
+<td>As of now, only S3-compatible services are supported, so only <code>s3</code> can be used.</td>
+</tr>
+<tr>
+<td><code>ServerAddress</code></td>
+<td>string</td>
+<td>A <code>host:port</code> to the used S3-compatible server.</td>
+</tr>
+<tr>
+<td><code>AccessKey</code></td>
+<td>string</td>
+<td>The access key specified for your S3 instance.</td>
+</tr>
+<tr>
+<td><code>SecretKey</code></td>
+<td>string</td>
+<td>The secret key specified for your S3 instance.</td>
+</tr>
+<tr>
+<td><code>BucketName</code></td>
+<td>string</td>
+<td>Name of the bucket where cache will be stored.</td>
+</tr>
+<tr>
+<td><code>BucketLocation</code></td>
+<td>string</td>
+<td>Name of S3 region.</td>
+</tr>
+<tr>
+<td><code>Insecure</code></td>
+<td>boolean</td>
+<td>Set to <code>true</code> if the S3 service is available by <code>HTTP</code>. Is set to <code>false</code> by default.</td>
+</tr>
+</tbody></table>
+
+<p>Example:</p>
+<pre class="highlight shell"><code><span class="o">[</span>runners.cache]
+  Type <span class="o">=</span> <span class="s2">"s3"</span>
+  ServerAddress <span class="o">=</span> <span class="s2">"s3.amazonaws.com"</span>
+  AccessKey <span class="o">=</span> <span class="s2">"AMAZON_S3_ACCESS_KEY"</span>
+  SecretKey <span class="o">=</span> <span class="s2">"AMAZON_S3_SECRET_KEY"</span>
+  BucketName <span class="o">=</span> <span class="s2">"runners"</span>
+  BucketLocation <span class="o">=</span> <span class="s2">"eu-west-1"</span>
+  Insecure <span class="o">=</span> <span class="nb">false</span>
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> For Amazon&#39;s S3 service the <code>ServerAddress</code> should always be <code>s3.amazonaws.com</code>. Minio S3 client will
+get bucket metadata and modify the URL to point to the valid region (eg. <code>s3-eu-west-1.amazonaws.com</code>) itself.</p>
+</blockquote>
+<h2 id='note'>Note <a class='anchor' href='advanced-configuration.html#note' title='Permalink'></a></h2>
+<p>If you&#39;d like to deploy to multiple servers using GitLab CI, you can create a
+single script that deploys to multiple servers or you can create many scripts.
+It depends on what you&#39;d like to do.</p>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/configuration/advanced-configuration.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

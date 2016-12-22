@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>GitLab Groups - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Workflow</a></li>
+            
+          
+          <li class="breadcrumb">GitLab Groups</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="groups.html#gitlab-groups">GitLab Groups</a>
+<ul>
+<li>
+<a href="groups.html#creating-groups">Creating groups</a>
+</li>
+<li>
+<a href="groups.html#transferring-an-existing-project-into-a-group">Transferring an existing project into a group</a>
+</li>
+<li>
+<a href="groups.html#adding-users-to-a-group">Adding users to a group</a>
+</li>
+<li>
+<a href="groups.html#requesting-access-to-a-group">Requesting access to a group</a>
+</li>
+<li>
+<a href="groups.html#managing-group-memberships-via-ldap">Managing group memberships via LDAP</a>
+</li>
+<li>
+<a href="groups.html#allowing-only-admins-to-create-groups">Allowing only admins to create groups</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gitlab-groups'>GitLab Groups <a class='anchor' href='groups.html#gitlab-groups' title='Permalink'></a></h1>
+<p>GitLab groups allow you to group projects into directories and give users to several projects at once.</p>
+
+<p>When you create a new project in GitLab, the default namespace for the project is the personal namespace associated with your GitLab user.
+In this document we will see how to create groups, put projects in groups and manage who can access the projects in a group.</p>
+<h2 id='creating-groups'>Creating groups <a class='anchor' href='groups.html#creating-groups' title='Permalink'></a></h2>
+<p>You can create a group by going to the &#39;Groups&#39; tab of the GitLab dashboard and clicking the &#39;New group&#39; button.</p>
+
+<p><a target="_blank" href="groups/new_group_button.png"><img src="groups/new_group_button.png" title="" alt="Click the 'New group' button in the 'Groups' tab"/></a></p>
+
+<p>Next, enter the name (required) and the optional description and group avatar.</p>
+
+<p><a target="_blank" href="groups/new_group_form.png"><img src="groups/new_group_form.png" title="" alt="Fill in the name for your new group"/></a></p>
+
+<p>When your group has been created you are presented with the group dashboard feed, which will be empty.</p>
+
+<p><a target="_blank" href="groups/group_dashboard.png"><img src="groups/group_dashboard.png" title="" alt="Group dashboard"/></a></p>
+
+<p>You can use the &#39;New project&#39; button to add a project to the new group.</p>
+<h2 id='transferring-an-existing-project-into-a-group'>Transferring an existing project into a group <a class='anchor' href='groups.html#transferring-an-existing-project-into-a-group' title='Permalink'></a></h2>
+<p>You can transfer an existing project into a group you own from the project settings page.
+First scroll down to the &#39;Dangerous settings&#39; and click &#39;Show them to me&#39;.
+Now you can pick any of the groups you manage as the new namespace for the group.</p>
+
+<p><a target="_blank" href="groups/transfer_project.png"><img src="groups/transfer_project.png" title="" alt="Transfer a project to a new namespace"/></a></p>
+
+<p>GitLab administrators can use the admin interface to move any project to any namespace if needed.</p>
+<h2 id='adding-users-to-a-group'>Adding users to a group <a class='anchor' href='groups.html#adding-users-to-a-group' title='Permalink'></a></h2>
+<p>One of the benefits of putting multiple projects in one group is that you can give a user to access to all projects in the group with one action.</p>
+
+<p>Suppose we have a group with two projects.</p>
+
+<p><a target="_blank" href="groups/group_with_two_projects.png"><img src="groups/group_with_two_projects.png" title="" alt="Group with two projects"/></a></p>
+
+<p>On the &#39;Group Members&#39; page we can now add a new user Barry to the group.</p>
+
+<p><a target="_blank" href="groups/add_member_to_group.png"><img src="groups/add_member_to_group.png" title="" alt="Add user Barry to the group"/></a></p>
+
+<p>Now because Barry is a &#39;Developer&#39; member of the &#39;Open Source&#39; group, he automatically gets &#39;Developer&#39; access to all projects in the &#39;Open Source&#39; group.</p>
+
+<p><a target="_blank" href="groups/project_members_via_group.png"><img src="groups/project_members_via_group.png" title="" alt="Barry has 'Developer' access to GitLab CI"/></a></p>
+
+<p>If necessary, you can increase the access level of an individual user for a specific project, by adding them as a Member to the project.</p>
+
+<p><a target="_blank" href="groups/override_access_level.png"><img src="groups/override_access_level.png" title="" alt="Barry effectively has 'Master' access to GitLab CI now"/></a></p>
+<h2 id='requesting-access-to-a-group'>Requesting access to a group <a class='anchor' href='groups.html#requesting-access-to-a-group' title='Permalink'></a></h2>
+<p>As a group owner you can enable or disable non members to request access to
+your group. Go to the group settings and click on <strong>Allow users to request access</strong>.</p>
+
+<p>As a user, you can request to be a member of a group. Go to the group you&#39;d
+like to be a member of, and click the <strong>Request Access</strong> button on the right
+side of your screen.</p>
+
+<p><a target="_blank" href="groups/request_access_button.png"><img src="groups/request_access_button.png" title="" alt="Request access button"/></a></p>
+
+<hr>
+
+<p>Group owners &amp; masters will be notified of your request and will be able to approve or
+decline it on the members page.</p>
+
+<p><a target="_blank" href="groups/access_requests_management.png"><img src="groups/access_requests_management.png" title="" alt="Manage access requests"/></a></p>
+
+<hr>
+
+<p>If you change your mind before your request is approved, just click the
+<strong>Withdraw Access Request</strong> button.</p>
+
+<p><a target="_blank" href="groups/withdraw_access_request_button.png"><img src="groups/withdraw_access_request_button.png" title="" alt="Withdraw access request button"/></a></p>
+<h2 id='managing-group-memberships-via-ldap'>Managing group memberships via LDAP <a class='anchor' href='groups.html#managing-group-memberships-via-ldap' title='Permalink'></a></h2>
+<p>In GitLab Enterprise Edition it is possible to manage GitLab group memberships using LDAP groups.
+See <a href="http://docs.gitlab.com/ee/integration/ldap.html">the GitLab Enterprise Edition documentation</a> for more information.</p>
+<h2 id='allowing-only-admins-to-create-groups'>Allowing only admins to create groups <a class='anchor' href='groups.html#allowing-only-admins-to-create-groups' title='Permalink'></a></h2>
+<p>By default, any GitLab user can create new groups.
+This ability can be disabled for individual users from the admin panel.
+It is also possible to configure GitLab so that new users default to not being able to create groups:</p>
+<pre class="highlight plaintext"><code># For omnibus-gitlab, put the following in /etc/gitlab/gitlab.rb
+gitlab_rails['gitlab_default_can_create_group'] = false
+
+# For installations from source, uncomment the 'default_can_create_group'
+# line in /home/git/gitlab/config/gitlab.yml
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/workflow/groups.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

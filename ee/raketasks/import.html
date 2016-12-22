@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Import bare repositories into your GitLab instance - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Rake tasks</a></li>
+            
+          
+          <li class="breadcrumb">Import bare repositories into your GitLab instance</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="import.html#import-bare-repositories-into-your-gitlab-instance">Import bare repositories into your GitLab instance</a>
+<ul>
+<li>
+<a href="import.html#notes">Notes</a>
+</li>
+<li>
+<a href="import.html#how-to-use">How to use</a>
+<ul>
+<li>
+<a href="import.html#create-a-new-folder-inside-the-git-repositories-path-this-will-be-the-name-of-the-new-group">Create a new folder inside the git repositories path. This will be the name of the new group.</a>
+</li>
+<li>
+<a href="import.html#copy-your-bare-repositories-inside-this-newly-created-folder">Copy your bare repositories inside this newly created folder:</a>
+</li>
+<li>
+<a href="import.html#run-the-command-below-depending-on-your-type-of-installation">Run the command below depending on your type of installation:</a>
+<ul>
+<li>
+<a href="import.html#omnibus-installation">Omnibus Installation</a>
+</li>
+<li>
+<a href="import.html#installation-from-source">Installation from source</a>
+</li>
+<li>
+<a href="import.html#example-output">Example output</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='import-bare-repositories-into-your-gitlab-instance'>Import bare repositories into your GitLab instance <a class='anchor' href='import.html#import-bare-repositories-into-your-gitlab-instance' title='Permalink'></a></h1><h2 id='notes'>Notes <a class='anchor' href='import.html#notes' title='Permalink'></a></h2>
+<ul>
+<li>The owner of the project will be the first admin</li>
+<li>The groups will be created as needed</li>
+<li>The owner of the group will be the first admin</li>
+<li>Existing projects will be skipped</li>
+</ul>
+<h2 id='how-to-use'>How to use <a class='anchor' href='import.html#how-to-use' title='Permalink'></a></h2><h3 id='create-a-new-folder-inside-the-git-repositories-path-this-will-be-the-name-of-the-new-group'>Create a new folder inside the git repositories path. This will be the name of the new group. <a class='anchor' href='import.html#create-a-new-folder-inside-the-git-repositories-path-this-will-be-the-name-of-the-new-group' title='Permalink'></a></h3>
+<ul>
+<li>For omnibus-gitlab, it is located at: <code>/var/opt/gitlab/git-data/repositories</code> by default, unless you changed
+it in the <code>/etc/gitlab/gitlab.rb</code> file.</li>
+<li>For installations from source, it is usually located at: <code>/home/git/repositories</code> or you can see where
+your repositories are located by looking at <code>config/gitlab.yml</code> under the <code>repositories =&gt; storages</code> entries
+(you&#39;ll usually use the <code>default</code> storage path to start).</li>
+</ul>
+
+<p>New folder needs to have git user ownership and read/write/execute access for git user and its group:</p>
+<pre class="highlight plaintext"><code>sudo -u git mkdir /var/opt/gitlab/git-data/repositories/new_group
+</code></pre>
+<p>If you are using an installation from source, replace <code>/var/opt/gitlab/git-data</code>
+with <code>/home/git</code>.</p>
+<h3 id='copy-your-bare-repositories-inside-this-newly-created-folder'>Copy your bare repositories inside this newly created folder: <a class='anchor' href='import.html#copy-your-bare-repositories-inside-this-newly-created-folder' title='Permalink'></a></h3><pre class="highlight plaintext"><code>sudo cp -r /old/git/foo.git /var/opt/gitlab/git-data/repositories/new_group/
+
+# Do this once when you are done copying git repositories
+sudo chown -R git:git /var/opt/gitlab/git-data/repositories/new_group/
+</code></pre>
+<p><code>foo.git</code> needs to be owned by the git user and git users group.</p>
+
+<p>If you are using an installation from source, replace <code>/var/opt/gitlab/git-data</code>
+with <code>/home/git</code>.</p>
+<h3 id='run-the-command-below-depending-on-your-type-of-installation'>Run the command below depending on your type of installation: <a class='anchor' href='import.html#run-the-command-below-depending-on-your-type-of-installation' title='Permalink'></a></h3><h4 id='omnibus-installation'>Omnibus Installation <a class='anchor' href='import.html#omnibus-installation' title='Permalink'></a></h4><pre class="highlight plaintext"><code>$ sudo gitlab-rake gitlab:import:repos
+</code></pre><h4 id='installation-from-source'>Installation from source <a class='anchor' href='import.html#installation-from-source' title='Permalink'></a></h4>
+<p>Before running this command you need to change the directory to where your GitLab installation is located:</p>
+<pre class="highlight plaintext"><code>$ cd /home/git/gitlab
+$ sudo -u git -H bundle exec rake gitlab:import:repos RAILS_ENV=production
+</code></pre><h4 id='example-output'>Example output <a class='anchor' href='import.html#example-output' title='Permalink'></a></h4><pre class="highlight plaintext"><code>Processing abcd.git
+ * Created abcd (abcd.git)
+Processing group/xyz.git
+ * Created Group group (2)
+ * Created xyz (group/xyz.git)
+[...]
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/raketasks/import.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

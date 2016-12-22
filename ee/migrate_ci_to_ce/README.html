@@ -1,0 +1,584 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>On your CI server: - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">On your CI server:</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#migrate-gitlab-ci-to-gitlab-ce-or-ee">Migrate GitLab CI to GitLab CE or EE</a>
+<ul>
+<li>
+<a href="README.html#overview">Overview</a>
+</li>
+<li>
+<a href="README.html#before-upgrading">Before upgrading</a>
+<ul>
+<li>
+<a href="README.html#0-updating-omnibus-from-versions-prior-to-7-13">0. Updating Omnibus from versions prior to 7.13</a>
+</li>
+<li>
+<a href="README.html#1-verify-that-backups-work">1. Verify that backups work</a>
+</li>
+<li>
+<a href="README.html#2-check-source-and-target-database-types">2. Check source and target database types</a>
+</li>
+<li>
+<a href="README.html#3-storage-planning">3. Storage planning</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#i-upgrading">I. Upgrading</a>
+<ul>
+<li>
+<a href="README.html#1-upgrade-gitlab-to-8-0">1. Upgrade GitLab to 8.0</a>
+</li>
+<li>
+<a href="README.html#2-disable-ci-on-the-gitlab-server-during-the-migration">2. Disable CI on the GitLab server during the migration</a>
+</li>
+<li>
+<a href="README.html#3-ci-settings-are-now-in-gitlab">3. CI settings are now in GitLab</a>
+</li>
+<li>
+<a href="README.html#4-upgrade-gitlab-ci-to-8-0">4. Upgrade GitLab CI to 8.0</a>
+</li>
+<li>
+<a href="README.html#5-disable-gitlab-ci-on-the-ci-server">5. Disable GitLab CI on the CI server</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#ii-moving-data">II. Moving data</a>
+<ul>
+<li>
+<a href="README.html#1-database-encryption-key">1. Database encryption key</a>
+</li>
+<li>
+<a href="README.html#2-sql-data-and-build-traces">2. SQL data and build traces</a>
+</li>
+<li>
+<a href="README.html#3-copy-data-to-the-gitlab-server">3. Copy data to the GitLab server</a>
+</li>
+<li>
+<a href="README.html#4-move-data-to-the-gitlab-backups-folder">4. Move data to the GitLab backups folder</a>
+</li>
+<li>
+<a href="README.html#5-import-the-ci-data-into-gitlab">5. Import the CI data into GitLab.</a>
+</li>
+<li>
+<a href="README.html#6-restart-gitlab">6. Restart GitLab</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#iii-redirecting-traffic">III. Redirecting traffic</a>
+<ul>
+<li>
+<a href="README.html#1-update-nginx-configuration">1. Update Nginx configuration</a>
+</li>
+<li>
+<a href="README.html#2-check-nginx-configuration">2. Check Nginx configuration</a>
+</li>
+<li>
+<a href="README.html#3-restart-nginx">3. Restart Nginx</a>
+</li>
+<li>
+<a href="README.html#restore-from-backup">Restore from backup</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="README.html#troubleshooting">Troubleshooting</a>
+<ul>
+<li>
+<a href="README.html#show-secrets-problem-omnibus-only">show:secrets problem (Omnibus-only)</a>
+</li>
+<li>
+<a href="README.html#permission-denied-when-accessing-var-opt-gitlab-gitlab-ci-builds">Permission denied when accessing /var/opt/gitlab/gitlab-ci/builds</a>
+</li>
+<li>
+<a href="README.html#problems-when-importing-ci-database-to-gitlab">Problems when importing CI database to GitLab</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id='migrate-gitlab-ci-to-gitlab-ce-or-ee'>Migrate GitLab CI to GitLab CE or EE <a class='anchor' href='README.html#migrate-gitlab-ci-to-gitlab-ce-or-ee' title='Permalink'></a></h2>
+<p>Beginning with version 8.0 of GitLab Community Edition (CE) and Enterprise
+Edition (EE), GitLab CI is no longer its own application, but is instead built
+into the CE and EE applications.</p>
+
+<p>This guide will detail the process of migrating your CI installation and data
+into your GitLab CE or EE installation. <strong>You can only migrate CI data from
+GitLab CI 8.0 to GitLab 8.0; migrating between other versions (e.g.7.14 to 8.1)
+is not possible.</strong></p>
+
+<p>We recommend that you read through the entire migration process in this
+document before beginning.</p>
+<h3 id='overview'>Overview <a class='anchor' href='README.html#overview' title='Permalink'></a></h3>
+<p>In this document we assume you have a GitLab server and a GitLab CI server. It
+does not matter if these are the same machine.</p>
+
+<p>The migration consists of three parts: updating GitLab and GitLab CI, moving
+data, and redirecting traffic.</p>
+
+<p>Please note that CI builds triggered on your GitLab server in the time between
+updating to 8.0 and finishing the migration will be lost. Your GitLab server
+can be online for most of the procedure; the only GitLab downtime (if any) is
+during the upgrade to 8.0. Your CI service will be offline from the moment you
+upgrade to 8.0 until you finish the migration procedure.</p>
+<h3 id='before-upgrading'>Before upgrading <a class='anchor' href='README.html#before-upgrading' title='Permalink'></a></h3>
+<p>If you have GitLab CI installed using omnibus-gitlab packages but <strong>you don&#39;t want to migrate your existing data</strong>:</p>
+<pre class="highlight shell"><code>mv /var/opt/gitlab/gitlab-ci/builds /var/opt/gitlab/gitlab-ci/builds.<span class="k">$(</span>date +%s<span class="k">)</span>
+</code></pre>
+<p>run <code>sudo gitlab-ctl reconfigure</code> and you can reach CI at <code>gitlab.example.com/ci</code>.</p>
+
+<p>If you want to migrate your existing data, continue reading.</p>
+<h4 id='0-updating-omnibus-from-versions-prior-to-7-13'>0. Updating Omnibus from versions prior to 7.13 <a class='anchor' href='README.html#0-updating-omnibus-from-versions-prior-to-7-13' title='Permalink'></a></h4>
+<p>If you are updating from older versions you should first update to 7.14 and then to 8.0.
+Otherwise it&#39;s pretty likely that you will encounter problems described in the <a href="README.html#troubleshooting">Troubleshooting</a>.</p>
+<h4 id='1-verify-that-backups-work'>1. Verify that backups work <a class='anchor' href='README.html#1-verify-that-backups-work' title='Permalink'></a></h4>
+<p>Make sure that the backup script on both servers can connect to the database.</p>
+<pre class="highlight plaintext"><code># On your CI server:
+# Omnibus
+sudo chown gitlab-ci:gitlab-ci /var/opt/gitlab/gitlab-ci/builds
+sudo gitlab-ci-rake backup:create
+
+# Source
+cd /home/gitlab_ci/gitlab-ci
+sudo -u gitlab_ci -H bundle exec rake backup:create RAILS_ENV=production
+</code></pre>
+<p>Also check on your GitLab server.</p>
+<pre class="highlight plaintext"><code># On your GitLab server:
+# Omnibus
+sudo gitlab-rake gitlab:backup:create SKIP=repositories,uploads
+
+# Source
+cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:backup:create RAILS_ENV=production SKIP=repositories,uploads
+</code></pre>
+<p>If this fails you need to fix it before upgrading to 8.0. Also see
+<a href="https://about.gitlab.com/getting-help/">https://about.gitlab.com/getting-help/</a></p>
+<h4 id='2-check-source-and-target-database-types'>2. Check source and target database types <a class='anchor' href='README.html#2-check-source-and-target-database-types' title='Permalink'></a></h4>
+<p>Check what databases you use on your GitLab server and your CI server.
+  Look for the &#39;adapter:&#39; line. If your CI server and your GitLab server use
+the same database adapter no special care is needed. If your CI server uses
+MySQL and your GitLab server uses PostgreSQL you need to pass a special option
+during the &#39;Moving data&#39; part. <strong>If your CI server uses PostgreSQL and your
+GitLab server uses MySQL you cannot migrate your CI data to GitLab 8.0.</strong></p>
+<pre class="highlight plaintext"><code># On your CI server:
+# Omnibus
+sudo gitlab-ci-rake env:info
+
+# Source
+cd /home/gitlab_ci/gitlab-ci
+sudo -u gitlab_ci -H bundle exec rake env:info RAILS_ENV=production
+</code></pre><pre class="highlight plaintext"><code># On your GitLab server:
+# Omnibus
+sudo gitlab-rake gitlab:env:info
+
+# Source
+cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=production
+</code></pre><h4 id='3-storage-planning'>3. Storage planning <a class='anchor' href='README.html#3-storage-planning' title='Permalink'></a></h4>
+<p>Decide where to store CI build traces on GitLab server. GitLab CI uses
+  files on disk to store CI build traces. The default path for these build
+traces is <code>/var/opt/gitlab/gitlab-ci/builds</code> (Omnibus) or
+<code>/home/git/gitlab/builds</code> (Source). If you are storing your repository data in
+a special location, or if you are using NFS, you should make sure that you
+store build traces on the same storage as your Git repositories.</p>
+<h3 id='i-upgrading'>I. Upgrading <a class='anchor' href='README.html#i-upgrading' title='Permalink'></a></h3>
+<p>From this point on, GitLab CI will be unavailable for your end users.</p>
+<h4 id='1-upgrade-gitlab-to-8-0'>1. Upgrade GitLab to 8.0 <a class='anchor' href='README.html#1-upgrade-gitlab-to-8-0' title='Permalink'></a></h4>
+<p>First upgrade your GitLab server to version 8.0:
+<a href="https://about.gitlab.com/update/">https://about.gitlab.com/update/</a></p>
+<h4 id='2-disable-ci-on-the-gitlab-server-during-the-migration'>2. Disable CI on the GitLab server during the migration <a class='anchor' href='README.html#2-disable-ci-on-the-gitlab-server-during-the-migration' title='Permalink'></a></h4>
+<p>After you update, go to the admin panel and temporarily disable CI.  As
+  an administrator, go to <strong>Admin Area</strong> -&gt; <strong>Settings</strong>, and under
+<strong>Continuous Integration</strong> uncheck <strong>Disable to prevent CI usage until rake
+ci:migrate is run (8.0 only)</strong>.</p>
+<h4 id='3-ci-settings-are-now-in-gitlab'>3. CI settings are now in GitLab <a class='anchor' href='README.html#3-ci-settings-are-now-in-gitlab' title='Permalink'></a></h4>
+<p>If you want to use custom CI settings (e.g. change where builds are
+  stored), please update <code>/etc/gitlab/gitlab.rb</code> (Omnibus) or
+<code>/home/git/gitlab/config/gitlab.yml</code> (Source).</p>
+<h4 id='4-upgrade-gitlab-ci-to-8-0'>4. Upgrade GitLab CI to 8.0 <a class='anchor' href='README.html#4-upgrade-gitlab-ci-to-8-0' title='Permalink'></a></h4>
+<p>Now upgrade GitLab CI to version 8.0. If you are using Omnibus packages,
+  this may have already happened when you upgraded GitLab to 8.0.</p>
+<h4 id='5-disable-gitlab-ci-on-the-ci-server'>5. Disable GitLab CI on the CI server <a class='anchor' href='README.html#5-disable-gitlab-ci-on-the-ci-server' title='Permalink'></a></h4>
+<p>Disable GitLab CI after upgrading to 8.0.</p>
+<pre class="highlight plaintext"><code># On your CI server:
+# Omnibus
+sudo gitlab-ctl stop ci-unicorn
+sudo gitlab-ctl stop ci-sidekiq
+
+# Source
+sudo service gitlab_ci stop
+cd /home/gitlab_ci/gitlab-ci
+sudo -u gitlab_ci -H bundle exec whenever --clear-crontab RAILS_ENV=production
+</code></pre><h3 id='ii-moving-data'>II. Moving data <a class='anchor' href='README.html#ii-moving-data' title='Permalink'></a></h3><h4 id='1-database-encryption-key'>1. Database encryption key <a class='anchor' href='README.html#1-database-encryption-key' title='Permalink'></a></h4>
+<p>Move the database encryption key from your CI server to your GitLab
+  server. The command below will show you what you need to copy-paste to your
+GitLab server. On Omnibus GitLab servers you will have to add a line to
+<code>/etc/gitlab/gitlab.rb</code>. On GitLab servers installed from source you will have
+to replace the contents of <code>/home/git/gitlab/config/secrets.yml</code>.</p>
+<pre class="highlight plaintext"><code># On your CI server:
+# Omnibus
+sudo gitlab-ci-rake backup:show_secrets
+
+# Source
+cd /home/gitlab_ci/gitlab-ci
+sudo -u gitlab_ci -H bundle exec rake backup:show_secrets RAILS_ENV=production
+</code></pre><h4 id='2-sql-data-and-build-traces'>2. SQL data and build traces <a class='anchor' href='README.html#2-sql-data-and-build-traces' title='Permalink'></a></h4>
+<p>Create your final CI data export. If you are converting from MySQL to
+  PostgreSQL, add <code>MYSQL_TO_POSTGRESQL=1</code> to the end of the rake command. When
+the command finishes it will print the path to your data export archive; you
+will need this file later.</p>
+<pre class="highlight plaintext"><code># On your CI server:
+# Omnibus
+sudo chown gitlab-ci:gitlab-ci /var/opt/gitlab/gitlab-ci/builds
+sudo gitlab-ci-rake backup:create
+
+# Source
+cd /home/gitlab_ci/gitlab-ci
+sudo -u gitlab_ci -H bundle exec rake backup:create RAILS_ENV=production
+</code></pre><h4 id='3-copy-data-to-the-gitlab-server'>3. Copy data to the GitLab server <a class='anchor' href='README.html#3-copy-data-to-the-gitlab-server' title='Permalink'></a></h4>
+<p>If you were running GitLab and GitLab CI on the same server you can skip this
+step.</p>
+
+<p>Copy your CI data archive to your GitLab server. There are many ways to do
+this, below we use SSH agent forwarding and &#39;scp&#39;, which will be easy and fast
+for most setups. You can also copy the data archive first from the CI server to
+your laptop and then from your laptop to the GitLab server.</p>
+<pre class="highlight plaintext"><code># Start from your laptop
+ssh -A ci_admin@ci_server.example
+# Now on the CI server
+scp /path/to/12345_gitlab_ci_backup.tar gitlab_admin@gitlab_server.example:~
+</code></pre><h4 id='4-move-data-to-the-gitlab-backups-folder'>4. Move data to the GitLab backups folder <a class='anchor' href='README.html#4-move-data-to-the-gitlab-backups-folder' title='Permalink'></a></h4>
+<p>Make the CI data archive discoverable for GitLab. We assume below that you
+store backups in the default path, adjust the command if necessary.</p>
+<pre class="highlight plaintext"><code># On your GitLab server:
+# Omnibus
+sudo mv /path/to/12345_gitlab_ci_backup.tar /var/opt/gitlab/backups/
+
+# Source
+sudo mv /path/to/12345_gitlab_ci_backup.tar /home/git/gitlab/tmp/backups/
+</code></pre><h4 id='5-import-the-ci-data-into-gitlab'>5. Import the CI data into GitLab. <a class='anchor' href='README.html#5-import-the-ci-data-into-gitlab' title='Permalink'></a></h4>
+<p>This step will delete any existing CI data on your GitLab server. There should
+be no CI data yet because you turned CI on the GitLab server off earlier.</p>
+<pre class="highlight plaintext"><code># On your GitLab server:
+# Omnibus
+sudo chown git:git /var/opt/gitlab/gitlab-ci/builds
+sudo gitlab-rake ci:migrate
+
+# Source
+cd /home/git/gitlab
+sudo -u git -H bundle exec rake ci:migrate RAILS_ENV=production
+</code></pre><h4 id='6-restart-gitlab'>6. Restart GitLab <a class='anchor' href='README.html#6-restart-gitlab' title='Permalink'></a></h4><pre class="highlight plaintext"><code># On your GitLab server:
+# Omnibus
+sudo gitlab-ctl hup unicorn
+sudo gitlab-ctl restart sidekiq
+
+# Source
+sudo service gitlab reload
+</code></pre><h3 id='iii-redirecting-traffic'>III. Redirecting traffic <a class='anchor' href='README.html#iii-redirecting-traffic' title='Permalink'></a></h3>
+<p>If you were running GitLab CI with Omnibus packages and you were using the
+internal NGINX configuration your CI service should now be available both at
+<code>ci.example.com</code> (the old address) and <code>gitlab.example.com/ci</code>. <strong>You are done!</strong></p>
+
+<p>If you installed GitLab CI from source we now need to configure a redirect in
+NGINX so that existing CI runners can keep using the old CI server address, and
+so that existing links to your CI server keep working.</p>
+<h4 id='1-update-nginx-configuration'>1. Update Nginx configuration <a class='anchor' href='README.html#1-update-nginx-configuration' title='Permalink'></a></h4>
+<p>To ensure that your existing CI runners are able to communicate with the
+migrated installation, and that existing build triggers still work, you&#39;ll need
+to update your Nginx configuration to redirect requests for the old locations to
+the new ones.</p>
+
+<p>Edit <code>/etc/nginx/sites-available/gitlab_ci</code> and paste:</p>
+<pre class="highlight nginx"><code><span class="c1"># GITLAB CI
+</span><span class="k">server</span> <span class="p">{</span>
+  <span class="kn">listen</span> <span class="mi">80</span> <span class="s">default_server</span><span class="p">;</span>         <span class="c1"># e.g., listen 192.168.1.1:80;
+</span>  <span class="kn">server_name</span> <span class="s">YOUR_CI_SERVER_FQDN</span><span class="p">;</span>  <span class="c1"># e.g., server_name source.example.com;
+</span>
+  <span class="kn">access_log</span>  <span class="n">/var/log/nginx/gitlab_ci_access.log</span><span class="p">;</span>
+  <span class="kn">error_log</span>   <span class="n">/var/log/nginx/gitlab_ci_error.log</span><span class="p">;</span>
+
+  <span class="c1"># expose API to fix runners
+</span>  <span class="kn">location</span> <span class="n">/api</span> <span class="p">{</span>
+    <span class="kn">proxy_read_timeout</span>    <span class="mi">300</span><span class="p">;</span>
+    <span class="kn">proxy_connect_timeout</span> <span class="mi">300</span><span class="p">;</span>
+    <span class="kn">proxy_redirect</span>        <span class="no">off</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>      <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+
+    <span class="c1"># You need to specify your DNS servers that are able to resolve YOUR_GITLAB_SERVER_FQDN
+</span>    <span class="kn">resolver</span> <span class="mi">8</span><span class="s">.8.8.8</span> <span class="mi">8</span><span class="s">.8.4.4</span><span class="p">;</span>
+    <span class="kn">proxy_pass</span> <span class="nv">$scheme</span><span class="p">:</span><span class="n">//YOUR_GITLAB_SERVER_FQDN/ci</span><span class="nv">$request_uri</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1"># redirect all other CI requests
+</span>  <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+    <span class="kn">return</span> <span class="mi">301</span> <span class="nv">$scheme</span><span class="p">:</span><span class="n">//YOUR_GITLAB_SERVER_FQDN/ci</span><span class="nv">$request_uri</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1"># adjust this to match the largest build log your runners might submit,
+</span>  <span class="c1"># set to 0 to disable limit
+</span>  <span class="kn">client_max_body_size</span> <span class="mi">10m</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<p>Make sure you substitute these placeholder values with your real ones:</p>
+
+<ol>
+<li><code>YOUR_CI_SERVER_FQDN</code>: The existing public-facing address of your GitLab CI
+install (e.g., <code>ci.gitlab.com</code>).</li>
+<li><code>YOUR_GITLAB_SERVER_FQDN</code>: The current public-facing address of your GitLab
+CE (or EE) install (e.g., <code>gitlab.com</code>).</li>
+</ol>
+
+<p><strong>Make sure not to remove the <code>/ci$request_uri</code> part. This is required to
+properly forward the requests.</strong></p>
+
+<p>You should also make sure that you can:</p>
+
+<ol>
+<li><code>curl https://YOUR_GITLAB_SERVER_FQDN/</code> from your previous GitLab CI server.</li>
+<li><code>curl https://YOUR_CI_SERVER_FQDN/</code> from your GitLab CE (or EE) server.</li>
+</ol>
+<h4 id='2-check-nginx-configuration'>2. Check Nginx configuration <a class='anchor' href='README.html#2-check-nginx-configuration' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo nginx -t
+</code></pre><h4 id='3-restart-nginx'>3. Restart Nginx <a class='anchor' href='README.html#3-restart-nginx' title='Permalink'></a></h4><pre class="highlight plaintext"><code>sudo /etc/init.d/nginx restart
+</code></pre><h4 id='restore-from-backup'>Restore from backup <a class='anchor' href='README.html#restore-from-backup' title='Permalink'></a></h4>
+<p>If something went wrong and you need to restore a backup, consult the <a href="../raketasks/backup_restore.html">Backup
+restoration</a> guide.</p>
+<h3 id='troubleshooting'>Troubleshooting <a class='anchor' href='README.html#troubleshooting' title='Permalink'></a></h3><h4 id='show-secrets-problem-omnibus-only'>show:secrets problem (Omnibus-only) <a class='anchor' href='README.html#show-secrets-problem-omnibus-only' title='Permalink'></a></h4>
+<p>If you see errors like this:</p>
+<pre class="highlight plaintext"><code>Missing `secret_key_base` or `db_key_base` for 'production' environment. The secrets will be generated and stored in `config/secrets.yml`
+rake aborted!
+Errno::EACCES: Permission denied @ rb_sysopen - config/secrets.yml
+</code></pre>
+<p>This can happen if you are updating from versions prior to 7.13 straight to 8.0.
+The fix for this is to update to Omnibus 7.14 first and then update it to 8.0.</p>
+<h4 id='permission-denied-when-accessing-var-opt-gitlab-gitlab-ci-builds'>Permission denied when accessing /var/opt/gitlab/gitlab-ci/builds <a class='anchor' href='README.html#permission-denied-when-accessing-var-opt-gitlab-gitlab-ci-builds' title='Permalink'></a></h4>
+<p>To fix that issue you have to change builds/ folder permission before doing final backup:</p>
+<pre class="highlight plaintext"><code>sudo chown -R gitlab-ci:gitlab-ci /var/opt/gitlab/gitlab-ci/builds
+</code></pre>
+<p>Then before executing <code>ci:migrate</code> you need to fix builds folder permission:</p>
+<pre class="highlight plaintext"><code>sudo chown git:git /var/opt/gitlab/gitlab-ci/builds
+</code></pre><h4 id='problems-when-importing-ci-database-to-gitlab'>Problems when importing CI database to GitLab <a class='anchor' href='README.html#problems-when-importing-ci-database-to-gitlab' title='Permalink'></a></h4>
+<p>If you were migrating CI database from MySQL to PostgreSQL manually you can see errors during import about missing sequences:</p>
+<pre class="highlight plaintext"><code>ALTER SEQUENCE
+ERROR:  relation "ci_builds_id_seq" does not exist
+ERROR:  relation "ci_commits_id_seq" does not exist
+ERROR:  relation "ci_events_id_seq" does not exist
+ERROR:  relation "ci_jobs_id_seq" does not exist
+ERROR:  relation "ci_projects_id_seq" does not exist
+ERROR:  relation "ci_runner_projects_id_seq" does not exist
+ERROR:  relation "ci_runners_id_seq" does not exist
+ERROR:  relation "ci_services_id_seq" does not exist
+ERROR:  relation "ci_taggings_id_seq" does not exist
+ERROR:  relation "ci_tags_id_seq" does not exist
+CREATE TABLE
+</code></pre>
+<p>To fix that you need to apply this SQL statement before doing final backup:</p>
+<pre class="highlight plaintext"><code># Omnibus
+gitlab-ci-rails dbconsole &lt;&lt;EOF
+-- ALTER TABLES - DROP DEFAULTS
+ALTER TABLE ONLY ci_application_settings ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_builds ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_commits ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_events ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_jobs ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_projects ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_runner_projects ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_runners ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_services ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_taggings ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_tags ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_trigger_requests ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_triggers ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_variables ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE ONLY ci_web_hooks ALTER COLUMN id DROP DEFAULT;
+
+-- ALTER SEQUENCES
+ALTER SEQUENCE ci_application_settings_id_seq OWNED BY ci_application_settings.id;
+ALTER SEQUENCE ci_builds_id_seq OWNED BY ci_builds.id;
+ALTER SEQUENCE ci_commits_id_seq OWNED BY ci_commits.id;
+ALTER SEQUENCE ci_events_id_seq OWNED BY ci_events.id;
+ALTER SEQUENCE ci_jobs_id_seq OWNED BY ci_jobs.id;
+ALTER SEQUENCE ci_projects_id_seq OWNED BY ci_projects.id;
+ALTER SEQUENCE ci_runner_projects_id_seq OWNED BY ci_runner_projects.id;
+ALTER SEQUENCE ci_runners_id_seq OWNED BY ci_runners.id;
+ALTER SEQUENCE ci_services_id_seq OWNED BY ci_services.id;
+ALTER SEQUENCE ci_taggings_id_seq OWNED BY ci_taggings.id;
+ALTER SEQUENCE ci_tags_id_seq OWNED BY ci_tags.id;
+ALTER SEQUENCE ci_trigger_requests_id_seq OWNED BY ci_trigger_requests.id;
+ALTER SEQUENCE ci_triggers_id_seq OWNED BY ci_triggers.id;
+ALTER SEQUENCE ci_variables_id_seq OWNED BY ci_variables.id;
+ALTER SEQUENCE ci_web_hooks_id_seq OWNED BY ci_web_hooks.id;
+
+-- ALTER TABLES - RE-APPLY DEFAULTS
+ALTER TABLE ONLY ci_application_settings ALTER COLUMN id SET DEFAULT nextval('ci_application_settings_id_seq'::regclass);
+ALTER TABLE ONLY ci_builds ALTER COLUMN id SET DEFAULT nextval('ci_builds_id_seq'::regclass);
+ALTER TABLE ONLY ci_commits ALTER COLUMN id SET DEFAULT nextval('ci_commits_id_seq'::regclass);
+ALTER TABLE ONLY ci_events ALTER COLUMN id SET DEFAULT nextval('ci_events_id_seq'::regclass);
+ALTER TABLE ONLY ci_jobs ALTER COLUMN id SET DEFAULT nextval('ci_jobs_id_seq'::regclass);
+ALTER TABLE ONLY ci_projects ALTER COLUMN id SET DEFAULT nextval('ci_projects_id_seq'::regclass);
+ALTER TABLE ONLY ci_runner_projects ALTER COLUMN id SET DEFAULT nextval('ci_runner_projects_id_seq'::regclass);
+ALTER TABLE ONLY ci_runners ALTER COLUMN id SET DEFAULT nextval('ci_runners_id_seq'::regclass);
+ALTER TABLE ONLY ci_services ALTER COLUMN id SET DEFAULT nextval('ci_services_id_seq'::regclass);
+ALTER TABLE ONLY ci_taggings ALTER COLUMN id SET DEFAULT nextval('ci_taggings_id_seq'::regclass);
+ALTER TABLE ONLY ci_tags ALTER COLUMN id SET DEFAULT nextval('ci_tags_id_seq'::regclass);
+ALTER TABLE ONLY ci_trigger_requests ALTER COLUMN id SET DEFAULT nextval('ci_trigger_requests_id_seq'::regclass);
+ALTER TABLE ONLY ci_triggers ALTER COLUMN id SET DEFAULT nextval('ci_triggers_id_seq'::regclass);
+ALTER TABLE ONLY ci_variables ALTER COLUMN id SET DEFAULT nextval('ci_variables_id_seq'::regclass);
+ALTER TABLE ONLY ci_web_hooks ALTER COLUMN id SET DEFAULT nextval('ci_web_hooks_id_seq'::regclass);
+EOF
+
+# Source
+cd /home/gitlab_ci/gitlab-ci
+sudo -u gitlab_ci -H bundle exec rails dbconsole production &lt;&lt;EOF
+... COPY SQL STATEMENTS FROM ABOVE ...
+EOF
+</code></pre>
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/migrate_ci_to_ce/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>NFS - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../../index.html">
+    <img src="../../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">High Availability</a></li>
+            
+          
+          <li class="breadcrumb">NFS</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="nfs.html#nfs">NFS</a>
+<ul>
+<li>
+<a href="nfs.html#required-nfs-server-features">Required NFS Server features</a>
+<ul>
+<li>
+<a href="nfs.html#recommended-options">Recommended options</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="nfs.html#client-mount-options">Client mount options</a>
+</li>
+<li>
+<a href="nfs.html#mount-locations">Mount locations</a>
+<ul>
+<li>
+<a href="nfs.html#consolidating-mount-points">Consolidating mount points</a>
+<ul>
+<li>
+<a href="nfs.html#change-default-file-locations">Change default file locations</a>
+</li>
+<li>
+<a href="nfs.html#bind-mounts">Bind mounts</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='nfs'>NFS <a class='anchor' href='nfs.html#nfs' title='Permalink'></a></h1><h2 id='required-nfs-server-features'>Required NFS Server features <a class='anchor' href='nfs.html#required-nfs-server-features' title='Permalink'></a></h2>
+<p><strong>File locking</strong>: GitLab <strong>requires</strong> advisory file locking, which is only
+supported natively in NFS version 4. NFSv3 also supports locking as long as
+Linux Kernel 2.6.5+ is used. We recommend using version 4 and do not
+specifically test NFSv3.</p>
+
+<p><strong>no_root_squash</strong>: NFS normally changes the <code>root</code> user to <code>nobody</code>. This is
+a good security measure when NFS shares will be accessed by many different
+users. However, in this case only GitLab will use the NFS share so it
+is safe. GitLab requires the <code>no_root_squash</code> setting because we need to
+manage file permissions automatically. Without the setting you will receive
+errors when the Omnibus package tries to alter permissions. Note that GitLab
+and other bundled components do <strong>not</strong> run as <code>root</code> but as non-privileged
+users. The requirement for <code>no_root_squash</code> is to allow the Omnibus package to
+set ownership and permissions on files, as needed.</p>
+<h3 id='recommended-options'>Recommended options <a class='anchor' href='nfs.html#recommended-options' title='Permalink'></a></h3>
+<p>When you define your NFS exports, we recommend you also add the following
+options:</p>
+
+<ul>
+<li><code>sync</code> - Force synchronous behavior. Default is asynchronous and under certain
+circumstances it could lead to data loss if a failure occurs before data has
+synced.</li>
+</ul>
+<h2 id='client-mount-options'>Client mount options <a class='anchor' href='nfs.html#client-mount-options' title='Permalink'></a></h2>
+<p>Below is an example of an NFS mount point we use on GitLab.com:</p>
+<pre class="highlight plaintext"><code>10.1.1.1:/var/opt/gitlab/git-data /var/opt/gitlab/git-data nfs4 defaults,soft,rsize=1048576,wsize=1048576,noatime,nobootwait,lookupcache=positive 0 2
+</code></pre>
+<p>Notice several options that you should consider using:</p>
+
+<table><thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>nobootwait</code></td>
+<td>Don&#39;t halt boot process waiting for this mount to become available</td>
+</tr>
+<tr>
+<td><code>lookupcache=positive</code></td>
+<td>Tells the NFS client to honor <code>positive</code> cache results but invalidates any <code>negative</code> cache results. Negative cache results cause problems with Git. Specifically, a <code>git push</code> can fail to register uniformly across all NFS clients. The negative cache causes the clients to &#39;remember&#39; that the files did not exist previously.</td>
+</tr>
+</tbody></table>
+<h2 id='mount-locations'>Mount locations <a class='anchor' href='nfs.html#mount-locations' title='Permalink'></a></h2>
+<p>When using default Omnibus configuration you will need to share 5 data locations
+between all GitLab cluster nodes. No other locations should be shared. The
+following are the 5 locations you need to mount:</p>
+
+<table><thead>
+<tr>
+<th>Location</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>/var/opt/gitlab/git-data</code></td>
+<td>Git repository data. This will account for a large portion of your data</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/.ssh</code></td>
+<td>SSH <code>authorized_keys</code> file and keys used to import repositories from some other Git services</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/uploads</code></td>
+<td>User uploaded attachments</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-rails/shared</code></td>
+<td>Build artifacts, GitLab Pages, LFS objects, temp files, etc. If you&#39;re using LFS this may also account for a large portion of your data</td>
+</tr>
+<tr>
+<td><code>/var/opt/gitlab/gitlab-ci/builds</code></td>
+<td>GitLab CI build traces</td>
+</tr>
+</tbody></table>
+
+<p>Other GitLab directories should not be shared between nodes. They contain
+node-specific files and GitLab code that does not need to be shared. To ship
+logs to a central location consider using remote syslog. GitLab Omnibus packages
+provide configuration for <a href="http://docs.gitlab.com/omnibus/settings/logs.html#udp-log-shipping-gitlab-enterprise-edition-only" title="UDP log shipping">UDP log shipping</a>.</p>
+<h3 id='consolidating-mount-points'>Consolidating mount points <a class='anchor' href='nfs.html#consolidating-mount-points' title='Permalink'></a></h3>
+<p>If you don&#39;t want to configure 5-6 different NFS mount points, you have a few
+alternative options.</p>
+<h4 id='change-default-file-locations'>Change default file locations <a class='anchor' href='nfs.html#change-default-file-locations' title='Permalink'></a></h4>
+<p>Omnibus allows you to configure the file locations. With custom configuration
+you can specify just one main mountpoint and have all of these locations
+as subdirectories. Mount <code>/gitlab-data</code> then use the following Omnibus
+configuration to move each data location to a subdirectory:</p>
+<pre class="highlight ruby"><code><span class="n">user</span><span class="p">[</span><span class="s1">'home'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/gitlab-data/home'</span>
+<span class="n">git_data_dir</span> <span class="s1">'/gitlab-data/git-data'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'shared_path'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/gitlab-data/shared'</span>
+<span class="n">gitlab_rails</span><span class="p">[</span><span class="s1">'uploads_directory'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/gitlab-data/uploads'</span>
+<span class="n">gitlab_ci</span><span class="p">[</span><span class="s1">'builds_directory'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/gitlab-data/builds'</span>
+</code></pre>
+<p>To move the <code>git</code> home directory, all GitLab services must be stopped. Run
+<code>gitlab-ctl stop &amp;&amp; initctl stop gitlab-runsvdir</code>. Then continue with the
+reconfigure.</p>
+
+<p>Run <code>sudo gitlab-ctl reconfigure</code> to start using the central location. Please
+be aware that if you had existing data you will need to manually copy/rsync it
+to these new locations and then restart GitLab.</p>
+<h4 id='bind-mounts'>Bind mounts <a class='anchor' href='nfs.html#bind-mounts' title='Permalink'></a></h4>
+<p>Bind mounts provide a way to specify just one NFS mount and then
+bind the default GitLab data locations to the NFS mount. Start by defining your
+single NFS mount point as you normally would in <code>/etc/fstab</code>. Let&#39;s assume your
+NFS mount point is <code>/gitlab-data</code>. Then, add the following bind mounts in
+<code>/etc/fstab</code>:</p>
+<pre class="highlight shell"><code>/gitlab-data/git-data /var/opt/gitlab/git-data none <span class="nb">bind </span>0 0
+/gitlab-data/.ssh /var/opt/gitlab/.ssh none <span class="nb">bind </span>0 0
+/gitlab-data/uploads /var/opt/gitlab/gitlab-rails/uploads none <span class="nb">bind </span>0 0
+/gitlab-data/shared /var/opt/gitlab/gitlab-rails/shared none <span class="nb">bind </span>0 0
+/gitlab-data/builds /var/opt/gitlab/gitlab-ci/builds none <span class="nb">bind </span>0 0
+</code></pre>
+<hr>
+
+<p>Read more on high-availability configuration:</p>
+
+<ol>
+<li><a href="database.html">Configure the database</a></li>
+<li><a href="redis.html">Configure Redis</a></li>
+<li><a href="gitlab.html">Configure the GitLab application servers</a></li>
+<li><a href="load_balancer.html">Configure the load balancers</a></li>
+</ol>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/administration/high_availability/nfs.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

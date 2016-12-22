@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Gotchas - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../../ce/README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+              <li class="breadcrumb"><a href="README.html">Development</a></li>
+            
+          
+          <li class="breadcrumb">Gotchas</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="gotchas.html#gotchas">Gotchas</a>
+<ul>
+<li>
+<a href="gotchas.html#don-t-describe-symbols">Don't <code>describe</code> symbols</a>
+<ul>
+<li>
+<a href="gotchas.html#solution">Solution</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="gotchas.html#don-t-assert-against-the-absolute-value-of-a-sequence-generated-attribute">Don't assert against the absolute value of a sequence-generated attribute</a>
+<ul>
+<li>
+<a href="gotchas.html#solution">Solution</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="gotchas.html#don-t-rescue-exception">Don't <code>rescue Exception</code></a>
+</li>
+<li>
+<a href="gotchas.html#don-t-use-inline-javascript-in-views">Don't use inline JavaScript in views</a>
+<ul>
+<li>
+<a href="gotchas.html#further-reading">Further reading</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="gotchas.html#id-based-css-selectors-need-to-be-a-bit-more-specific">ID-based CSS selectors need to be a bit more specific</a>
+<ul>
+<li>
+<a href="gotchas.html#solution">Solution</a>
+</li>
+<li>
+<a href="gotchas.html#further-reading">Further reading</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='gotchas'>Gotchas <a class='anchor' href='gotchas.html#gotchas' title='Permalink'></a></h1>
+<p>The purpose of this guide is to document potential &quot;gotchas&quot; that contributors
+might encounter or should avoid during development of GitLab CE and EE.</p>
+<h2 id='don-39-t-describe-symbols'>Don&#39;t <code>describe</code> symbols <a class='anchor' href='gotchas.html#don-39-t-describe-symbols' title='Permalink'></a></h2>
+<p>Consider the following model spec:</p>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="ss">:to_param</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'converts the username to a param'</span> <span class="k">do</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="n">described_class</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">username: </span><span class="s1">'John Smith'</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">to_param</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span> <span class="s1">'john-smith'</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>When run, this spec doesn&#39;t do what we might expect:</p>
+<pre class="highlight shell"><code>spec/models/user_spec.rb|6 error|  Failure/Error: u <span class="o">=</span> described_class.new NoMethodError: undefined method <span class="sb">`</span>new<span class="s1">' for :to_param:Symbol
+</span></code></pre><h3 id='solution'>Solution <a class='anchor' href='gotchas.html#solution' title='Permalink'></a></h3>
+<p>Except for the top-level <code>describe</code> block, always provide a String argument to
+<code>describe</code>.</p>
+<h2 id='don-39-t-assert-against-the-absolute-value-of-a-sequence-generated-attribute'>Don&#39;t assert against the absolute value of a sequence-generated attribute <a class='anchor' href='gotchas.html#don-39-t-assert-against-the-absolute-value-of-a-sequence-generated-attribute' title='Permalink'></a></h2>
+<p>Consider the following factory:</p>
+<pre class="highlight ruby"><code><span class="no">FactoryGirl</span><span class="p">.</span><span class="nf">define</span> <span class="k">do</span>
+  <span class="n">factory</span> <span class="ss">:label</span> <span class="k">do</span>
+    <span class="n">sequence</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">"label</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>Consider the following API spec:</p>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">API</span><span class="o">::</span><span class="no">Labels</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s1">'creates a first label'</span> <span class="k">do</span>
+    <span class="n">create</span><span class="p">(</span><span class="ss">:label</span><span class="p">)</span>
+
+    <span class="n">get</span> <span class="n">api</span><span class="p">(</span><span class="s2">"/projects/</span><span class="si">#{</span><span class="n">project</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">/labels"</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_http_status</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">json_response</span><span class="p">.</span><span class="nf">first</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'label1'</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'creates a second label'</span> <span class="k">do</span>
+    <span class="n">create</span><span class="p">(</span><span class="ss">:label</span><span class="p">)</span>
+
+    <span class="n">get</span> <span class="n">api</span><span class="p">(</span><span class="s2">"/projects/</span><span class="si">#{</span><span class="n">project</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">/labels"</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_http_status</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">json_response</span><span class="p">.</span><span class="nf">first</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'label1'</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>When run, this spec doesn&#39;t do what we might expect:</p>
+<pre class="highlight shell"><code>1<span class="o">)</span> API::API reproduce sequence issue creates a second label
+   Failure/Error: expect<span class="o">(</span>json_response.first[<span class="s1">'name'</span><span class="o">])</span>.to eq<span class="o">(</span><span class="s1">'label1'</span><span class="o">)</span>
+
+     expected: <span class="s2">"label1"</span>
+          got: <span class="s2">"label2"</span>
+
+     <span class="o">(</span>compared using <span class="o">==)</span>
+</code></pre>
+<p>That&#39;s because FactoryGirl sequences are not reseted for each example.</p>
+
+<p>Please remember that sequence-generated values exist only to avoid having to
+explicitly set attributes that have a uniqueness constraint when using a factory.</p>
+<h3 id='solution'>Solution <a class='anchor' href='gotchas.html#solution' title='Permalink'></a></h3>
+<p>If you assert against a sequence-generated attribute&#39;s value, you should set it
+explicitly. Also, the value you set shouldn&#39;t match the sequence pattern.</p>
+
+<p>For instance, using our <code>:label</code> factory, writing <code>create(:label, title: &#39;foo&#39;)</code>
+is ok, but <code>create(:label, title: &#39;label1&#39;)</code> is not.</p>
+
+<p>Following is the fixed API spec:</p>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">API</span><span class="o">::</span><span class="no">Labels</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s1">'creates a first label'</span> <span class="k">do</span>
+    <span class="n">create</span><span class="p">(</span><span class="ss">:label</span><span class="p">,</span> <span class="ss">title: </span><span class="s1">'foo'</span><span class="p">)</span>
+
+    <span class="n">get</span> <span class="n">api</span><span class="p">(</span><span class="s2">"/projects/</span><span class="si">#{</span><span class="n">project</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">/labels"</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_http_status</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">json_response</span><span class="p">.</span><span class="nf">first</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'creates a second label'</span> <span class="k">do</span>
+    <span class="n">create</span><span class="p">(</span><span class="ss">:label</span><span class="p">,</span> <span class="ss">title: </span><span class="s1">'bar'</span><span class="p">)</span>
+
+    <span class="n">get</span> <span class="n">api</span><span class="p">(</span><span class="s2">"/projects/</span><span class="si">#{</span><span class="n">project</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">/labels"</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_http_status</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">json_response</span><span class="p">.</span><span class="nf">first</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'bar'</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre><h2 id='don-39-t-rescue-exception'>Don&#39;t <code>rescue Exception</code> <a class='anchor' href='gotchas.html#don-39-t-rescue-exception' title='Permalink'></a></h2>
+<p>See <a href="http://stackoverflow.com/q/10048173/223897">&quot;Why is it bad style to <code>rescue Exception =&gt; e</code> in Ruby?&quot;</a>.</p>
+
+<p><em><strong>Note:</strong> This rule is <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/8-4-stable/.rubocop.yml#L911-914">enforced automatically by
+Rubocop</a>.</em></p>
+<h2 id='don-39-t-use-inline-javascript-in-views'>Don&#39;t use inline JavaScript in views <a class='anchor' href='gotchas.html#don-39-t-use-inline-javascript-in-views' title='Permalink'></a></h2>
+<p>Using the inline <code>:javascript</code> Haml filters comes with a
+performance overhead. Using inline JavaScript is not a good way to structure your code and should be avoided.</p>
+
+<p><em><strong>Note:</strong> We&#39;ve <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/config/initializers/hamlit.rb">removed these two filters</a>
+in an initializer.</em></p>
+<h3 id='further-reading'>Further reading <a class='anchor' href='gotchas.html#further-reading' title='Permalink'></a></h3>
+<ul>
+<li>Stack Overflow: <a href="http://programmers.stackexchange.com/questions/86589/why-should-i-avoid-inline-scripting">Why you should not write inline JavaScript</a></li>
+</ul>
+<h2 id='id-based-css-selectors-need-to-be-a-bit-more-specific'>ID-based CSS selectors need to be a bit more specific <a class='anchor' href='gotchas.html#id-based-css-selectors-need-to-be-a-bit-more-specific' title='Permalink'></a></h2>
+<p>Normally, because HTML <code>id</code> attributes need to be unique to the page, it&#39;s
+perfectly fine to write some JavaScript like the following:</p>
+<pre class="highlight javascript"><code><span class="nx">$</span><span class="p">(</span><span class="s1">'#js-my-selector'</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+</code></pre>
+<p>However, there&#39;s a feature of GitLab&#39;s Markdown processing that <a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/8-4-stable/lib/banzai/filter/table_of_contents_filter.rb#L31-37">automatically
+adds anchors to header elements</a>, with the <code>id</code> attribute being
+automatically generated based on the content of the header.</p>
+
+<p>Unfortunately, this feature makes it possible for user-generated content to
+create a header element with the same <code>id</code> attribute we&#39;re using in our
+selector, potentially breaking the JavaScript behavior. A user could break the
+above example with the following Markdown:</p>
+<pre class="highlight markdown"><code><span class="gu">## JS My Selector</span>
+</code></pre>
+<p>Which gets converted to the following HTML:</p>
+<pre class="highlight html"><code><span class="nt">&lt;h2&gt;</span>
+  <span class="nt">&lt;a</span> <span class="na">id=</span><span class="s">"js-my-selector"</span> <span class="na">class=</span><span class="s">"anchor"</span> <span class="na">href=</span><span class="s">"#js-my-selector"</span> <span class="na">aria-hidden=</span><span class="s">"true"</span><span class="nt">&gt;&lt;/a&gt;</span>
+  JS My Selector
+<span class="nt">&lt;/h2&gt;</span>
+</code></pre><h3 id='solution'>Solution <a class='anchor' href='gotchas.html#solution' title='Permalink'></a></h3>
+<p>The current recommended fix for this is to make our selectors slightly more
+specific:</p>
+<pre class="highlight javascript"><code><span class="nx">$</span><span class="p">(</span><span class="s1">'div#js-my-selector'</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+</code></pre><h3 id='further-reading'>Further reading <a class='anchor' href='gotchas.html#further-reading' title='Permalink'></a></h3>
+<ul>
+<li>Issue: <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/3908">Merge request ToC anchor conflicts with tabs</a></li>
+<li>Merge Request: <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/2023">Make tab target selectors less naive</a></li>
+<li>Merge Request: <a href="https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/2024">Make cross-project reference&#39;s clipboard target less naive</a></li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ee/blob/master/doc/development/gotchas.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>

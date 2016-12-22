@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Development - GitLab中文文档</title>
+  <meta name="description" content="GitLab中文社区提供GitLab社区版，GitLab企业版，Omnibus GitLab，GitLab Runner全系列中文文档！">
+  <link rel="stylesheet" href="../../assets/stylesheets/stylesheet-v6.css">
+  <link rel="stylesheet" href="../../assets/stylesheets/highlight-v4.css">
+  <script async src="../../assets/javascripts/docs.js"></script>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Ubuntu:300,400,600,400italic' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <!-- you don't need to keep this, but it's cool for stats! -->
+  <meta name="generator" content="Nanoc 4.4.2">
+</head>
+
+  <body>
+    <div class="header">
+  <a href="../../index.html">
+    <img src="../../assets/images/gitlab-logo.svg"/>
+    <p>GitLab 中文文档</p>
+  </a>
+  <div class="nav-container">
+    <a class="nav-toggle" id="docs-nav-toggle">Menu</a>
+    <ul class="nav">
+      <li class="search"><input type="text" class="st-default-search-input" placeholder="Search"></li>
+      
+        <li class="nav-item">
+          <a href="../README.html">
+            Community Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../ee/README.html">
+            Enterprise Edition
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../omnibus/README.html">
+            Omnibus
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a href="../../runner/index.html">
+            Runner
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main class">
+      
+        <ul class="breadcrumbs">
+          
+          
+            
+              <li class="breadcrumb"><a href="../README.html">Documentation</a></li>
+            
+          
+          <li class="breadcrumb">Development</li>
+        </ul>
+      
+      <ul>
+<li>
+<a href="README.html#development">Development</a>
+<ul>
+<li>
+<a href="README.html#outside-of-docs">Outside of docs</a>
+</li>
+<li>
+<a href="README.html#styleguides">Styleguides</a>
+</li>
+<li>
+<a href="README.html#process">Process</a>
+</li>
+<li>
+<a href="README.html#backend-howtos">Backend howtos</a>
+</li>
+<li>
+<a href="README.html#databases">Databases</a>
+</li>
+<li>
+<a href="README.html#compliance">Compliance</a>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id='development'>Development <a class='anchor' href='README.html#development' title='Permalink'></a></h1><h2 id='outside-of-docs'>Outside of docs <a class='anchor' href='README.html#outside-of-docs' title='Permalink'></a></h2>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> main contributing guide</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-ce/blob/master/PROCESS.md">PROCESS.md</a> contributing process</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-development-kit/blob/master/doc/howto/README.md">GitLab Development Kit (GDK)</a> to install a development version</li>
+</ul>
+<h2 id='styleguides'>Styleguides <a class='anchor' href='README.html#styleguides' title='Permalink'></a></h2>
+<ul>
+<li><a href="api_styleguide.html">API styleguide</a> Use this styleguide if you are
+contributing to the API.</li>
+<li><a href="doc_styleguide.html">Documentation styleguide</a> Use this styleguide if you are
+contributing to documentation.</li>
+<li><a href="migration_style_guide.html">SQL Migration Style Guide</a> for creating safe SQL migrations</li>
+<li><a href="testing.html">Testing standards and style guidelines</a></li>
+<li><a href="ux_guide/index.html">UX guide</a> for building GitLab with existing CSS styles and elements</li>
+<li><a href="frontend.html">Frontend guidelines</a></li>
+<li><a href="sql.html">SQL guidelines</a> for working with SQL queries</li>
+<li><a href="sidekiq_style_guide.html">Sidekiq guidelines</a> for working with Sidekiq workers</li>
+</ul>
+<h2 id='process'>Process <a class='anchor' href='README.html#process' title='Permalink'></a></h2>
+<ul>
+<li><a href="changelog.html">Generate a changelog entry with <code>bin/changelog</code></a></li>
+<li><a href="limit_ee_conflicts.html">Limit conflicts with EE when developing on CE</a></li>
+<li><a href="code_review.html">Code review guidelines</a> for reviewing code and having code reviewed.</li>
+<li><a href="merge_request_performance_guidelines.html">Merge request performance guidelines</a>
+for ensuring merge requests do not negatively impact GitLab performance</li>
+</ul>
+<h2 id='backend-howtos'>Backend howtos <a class='anchor' href='README.html#backend-howtos' title='Permalink'></a></h2>
+<ul>
+<li><a href="architecture.html">Architecture</a> of GitLab</li>
+<li><a href="ci_setup.html">CI setup</a> for testing GitLab</li>
+<li><a href="gotchas.html">Gotchas</a> to avoid</li>
+<li><a href="db_dump.html">How to dump production data to staging</a></li>
+<li><a href="instrumentation.html">Instrumentation</a></li>
+<li><a href="performance.html">Performance guidelines</a></li>
+<li><a href="rake_tasks.html">Rake tasks</a> for development</li>
+<li><a href="shell_commands.html">Shell commands</a> in the GitLab codebase</li>
+<li><a href="sidekiq_debugging.html">Sidekiq debugging</a></li>
+<li><a href="object_state_models.html">Object state models</a></li>
+</ul>
+<h2 id='databases'>Databases <a class='anchor' href='README.html#databases' title='Permalink'></a></h2>
+<ul>
+<li><a href="what_requires_downtime.html">What requires downtime?</a></li>
+<li><a href="adding_database_indexes.html">Adding database indexes</a></li>
+<li><a href="post_deployment_migrations.html">Post Deployment Migrations</a></li>
+</ul>
+<h2 id='compliance'>Compliance <a class='anchor' href='README.html#compliance' title='Permalink'></a></h2>
+<ul>
+<li><a href="licensing.html">Licensing</a> for ensuring license compliance</li>
+</ul>
+
+      <hr>
+      <!--插入畅言评论框-->
+      <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cysJws232';
+var conf = 'prod_75287b5b4916f1a8a49f289fd9f44e32';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+      <footer>
+        <a href='https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/README.md'>Improve this documentation on GitLab.com</a>
+        <a href="https://gitlab.com/gitlab-com/gitlab-docs">View the source code of this site</a>
+      </footer>
+    </div>
+  </body>
+
+  <!-- Baidu analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?32465a463ee9e0febe2ad3f353d247fc";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+<!-- Swiftype search engine -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sSywtTjozQxL11PWiwA7','2.0.0');
+</script>
+
+<!-- Marketo -->
+<script type="text/javascript">
+  (function() {
+    var didInit = false;
+    function initMunchkin() {
+      if(didInit === false) {
+        didInit = true;
+        Munchkin.init('194-VVC-221');
+      }
+    }
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//munchkin.marketo.net/munchkin.js';
+    s.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        initMunchkin();
+      }
+    };
+    s.onload = initMunchkin;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+</html>
